@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (6 of 11 notebooks done) |
-| Current notebook | — (06 merged; next is 07) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 07: `git switch -c notebook/00_GettingStarted__07_confusion_matrix_precision_recall` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 07 row — the **confusion matrix** (TP/FP/FN/TN, positive = Gentoo), **precision / recall / F1** (by hand, then `sklearn.metrics`), and **asymmetric error costs** (when to favour precision vs recall). Reuse `viz.plot_confusion_matrix`. To get a non-trivial confusion matrix (the centroid is ~perfect on the clean test), likely use the imbalanced what-if from NB 06 (or a harder slice) so there are real FP/FN to read. Rémy approves; then build. |
+| Current notebook | `07_confusion_matrix_precision_recall` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__07_confusion_matrix_precision_recall` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__07_confusion_matrix_precision_recall.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 07 — confusion matrix (TP/FP/FN/TN, positive = Gentoo), precision/recall/F1 (by hand → `sklearn.metrics` with `pos_label="Gentoo"`), asymmetric error costs. **Design decision to make instructive errors:** classify on **bill length alone** (a single feature; NB 03 showed bill overlaps more than flipper), so the nearest-centroid makes real FP/FN — vs the ~perfect 2-feature model. Reuse `viz.plot_confusion_matrix`; no new src. ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
