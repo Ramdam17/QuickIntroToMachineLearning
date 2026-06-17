@@ -18,11 +18,14 @@ build/
 # for clearing outputs before commit (see CLAUDE.md).
 # (Outputs live inside the .ipynb JSON; clear them, do not gitignore the notebooks.)
 
-# Data is never committed — keep it local.
-data/
+# Data is never committed — keep it local. ("/data/" is root-anchored so vendored teaching
+# datasets inside the package can be tracked via the exception below.)
+/data/
 *.csv
 *.parquet
 *.npz
+# Exception: the small vendored teaching dataset (offline penguins for module 00).
+!src/ml_course/data/penguins.csv
 
 # OS / editor
 .DS_Store

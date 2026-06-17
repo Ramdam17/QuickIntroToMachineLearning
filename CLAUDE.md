@@ -69,6 +69,10 @@ Three notebooks is the floor (a method may not need 5); five is the ceiling. Nev
 - **Graphic charter:** the palette lives only in `ml_course.colors`; **no hardcoded hex** in
   notebooks or modules (enforced by `scripts/check_no_hardcoded_hex.py`). Call
   `ml_course.viz.use_course_style()`; fixed dims/DPI/fonts from the charter.
+- **Pandas-first.** Use pandas (DataFrame/Series) as the default data interface — loading, tabular
+  display, selection, `value_counts`, `describe`, `groupby` for class means — keeping **numpy under
+  the hood** where numpy is right (distances, `meshgrid`, linear algebra). Datasets return
+  DataFrames; `viz` helpers accept DataFrames/Series and use column names for labels.
 - **Notebooks are output-free in git** (clear outputs before committing) and didactic, per the
   `notebook-quality` standard.
 - **Rigor:** fix and document random seeds; validate numbers against known/closed forms where they
