@@ -88,7 +88,7 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | NB | Branch | Status |
 |----|--------|--------|
 | 01 | `notebook/00_GettingStarted__01_what_is_ml` | **done** (reviewers PASS/REVISE→fixed; Rémy validated; merged) |
-| 02 | — | not started |
+| 02 | `notebook/00_GettingStarted__02_features_and_feature_space` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 03 | — | not started |
 | 04 | — | not started |
 | 05 | — | not started |
