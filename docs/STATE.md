@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (7 of 11 notebooks done) |
-| Current notebook | — (07 merged; next is 08) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 08: `git switch -c notebook/00_GettingStarted__08_scores_thresholds_roc` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 08 row — classifiers emit a **score**, sliding the **threshold** trades precision↔recall, **ROC** & **AUC**, the **precision-recall curve**; threshold-swept vs threshold-fixed metrics. **Score source:** the affine signed squared-distance from NB 05's centroids (pinned in the chapter plan); validate by-hand AUC vs `roc_auc_score`. Likely new `viz` helpers `plot_roc_curve` / `plot_score_threshold` (+ tests). Rémy approves; then build. |
+| Current notebook | `08_scores_thresholds_roc` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__08_scores_thresholds_roc` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__08_scores_thresholds_roc.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 08 — a classifier emits a **score** (the affine signed squared-distance from centroids, positive = Gentoo: `s = d(x,μ_Adelie)² − d(x,μ_Gentoo)²`); sliding the **threshold** trades precision↔recall; **ROC** + **AUC** + **PR curve**; threshold-swept vs threshold-fixed. Design: use the **bill-only** model (NB 07) as primary so the ROC has a real shape/trade-off (the 2-feature model is ~perfect, AUC≈1 — show briefly as a contrast). New `viz` helpers `plot_roc_curve` + `plot_score_threshold` (+ tests). Validate by-hand AUC vs `roc_auc_score`. ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
