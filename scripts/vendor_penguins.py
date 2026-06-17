@@ -1,46 +1,39 @@
-"""Vendor a small, offline Palmer penguins teaching CSV into the package.
+"""Warm the offline cache for the Palmer penguins teaching dataset.
 
-One-off data-prep, kept for provenance and reproducibility. Fetches the Palmer penguins dataset once
-via seaborn (network required), keeps the binary 2-feature teaching subset used in module
-``00_GettingStarted`` (Adélie vs Gentoo; bill length & flipper length), drops missing rows, and
-writes ``src/ml_course/data/penguins.csv`` so the course runs offline thereafter.
-
-Run once (or to refresh the vendored file):
+The course fetches the full Palmer penguins dataset on first use and caches it under the package
+(git-ignored); see :mod:`ml_course.datasets`. Run this once to populate that cache ahead of time
+(e.g., before going offline or in CI setup), instead of letting the first notebook trigger the
+download:
 
     uv run python scripts/vendor_penguins.py
 
-Data: Gorman KB, Williams TD, Fraser WR (2014), PLoS ONE 9(3):e90081; packaged as palmerpenguins
-(Horst AM, Hill AP, Gorman KB, 2020).
+Nothing is committed to the repo — the cached CSV is git-ignored.
+
+Data: Gorman KB, Williams TD, Fraser WR (2014), PLoS ONE 9(3):e90081; palmerpenguins (Horst AM,
+Hill AP, Gorman KB, 2020). Source CSV: the seaborn-data mirror.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
+import logging
 
-import seaborn as sns
-
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "src" / "ml_course" / "data" / "penguins.csv"
-
-SPECIES = ["Adelie", "Gentoo"]
-FEATURES = ["bill_length_mm", "flipper_length_mm"]
-LABEL = "species"
+from ml_course import datasets
 
 
 def main() -> None:
-    """Fetch, subset, clean, and write the vendored penguins CSV."""
-    print("Fetching Palmer penguins via seaborn (network required)...")
-    df = sns.load_dataset("penguins")  # raises if unreachable — we want that, loudly
-    print(f"  full dataset: {df.shape[0]} rows, {df.shape[1]} columns")
+    """Download (if needed) and report the cached full dataset and the derived teaching subset."""
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    full = datasets.load_penguins_full()
+    print(f"\nfull dataset: {full.shape[0]} rows, {full.shape[1]} columns")
+    print("class counts:")
+    print(full[datasets.PENGUINS_TARGET].value_counts().to_string())
+    print(f"missing values per column:\n{full.isna().sum().to_string()}")
 
-    subset = df[df[LABEL].isin(SPECIES)][[*FEATURES, LABEL]].dropna().reset_index(drop=True)
-    print(f"  teaching subset ({' vs '.join(SPECIES)}, {FEATURES}): {subset.shape[0]} rows")
-    print("\nClass counts:\n", subset[LABEL].value_counts().to_string())
-    print("\nFeature summary:\n", subset[FEATURES].describe().to_string())
-
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    subset.to_csv(OUT, index=False)
-    print(f"\nWrote {OUT.relative_to(ROOT)} ({subset.shape[0]} rows).")
+    subset = datasets.load_penguins()
+    print(
+        f"\nderived module-00 subset (Adelie vs Gentoo, "
+        f"{datasets.PENGUINS_FEATURES}): {subset.shape[0]} rows, no missing values."
+    )
 
 
 if __name__ == "__main__":
