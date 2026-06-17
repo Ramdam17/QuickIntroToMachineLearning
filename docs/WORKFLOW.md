@@ -12,6 +12,10 @@ this document and your memory disagree, **these files win**.
 | `docs/plans/chapter_NN_Method.md` | the validated chapter plan (concepts → notebooks 1–3, notebook 4, notebook 5 example) | when the chapter plan is drafted / revised / approved |
 | `docs/plans/NN_Method__MM_title.md` | the validated notebook content plan (cell-by-cell intent) | when the notebook plan is drafted / revised / approved |
 
+`STATE.md` is written to disk at every transition and committed alongside the next plan/notebook
+commit — or on its own before a `git switch`, so the working tree is clean and the branch carries
+the current position.
+
 ## Phase vocabulary (the value in `STATE.md`)
 
 ```
@@ -38,30 +42,39 @@ chapter-merge            chapter complete; merging chapter → main
 - `chapter → main`: **`--no-ff` merge commit** — preserves per-notebook history; each chapter is a
   visible unit.
 - Never force-push `main`. Never merge a `wip` commit to `main`.
+- **Working-tree hygiene:** commit pending `STATE.md` / plan changes before any `git switch` — they
+  are tracked files, so uncommitted edits would otherwise follow you across branches.
 
 ## Chapter loop
 
 1. **Open the chapter.** `git switch main && git switch -c chapter/NN_Method`. Set `STATE.md`:
    chapter = NN_Method, phase = `chapter-plan`, next action = "draft chapter plan in plan mode".
-2. **Plan (plan mode).** Enter plan mode. Draft `docs/plans/chapter_NN_Method.md` deciding together:
+2. **Plan (plan mode).** Enter plan mode. Draft the chapter plan (to be written to
+   `docs/plans/chapter_NN_Method.md` on approval) deciding together:
    1. the **primordial concepts** and how they distribute across **notebooks 1–3** (one concept per
       notebook),
    2. the **content of notebook 4** (the real estimator, its hyperparameters, failure modes, tuning),
    3. the **example for notebook 5** (the demanding practical case).
    Cross-check `docs/course_map.md`; refine it if the plan changes the promised coverage.
 3. **Review the plan.** Phase = `chapter-plan-review`. Dispatch BOTH `@ml-expert-reviewer` and
-   `@pedagogy-reviewer` on `docs/plans/chapter_NN_Method.md`. Apply fixes until no BLOCK.
-4. **Validate.** Present the plan; Rémy approves (ExitPlanMode). Commit the plan
-   (`docs(plan): chapter NN_Method`). Phase = `chapter-plan-approved`.
+   `@pedagogy-reviewer` on the chapter plan (share the draft inline, since plan mode may block
+   writing the file). Apply fixes until no BLOCK.
+4. **Validate & persist.** Present the reviewed plan via ExitPlanMode; Rémy approves. **On approval,
+   write `docs/plans/chapter_NN_Method.md` and commit it** (`docs(plan): chapter NN_Method`); set
+   phase = `chapter-plan-approved`. If a compaction hits before approval, STATE.md's phase +
+   next-action let you re-enter plan mode and re-draft — nothing approved is lost.
 
 ## Notebook loop (repeat for each notebook in the chapter)
 
 1. **Open the notebook.** `git switch chapter/NN_Method && git switch -c notebook/NN_Method__MM_title`.
    Set `STATE.md`: notebook = MM_title, phase = `notebook-plan`, active branch, next action.
-2. **Plan (plan mode).** Enter plan mode. Draft `docs/plans/NN_Method__MM_title.md`: the cell-by-cell
-   intent following `docs/notebook_template.md` (~20 cells; header, recap, body sections with
-   intuition → implementation → "Read the figure", Your turn, What you built, References).
-3. **Validate the notebook plan.** Rémy approves (ExitPlanMode). Phase = `notebook-plan-approved`.
+2. **Plan (plan mode).** Enter plan mode. Draft the notebook plan (to be written to
+   `docs/plans/NN_Method__MM_title.md` on approval): the cell-by-cell intent following
+   `docs/notebook_template.md` (~20 cells; header, recap, body sections with intuition →
+   implementation → "Read the figure", Your turn, What you built, References).
+3. **Validate the notebook plan.** Present via ExitPlanMode; Rémy approves. **On approval, write and
+   commit** `docs/plans/NN_Method__MM_title.md`. Phase = `notebook-plan-approved`. (No reviewer gate
+   here — the notebook plan is validated by Rémy alone; reviewers return at the built-notebook stage.)
 4. **Build.** Phase = `notebook-build`. Create the `.ipynb` (use `NotebookEdit`). One concept; by
    hand before library; `viz.use_course_style()`; colours from `ml_course.colors`; seeds fixed;
    every figure followed by a "Read the figure" paragraph; everything in English.
@@ -99,9 +112,10 @@ chapter-merge            chapter complete; merging chapter → main
 
 ## Reviewer gate (both levels)
 
-- **Plan level:** reviewers read the plan markdown — pedagogy checks progression/exhaustiveness/no
-  concept gap; ML expert checks correctness, honest limits, that notebook 5's example actually
-  mobilizes the method and admits an honest evaluation.
+- **Chapter-plan level:** reviewers read the chapter plan — pedagogy checks progression/
+  exhaustiveness/no concept gap; ML expert checks correctness, honest limits, that notebook 5's
+  example actually mobilizes the method and admits an honest evaluation. (The per-notebook plan is
+  not reviewer-gated — only Rémy validates it.)
 - **Notebook level:** reviewers read the `.ipynb` — same dimensions, against the built artifact.
 - Dispatch both **in parallel**. A plan or notebook advances only when **neither** returns a BLOCK.
 
@@ -116,7 +130,9 @@ On any session start, after a compaction, or after `/clear`:
 
 ## Plan mode
 
-Both planning steps (chapter, notebook) use plan mode: enter plan mode, draft the plan into
-`docs/plans/`, run the reviewer gate, then ExitPlanMode for Rémy's approval. The plan file — not the
-plan-mode buffer — is the durable record, so a compaction during planning loses nothing already
-written to `docs/plans/`.
+Both planning steps (chapter, notebook) use plan mode: enter plan mode, draft the plan, run the
+reviewer gate (**chapter plan only** — the notebook plan is validated by Rémy alone), then
+ExitPlanMode for approval. **Write the plan to `docs/plans/` and commit it on approval** — that
+file, not the plan-mode buffer, is the durable record. If a compaction hits mid-planning (before
+approval), `STATE.md`'s phase + next-action let you re-enter plan mode and re-draft; nothing
+*approved* is ever lost.
