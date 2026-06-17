@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` — **COMPLETE (11 of 11)**, merged to `main` |
-| Current notebook | — (chapter 00 done) |
-| Phase | `idle` (between chapters) |
-| Active branch | `main` |
-| Active plan | — (next: chapter `01_KNN` plan) |
-| Next concrete action | **Open chapter 01 — k-Nearest Neighbours.** `git switch main && git switch -c chapter/01_KNN`; phase `chapter-plan`; enter plan mode; plan the chapter from `docs/course_map.md` (01_KNN: 5 notebooks — prediction = neighbourhood vote & k; distance + the scale trap; the k dial / under-vs-over-fitting; the estimator & its parameters; demanding case + the curse of dimensionality). Reviewer-gate the chapter plan (both reviewers, no BLOCK); Rémy validates before any notebook is built. Reuse the fetch-and-cache penguins data layer; KNN is distance-based, so the standardization from NB 11 is load-bearing here. |
+| Current chapter | `01_KNN` (planning) — chapter 00 complete & on `main` |
+| Current notebook | — |
+| Phase | `chapter-plan` |
+| Active branch | `chapter/01_KNN` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (drafting in plan mode) |
+| Next concrete action | **In plan mode — draft the chapter 01 (k-NN) plan** from `docs/course_map.md` (5 notebooks: prediction = neighbourhood vote & k, by hand → distance + the scale trap → the k dial / under-vs-over-fitting, choose k on held-out points → the estimator `KNeighborsClassifier` & its parameters, boundary vs k → demanding case + the curse of dimensionality). **Decide with Rémy:** the dataset for NB 5 / the curse-of-dimensionality demo (penguins + injected noise dimensions, keeping the through-line, vs a higher-dimensional real set). Reviewer-gate the chapter plan (both, no BLOCK); Rémy validates; then persist `docs/plans/chapter_01_KNN.md` + commit. Through-line: penguins (binary, 2 features) for NB 1–4; standardization (NB 11) is load-bearing for distance-based k-NN; choose k by CV (NB 10); reuse `viz.plot_decision_boundary` for boundary-vs-k. Chapter close → **PR** into `main` (protected). |
 
 ## Notes / blockers
 
