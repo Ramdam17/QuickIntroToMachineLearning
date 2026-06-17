@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `01_KNN` (planning) — chapter 00 complete & on `main` |
-| Current notebook | — |
-| Phase | `chapter-plan` |
+| Current chapter | `01_KNN` (plan APPROVED — 6 notebooks incl. an optional NB 6 "Advanced") |
+| Current notebook | — (about to open NB 1) |
+| Phase | `chapter-plan-approved` |
 | Active branch | `chapter/01_KNN` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (drafting in plan mode) |
-| Next concrete action | **In plan mode — draft the chapter 01 (k-NN) plan** from `docs/course_map.md` (5 notebooks: prediction = neighbourhood vote & k, by hand → distance + the scale trap → the k dial / under-vs-over-fitting, choose k on held-out points → the estimator `KNeighborsClassifier` & its parameters, boundary vs k → demanding case + the curse of dimensionality). **Decide with Rémy:** the dataset for NB 5 / the curse-of-dimensionality demo (penguins + injected noise dimensions, keeping the through-line, vs a higher-dimensional real set). Reviewer-gate the chapter plan (both, no BLOCK); Rémy validates; then persist `docs/plans/chapter_01_KNN.md` + commit. Through-line: penguins (binary, 2 features) for NB 1–4; standardization (NB 11) is load-bearing for distance-based k-NN; choose k by CV (NB 10); reuse `viz.plot_decision_boundary` for boundary-vs-k. Chapter close → **PR** into `main` (protected). |
+| Active plan | `docs/plans/chapter_01_KNN.md` (APPROVED) |
+| Next concrete action | **Open NB 1** — `git switch -c notebook/01_KNN__01_neighbourhood_vote` off `chapter/01_KNN`; phase `notebook-plan`; enter plan mode; draft NB 1 cell-by-cell from the chapter plan's NB 1 row: the **neighbourhood vote by hand on `make_moons`** (distances to all training points → k smallest → majority vote; k = 1, 3, 5); the **lazy-learner cost felt** (time `fit` ≈ instant vs the per-query work); figure = a query with its k neighbours highlighted + the vote. Prereqs 02, 04. Rémy validates the cell plan; then build (both reviewers + visual). Datasets/decisions already locked in the chapter plan (moons for NB 1–4; breast_cancer for NB 5; NB 6 Advanced = metrics + nested CV + silhouette clarification). Chapter close → **PR** into `main` (protected). |
 
 ## Notes / blockers
 
@@ -27,6 +27,13 @@
 
 ## Progress log (most recent first)
 
+- Chapter 01 (k-NN) plan **approved & persisted** (`docs/plans/chapter_01_KNN.md`) — 6 notebooks: vote
+  → distance/scale trap → k-dial → estimator/params → demanding case (breast_cancer + the curse) → an
+  optional **NB 6 Advanced** (metric geometry L1/L2/L∞ + Mahalanobis/cosine, metric×curse, nested CV,
+  and the silhouette≠k-NN clarification — a deliberate, Rémy-approved exception to the 5-ceiling).
+  `make_moons` for NB 1–4 (penguins too separable, measured: 0/69 flips), breast_cancer for NB 5; all
+  offline. Reviewer-gated (both REVISE→incorporated). `WORKFLOW.md` updated: chapter close now via PR
+  (`main` is protected by a global pre-push hook).
 - **Chapter 00 (Getting Started) COMPLETE — 11 notebooks, merged to `main` (`--no-ff`).** The on-ramp:
   what ML is → features/feature space → EDA → split & leakage → nearest centroid → accuracy/baseline →
   confusion/precision-recall → scores/ROC/AUC → over/under-fitting → cross-validation → preprocessing &
