@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` |
-| Current notebook | — (about to open 01) |
-| Phase | `chapter-plan-approved` |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED, 11 notebooks) |
-| Next concrete action | Open notebook 01: `git switch -c notebook/00_GettingStarted__01_what_is_ml` off the chapter branch; set phase `notebook-plan`; enter plan mode; draft the cell-by-cell notebook plan from the chapter plan's NB 01 row; Rémy approves; then build. |
+| Current notebook | `01_what_is_ml` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__01_what_is_ml` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__01_what_is_ml.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft the cell-by-cell plan for NB 01 (from the chapter plan's NB 01 row: what ML is / supervised / classification vs regression / meet penguins + toolkit + "read a figure" + version echo); ExitPlanMode for Rémy's approval; then write + commit the notebook plan and build the `.ipynb`. NB 01 needs `ml_course.datasets.load_penguins()` + vendored `penguins.csv` + `.gitignore` exception, built just-in-time. |
 
 ## Notes / blockers
 
