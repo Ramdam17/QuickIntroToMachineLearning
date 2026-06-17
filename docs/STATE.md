@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `01_KNN` (plan APPROVED — 6 notebooks incl. an optional NB 6 "Advanced") |
-| Current notebook | — (about to open NB 1) |
-| Phase | `chapter-plan-approved` |
-| Active branch | `chapter/01_KNN` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (APPROVED) |
-| Next concrete action | **Open NB 1** — `git switch -c notebook/01_KNN__01_neighbourhood_vote` off `chapter/01_KNN`; phase `notebook-plan`; enter plan mode; draft NB 1 cell-by-cell from the chapter plan's NB 1 row: the **neighbourhood vote by hand on `make_moons`** (distances to all training points → k smallest → majority vote; k = 1, 3, 5); the **lazy-learner cost felt** (time `fit` ≈ instant vs the per-query work); figure = a query with its k neighbours highlighted + the vote. Prereqs 02, 04. Rémy validates the cell plan; then build (both reviewers + visual). Datasets/decisions already locked in the chapter plan (moons for NB 1–4; breast_cancer for NB 5; NB 6 Advanced = metrics + nested CV + silhouette clarification). Chapter close → **PR** into `main` (protected). |
+| Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
+| Current notebook | `01_neighbourhood_vote` (planning) |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/01_KNN__01_neighbourhood_vote` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (APPROVED); NB 1 cell plan drafting in plan mode |
+| Next concrete action | **In plan mode for NB 1** (the neighbourhood vote). Draft cell-by-cell from the chapter plan: the k-NN rule (k nearest → **majority vote**) **by hand on `make_moons`** (Euclidean distances to all training points → k smallest → vote; k = 1, 3, 5, including a borderline query where k changes the call); the **lazy learner** (fit = store) with its cost **felt** (time fit ≈ instant vs per-query distance work; predict cost grows with n); figure = a query with its k nearest neighbours highlighted + the vote. Prereqs 02, 04. No new `src/` expected (in-notebook figure). Rémy validates the cell plan; then build (both reviewers + visual). |
 
 ## Notes / blockers
 
