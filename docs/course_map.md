@@ -15,10 +15,24 @@ boosting family AdaBoost → Gradient Boosting → XGBoost → LightGBM), then l
 (MLP → Neural Networks).
 
 ## 00_GettingStarted
-- What ML is: learning a rule from examples; features and labels.
-- The train/test split and *why* we hold data out (generalize ≠ memorize).
-- A first classifier end to end, with one honest metric.
-- The course toolkit: `ml_course.viz`, the charter, reading a figure.
+
+The foundational module: the vocabulary and skills every ML student needs before the twelve methods.
+Exempt from the per-method arc and the 3–5 ceiling — a one-concept-per-notebook progression of **11
+notebooks**. Through-line: Palmer penguins (binary, 2 features), nearest-centroid as the first
+classifier, a polynomial-degree complexity dial for the over/underfitting and cross-validation
+notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
+
+1. What is machine learning? — learn a rule from examples; supervised; classification vs regression; the toolkit.
+2. Features, labels, and the feature space — `X`/`y`; the mean of a point cloud and Euclidean distance.
+3. Look before you model (EDA) — distributions, class balance, feature scales.
+4. Generalize, don't memorize — the stratified train/test split; the cardinal sin; leakage; i.i.d. as an assumption.
+5. Your first classifier: nearest centroid — fit→predict by hand; the bisector boundary, its bias and scale-sensitivity.
+6. Is it any good? accuracy + a baseline — accuracy, the majority baseline, and accuracy's limit under imbalance.
+7. The confusion matrix, precision & recall — TP/FP/FN/TN, precision/recall/F1, asymmetric error costs.
+8. Scores, thresholds, ROC & AUC — the signed-distance score, sliding the threshold, ROC/PR, AUC.
+9. Over-/under-fitting and the generalization gap — complexity, the train/test U, bias–variance, the learning curve.
+10. Validating honestly: cross-validation — hyperparameters vs parameters, stratified k-fold, model selection.
+11. Preprocessing & leakage — scaling, encoding, fit-on-train-only, the `Pipeline`.
 
 ## 01_KNN — k-Nearest Neighbours
 1. Prediction = vote of the neighbourhood; k = size of the neighbourhood (by hand, 2D).

@@ -7,20 +7,25 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` |
-| Current notebook | — |
-| Phase | `chapter-plan` |
+| Current notebook | — (about to open 01) |
+| Phase | `chapter-plan-approved` |
 | Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (pending — written on approval) |
-| Next concrete action | In plan mode: resolve the chapter-00 forks (notebook count/shape; the "first classifier"; the dataset), draft the chapter plan, run the reviewer gate (both reviewers), ExitPlanMode for Rémy's approval, then write + commit the plan and set phase `chapter-plan-approved`. |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED, 11 notebooks) |
+| Next concrete action | Open notebook 01: `git switch -c notebook/00_GettingStarted__01_what_is_ml` off the chapter branch; set phase `notebook-plan`; enter plan mode; draft the cell-by-cell notebook plan from the chapter plan's NB 01 row; Rémy approves; then build. |
 
 ## Notes / blockers
 
-- `00_GettingStarted` is the foundational module; the per-method arc (NB 1–3 / NB 4 params / NB 5
-  case) does not map cleanly — it has its own shape (to be settled in the plan).
-- Confirmed: notebooks all-English; audience = young developers, maths re-established not presupposed;
-  git history = preserve per-notebook, mark chapters (`--no-ff` chapter → main).
+- Chapter 00 plan APPROVED (11 notebooks). Through-line: Palmer penguins (binary, 2 features),
+  nearest-centroid first classifier, polynomial-degree complexity dial (NB 09–10).
+- First library need (NB 01): `ml_course.datasets.load_penguins()` + vendored `penguins.csv` +
+  `.gitignore` exception. Build it just-in-time within the NB 01 work.
+- Confirmed: notebooks all-English; maths re-established not presupposed; git history = preserve
+  per-notebook, mark chapters (`--no-ff` chapter → main).
 
 ## Progress log (most recent first)
 
-- Opened chapter `00_GettingStarted` (branch created); entering chapter planning.
+- Chapter 00 plan approved and persisted; `course_map.md` 00 section rewritten to 11 notebooks.
+- Chapter 00 plan reviewer-gated (ml-expert + pedagogy, both REVISE→incorporated: EDA notebook added,
+  mean/distance footing, affine signed-distance score, bias–variance precision, stratification).
+- Opened chapter `00_GettingStarted` (branch created); chapter planning.
 - Course scaffold + build workflow set up on `main` (3 infra commits).
