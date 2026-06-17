@@ -9,6 +9,20 @@
 > assistant *tutoring a learner* through the published course. When both could apply to you, decide
 > by task: building/restructuring → here; helping a learner → `AGENTS.md`.
 
+## READ FIRST — every session, especially after a compaction / `/clear` / new conversation
+
+Before doing anything, read, in order:
+
+1. **`docs/STATE.md`** — where we are right now (current chapter, notebook, phase) and the **next
+   concrete action**. This is the compaction lifeline.
+2. **`docs/WORKFLOW.md`** — the chapter → notebook build loop, the git branch model, the review
+   gates, and the end-of-notebook / end-of-chapter checklists.
+3. The **active plan** named in `STATE.md` (under `docs/plans/`), if a chapter or notebook is in
+   progress.
+
+A mid-flight compaction must never disrupt the work: `STATE.md` + the active plan hold everything
+needed to resume. **If your memory of the plan disagrees with these files, the files win.**
+
 ## What this course is
 
 A hands-on, **learn-by-doing** introduction to twelve classical ML methods, for **young
@@ -59,6 +73,30 @@ Three notebooks is the floor (a method may not need 5); five is the ceiling. Nev
   `notebook-quality` standard.
 - **Rigor:** fix and document random seeds; validate numbers against known/closed forms where they
   exist; flag heuristic vs. established choices; cite sources with DOI in docstrings and references.
+
+## Build workflow (chapter → notebook loop)
+
+The full procedure, git commands, gates, and checklists live in **`docs/WORKFLOW.md`**; the live
+position lives in **`docs/STATE.md`**. The shape:
+
+- **Each chapter = a git branch** `chapter/NN_Method` off `main`. **Each notebook = its own branch**
+  `notebook/NN_Method__MM_title` off the chapter branch.
+- **Chapter planning (plan mode).** Plan the chapter together: (1) the primordial concepts and how
+  they distribute across notebooks 1–3, (2) the content of notebook 4 (the method & its parameters),
+  (3) the example for notebook 5 (the demanding case). The plan is written to `docs/plans/`. Both
+  reviewers review the plan. Rémy validates before any notebook is built.
+- **Notebook planning (plan mode).** For each notebook, plan its content cell-by-cell together;
+  Rémy validates the plan before building.
+- **Build → review → revise → visual check → commit.** Build the notebook; both reviewers pass over
+  it (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); apply fixes; **Rémy validates the
+  notebook visually**; then update docs (incl. the LLM index `llms.txt`), clear outputs, run guards,
+  commit the notebook, and merge `notebook → chapter`.
+- **Chapter done → merge `chapter → main`** with a `--no-ff` merge commit (preserve per-notebook
+  history; each chapter is a visible unit).
+- **Update `docs/STATE.md` at every phase transition**, and the docs at every notebook end.
+
+Never skip a gate, never bulk-build. One notebook at a time, validated by both reviewers and by
+Rémy, before it ships.
 
 ## Course content language
 
