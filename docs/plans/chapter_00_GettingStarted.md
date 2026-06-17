@@ -96,5 +96,5 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | 07 | `notebook/00_GettingStarted__07_confusion_matrix_precision_recall` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 08 | `notebook/00_GettingStarted__08_scores_thresholds_roc` | **done** (reviewers PASS/PASS; Rémy validated; merged; +viz plot_roc_curve/plot_score_threshold) |
 | 09 | `notebook/00_GettingStarted__09_overfitting_generalization_gap` | **done** (pedagogy PASS; ml-expert REVISE→fixed; Rémy validated; merged; +viz plot_train_test_curve) |
-| 10 | — | not started |
+| 10 | `notebook/00_GettingStarted__10_cross_validation` | **done** (single NB, Rémy chose over 10a/10b; pedagogy PASS; ml-expert REVISE→fixed stratification-exactness MAJOR + minors; Rémy validated; merged; +NB 01–09 ruff cleanup) |
 | 11 | — | not started |

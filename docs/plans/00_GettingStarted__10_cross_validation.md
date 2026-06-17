@@ -20,9 +20,10 @@ pipeline (`PolynomialFeatures(degree) → StandardScaler → LogisticRegression(
 ## Design (measured on the NB 09 setup — `uv run python`, not guessed)
 
 - **5-fold stratified CV picks degree 3** — the same honest sweet spot NB 09 found by eye on the test
-  curve, now chosen **without touching test**. CV accuracy: deg1 0.857, deg2 0.833, deg3 **0.905**
-  (peak), easing to ~0.87 by deg 8-9. (Small non-monotone wobble at deg 2, echoing NB 09's train kink
-  — read the trend, not each step.)
+  curve, now chosen **without touching test**. CV accuracy (the by-hand folds, as shipped): deg1 0.843,
+  deg2 0.829, deg3 **0.914** (peak), easing to ~0.86-0.88 by deg 6-9. (Small non-monotone wobble at
+  deg 2, echoing NB 09's train kink — read the trend, not each step. A pre-build run with scikit-learn's
+  own StratifiedKFold folds gave deg3 0.905 — same pick, a slightly different fold partition.)
 - **By-hand k-fold mean == `cross_val_score` exactly** (0.904762 both; the rigor check, true because we
   feed sklearn the same folds we built).
 - **A single validation split is unstable:** the val-picked degree across 6 seeds = **3, 3, 5, 6, 3, 9**

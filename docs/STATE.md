@@ -6,15 +6,18 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (9 of 11 notebooks done; **building notebook 10**) |
-| Current notebook | `10_cross_validation` (build in progress) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/00_GettingStarted__10_cross_validation` |
-| Active plan | `docs/plans/00_GettingStarted__10_cross_validation.md` (APPROVED 2026-06-17) |
-| Next concrete action | Build the ~26-28 cells of NB 10 per the approved plan — **single notebook** (Rémy chose single over a 10a/10b split). Continues NB 09's `make_moons(n_samples=300, noise=0.30, random_state=0)` + stratified split + `flexible_boundary(degree)`. Reuse `viz.plot_train_test_curve`; k-fold scheme diagram + inflation bar are in-notebook figures (colours from `ml_course.colors` only). **Measured anchors:** 5-fold stratified CV picks **degree 3**; by-hand k-fold == `cross_val_score` exactly (0.904762); single-val-split wobble across seeds = 3,3,5,6,3,9; final honest test acc (deg 3, refit on full train, scored once) = **0.9111**; tuning-on-test inflation over 100 splits = honest **0.9197** vs cheat **0.9338** (**+0.014**). After build: both reviewers (no BLOCK) → revise → Rémy visual check → clear outputs → guards (`check_no_hardcoded_hex`, `gen_llms_txt`, `pytest` still 13) → update `course_map.md` + `STATE.md` → commit `feat(00_getting_started): notebook 10 — validating honestly: cross-validation` → merge to chapter. |
+| Current chapter | `00_GettingStarted` (10 of 11 notebooks done) |
+| Current notebook | — (10 merged; next is 11) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 11 (the chapter's last): `git switch -c notebook/00_GettingStarted__11_preprocessing_leakage` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 11 row — **standardization** (and that NB 05's Euclidean nearest-centroid was already trusting raw scales → the scale-sensitivity payoff promised in NB 02/05); **encoding**; **fit-on-train-only**; the **`Pipeline`**; demonstrate **scale-before-split leakage** vs the correct estimate; build a `Pipeline` evaluated under CV (reuse NB 10's cross-validation). **Returns to penguins** (binary, 2 features). Prereqs 04, 05, 10. Rémy approves the plan; then build. After NB 11 ships: **chapter 00 close** — `git switch main && git merge --no-ff chapter/00_GettingStarted`. |
 
 ## Notes / blockers
 
+- **Resolved (lint debt):** Rémy chose option B — fix the notebooks. NB 01–09 made ruff-clean
+  (explicit `zip(strict=False)`, unused `pandas` imports removed, long lines wrapped; all seven
+  re-executed end-to-end), committed as `f84eec6`. `ruff check .` is now fully green across the repo.
 - NB 01 shipped: `ml_course.datasets.load_penguins()` + vendored `penguins.csv` + tests are in place
   and reusable by later notebooks. pandas-first convention recorded in CLAUDE.md/AGENTS.md.
 - Through-line reminder: Palmer penguins (binary, 2 features), nearest-centroid first classifier (NB
@@ -24,6 +27,14 @@
 
 ## Progress log (most recent first)
 
+- NB 10 (validating honestly: cross-validation) built — single notebook (Rémy chose over a 10a/10b
+  split), 30 cells; continues NB 09's make_moons + `flexible_boundary`. Arc: parameters vs
+  hyperparameters → the validation set → single-split instability (degree 3,3,5,6,3,9) → stratified
+  k-fold BY HAND → CV picks degree 3 → by-hand == `cross_val_score` (0.914286, exact) → one honest
+  test estimate (0.9111) → tuning-on-test inflation (+0.014 over 100 splits). No new `src/` (reused
+  `plot_train_test_curve`; k-fold scheme + inflation bar in-notebook). Reviewer-gated (pedagogy PASS;
+  ml-expert REVISE→ stratification-exactness MAJOR + minors fixed), Rémy validated, merged. Alongside:
+  NB 01–09 made ruff-clean (option B, `f84eec6`).
 - NB 09 (over-/under-fitting, the generalization gap) built — make_moons + polynomial-degree dial
   (linear engine as plumbing), complexity curve U, generalization gap (≠ variance), bias-variance,
   learning curve, optional variance fan; added `viz.plot_train_test_curve` + test. Reviewer-gated
