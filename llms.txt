@@ -9,3 +9,4 @@
 - [notebooks/00_GettingStarted/03_look_before_you_model.ipynb](notebooks/00_GettingStarted/03_look_before_you_model.ipynb) — 03 — Look before you model — *Module 00 · Getting Started — notebook 3 of 11*
 - [notebooks/00_GettingStarted/04_generalize_dont_memorize.ipynb](notebooks/00_GettingStarted/04_generalize_dont_memorize.ipynb) — 04 — Generalize, don't memorize — *Module 00 · Getting Started — notebook 4 of 11*
 - [notebooks/00_GettingStarted/05_first_classifier_nearest_centroid.ipynb](notebooks/00_GettingStarted/05_first_classifier_nearest_centroid.ipynb) — 05 — Your first classifier: nearest centroid — *Module 00 · Getting Started — notebook 5 of 11*
+- [notebooks/00_GettingStarted/06_accuracy_and_baseline.ipynb](notebooks/00_GettingStarted/06_accuracy_and_baseline.ipynb) — 06 — Is it any good? accuracy and a baseline — *Module 00 · Getting Started — notebook 6 of 11*

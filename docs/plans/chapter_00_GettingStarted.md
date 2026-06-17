@@ -92,7 +92,7 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | 03 | `notebook/00_GettingStarted__03_look_before_you_model` | **done** (reviewers PASS/PASS; Rémy validated; merged; +NB01 c06 forward-ref fix) |
 | 04 | `notebook/00_GettingStarted__04_generalize_dont_memorize` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 05 | `notebook/00_GettingStarted__05_first_classifier_nearest_centroid` | **done** (reviewers REVISE→fixed / PASS; Rémy validated; merged; +viz pandas-first extension) |
-| 06 | — | not started |
+| 06 | `notebook/00_GettingStarted__06_accuracy_and_baseline` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 07 | — | not started |
 | 08 | — | not started |
 | 09 | — | not started |

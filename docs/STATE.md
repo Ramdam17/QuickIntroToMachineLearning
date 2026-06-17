@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (5 of 11 notebooks done) |
-| Current notebook | `06_accuracy_and_baseline` |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__06_accuracy_and_baseline` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__06_accuracy_and_baseline.md` (pending, written on approval) |
-| Next concrete action | In plan mode: draft NB 06 — formalise **accuracy** (`accuracy_score`) on the nearest-centroid classifier (sklearn `NearestCentroid`, the NB 05 model); the **majority baseline** (`DummyClassifier(strategy="most_frequent")`, accuracy = majority share); accuracy's limit via a deliberately **imbalanced what-if** (all Adélie + ~5% Gentoo → Dummy ≈95% accuracy yet finds 0 minority = the accuracy paradox); **fix positive = Gentoo** for NB 07–08. No new src code (plain matplotlib bar). ExitPlanMode for approval; then build. |
+| Current chapter | `00_GettingStarted` (6 of 11 notebooks done) |
+| Current notebook | — (06 merged; next is 07) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 07: `git switch -c notebook/00_GettingStarted__07_confusion_matrix_precision_recall` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 07 row — the **confusion matrix** (TP/FP/FN/TN, positive = Gentoo), **precision / recall / F1** (by hand, then `sklearn.metrics`), and **asymmetric error costs** (when to favour precision vs recall). Reuse `viz.plot_confusion_matrix`. To get a non-trivial confusion matrix (the centroid is ~perfect on the clean test), likely use the imbalanced what-if from NB 06 (or a harder slice) so there are real FP/FN to read. Rémy approves; then build. |
 
 ## Notes / blockers
 
@@ -24,6 +24,9 @@
 
 ## Progress log (most recent first)
 
+- NB 06 (accuracy + baseline) built — accuracy formalised, DummyClassifier baseline, the accuracy
+  paradox on an imbalanced what-if (Dummy 95%/0-of-2 vs centroid 100%/2-of-2), positive = Gentoo.
+  Reviewer-gated (both PASS; 3 minor polish), Rémy validated, merged.
 - NB 05 (first classifier: nearest centroid) built — by-hand fit/predict class, decision boundary
   (extended `plot_decision_boundary` to be pandas-first + label-agnostic, with a test), honest loop
   (100% test vs 55% baseline, by-hand = sklearn). Reviewer-gated (ml-expert REVISE→fixed, pedagogy
