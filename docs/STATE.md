@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (8 of 11 notebooks done) |
-| Current notebook | — (08 merged; next is 09) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 09: `git switch -c notebook/00_GettingStarted__09_overfitting_generalization_gap` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 09 row — **over-/under-fitting** and the **generalization gap** (named precisely, ≠ variance), **bias–variance** as the conceptual explanation, the **learning curve**. **Complexity dial:** a polynomial-feature decision boundary whose degree is the knob (method-agnostic — NOT one of the 12; per chapter plan). Likely a new `viz` helper (`plot_complexity_curve` / `plot_learning_curve`) + tests. Rémy approves; then build. |
+| Current notebook | `09_overfitting_generalization_gap` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__09_overfitting_generalization_gap` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__09_overfitting_generalization_gap.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 09 — over-/under-fitting, the generalization gap (≠ variance), bias–variance (conceptual), the learning curve. Open forks to settle empirically + with Rémy: (a) dataset — penguins is too separable to overfit, so likely a harder synthetic 2-D set (e.g. `make_moons(noise=...)`); (b) the complexity dial / base learner — polynomial-degree on a flexible classifier, but the base must not pre-empt a later method (test nearest-centroid-on-poly vs a black-box linear engine framed honestly). Measure candidates before choosing. Likely a `viz` helper (`plot_complexity_curve` / `plot_learning_curve`) + tests. ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
