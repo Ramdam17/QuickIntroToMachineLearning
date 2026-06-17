@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (4 of 11 notebooks done) |
-| Current notebook | `05_first_classifier_nearest_centroid` |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__05_first_classifier_nearest_centroid` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__05_first_classifier_nearest_centroid.md` (pending, written on approval) |
-| Next concrete action | In plan mode: draft NB 05 — nearest-centroid by hand (centroids = train class means via `groupby`; assign by nearest Euclidean distance), wrapped as a `NearestCentroidByHand` class with fit/predict (the estimator API), compared to `sklearn.neighbors.NearestCentroid`; decision boundary via `viz.plot_decision_boundary` (**extend the helper to accept a DataFrame X + string labels, pandas-first**, with a test); the honest fit→predict→evaluate loop on the NB 04 split (fraction right vs baseline, accuracy formalised NB 06); inductive bias (bisector = hyperplane; equal isotropic spread; a failure case) + scale-sensitivity (→ NB 11); signed-score teaser (→ NB 08). ExitPlanMode for approval; then build. |
+| Current chapter | `00_GettingStarted` (5 of 11 notebooks done) |
+| Current notebook | — (05 merged; next is 06) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 06: `git switch -c notebook/00_GettingStarted__06_accuracy_and_baseline` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 06 row — **formalise accuracy** (the "fraction right" from NB 04/05) on the nearest-centroid classifier; the **majority baseline** (`DummyClassifier`); accuracy's first limit under **class imbalance** (build a deliberately imbalanced case, using the NB 03 imbalance picture); **fix the positive class = Gentoo** for NB 06–08. Rémy approves; then build. |
 
 ## Notes / blockers
 
@@ -24,6 +24,10 @@
 
 ## Progress log (most recent first)
 
+- NB 05 (first classifier: nearest centroid) built — by-hand fit/predict class, decision boundary
+  (extended `plot_decision_boundary` to be pandas-first + label-agnostic, with a test), honest loop
+  (100% test vs 55% baseline, by-hand = sklearn). Reviewer-gated (ml-expert REVISE→fixed, pedagogy
+  PASS), Rémy validated, merged.
 - NB 04 (generalize, don't memorize — stratified split + rote-memorizer demo) built, reviewer-gated
   (both PASS; convergent honesty MINOR fixed), Rémy validated, merged.
 - NB 03 (look before you model — EDA) built (+ `viz.plot_class_balance` / `plot_feature_histograms`

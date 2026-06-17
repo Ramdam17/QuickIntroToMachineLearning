@@ -57,3 +57,18 @@ def test_plot_feature_histograms_panels_and_split() -> None:
 
     fig_split = viz.plot_feature_histograms(df, ["f1"], by="label")
     assert len(fig_split.axes) == 1
+
+
+def test_plot_decision_boundary_dataframe_string_labels() -> None:
+    df = pd.DataFrame(
+        {
+            "bill_length_mm": [39.0, 49.0, 40.0, 48.0],
+            "flipper_length_mm": [190.0, 216.0, 188.0, 214.0],
+        }
+    )
+    y = pd.Series(["Adelie", "Gentoo", "Adelie", "Gentoo"])
+    clf = KNeighborsClassifier(n_neighbors=1).fit(df.to_numpy(), y.to_numpy())
+    fig = viz.plot_decision_boundary(clf, df, y, resolution=30)
+    ax = fig.axes[0]
+    assert ax.get_xlabel() == "bill_length_mm"
+    assert ax.get_ylabel() == "flipper_length_mm"

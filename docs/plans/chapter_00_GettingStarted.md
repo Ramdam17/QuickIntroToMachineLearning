@@ -91,7 +91,7 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | 02 | `notebook/00_GettingStarted__02_features_and_feature_space` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 03 | `notebook/00_GettingStarted__03_look_before_you_model` | **done** (reviewers PASS/PASS; Rémy validated; merged; +NB01 c06 forward-ref fix) |
 | 04 | `notebook/00_GettingStarted__04_generalize_dont_memorize` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
-| 05 | — | not started |
+| 05 | `notebook/00_GettingStarted__05_first_classifier_nearest_centroid` | **done** (reviewers REVISE→fixed / PASS; Rémy validated; merged; +viz pandas-first extension) |
 | 06 | — | not started |
 | 07 | — | not started |
 | 08 | — | not started |

@@ -58,8 +58,8 @@ def use_course_style() -> None:
 
 def plot_decision_boundary(
     model,
-    X: np.ndarray,
-    y: np.ndarray,
+    X,
+    y,
     *,
     resolution: int = 300,
     ax: plt.Axes | None = None,
@@ -74,10 +74,10 @@ def plot_decision_boundary(
     ----------
     model : object
         A fitted classifier exposing ``predict(X) -> labels``, with ``X`` of shape (n, 2).
-    X : numpy.ndarray, shape (n_samples, 2)
-        The two features to plot, in plotting units.
-    y : numpy.ndarray, shape (n_samples,)
-        Integer class labels ``0..n_classes-1`` used to colour the points.
+    X : pandas.DataFrame or numpy.ndarray, shape (n_samples, 2)
+        The two features to plot. A DataFrame's column names become the axis labels.
+    y : array-like, shape (n_samples,)
+        Class labels, integer or string. Region/point colours follow ``sorted(unique(y))``.
     resolution : int, default 300
         Grid points per axis. Higher is smoother and slower.
     ax : matplotlib.axes.Axes, optional
@@ -102,14 +102,16 @@ def plot_decision_boundary(
     >>> clf = KNeighborsClassifier(n_neighbors=1).fit(X, y)
     >>> _ = plot_decision_boundary(clf, X, y)
     """
-    X = np.asarray(X, dtype=float)
-    y = np.asarray(y)
-    if X.ndim != 2 or X.shape[1] != 2:
-        raise ValueError(f"X must have shape (n_samples, 2); got {X.shape}.")
+    if hasattr(X, "columns"):  # a DataFrame: take axis labels from the columns
+        feature_names = [str(c) for c in X.columns[:2]]
+        X_arr = X.to_numpy(dtype=float)
+    else:
+        X_arr = np.asarray(X, dtype=float)
+        feature_names = ["x1", "x2"]
+    if X_arr.ndim != 2 or X_arr.shape[1] != 2:
+        raise ValueError(f"X must have shape (n_samples, 2); got {X_arr.shape}.")
 
-    n_classes = int(np.max(y)) + 1
-    class_colors = CLASS_CYCLE[:n_classes]
-    region_cmap = ListedColormap(class_colors)
+    y_arr = np.asarray(y)
 
     if ax is None:
         fig, ax = plt.subplots(figsize=(6.5, 5.5))
@@ -117,31 +119,41 @@ def plot_decision_boundary(
         fig = ax.figure
 
     pad = 0.5
-    x_min, x_max = X[:, 0].min() - pad, X[:, 0].max() + pad
-    y_min, y_max = X[:, 1].min() - pad, X[:, 1].max() + pad
+    x_min, x_max = X_arr[:, 0].min() - pad, X_arr[:, 0].max() + pad
+    y_min, y_max = X_arr[:, 1].min() - pad, X_arr[:, 1].max() + pad
     xx, yy = np.meshgrid(
         np.linspace(x_min, x_max, resolution),
         np.linspace(y_min, y_max, resolution),
     )
     grid = np.c_[xx.ravel(), yy.ravel()]
-    zz = np.asarray(model.predict(grid)).reshape(xx.shape)
+    preds = np.asarray(model.predict(grid))
 
+    # Map labels (int OR string) to integer codes, covering both the data and the predictions.
+    classes = sorted(set(y_arr.tolist()) | set(preds.tolist()))
+    code = {label: i for i, label in enumerate(classes)}
+    n_classes = len(classes)
+    class_colors = [CLASS_CYCLE[i % len(CLASS_CYCLE)] for i in range(n_classes)]
+    region_cmap = ListedColormap(class_colors)
+
+    zz = np.array([code[p] for p in preds.tolist()]).reshape(xx.shape)
     ax.contourf(xx, yy, zz, alpha=0.25, levels=np.arange(n_classes + 1) - 0.5, cmap=region_cmap)
-    for cls in range(n_classes):
-        mask = y == cls
+    for label in classes:
+        mask = y_arr == label
+        if not mask.any():
+            continue
         ax.scatter(
-            X[mask, 0],
-            X[mask, 1],
-            color=class_colors[cls],
+            X_arr[mask, 0],
+            X_arr[mask, 1],
+            color=class_colors[code[label]],
             edgecolor=COLORS["text"],
             linewidth=0.6,
             s=45,
-            label=f"class {cls}",
+            label=str(label),
         )
     ax.set_xlim(x_min, x_max)
     ax.set_ylim(y_min, y_max)
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
+    ax.set_xlabel(feature_names[0])
+    ax.set_ylabel(feature_names[1])
     ax.legend(loc="best")
     return fig
 
