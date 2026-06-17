@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (3 of 11 notebooks done) |
-| Current notebook | — (03 merged; next is 04) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 04: `git switch -c notebook/00_GettingStarted__04_generalize_dont_memorize` off the chapter branch; phase `notebook-plan`; enter plan mode; draft the cell-by-cell plan from the chapter plan's NB 04 row (**stratified** train/test split; the cardinal sin of scoring on training data; i.i.d. as a *chosen* assumption; leakage intro; preview fit→predict→evaluate). Likely uses `sklearn.model_selection.train_test_split(stratify=...)`. Rémy approves; then build. |
+| Current notebook | `04_generalize_dont_memorize` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__04_generalize_dont_memorize` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__04_generalize_dont_memorize.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 04 from the chapter plan's NB 04 row — **stratified** `train_test_split`; the cardinal sin (scoring on training data); i.i.d. as a *chosen* assumption (penguins span islands/years); leakage intro; preview fit→predict→evaluate. Open fork to settle with Rémy: demonstrate memorize≠generalize via a deliberately silly "rote memorizer" (100% train / chance test), or stay model-free (split mechanics + analogy, deferring fit/predict to NB 05). Keep "accuracy" informal here (fraction correct), formalised in NB 06. ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
