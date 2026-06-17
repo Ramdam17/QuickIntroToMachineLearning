@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (2 of 11 notebooks done) |
-| Current notebook | — (02 merged; next is 03) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 03: `git switch -c notebook/00_GettingStarted__03_look_before_you_model` off the chapter branch; phase `notebook-plan`; enter plan mode; draft the cell-by-cell plan from the chapter plan's NB 03 row (EDA: per-feature distributions/histograms, class balance, feature ranges/scales, re-read the scatter for overlap — pre-establishing the imbalance picture NB 06 needs and the scale picture NB 11 needs). Likely a small new `viz` helper (`plot_feature_histograms` / `plot_class_balance`) built just-in-time. Rémy approves; then build. |
+| Current notebook | `03_look_before_you_model` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__03_look_before_you_model` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__03_look_before_you_model.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft the cell-by-cell plan for NB 03 (EDA) from the chapter plan's NB 03 row — class balance, per-feature distributions (histograms split by class), feature ranges/scales (`describe`), re-read the scatter; pre-establish imbalance (→ NB 06) and scale (→ NB 11). Plan the just-in-time `viz` helpers `plot_class_balance` + `plot_feature_histograms` (ax/Figure, colours from `ml_course.colors`) + smoke tests. ExitPlanMode for Rémy's approval; then write + commit the plan and build. |
 
 ## Notes / blockers
 
