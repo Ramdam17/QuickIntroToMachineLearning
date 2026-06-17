@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (9 of 11 notebooks done) |
-| Current notebook | — (09 merged; next is 10) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 10: `git switch -c notebook/00_GettingStarted__10_cross_validation` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 10 row — **hyperparameters vs parameters**; **train/validation/test**; **stratified k-fold cross-validation** (by hand); **model selection** (pick NB 09's polynomial degree by CV — continues the make_moons + `flexible_boundary(degree)` setup, closing NB 09's "we picked the degree on the test set" loose end); **tuning-on-test inflation**. May split into 10a/10b if it exceeds ~20 cells (per chapter plan). Likely reuses `viz.plot_train_test_curve` (CV score vs degree); possibly a small k-fold diagram. Rémy approves the plan; then build. |
+| Current chapter | `00_GettingStarted` (9 of 11 notebooks done; **building notebook 10**) |
+| Current notebook | `10_cross_validation` (build in progress) |
+| Phase | `notebook-build` |
+| Active branch | `notebook/00_GettingStarted__10_cross_validation` |
+| Active plan | `docs/plans/00_GettingStarted__10_cross_validation.md` (APPROVED 2026-06-17) |
+| Next concrete action | Build the ~26-28 cells of NB 10 per the approved plan — **single notebook** (Rémy chose single over a 10a/10b split). Continues NB 09's `make_moons(n_samples=300, noise=0.30, random_state=0)` + stratified split + `flexible_boundary(degree)`. Reuse `viz.plot_train_test_curve`; k-fold scheme diagram + inflation bar are in-notebook figures (colours from `ml_course.colors` only). **Measured anchors:** 5-fold stratified CV picks **degree 3**; by-hand k-fold == `cross_val_score` exactly (0.904762); single-val-split wobble across seeds = 3,3,5,6,3,9; final honest test acc (deg 3, refit on full train, scored once) = **0.9111**; tuning-on-test inflation over 100 splits = honest **0.9197** vs cheat **0.9338** (**+0.014**). After build: both reviewers (no BLOCK) → revise → Rémy visual check → clear outputs → guards (`check_no_hardcoded_hex`, `gen_llms_txt`, `pytest` still 13) → update `course_map.md` + `STATE.md` → commit `feat(00_getting_started): notebook 10 — validating honestly: cross-validation` → merge to chapter. |
 
 ## Notes / blockers
 
