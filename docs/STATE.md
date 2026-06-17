@@ -6,19 +6,21 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | — (none started) |
+| Current chapter | `00_GettingStarted` |
 | Current notebook | — |
-| Phase | `idle` |
-| Active branch | `main` |
-| Active plan | — |
-| Next concrete action | Open the first chapter: `00_GettingStarted`. Create branch `chapter/00_GettingStarted`, enter plan mode, draft `docs/plans/chapter_00_GettingStarted.md`. |
+| Phase | `chapter-plan` |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (pending — written on approval) |
+| Next concrete action | In plan mode: resolve the chapter-00 forks (notebook count/shape; the "first classifier"; the dataset), draft the chapter plan, run the reviewer gate (both reviewers), ExitPlanMode for Rémy's approval, then write + commit the plan and set phase `chapter-plan-approved`. |
 
 ## Notes / blockers
 
-- Scaffold committed on `main` (`chore(scaffold)`). Build workflow encoded; nothing in progress yet.
+- `00_GettingStarted` is the foundational module; the per-method arc (NB 1–3 / NB 4 params / NB 5
+  case) does not map cleanly — it has its own shape (to be settled in the plan).
 - Confirmed: notebooks all-English; audience = young developers, maths re-established not presupposed;
   git history = preserve per-notebook, mark chapters (`--no-ff` chapter → main).
 
 ## Progress log (most recent first)
 
-- Course scaffold + build workflow set up; awaiting kickoff of chapter `00_GettingStarted`.
+- Opened chapter `00_GettingStarted` (branch created); entering chapter planning.
+- Course scaffold + build workflow set up on `main` (3 infra commits).
