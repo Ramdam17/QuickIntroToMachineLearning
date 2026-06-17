@@ -15,6 +15,7 @@ from __future__ import annotations
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.colors import ListedColormap
 
 from ml_course.colors import CLASS_CYCLE, CMAP_PROBA, COLORS
@@ -204,4 +205,113 @@ def plot_confusion_matrix(
     ax.set_xlabel("predicted")
     ax.set_ylabel("true")
     ax.grid(False)
+    return fig
+
+
+def plot_class_balance(y, ax: plt.Axes | None = None) -> plt.Figure:
+    """Bar chart of how many examples fall in each class.
+
+    Parameters
+    ----------
+    y : array-like or pandas.Series, shape (n_samples,)
+        Class labels (any hashable type).
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure is created when omitted.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the bar chart.
+
+    When to use
+    -----------
+    A first look at class balance before trusting accuracy: under a strong imbalance a constant
+    "predict the majority" classifier can score high (see the metrics notebooks).
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> _ = plot_class_balance(pd.Series(["a", "a", "b"]))
+    """
+    counts = pd.Series(y).value_counts().sort_index()
+    classes = [str(c) for c in counts.index]
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(5, 4))
+    else:
+        fig = ax.figure
+    bar_colors = [CLASS_CYCLE[i % len(CLASS_CYCLE)] for i in range(len(classes))]
+    ax.bar(classes, counts.to_numpy(), color=bar_colors, edgecolor=COLORS["text"], linewidth=0.6)
+    for i, value in enumerate(counts.to_numpy()):
+        ax.text(i, value, str(int(value)), ha="center", va="bottom", color=COLORS["text"])
+    ax.set_xlabel("class")
+    ax.set_ylabel("count")
+    ax.grid(False)
+    return fig
+
+
+def plot_feature_histograms(
+    df: pd.DataFrame,
+    features: list[str],
+    by: str | None = None,
+    *,
+    bins: int = 20,
+) -> plt.Figure:
+    """Plot one histogram per feature, optionally split by a label column.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The data; must contain every name in ``features`` (and ``by`` when given).
+    features : list of str
+        Numeric feature columns to histogram, one panel each.
+    by : str, optional
+        A categorical column to split on: each class is overlaid as a translucent histogram with
+        its own colour. When omitted, a single histogram per feature is drawn.
+    bins : int, default 20
+        Number of histogram bins.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        A figure with one panel per feature (it owns its panels — no ``ax`` argument).
+
+    When to use
+    -----------
+    A quick read of each feature's shape and spread, and (with ``by``) of how well a single feature
+    separates the classes. Bars show raw counts (not densities), so under a strong class imbalance
+    the majority class looks taller — read the overlap of the humps, not their absolute height.
+
+    Examples
+    --------
+    >>> from ml_course import datasets
+    >>> df = datasets.load_penguins()
+    >>> _ = plot_feature_histograms(df, ["bill_length_mm", "flipper_length_mm"], by="species")
+    """
+    n = len(features)
+    fig, axes = plt.subplots(1, n, figsize=(5.5 * n, 4.0))
+    axes = np.atleast_1d(axes)
+    for ax, feature in zip(axes, features, strict=True):
+        if by is None:
+            ax.hist(
+                df[feature].to_numpy(),
+                bins=bins,
+                color=CLASS_CYCLE[0],
+                edgecolor=COLORS["text"],
+                linewidth=0.5,
+            )
+        else:
+            for i, group in enumerate(sorted(df[by].unique())):
+                values = df.loc[df[by] == group, feature].to_numpy()
+                ax.hist(
+                    values,
+                    bins=bins,
+                    color=CLASS_CYCLE[i % len(CLASS_CYCLE)],
+                    alpha=0.6,
+                    label=str(group),
+                    edgecolor="none",
+                )
+            ax.legend(title=by)
+        ax.set_xlabel(feature)
+        ax.set_ylabel("count")
+    fig.tight_layout()
     return fig

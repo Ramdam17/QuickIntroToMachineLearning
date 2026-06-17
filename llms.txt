@@ -6,3 +6,4 @@
 ## 00_GettingStarted
 - [notebooks/00_GettingStarted/01_what_is_ml.ipynb](notebooks/00_GettingStarted/01_what_is_ml.ipynb) — 01 — What is machine learning? — *Module 00 · Getting Started — notebook 1 of 11*
 - [notebooks/00_GettingStarted/02_features_and_feature_space.ipynb](notebooks/00_GettingStarted/02_features_and_feature_space.ipynb) — 02 — Features, labels, and the feature space — *Module 00 · Getting Started — notebook 2 of 11*
+- [notebooks/00_GettingStarted/03_look_before_you_model.ipynb](notebooks/00_GettingStarted/03_look_before_you_model.ipynb) — 03 — Look before you model — *Module 00 · Getting Started — notebook 3 of 11*

@@ -7,6 +7,7 @@ import matplotlib
 matplotlib.use("Agg")  # headless backend for CI / tests
 
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
 from ml_course import colors, viz
@@ -35,3 +36,24 @@ def test_plot_confusion_matrix_returns_figure() -> None:
     cm = np.array([[5, 1], [0, 4]])
     fig = viz.plot_confusion_matrix(cm, ["negative", "positive"])
     assert fig is not None
+
+
+def test_plot_class_balance_returns_figure() -> None:
+    y = pd.Series(["a", "a", "b", "a", "b"])
+    fig = viz.plot_class_balance(y)
+    assert fig is not None
+
+
+def test_plot_feature_histograms_panels_and_split() -> None:
+    df = pd.DataFrame(
+        {
+            "f1": [1.0, 2.0, 3.0, 4.0],
+            "f2": [10.0, 20.0, 30.0, 40.0],
+            "label": ["a", "a", "b", "b"],
+        }
+    )
+    fig_plain = viz.plot_feature_histograms(df, ["f1", "f2"])
+    assert len(fig_plain.axes) == 2
+
+    fig_split = viz.plot_feature_histograms(df, ["f1"], by="label")
+    assert len(fig_split.axes) == 1
