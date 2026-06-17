@@ -327,3 +327,144 @@ def plot_feature_histograms(
         ax.set_ylabel("count")
     fig.tight_layout()
     return fig
+
+
+def plot_roc_curve(
+    y_true,
+    scores,
+    *,
+    ax: plt.Axes | None = None,
+    label: str | None = None,
+    color: str | None = None,
+) -> plt.Figure:
+    """Plot the ROC curve (true-positive rate vs false-positive rate) of a scored binary classifier.
+
+    Sweeps every decision threshold on ``scores`` and traces the true-positive rate (recall) against
+    the false-positive rate; the area under the curve (AUC) summarizes ranking quality in a single
+    number. Pass an existing ``ax`` (and distinct ``color``) to overlay several models.
+
+    Parameters
+    ----------
+    y_true : array-like, shape (n_samples,)
+        Binary ground truth, positive class encoded as ``1`` (or ``True``).
+    scores : array-like, shape (n_samples,)
+        A real-valued score per sample; higher means more likely positive.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure (with the chance diagonal) is created when omitted.
+    label : str, optional
+        Legend label for this curve; its AUC is appended automatically.
+    color : str, optional
+        Curve colour; defaults to the charter ``model`` colour.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the ROC curve.
+
+    When to use
+    -----------
+    To judge a classifier across all thresholds at once, independent of where the cutoff is set.
+    When positives are rare, read a precision-recall curve alongside it.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> y = np.array([0, 0, 1, 1])
+    >>> s = np.array([0.1, 0.4, 0.35, 0.8])
+    >>> _ = plot_roc_curve(y, s, label="demo")
+    """
+    from sklearn.metrics import roc_auc_score, roc_curve
+
+    y_true = np.asarray(y_true).astype(int)
+    scores = np.asarray(scores, dtype=float)
+    fpr, tpr, _ = roc_curve(y_true, scores)
+    auc = roc_auc_score(y_true, scores)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 5.5))
+        ax.plot([0, 1], [0, 1], color=COLORS["muted"], linestyle="--", linewidth=1, label="chance")
+    else:
+        fig = ax.figure
+
+    curve_label = f"{label} (AUC = {auc:.3f})" if label else f"AUC = {auc:.3f}"
+    ax.plot(fpr, tpr, color=color or COLORS["model"], linewidth=2, label=curve_label)
+    ax.set_xlabel("false-positive rate")
+    ax.set_ylabel("true-positive rate (recall)")
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.02)
+    ax.legend(loc="lower right")
+    return fig
+
+
+def plot_score_threshold(
+    scores,
+    y_true,
+    *,
+    threshold: float = 0.0,
+    class_names: tuple[str, str] = ("negative", "positive"),
+    ax: plt.Axes | None = None,
+) -> plt.Figure:
+    """Plot per-class score histograms with the decision threshold marked.
+
+    Shows how the two classes' scores overlap and where a chosen threshold cuts between them — the
+    picture behind precision, recall, and the ROC curve.
+
+    Parameters
+    ----------
+    scores : array-like, shape (n_samples,)
+        Real-valued score per sample; higher means more likely positive.
+    y_true : array-like, shape (n_samples,)
+        Binary ground truth, positive class encoded as ``1`` (or ``True``).
+    threshold : float, default 0.0
+        The decision cutoff: samples scoring above it are called positive.
+    class_names : tuple of (str, str), default ("negative", "positive")
+        Labels for the (0, 1) classes, used in the legend.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure is created when omitted.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the histograms.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> _ = plot_score_threshold(np.array([-1.0, 0.2, 0.6]), np.array([0, 1, 1]))
+    """
+    scores = np.asarray(scores, dtype=float)
+    y_true = np.asarray(y_true).astype(int)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 4.5))
+    else:
+        fig = ax.figure
+
+    bins = np.linspace(scores.min(), scores.max(), 20)
+    ax.hist(
+        scores[y_true == 0],
+        bins=bins,
+        color=CLASS_CYCLE[0],
+        alpha=0.6,
+        label=class_names[0],
+        edgecolor="none",
+    )
+    ax.hist(
+        scores[y_true == 1],
+        bins=bins,
+        color=CLASS_CYCLE[1],
+        alpha=0.6,
+        label=class_names[1],
+        edgecolor="none",
+    )
+    ax.axvline(
+        threshold,
+        color=COLORS["text"],
+        linestyle="--",
+        linewidth=1.2,
+        label=f"threshold = {threshold:g}",
+    )
+    ax.set_xlabel("score")
+    ax.set_ylabel("count")
+    ax.legend()
+    return fig

@@ -72,3 +72,17 @@ def test_plot_decision_boundary_dataframe_string_labels() -> None:
     ax = fig.axes[0]
     assert ax.get_xlabel() == "bill_length_mm"
     assert ax.get_ylabel() == "flipper_length_mm"
+
+
+def test_plot_roc_curve_returns_figure() -> None:
+    y = np.array([0, 0, 1, 1])
+    scores = np.array([0.1, 0.4, 0.35, 0.8])
+    fig = viz.plot_roc_curve(y, scores, label="demo")
+    assert fig is not None
+
+
+def test_plot_score_threshold_returns_figure() -> None:
+    scores = np.array([-1.0, -0.2, 0.3, 0.9])
+    y = np.array([0, 0, 1, 1])
+    fig = viz.plot_score_threshold(scores, y, threshold=0.0)
+    assert fig is not None

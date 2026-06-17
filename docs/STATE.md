@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (7 of 11 notebooks done) |
-| Current notebook | `08_scores_thresholds_roc` |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__08_scores_thresholds_roc` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__08_scores_thresholds_roc.md` (pending, written on approval) |
-| Next concrete action | In plan mode: draft NB 08 — a classifier emits a **score** (the affine signed squared-distance from centroids, positive = Gentoo: `s = d(x,μ_Adelie)² − d(x,μ_Gentoo)²`); sliding the **threshold** trades precision↔recall; **ROC** + **AUC** + **PR curve**; threshold-swept vs threshold-fixed. Design: use the **bill-only** model (NB 07) as primary so the ROC has a real shape/trade-off (the 2-feature model is ~perfect, AUC≈1 — show briefly as a contrast). New `viz` helpers `plot_roc_curve` + `plot_score_threshold` (+ tests). Validate by-hand AUC vs `roc_auc_score`. ExitPlanMode for approval; then build. |
+| Current chapter | `00_GettingStarted` (8 of 11 notebooks done) |
+| Current notebook | — (08 merged; next is 09) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 09: `git switch -c notebook/00_GettingStarted__09_overfitting_generalization_gap` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 09 row — **over-/under-fitting** and the **generalization gap** (named precisely, ≠ variance), **bias–variance** as the conceptual explanation, the **learning curve**. **Complexity dial:** a polynomial-feature decision boundary whose degree is the knob (method-agnostic — NOT one of the 12; per chapter plan). Likely a new `viz` helper (`plot_complexity_curve` / `plot_learning_curve`) + tests. Rémy approves; then build. |
 
 ## Notes / blockers
 
@@ -24,6 +24,10 @@
 
 ## Progress log (most recent first)
 
+- NB 08 (scores, thresholds, ROC & AUC) built — signed-distance score (`s>0` = centroid), threshold
+  trade-off, ROC/AUC 0.989, PR curve, two-feature contrast AUC 1.0; added `viz.plot_roc_curve` +
+  `plot_score_threshold` + tests. Reviewer-gated (both PASS; 2 minor polish), Rémy validated, merged.
+  Closes the evaluation trilogy (06-08).
 - NB 07 (confusion matrix, precision & recall) built — bill-only weaker model for real errors, cm
   [[37,1],[2,29]], precision 0.967 / recall 0.935 / F1 0.951, asymmetric costs. Reviewer-gated (both
   PASS; 3 minor polish), Rémy validated, merged.

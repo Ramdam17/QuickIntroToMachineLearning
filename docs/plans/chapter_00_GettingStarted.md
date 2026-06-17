@@ -94,7 +94,7 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | 05 | `notebook/00_GettingStarted__05_first_classifier_nearest_centroid` | **done** (reviewers REVISE→fixed / PASS; Rémy validated; merged; +viz pandas-first extension) |
 | 06 | `notebook/00_GettingStarted__06_accuracy_and_baseline` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
 | 07 | `notebook/00_GettingStarted__07_confusion_matrix_precision_recall` | **done** (reviewers PASS/PASS; Rémy validated; merged) |
-| 08 | — | not started |
+| 08 | `notebook/00_GettingStarted__08_scores_thresholds_roc` | **done** (reviewers PASS/PASS; Rémy validated; merged; +viz plot_roc_curve/plot_score_threshold) |
 | 09 | — | not started |
 | 10 | — | not started |
 | 11 | — | not started |
