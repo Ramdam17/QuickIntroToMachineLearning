@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# uv
+.uv/
+
+# Tooling caches
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Notebooks are committed OUTPUT-FREE. This is a safety net, not a substitute
+# for clearing outputs before commit (see CLAUDE.md).
+# (Outputs live inside the .ipynb JSON; clear them, do not gitignore the notebooks.)
+
+# Data is never committed — keep it local.
+data/
+*.csv
+*.parquet
+*.npz
+
+# OS / editor
+.DS_Store
+.env

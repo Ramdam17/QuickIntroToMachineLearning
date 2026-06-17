@@ -1,0 +1,50 @@
+[project]
+name = "ml-course"
+version = "0.1.0"
+description = "A hands-on, learn-by-doing course on classical machine learning methods."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "scikit-learn>=1.4",
+    "pandas>=2.1",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "jupyterlab>=4.0",
+]
+
+[project.optional-dependencies]
+# Gradient-boosting libraries get their own modules (09 XGBoost, 10 LightGBM).
+boosting = [
+    "xgboost>=2.0",
+    "lightgbm>=4.1",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "black>=24.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ml_course"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Pedagogical notebooks keep imports near first use; src/ stays strict.
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
