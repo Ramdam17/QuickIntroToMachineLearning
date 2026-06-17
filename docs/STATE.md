@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (1 of 11 notebooks done) |
-| Current notebook | — (01 merged; next is 02) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 02: `git switch -c notebook/00_GettingStarted__02_features_labels_feature_space` off the chapter branch; set phase `notebook-plan`; enter plan mode; draft the cell-by-cell plan from the chapter plan's NB 02 row (X/y; feature types; row = example; **the mean of a point cloud and Euclidean distance between two points** — the centroid primitives); Rémy approves; then build. |
+| Current notebook | `02_features_and_feature_space` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__02_features_and_feature_space` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__02_features_and_feature_space.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft the cell-by-cell plan for NB 02 from the chapter plan's NB 02 row — `X` (n×d) / `y`; feature types; row = example; the feature space as points; **the mean of a point cloud and Euclidean distance between two points** (the primitives NB 05's nearest-centroid needs), without yet building any classifier. ExitPlanMode for Rémy's approval; then write + commit the notebook plan and build. Reuse `ml_course.datasets` (penguins_xy); pandas-first (mean via `groupby`), numpy for distances. |
 
 ## Notes / blockers
 
