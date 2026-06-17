@@ -97,4 +97,4 @@ at its own notebook-planning if it would exceed ~20 cells — decided then, not 
 | 08 | `notebook/00_GettingStarted__08_scores_thresholds_roc` | **done** (reviewers PASS/PASS; Rémy validated; merged; +viz plot_roc_curve/plot_score_threshold) |
 | 09 | `notebook/00_GettingStarted__09_overfitting_generalization_gap` | **done** (pedagogy PASS; ml-expert REVISE→fixed; Rémy validated; merged; +viz plot_train_test_curve) |
 | 10 | `notebook/00_GettingStarted__10_cross_validation` | **done** (single NB, Rémy chose over 10a/10b; pedagogy PASS; ml-expert REVISE→fixed stratification-exactness MAJOR + minors; Rémy validated; merged; +NB 01–09 ruff cleanup) |
-| 11 | — | not started |
+| 11 | `notebook/00_GettingStarted__11_preprocessing_leakage` | **done** (standardization payoff + one-hot + ColumnTransformer/Pipeline + ESL §7.10.2 leakage; pedagogy PASS, ml-expert REVISE→fixed the boundary-rotation angle 52.6°; Rémy validated; merged) |

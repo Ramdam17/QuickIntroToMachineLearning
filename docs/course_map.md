@@ -32,7 +32,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 8. Scores, thresholds, ROC & AUC — the signed-distance score, sliding the threshold, ROC/PR, AUC.
 9. Over-/under-fitting and the generalization gap — complexity, the train/test U, bias–variance, the learning curve.
 10. Validating honestly: cross-validation — hyperparameters vs parameters, stratified k-fold, model selection.
-11. Preprocessing & leakage — scaling, encoding, fit-on-train-only, the `Pipeline`.
+11. Preprocessing & leakage — scaling, encoding, fit-on-train-only, the `Pipeline`; data leakage (the wrong way to cross-validate).
 
 ## 01_KNN — k-Nearest Neighbours
 1. Prediction = vote of the neighbourhood; k = size of the neighbourhood (by hand, 2D).

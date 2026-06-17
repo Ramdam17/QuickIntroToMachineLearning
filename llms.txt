@@ -14,3 +14,4 @@
 - [notebooks/00_GettingStarted/08_scores_thresholds_roc.ipynb](notebooks/00_GettingStarted/08_scores_thresholds_roc.ipynb) — 08 — Scores, thresholds, ROC & AUC — *Module 00 · Getting Started — notebook 8 of 11*
 - [notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb](notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb) — 09 — Over-/under-fitting and the generalization gap — *Module 00 · Getting Started — notebook 9 of 11*
 - [notebooks/00_GettingStarted/10_cross_validation.ipynb](notebooks/00_GettingStarted/10_cross_validation.ipynb) — 10 — Validating honestly: cross-validation — *Module 00 · Getting Started — notebook 10 of 11*
+- [notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb](notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb) — 11 — Preprocessing & leakage — *Module 00 · Getting Started — notebook 11 of 11*

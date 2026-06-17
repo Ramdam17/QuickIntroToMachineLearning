@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (10 of 11 done; data layer = fetch-and-cache; NB 01 fetch step added) |
-| Current notebook | `11_preprocessing_leakage` (planning) |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__11_preprocessing_leakage` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED); NB 11 plan pending |
-| Next concrete action | Branch open; **in plan mode for NB 11** (the chapter's last). Settle the leakage fork with Rémy, then draft cell-by-cell. Content: **standardization** paying off NB 05's scale-sensitivity debt (measured: nearest-centroid boundary rotates **25.5°** raw→standardized; CV **0.9927 vs 0.989**); **one-hot encoding** of a real categorical now available via `load_penguins_full()` — `sex` (MALE/FEMALE, 11 missing) and/or `island` (Biscoe/Dream/Torgersen); **fit-on-train-only** + the **`Pipeline`**, evaluated under CV (reuse NB 10). **Leakage demo STILL UNDECIDED — settle with Rémy first:** ESL §7.10.2 synthetic (noise features + selection-before-CV, the only way to *show* leakage bite) vs honest-principle-only (penguins can't show it dramatically). Returns to penguins; prereqs 04, 05, 10. Rémy approves the plan; then build. After NB 11 ships: **chapter 00 close** — `git switch main && git merge --no-ff chapter/00_GettingStarted`. |
+| Current chapter | `00_GettingStarted` — **COMPLETE (11 of 11)**, merged to `main` |
+| Current notebook | — (chapter 00 done) |
+| Phase | `idle` (between chapters) |
+| Active branch | `main` |
+| Active plan | — (next: chapter `01_KNN` plan) |
+| Next concrete action | **Open chapter 01 — k-Nearest Neighbours.** `git switch main && git switch -c chapter/01_KNN`; phase `chapter-plan`; enter plan mode; plan the chapter from `docs/course_map.md` (01_KNN: 5 notebooks — prediction = neighbourhood vote & k; distance + the scale trap; the k dial / under-vs-over-fitting; the estimator & its parameters; demanding case + the curse of dimensionality). Reviewer-gate the chapter plan (both reviewers, no BLOCK); Rémy validates before any notebook is built. Reuse the fetch-and-cache penguins data layer; KNN is distance-based, so the standardization from NB 11 is load-bearing here. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 00 (Getting Started) COMPLETE — 11 notebooks, merged to `main` (`--no-ff`).** The on-ramp:
+  what ML is → features/feature space → EDA → split & leakage → nearest centroid → accuracy/baseline →
+  confusion/precision-recall → scores/ROC/AUC → over/under-fitting → cross-validation → preprocessing &
+  leakage. Plus a fetch-and-cache data layer and a "get your data" step in NB 01. Two-reviewer gate +
+  Rémy's visual validation throughout.
+- NB 11 (preprocessing & leakage) built — standardization paying off NB 05's scale-sensitivity (NC
+  boundary rotates ~52.6° in mm coords; CV 0.989→0.9927), one-hot encoding of `island` (by hand +
+  `OneHotEncoder` fit-on-train), `ColumnTransformer`+`Pipeline` under CV, and the ESL §7.10.2 leakage
+  demo (1000 pure-noise features: select-on-all 0.85 vs select-in-fold 0.57). Reviewer-gated (pedagogy
+  PASS; ml-expert REVISE→fixed the boundary-rotation angle — my coordinate-space error), Rémy validated.
 - NB 01 "Getting the data" step added (Phase 2 of the data-layer change): a fetch+cache section
   (intro md + `load_penguins_full()` with visible `logging` + a "Read the output") inserted after
   "Learning from labelled examples"; teaches fetching/caching as a first ML step, then narrows to the
