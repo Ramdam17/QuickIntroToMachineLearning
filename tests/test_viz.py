@@ -7,6 +7,7 @@ import matplotlib
 matplotlib.use("Agg")  # headless backend for CI / tests
 
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 
 from ml_course import colors, viz
@@ -34,4 +35,59 @@ def test_plot_decision_boundary_returns_figure() -> None:
 def test_plot_confusion_matrix_returns_figure() -> None:
     cm = np.array([[5, 1], [0, 4]])
     fig = viz.plot_confusion_matrix(cm, ["negative", "positive"])
+    assert fig is not None
+
+
+def test_plot_class_balance_returns_figure() -> None:
+    y = pd.Series(["a", "a", "b", "a", "b"])
+    fig = viz.plot_class_balance(y)
+    assert fig is not None
+
+
+def test_plot_feature_histograms_panels_and_split() -> None:
+    df = pd.DataFrame(
+        {
+            "f1": [1.0, 2.0, 3.0, 4.0],
+            "f2": [10.0, 20.0, 30.0, 40.0],
+            "label": ["a", "a", "b", "b"],
+        }
+    )
+    fig_plain = viz.plot_feature_histograms(df, ["f1", "f2"])
+    assert len(fig_plain.axes) == 2
+
+    fig_split = viz.plot_feature_histograms(df, ["f1"], by="label")
+    assert len(fig_split.axes) == 1
+
+
+def test_plot_decision_boundary_dataframe_string_labels() -> None:
+    df = pd.DataFrame(
+        {
+            "bill_length_mm": [39.0, 49.0, 40.0, 48.0],
+            "flipper_length_mm": [190.0, 216.0, 188.0, 214.0],
+        }
+    )
+    y = pd.Series(["Adelie", "Gentoo", "Adelie", "Gentoo"])
+    clf = KNeighborsClassifier(n_neighbors=1).fit(df.to_numpy(), y.to_numpy())
+    fig = viz.plot_decision_boundary(clf, df, y, resolution=30)
+    ax = fig.axes[0]
+    assert ax.get_xlabel() == "bill_length_mm"
+    assert ax.get_ylabel() == "flipper_length_mm"
+
+
+def test_plot_roc_curve_returns_figure() -> None:
+    y = np.array([0, 0, 1, 1])
+    scores = np.array([0.1, 0.4, 0.35, 0.8])
+    fig = viz.plot_roc_curve(y, scores, label="demo")
+    assert fig is not None
+
+
+def test_plot_score_threshold_returns_figure() -> None:
+    scores = np.array([-1.0, -0.2, 0.3, 0.9])
+    y = np.array([0, 0, 1, 1])
+    fig = viz.plot_score_threshold(scores, y, threshold=0.0)
+    assert fig is not None
+
+
+def test_plot_train_test_curve_returns_figure() -> None:
+    fig = viz.plot_train_test_curve([1, 2, 3], [0.3, 0.2, 0.1], [0.35, 0.25, 0.30], xlabel="degree")
     assert fig is not None

@@ -18,8 +18,9 @@ build/
 # for clearing outputs before commit (see CLAUDE.md).
 # (Outputs live inside the .ipynb JSON; clear them, do not gitignore the notebooks.)
 
-# Data is never committed — keep it local.
-data/
+# Data is never committed — keep it local. Teaching datasets are fetched on first use and cached
+# under src/ml_course/data/ (git-ignored); see ml_course.datasets.
+/data/
 *.csv
 *.parquet
 *.npz

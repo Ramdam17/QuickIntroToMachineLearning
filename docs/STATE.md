@@ -6,19 +6,89 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | — (none started) |
-| Current notebook | — |
-| Phase | `idle` |
+| Current chapter | `00_GettingStarted` — **COMPLETE (11 of 11)**, merged to `main` |
+| Current notebook | — (chapter 00 done) |
+| Phase | `idle` (between chapters) |
 | Active branch | `main` |
-| Active plan | — |
-| Next concrete action | Open the first chapter: `00_GettingStarted`. Create branch `chapter/00_GettingStarted`, enter plan mode, draft `docs/plans/chapter_00_GettingStarted.md`. |
+| Active plan | — (next: chapter `01_KNN` plan) |
+| Next concrete action | **Open chapter 01 — k-Nearest Neighbours.** `git switch main && git switch -c chapter/01_KNN`; phase `chapter-plan`; enter plan mode; plan the chapter from `docs/course_map.md` (01_KNN: 5 notebooks — prediction = neighbourhood vote & k; distance + the scale trap; the k dial / under-vs-over-fitting; the estimator & its parameters; demanding case + the curse of dimensionality). Reviewer-gate the chapter plan (both reviewers, no BLOCK); Rémy validates before any notebook is built. Reuse the fetch-and-cache penguins data layer; KNN is distance-based, so the standardization from NB 11 is load-bearing here. |
 
 ## Notes / blockers
 
-- Scaffold committed on `main` (`chore(scaffold)`). Build workflow encoded; nothing in progress yet.
-- Confirmed: notebooks all-English; audience = young developers, maths re-established not presupposed;
-  git history = preserve per-notebook, mark chapters (`--no-ff` chapter → main).
+- **Resolved (lint debt):** Rémy chose option B — fix the notebooks. NB 01–09 made ruff-clean
+  (explicit `zip(strict=False)`, unused `pandas` imports removed, long lines wrapped; all seven
+  re-executed end-to-end), committed as `f84eec6`. `ruff check .` is now fully green across the repo.
+- NB 01 shipped: `ml_course.datasets.load_penguins()` + vendored `penguins.csv` + tests are in place
+  and reusable by later notebooks. pandas-first convention recorded in CLAUDE.md/AGENTS.md.
+- Through-line reminder: Palmer penguins (binary, 2 features), nearest-centroid first classifier (NB
+  05), polynomial-degree complexity dial (NB 09–10).
+- Confirmed: notebooks all-English; maths re-established not presupposed; git history = preserve
+  per-notebook, mark chapters (`--no-ff` chapter → main).
 
 ## Progress log (most recent first)
 
-- Course scaffold + build workflow set up; awaiting kickoff of chapter `00_GettingStarted`.
+- **Chapter 00 (Getting Started) COMPLETE — 11 notebooks, merged to `main` (`--no-ff`).** The on-ramp:
+  what ML is → features/feature space → EDA → split & leakage → nearest centroid → accuracy/baseline →
+  confusion/precision-recall → scores/ROC/AUC → over/under-fitting → cross-validation → preprocessing &
+  leakage. Plus a fetch-and-cache data layer and a "get your data" step in NB 01. Two-reviewer gate +
+  Rémy's visual validation throughout.
+- NB 11 (preprocessing & leakage) built — standardization paying off NB 05's scale-sensitivity (NC
+  boundary rotates ~52.6° in mm coords; CV 0.989→0.9927), one-hot encoding of `island` (by hand +
+  `OneHotEncoder` fit-on-train), `ColumnTransformer`+`Pipeline` under CV, and the ESL §7.10.2 leakage
+  demo (1000 pure-noise features: select-on-all 0.85 vs select-in-fold 0.57). Reviewer-gated (pedagogy
+  PASS; ml-expert REVISE→fixed the boundary-rotation angle — my coordinate-space error), Rémy validated.
+- NB 01 "Getting the data" step added (Phase 2 of the data-layer change): a fetch+cache section
+  (intro md + `load_penguins_full()` with visible `logging` + a "Read the output") inserted after
+  "Learning from labelled examples"; teaches fetching/caching as a first ML step, then narrows to the
+  2-feature binary slice. Reviewer-gated (ml-expert PASS; pedagogy REVISE→fixed: framed the logging,
+  explained the repeated cached-read, trimmed the forward-ref roster, first-run note; +`datasets.py`
+  `sex` docstring MALE/FEMALE). Rémy validated visually, merged.
+- Data-layer refactor (prereq for NB 11): `datasets.py` switched from a committed binary CSV to
+  **fetch-and-cache** the full Palmer penguins set (pinned seaborn-data URL →
+  `src/ml_course/data/penguins_full.csv`, git-ignored, offline after first run); added
+  `load_penguins_full()` (344×7: +island, sex, bill_depth, body_mass, Chinstrap, missing values) +
+  `PENGUINS_FULL_*` constants; `load_penguins()` now **derives** the 2-feature binary subset (verified
+  byte-identical to the old committed 274-row CSV → NB 01–10 behaviourally unchanged); removed the
+  committed `penguins.csv` + the `.gitignore` exception; repurposed `vendor_penguins.py` to warm the
+  cache (logs the download). Tests 14 green; all 10 notebooks re-execute; ruff/black clean. Rémy chose
+  fetch-and-cache + a visible fetch step in NB 01 (Phase 2 next). Logging used in `datasets.py` (hook).
+- NB 10 (validating honestly: cross-validation) built — single notebook (Rémy chose over a 10a/10b
+  split), 30 cells; continues NB 09's make_moons + `flexible_boundary`. Arc: parameters vs
+  hyperparameters → the validation set → single-split instability (degree 3,3,5,6,3,9) → stratified
+  k-fold BY HAND → CV picks degree 3 → by-hand == `cross_val_score` (0.914286, exact) → one honest
+  test estimate (0.9111) → tuning-on-test inflation (+0.014 over 100 splits). No new `src/` (reused
+  `plot_train_test_curve`; k-fold scheme + inflation bar in-notebook). Reviewer-gated (pedagogy PASS;
+  ml-expert REVISE→ stratification-exactness MAJOR + minors fixed), Rémy validated, merged. Alongside:
+  NB 01–09 made ruff-clean (option B, `f84eec6`).
+- NB 09 (over-/under-fitting, the generalization gap) built — make_moons + polynomial-degree dial
+  (linear engine as plumbing), complexity curve U, generalization gap (≠ variance), bias-variance,
+  learning curve, optional variance fan; added `viz.plot_train_test_curve` + test. Reviewer-gated
+  (pedagogy PASS; ml-expert REVISE→fixed the "train error always falls" vs measured kink), Rémy
+  validated, merged.
+- NB 08 (scores, thresholds, ROC & AUC) built — signed-distance score (`s>0` = centroid), threshold
+  trade-off, ROC/AUC 0.989, PR curve, two-feature contrast AUC 1.0; added `viz.plot_roc_curve` +
+  `plot_score_threshold` + tests. Reviewer-gated (both PASS; 2 minor polish), Rémy validated, merged.
+  Closes the evaluation trilogy (06-08).
+- NB 07 (confusion matrix, precision & recall) built — bill-only weaker model for real errors, cm
+  [[37,1],[2,29]], precision 0.967 / recall 0.935 / F1 0.951, asymmetric costs. Reviewer-gated (both
+  PASS; 3 minor polish), Rémy validated, merged.
+- NB 06 (accuracy + baseline) built — accuracy formalised, DummyClassifier baseline, the accuracy
+  paradox on an imbalanced what-if (Dummy 95%/0-of-2 vs centroid 100%/2-of-2), positive = Gentoo.
+  Reviewer-gated (both PASS; 3 minor polish), Rémy validated, merged.
+- NB 05 (first classifier: nearest centroid) built — by-hand fit/predict class, decision boundary
+  (extended `plot_decision_boundary` to be pandas-first + label-agnostic, with a test), honest loop
+  (100% test vs 55% baseline, by-hand = sklearn). Reviewer-gated (ml-expert REVISE→fixed, pedagogy
+  PASS), Rémy validated, merged.
+- NB 04 (generalize, don't memorize — stratified split + rote-memorizer demo) built, reviewer-gated
+  (both PASS; convergent honesty MINOR fixed), Rémy validated, merged.
+- NB 03 (look before you model — EDA) built (+ `viz.plot_class_balance` / `plot_feature_histograms`
+  + tests), reviewer-gated (both PASS; polish applied), Rémy validated, merged. Also fixed NB 01 c06's
+  dangling "fuller dataset" forward-reference (flagged by pedagogy reviewer).
+- NB 02 (features, labels, the feature space) built, reviewer-gated (both PASS; 2 minor polish
+  applied), Rémy validated visually, committed and merged into `chapter/00_GettingStarted`.
+- NB 01 (what is machine learning?) built, reviewer-gated (pedagogy PASS; ml-expert REVISE→fixed:
+  corrected the figure reading, softened the line claim, added subset honesty), Rémy validated
+  visually, committed and merged into `chapter/00_GettingStarted`.
+- Chapter 00 plan approved and persisted; `course_map.md` 00 section rewritten to 11 notebooks.
+- Chapter 00 plan reviewer-gated (both REVISE→incorporated).
+- Course scaffold + build workflow set up on `main` (3 infra commits).

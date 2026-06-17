@@ -51,6 +51,9 @@ Notebooks are committed **without outputs** — run cells top to bottom.
 
 - **Colours come from `ml_course.colors`** — never hardcode hex.
 - Apply the style once per notebook: `from ml_course import viz; viz.use_course_style()`.
+- **Pandas-first:** prefer pandas (DataFrame/Series) for data — loading, display, selection,
+  `value_counts`, `describe`, `groupby` — with numpy under the hood for numeric kernels. Datasets
+  (e.g. `ml_course.datasets.load_penguins()`) return DataFrames.
 - **NumPy-style docstrings**: imperative first sentence (fits an IDE tooltip), array **shapes**
   stated, **units** explicit, a "When to use" note vs. alternatives, runnable examples, references
   with DOI.
