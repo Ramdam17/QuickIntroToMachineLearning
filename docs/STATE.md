@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (10 of 11 notebooks done; data layer now fetch-and-cache) |
-| Current notebook | — (next: NB 01 "Getting the data" step = Phase 2, then NB 11) |
-| Phase | `notebook-build` (Phase 2: add the visible fetch step to NB 01) |
-| Active branch | `chapter/00_GettingStarted` (Phase 1 data-layer refactor merged; open the NB 01 branch next) |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED); NB 11 plan still pending |
-| Next concrete action | **Phase 2 — NB 01 visible fetch step:** `git switch -c notebook/00_GettingStarted__01_what_is_ml` off chapter; add a short "Getting the data" section near the top of NB 01 — a markdown (data isn't shipped in the repo; we fetch the full Palmer penguins set once and cache it locally, the real first step of an ML project) + a code cell calling `datasets.load_penguins_full()` with `logging.basicConfig(level=logging.INFO)` so the download shows, displaying the cache path / shape / columns / `head()`; then a line noting this module uses the 2-feature binary slice via `load_penguins()`. ~2 added cells, existing NB 01 flow untouched. Gate: both reviewers (no BLOCK) → Rémy visual → clear outputs → guards (`gen_llms_txt`, hex, ruff, pytest) → commit + merge. **Then plan NB 11** (preprocessing & leakage): one-hot encoding on `sex`/`island` (full set); standardization payoff (NC boundary rotates 25.5°, CV 0.9927 vs 0.989); fit-on-train-only + `Pipeline`-under-CV; **leakage demo still UNDECIDED** (ESL §7.10.2 synthetic vs honest-principle — penguins can't show leakage dramatically). Then **chapter 00 close** (`git merge --no-ff` → main). |
+| Current chapter | `00_GettingStarted` (10 of 11 done; data layer = fetch-and-cache; NB 01 fetch step added) |
+| Current notebook | — (NB 01 "Getting the data" step merged; next is NB 11, the chapter's last) |
+| Phase | `chapter-plan-approved` (ready to open the last notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED); NB 11 plan pending |
+| Next concrete action | Open notebook 11 (the chapter's last): `git switch -c notebook/00_GettingStarted__11_preprocessing_leakage` off chapter; phase `notebook-plan`; enter plan mode and draft cell-by-cell. Content: **standardization** paying off NB 05's scale-sensitivity debt (measured: nearest-centroid boundary rotates **25.5°** raw→standardized; CV **0.9927 vs 0.989**); **one-hot encoding** of a real categorical now available via `load_penguins_full()` — `sex` (MALE/FEMALE, 11 missing) and/or `island` (Biscoe/Dream/Torgersen); **fit-on-train-only** + the **`Pipeline`**, evaluated under CV (reuse NB 10). **Leakage demo STILL UNDECIDED — settle with Rémy first:** ESL §7.10.2 synthetic (noise features + selection-before-CV, the only way to *show* leakage bite) vs honest-principle-only (penguins can't show it dramatically). Returns to penguins; prereqs 04, 05, 10. Rémy approves the plan; then build. After NB 11 ships: **chapter 00 close** — `git switch main && git merge --no-ff chapter/00_GettingStarted`. |
 
 ## Notes / blockers
 
@@ -27,6 +27,12 @@
 
 ## Progress log (most recent first)
 
+- NB 01 "Getting the data" step added (Phase 2 of the data-layer change): a fetch+cache section
+  (intro md + `load_penguins_full()` with visible `logging` + a "Read the output") inserted after
+  "Learning from labelled examples"; teaches fetching/caching as a first ML step, then narrows to the
+  2-feature binary slice. Reviewer-gated (ml-expert PASS; pedagogy REVISE→fixed: framed the logging,
+  explained the repeated cached-read, trimmed the forward-ref roster, first-run note; +`datasets.py`
+  `sex` docstring MALE/FEMALE). Rémy validated visually, merged.
 - Data-layer refactor (prereq for NB 11): `datasets.py` switched from a committed binary CSV to
   **fetch-and-cache** the full Palmer penguins set (pinned seaborn-data URL →
   `src/ml_course/data/penguins_full.csv`, git-ignored, offline after first run); added

@@ -74,7 +74,7 @@ def load_penguins_full() -> pd.DataFrame:
     -------
     pandas.DataFrame, shape (344, 7)
         Columns ``species`` (str; ``Adelie``/``Gentoo``/``Chinstrap``), ``island`` (str),
-        ``sex`` (str; ``Male``/``Female``, with some missing), and the numeric ``bill_length_mm``,
+        ``sex`` (str; ``MALE``/``FEMALE``, with some missing), and the numeric ``bill_length_mm``,
         ``bill_depth_mm``, ``flipper_length_mm``, ``body_mass_g`` (millimetres / grams). One row =
         one penguin.
 

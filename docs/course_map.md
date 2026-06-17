@@ -22,7 +22,7 @@ notebooks**. Through-line: Palmer penguins (binary, 2 features), nearest-centroi
 classifier, a polynomial-degree complexity dial for the over/underfitting and cross-validation
 notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 
-1. What is machine learning? — learn a rule from examples; supervised; classification vs regression; the toolkit.
+1. What is machine learning? — learn a rule from examples; supervised; classification vs regression; the toolkit; fetching and caching the data.
 2. Features, labels, and the feature space — `X`/`y`; the mean of a point cloud and Euclidean distance.
 3. Look before you model (EDA) — distributions, class balance, feature scales.
 4. Generalize, don't memorize — the stratified train/test split; the cardinal sin; leakage; i.i.d. as an assumption.
