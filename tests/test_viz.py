@@ -86,3 +86,8 @@ def test_plot_score_threshold_returns_figure() -> None:
     y = np.array([0, 0, 1, 1])
     fig = viz.plot_score_threshold(scores, y, threshold=0.0)
     assert fig is not None
+
+
+def test_plot_train_test_curve_returns_figure() -> None:
+    fig = viz.plot_train_test_curve([1, 2, 3], [0.3, 0.2, 0.1], [0.35, 0.25, 0.30], xlabel="degree")
+    assert fig is not None

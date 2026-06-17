@@ -468,3 +468,55 @@ def plot_score_threshold(
     ax.set_ylabel("count")
     ax.legend()
     return fig
+
+
+def plot_train_test_curve(
+    x,
+    train_scores,
+    test_scores,
+    *,
+    xlabel: str,
+    ylabel: str = "error",
+    ax: plt.Axes | None = None,
+) -> plt.Figure:
+    """Plot training and test curves against a complexity knob or training-set size.
+
+    Two lines — training and test — in the charter ``train``/``test`` colours: the standard view for
+    spotting under/over-fitting (against a complexity knob) or diagnosing data sufficiency (against
+    training-set size).
+
+    Parameters
+    ----------
+    x : array-like, shape (n_points,)
+        The x-axis values (e.g. polynomial degree, or number of training examples).
+    train_scores : array-like, shape (n_points,)
+        The metric on the training set at each ``x``.
+    test_scores : array-like, shape (n_points,)
+        The metric on the held-out set at each ``x``.
+    xlabel : str
+        Label for the x-axis (names the knob being turned).
+    ylabel : str, default "error"
+        Label for the y-axis.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure is created when omitted.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the two curves.
+
+    Examples
+    --------
+    >>> _ = plot_train_test_curve([1, 2, 3], [0.3, 0.2, 0.1], [0.35, 0.25, 0.30], xlabel="degree")
+    """
+    x = np.asarray(x)
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6.5, 4.5))
+    else:
+        fig = ax.figure
+    ax.plot(x, train_scores, color=COLORS["train"], marker="o", linewidth=2, label="training")
+    ax.plot(x, test_scores, color=COLORS["test"], marker="s", linewidth=2, label="test")
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.legend()
+    return fig

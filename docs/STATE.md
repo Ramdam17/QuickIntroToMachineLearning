@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (8 of 11 notebooks done) |
-| Current notebook | `09_overfitting_generalization_gap` |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__09_overfitting_generalization_gap` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__09_overfitting_generalization_gap.md` (pending, written on approval) |
-| Next concrete action | In plan mode: draft NB 09 — over-/under-fitting, the generalization gap (≠ variance), bias–variance (conceptual), the learning curve. Open forks to settle empirically + with Rémy: (a) dataset — penguins is too separable to overfit, so likely a harder synthetic 2-D set (e.g. `make_moons(noise=...)`); (b) the complexity dial / base learner — polynomial-degree on a flexible classifier, but the base must not pre-empt a later method (test nearest-centroid-on-poly vs a black-box linear engine framed honestly). Measure candidates before choosing. Likely a `viz` helper (`plot_complexity_curve` / `plot_learning_curve`) + tests. ExitPlanMode for approval; then build. |
+| Current chapter | `00_GettingStarted` (9 of 11 notebooks done) |
+| Current notebook | — (09 merged; next is 10) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 10: `git switch -c notebook/00_GettingStarted__10_cross_validation` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 10 row — **hyperparameters vs parameters**; **train/validation/test**; **stratified k-fold cross-validation** (by hand); **model selection** (pick NB 09's polynomial degree by CV — continues the make_moons + `flexible_boundary(degree)` setup, closing NB 09's "we picked the degree on the test set" loose end); **tuning-on-test inflation**. May split into 10a/10b if it exceeds ~20 cells (per chapter plan). Likely reuses `viz.plot_train_test_curve` (CV score vs degree); possibly a small k-fold diagram. Rémy approves the plan; then build. |
 
 ## Notes / blockers
 
@@ -24,6 +24,11 @@
 
 ## Progress log (most recent first)
 
+- NB 09 (over-/under-fitting, the generalization gap) built — make_moons + polynomial-degree dial
+  (linear engine as plumbing), complexity curve U, generalization gap (≠ variance), bias-variance,
+  learning curve, optional variance fan; added `viz.plot_train_test_curve` + test. Reviewer-gated
+  (pedagogy PASS; ml-expert REVISE→fixed the "train error always falls" vs measured kink), Rémy
+  validated, merged.
 - NB 08 (scores, thresholds, ROC & AUC) built — signed-distance score (`s>0` = centroid), threshold
   trade-off, ROC/AUC 0.989, PR curve, two-feature contrast AUC 1.0; added `viz.plot_roc_curve` +
   `plot_score_threshold` + tests. Reviewer-gated (both PASS; 2 minor polish), Rémy validated, merged.
