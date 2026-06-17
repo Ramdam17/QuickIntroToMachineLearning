@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (10 of 11 done; data layer = fetch-and-cache; NB 01 fetch step added) |
-| Current notebook | — (NB 01 "Getting the data" step merged; next is NB 11, the chapter's last) |
-| Phase | `chapter-plan-approved` (ready to open the last notebook) |
-| Active branch | `chapter/00_GettingStarted` |
+| Current notebook | `11_preprocessing_leakage` (planning) |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__11_preprocessing_leakage` |
 | Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED); NB 11 plan pending |
-| Next concrete action | Open notebook 11 (the chapter's last): `git switch -c notebook/00_GettingStarted__11_preprocessing_leakage` off chapter; phase `notebook-plan`; enter plan mode and draft cell-by-cell. Content: **standardization** paying off NB 05's scale-sensitivity debt (measured: nearest-centroid boundary rotates **25.5°** raw→standardized; CV **0.9927 vs 0.989**); **one-hot encoding** of a real categorical now available via `load_penguins_full()` — `sex` (MALE/FEMALE, 11 missing) and/or `island` (Biscoe/Dream/Torgersen); **fit-on-train-only** + the **`Pipeline`**, evaluated under CV (reuse NB 10). **Leakage demo STILL UNDECIDED — settle with Rémy first:** ESL §7.10.2 synthetic (noise features + selection-before-CV, the only way to *show* leakage bite) vs honest-principle-only (penguins can't show it dramatically). Returns to penguins; prereqs 04, 05, 10. Rémy approves the plan; then build. After NB 11 ships: **chapter 00 close** — `git switch main && git merge --no-ff chapter/00_GettingStarted`. |
+| Next concrete action | Branch open; **in plan mode for NB 11** (the chapter's last). Settle the leakage fork with Rémy, then draft cell-by-cell. Content: **standardization** paying off NB 05's scale-sensitivity debt (measured: nearest-centroid boundary rotates **25.5°** raw→standardized; CV **0.9927 vs 0.989**); **one-hot encoding** of a real categorical now available via `load_penguins_full()` — `sex` (MALE/FEMALE, 11 missing) and/or `island` (Biscoe/Dream/Torgersen); **fit-on-train-only** + the **`Pipeline`**, evaluated under CV (reuse NB 10). **Leakage demo STILL UNDECIDED — settle with Rémy first:** ESL §7.10.2 synthetic (noise features + selection-before-CV, the only way to *show* leakage bite) vs honest-principle-only (penguins can't show it dramatically). Returns to penguins; prereqs 04, 05, 10. Rémy approves the plan; then build. After NB 11 ships: **chapter 00 close** — `git switch main && git merge --no-ff chapter/00_GettingStarted`. |
 
 ## Notes / blockers
 
