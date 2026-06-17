@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` (3 of 11 notebooks done) |
-| Current notebook | `04_generalize_dont_memorize` |
-| Phase | `notebook-plan` |
-| Active branch | `notebook/00_GettingStarted__04_generalize_dont_memorize` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__04_generalize_dont_memorize.md` (pending, written on approval) |
-| Next concrete action | In plan mode: draft NB 04 from the chapter plan's NB 04 row — **stratified** `train_test_split`; the cardinal sin (scoring on training data); i.i.d. as a *chosen* assumption (penguins span islands/years); leakage intro; preview fit→predict→evaluate. Open fork to settle with Rémy: demonstrate memorize≠generalize via a deliberately silly "rote memorizer" (100% train / chance test), or stay model-free (split mechanics + analogy, deferring fit/predict to NB 05). Keep "accuracy" informal here (fraction correct), formalised in NB 06. ExitPlanMode for approval; then build. |
+| Current chapter | `00_GettingStarted` (4 of 11 notebooks done) |
+| Current notebook | — (04 merged; next is 05) |
+| Phase | `chapter-plan-approved` (ready to open the next notebook) |
+| Active branch | `chapter/00_GettingStarted` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
+| Next concrete action | Open notebook 05: `git switch -c notebook/00_GettingStarted__05_first_classifier_nearest_centroid` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 05 row — **the first real classifier**: nearest centroid by hand (centroids = class means from NB 02; assign by nearest distance), wrapped as a `.predict` object; the bisector boundary + inductive bias (equal isotropic spread) + scale-sensitivity (→ NB 11); `viz.plot_decision_boundary` (extend to accept a DataFrame, pandas-first); run the honest fit→predict→evaluate loop on the NB 04 split; **close with the signed-score teaser** (→ NB 08). Rémy approves; then build. |
 
 ## Notes / blockers
 
@@ -24,6 +24,8 @@
 
 ## Progress log (most recent first)
 
+- NB 04 (generalize, don't memorize — stratified split + rote-memorizer demo) built, reviewer-gated
+  (both PASS; convergent honesty MINOR fixed), Rémy validated, merged.
 - NB 03 (look before you model — EDA) built (+ `viz.plot_class_balance` / `plot_feature_histograms`
   + tests), reviewer-gated (both PASS; polish applied), Rémy validated, merged. Also fixed NB 01 c06's
   dangling "fuller dataset" forward-reference (flagged by pedagogy reviewer).
