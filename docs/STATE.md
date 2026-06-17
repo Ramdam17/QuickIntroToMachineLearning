@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (4 of 11 notebooks done) |
-| Current notebook | — (04 merged; next is 05) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 05: `git switch -c notebook/00_GettingStarted__05_first_classifier_nearest_centroid` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 05 row — **the first real classifier**: nearest centroid by hand (centroids = class means from NB 02; assign by nearest distance), wrapped as a `.predict` object; the bisector boundary + inductive bias (equal isotropic spread) + scale-sensitivity (→ NB 11); `viz.plot_decision_boundary` (extend to accept a DataFrame, pandas-first); run the honest fit→predict→evaluate loop on the NB 04 split; **close with the signed-score teaser** (→ NB 08). Rémy approves; then build. |
+| Current notebook | `05_first_classifier_nearest_centroid` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__05_first_classifier_nearest_centroid` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__05_first_classifier_nearest_centroid.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 05 — nearest-centroid by hand (centroids = train class means via `groupby`; assign by nearest Euclidean distance), wrapped as a `NearestCentroidByHand` class with fit/predict (the estimator API), compared to `sklearn.neighbors.NearestCentroid`; decision boundary via `viz.plot_decision_boundary` (**extend the helper to accept a DataFrame X + string labels, pandas-first**, with a test); the honest fit→predict→evaluate loop on the NB 04 split (fraction right vs baseline, accuracy formalised NB 06); inductive bias (bisector = hyperplane; equal isotropic spread; a failure case) + scale-sensitivity (→ NB 11); signed-score teaser (→ NB 08). ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
