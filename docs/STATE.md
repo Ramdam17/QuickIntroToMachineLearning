@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `00_GettingStarted` (5 of 11 notebooks done) |
-| Current notebook | — (05 merged; next is 06) |
-| Phase | `chapter-plan-approved` (ready to open the next notebook) |
-| Active branch | `chapter/00_GettingStarted` |
-| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) |
-| Next concrete action | Open notebook 06: `git switch -c notebook/00_GettingStarted__06_accuracy_and_baseline` off the chapter branch; phase `notebook-plan`; enter plan mode; draft from the chapter plan's NB 06 row — **formalise accuracy** (the "fraction right" from NB 04/05) on the nearest-centroid classifier; the **majority baseline** (`DummyClassifier`); accuracy's first limit under **class imbalance** (build a deliberately imbalanced case, using the NB 03 imbalance picture); **fix the positive class = Gentoo** for NB 06–08. Rémy approves; then build. |
+| Current notebook | `06_accuracy_and_baseline` |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/00_GettingStarted__06_accuracy_and_baseline` |
+| Active plan | `docs/plans/chapter_00_GettingStarted.md` (APPROVED) → notebook plan `docs/plans/00_GettingStarted__06_accuracy_and_baseline.md` (pending, written on approval) |
+| Next concrete action | In plan mode: draft NB 06 — formalise **accuracy** (`accuracy_score`) on the nearest-centroid classifier (sklearn `NearestCentroid`, the NB 05 model); the **majority baseline** (`DummyClassifier(strategy="most_frequent")`, accuracy = majority share); accuracy's limit via a deliberately **imbalanced what-if** (all Adélie + ~5% Gentoo → Dummy ≈95% accuracy yet finds 0 minority = the accuracy paradox); **fix positive = Gentoo** for NB 07–08. No new src code (plain matplotlib bar). ExitPlanMode for approval; then build. |
 
 ## Notes / blockers
 
