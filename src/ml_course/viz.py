@@ -520,3 +520,93 @@ def plot_train_test_curve(
     ax.set_ylabel(ylabel)
     ax.legend()
     return fig
+
+
+def plot_calibration_curve(
+    y_true,
+    proba,
+    *,
+    n_bins: int = 8,
+    strategy: str = "quantile",
+    label: str | None = None,
+    ax: plt.Axes | None = None,
+    color: str | None = None,
+) -> plt.Figure:
+    """Plot a reliability diagram: observed frequency vs mean predicted probability.
+
+    Bins the predicted probabilities and plots, per bin, the fraction of positives against the
+    mean predicted probability. A perfectly calibrated model sits on the diagonal; points below
+    it are over-confident (predicted higher than reality), points above under-confident. Pass an
+    existing ``ax`` (and a distinct ``color``) to overlay several models.
+
+    Parameters
+    ----------
+    y_true : array-like, shape (n_samples,)
+        Binary ground truth, positive class encoded as ``1`` (or ``True``).
+    proba : array-like, shape (n_samples,)
+        Predicted probability of the positive class, in [0, 1].
+    n_bins : int, default 8
+        Number of probability bins.
+    strategy : {"quantile", "uniform"}, default "quantile"
+        Bin-edge rule; ``"quantile"`` keeps roughly equal counts per bin.
+    label : str, optional
+        Legend label for this curve; its Brier score is appended automatically.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure (with the calibrated diagonal) is created when omitted.
+    color : str, optional
+        Curve colour; defaults to the charter ``model`` colour.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the reliability diagram.
+
+    When to use
+    -----------
+    To judge whether a classifier's probabilities can be read as probabilities (not merely ranked).
+    Naive Bayes, for instance, is often a strong ranker yet poorly calibrated. Read alongside the
+    Brier score (lower is better), which is shown in the legend.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> y = np.array([0, 0, 1, 1, 1, 0, 1, 0])
+    >>> p = np.array([0.1, 0.4, 0.35, 0.8, 0.9, 0.2, 0.7, 0.3])
+    >>> _ = plot_calibration_curve(y, p, n_bins=3)
+    """
+    from sklearn.calibration import calibration_curve
+    from sklearn.metrics import brier_score_loss
+
+    y_true = np.asarray(y_true).astype(int)
+    proba = np.asarray(proba, dtype=float)
+    frac_pos, mean_pred = calibration_curve(y_true, proba, n_bins=n_bins, strategy=strategy)
+    brier = brier_score_loss(y_true, proba)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.plot(
+            [0, 1],
+            [0, 1],
+            color=COLORS["muted"],
+            linestyle="--",
+            linewidth=1,
+            label="perfectly calibrated",
+        )
+    else:
+        fig = ax.figure
+
+    curve_label = f"{label} (Brier = {brier:.3f})" if label else f"Brier = {brier:.3f}"
+    ax.plot(
+        mean_pred,
+        frac_pos,
+        color=color or COLORS["model"],
+        marker="o",
+        linewidth=2,
+        label=curve_label,
+    )
+    ax.set_xlabel("mean predicted probability")
+    ax.set_ylabel("observed frequency")
+    ax.set_xlim(-0.02, 1.02)
+    ax.set_ylim(-0.02, 1.02)
+    ax.legend(loc="upper left")
+    return fig

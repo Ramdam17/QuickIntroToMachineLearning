@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`05_text_classification`** (NB 5 of 5, the capstone) — plan APPROVED, building (+ 2 `src/` adds with tests). |
-| Phase | `notebook-plan-approved` → `notebook-build` |
-| Active branch | `notebook/02_NaiveBayes__05_text_classification` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__05_text_classification.md` (**APPROVED** 2026-06-18) |
-| Next concrete action | **Open NB 5 — "Text classification" (the demanding case)**, the chapter capstone. `git switch -c notebook/02_NaiveBayes__05_text_classification` off the chapter branch; set STATE (phase `notebook-plan`); **measure** (fetch 20newsgroups subset; `CountVectorizer`+`MultinomialNB` acc; one-vs-rest imbalance; over-confidence/Brier vs LogReg; calibration curve) then plan mode. Per the approved chapter plan: **by-hand vectorization on-ramp** (toy sentences → hand vocab → dense count matrix → reveal `CountVectorizer` + sparsity — built, not "just happening"); fit-on-train-only; **honest eval under imbalance** (one-vs-rest sci.med ≈396 vs 1037 test → precision/recall/F1 + PR curve, not accuracy); **calibration in full** (reliability diagram + Brier — NB over-confident vs LogReg — the limit NB 4 named); the **Domingos-Pazzani loop closes** (independence wildly violated in text, KNN died of the curse, NB fast & strong); **generative-vs-discriminative bridge → ch 03** (Ng & Jordan 2001, named). **Likely `src/` adds (with tests):** `datasets.load_newsgroups()` (fetch-and-cache + visible logging) + `viz.plot_calibration_curve()`. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge → **chapter 02 closes via PR into `main`**. |
+| Current chapter | `02_NaiveBayes` — **COMPLETE (5/5)**, merging to `main` (chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
+| Current notebook | `05_text_classification` (NB 5 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging). |
+| Phase | `chapter-merge` → then `idle` / open chapter 03 |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__05_text_classification` merges in, ff) → PR into `main` |
+| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (all 5 notebooks done) |
+| Next concrete action | **Close chapter 02 via PR into `main`** (protected): `git push -u origin chapter/02_NaiveBayes`; `gh pr create --base main --head chapter/02_NaiveBayes` (title `feat(02_naive_bayes): complete chapter — Naive Bayes`); `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 03 — Logistic Regression** (the idle edit rides onto the `chapter/03` branch, per the PR-only-main discipline — same as the ch-01→ch-02 handoff). |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (Text classification — the demanding case) built & merged; CHAPTER 02 COMPLETE (5/5).** The
+  capstone, on 20-newsgroups: **by-hand bag-of-words on-ramp** (toy sentences → vocab → dense count
+  matrix) → `CountVectorizer` (12 384 words, density 0.0043, fit-on-train-only) → `MultinomialNB`
+  (fit ≈ms, acc **0.887**, confusion → religion hardest) → **honest eval under imbalance** (one-vs-rest
+  sci.med: acc **0.930** vs **baseline 0.724**, P/R/F1 0.887/0.854/0.870, PR AP 0.935) → **calibration**
+  (MNB piles 1205/1433 at 0/1 = over-confident *in shape*; Brier 0.056 < LogReg 0.080 here because the
+  task is easy → "trust the ranking, not the number"; cost shown on the confusable pair in Your turn) →
+  Domingos-Pazzani at scale + **generative-vs-discriminative bridge to ch 03**. 27 cells, 5 figures.
+  **2 `src/` additions with tests** (`datasets.load_newsgroups` fetch-and-cache + visible logging;
+  `viz.plot_calibration_curve` reliability diagram) → **pytest 16**. Both reviewers **PASS** (no BLOCK):
+  ml-expert verified every number + measured that keeping metadata leaks the label (0.887→0.955, so
+  `remove=` is right); pedagogy confirmed the by-hand on-ramp + honest calibration framing. 5 MINORs
+  folded (calibration wording, "crushes most", no-skill label value, multinomial pointer). `common_errors`
+  + `course_map` §02 + `llms.txt` updated. Rémy validated visually. Next: PR `chapter/02_NaiveBayes` →
+  `main`, then open chapter 03 (Logistic Regression).
 - **NB 4 (The estimators & their parameters) built & merged to `chapter/02_NaiveBayes`.** The
   integration notebook: the NB family (Gaussian/Multinomial/Bernoulli) + each dial *measured* —
   **`var_smoothing`** (flat 0.9927 → 1.0:0.989 → 10:0.711, the flood), **`alpha`/Laplace** healing NB 1's

@@ -226,7 +226,7 @@ notebook; Rémy validates visually; commit per notebook; **chapter close via PR 
 | 2 | `notebook/02_NaiveBayes__02_naive_assumption` | **done** — built (21 cells), both reviewers PASS (shared MINOR "Read the table" folded), Rémy validated visually, merged to `chapter/02_NaiveBayes` |
 | 3 | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` | **done** — built (20 cells), both reviewers PASS (3 banned words + honesty/NaN MINORs folded), Rémy validated visually, merged to `chapter/02_NaiveBayes`. Stayed at 5 (split not pulled). |
 | 4 | `notebook/02_NaiveBayes__04_estimators_and_parameters` | **done** — built (20 cells), both reviewers PASS (ml-expert REVISE→Brier-assertion reframed + 2 MINORs; pedagogy PASS); calibration named & deferred to NB 5; Rémy validated visually, merged to `chapter/02_NaiveBayes` |
-| 5 | `notebook/02_NaiveBayes__05_text_classification` | planned |
+| 5 | `notebook/02_NaiveBayes__05_text_classification` | **done** — built (27 cells, capstone), + `src/` `load_newsgroups` & `plot_calibration_curve` (pytest 16); both reviewers PASS (no BLOCK, MINORs folded), Rémy validated visually, merged. **Chapter complete (5/5).** |
 
 ## Reviewer notes
 

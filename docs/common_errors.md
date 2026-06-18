@@ -31,6 +31,7 @@ point to the notebook that addresses it.
 | Naive Bayes | "The product of the per-feature likelihoods is 0 for every class." | With many features the product underflows to 0.0 in floating point — it's *unrepresentable*, not actually zero. Work in **log-space**: sum log-likelihoods instead of multiplying; the argmax is unchanged. `02_NaiveBayes/03`. |
 | Naive Bayes / densities | "A probability density above 1 means something is wrong." | For a continuous feature it's the **area** under the density, not its height, that is a probability; a narrow distribution can have a peak above 1 while still integrating to 1. `02_NaiveBayes/03`. |
 | Naive Bayes | "Turn `var_smoothing` (or `alpha`) up to be safe." | Smoothing is a floor, not a free lunch: too much inflates every variance (or flattens every count) until the classes stop differing and accuracy collapses toward the majority baseline. It's a safety net to tune, not a knob to max out. `02_NaiveBayes/04`. |
+| Naive Bayes | "It reported 99%, so it's almost certainly right." | NB is **over-confident**: treating correlated features as independent double-counts evidence and piles probabilities at 0/1. Trust its *ranking*, not the raw number; recalibrate (`CalibratedClassifierCV`) if you need a probability. `02_NaiveBayes/05`. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |
 | SVM | "Forgot to scale." | SVMs are scale-sensitive; standardize features. |
