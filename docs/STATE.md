@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `04_estimator_and_parameters` (not started — branch not yet created) |
+| Current notebook | `04_estimator_and_parameters` (planning — branch created) |
 | Phase | `notebook-plan` |
-| Active branch | `chapter/01_KNN` (NB 3 committed + merged) |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 4 = the estimator & its parameters) |
-| Next concrete action | **Open NB 4** (awaiting Rémy's go). NB 4 is the **method & parameters** notebook (the role changes: not one new concept — walk the real estimator). Introduce `KNeighborsClassifier` and its hyperparameters: **n_neighbors** (recall the k dial, NB 3), **weights** (uniform vs distance — distance visibly resists over-smoothing at large k), **metric / p** (the NB 2 metric, now a *tuned* dial; deep geometry stays NB 6). Show the **even-k tie** resolved deterministically by sklearn (lowest class label) — why odd k for binary. Confirm **by-hand == sklearn** (ties NB 1–3 to the library). Boundary panels: uniform vs distance at large k; a metric comparison. From `chapter/01_KNN`: `git switch -c notebook/01_KNN__04_estimator_and_parameters`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–3, plus 05. Rémy validates the plan before build. |
+| Active branch | `notebook/01_KNN__04_estimator_and_parameters` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 4) — per-notebook plan being drafted in plan mode |
+| Next concrete action | **Draft & approve the NB 4 plan, then build.** NB 4 = the **method & parameters** notebook (walk the real `KNeighborsClassifier`). **Measured anchors (`make_moons(300,0.30,0)`, 210/90):** (1) **by-hand == sklearn** at k=15 (0 diff, acc 0.956); (2) **weights** uniform vs distance: k=15 .956/.967, k=51 .878/.922, k=101 .733/.889, **k=151 .678/.833** (distance resists over-smoothing, gap widens with k); (3) **metric** @k=15: Manhattan p=1 **0.967**, Euclidean p=2 0.956, Chebyshev 0.956 (small effect, cf NB 2); (4) **even-k tie** (k=2): sklearn `weights="uniform"` breaks 1-1 ties by **lowest class label (0)**, ignoring which neighbour is nearer (pt 26: 2-NN [1,0], nearer=1, predicts 0) → why odd k in binary. Plan: also a `cross_val_score` (NB 10) selection of weights now that the estimator is sklearn-compatible (measure at build). Figures: uniform-vs-distance boundary at large k; metric comparison. Prereqs: NB 1–3, plus 05. On ExitPlanMode approval → persist `docs/plans/01_KNN__04_estimator_and_parameters.md`, commit → build. |
 
 ## Notes / blockers
 
