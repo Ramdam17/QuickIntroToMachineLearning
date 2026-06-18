@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `06_advanced_distances_and_k` (v2 done — both reviewers PASS, Rémy validated) |
-| Phase | `chapter-merge` |
-| Active branch | `notebook/01_KNN__06_advanced_distances_and_k` (→ merge to chapter → PR to main) |
-| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED v2) |
-| Next concrete action | **Close chapter 01 (6/6 done).** Commit NB 6 → merge to `chapter/01_KNN` → `git push -u origin chapter/01_KNN` → `gh pr create --base main --head chapter/01_KNN` (title `feat(01_knn): complete chapter — k-Nearest Neighbours`) → `gh pr merge --merge` (preserve per-notebook history; main is PR-only) → `git switch main && git pull`. Then set phase `idle`, next = open chapter `02_NaiveBayes`. |
+| Current chapter | `02_NaiveBayes` — **chapter planning** (chapter `01_KNN` is COMPLETE, merged to `main` via PR #1 `110c081`). |
+| Current notebook | — (planning the chapter) |
+| Phase | `chapter-plan` |
+| Active branch | `chapter/02_NaiveBayes` (off `main` @ `110c081`) |
+| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (to be written on Rémy's approval) |
+| Next concrete action | **Draft the Naive Bayes chapter plan in plan mode.** Decide together: (1) the primordial concepts and their distribution across NB 1–3 (one concept each, by hand) — probability/conditional probability/Bayes' rule, the "naive" conditional-independence assumption, likelihoods (Gaussian vs multinomial/Bernoulli) + log-probabilities/underflow; (2) NB 4 — the estimators & parameters (`GaussianNB`/`MultinomialNB`/`BernoulliNB`: var_smoothing, alpha, priors) + calibration; (3) NB 5 — the demanding case (text or tabular; honest evaluation under imbalance). Cross-check `course_map.md` §02. Then reviewer-gate the chapter plan (BOTH reviewers, no BLOCK), ExitPlanMode for Rémy's approval, persist to `docs/plans/` + commit, set phase `chapter-plan-approved`. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 02 (Naive Bayes) opened.** Branch `chapter/02_NaiveBayes` created off `main` (synced to
+  `110c081` after PR #1). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §02 and the per-method arc. The pending `idle` STATE edit was folded into this
+  transition (committed on the chapter branch, not on protected `main`).
+- **Chapter 01 (k-Nearest Neighbours) COMPLETE — 6 notebooks merged to `main` via PR #1** (merge commit
+  `110c081`, `gh pr merge --merge` — per-notebook history preserved; pushed to
+  `Ramdam17/QuickIntroToMachineLearning`). The arc: the vote → distance & the scale trap → the k dial →
+  the estimator & its parameters → demanding case + the curse → advanced distances & nested CV. The
+  two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`) + Rémy's visual validation held on
+  every notebook; NB 6 was rebuilt from scratch (v1 was visually thin). Next: chapter `02_NaiveBayes`.
 - **NB 6 (advanced: distances & choosing k) built & merged — chapter complete (6/6).** Optional Advanced
   capstone, **rebuilt from scratch (v1 scrapped by Rémy as too table-heavy)** → visualization-first, 28
   cells, **9 figures**: unit balls L1/L2/L∞; metric decision boundaries on moons; Mahalanobis ellipse +
