@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `02_NaiveBayes` — **chapter plan APPROVED** (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | — (about to open NB 1) |
-| Phase | `chapter-plan-approved` |
-| Active branch | `chapter/02_NaiveBayes` (off `main` @ `110c081`) |
-| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (**APPROVED**; 5 notebooks, standard arc) |
-| Next concrete action | **Open NB 1 — "Bayes' rule, from counts".** `git switch -c notebook/02_NaiveBayes__01_bayes_from_counts` off the chapter branch; set STATE (notebook = `01_bayes_from_counts`, phase `notebook-plan`); enter plan mode and draft the NB-1 cell-by-cell plan per `docs/notebook_template.md` and the approved chapter plan (one concept: posterior ∝ prior × likelihood on ONE feature, by hand from a `bill_length` 3-bin contingency table; evidence = normalizer; argmax; exploit the live zero-frequency case; "Your turn" 2–3 tiered). Rémy validates the NB-1 plan alone (no reviewer gate at notebook-plan), then build → both reviewers → revise → Rémy visual → guards → commit → merge to chapter. |
+| Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
+| Current notebook | **`01_bayes_from_counts`** (NB 1 of 5) — planning. |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/02_NaiveBayes__01_bayes_from_counts` (off `chapter/02_NaiveBayes`) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__01_bayes_from_counts.md` (to be written on Rémy's approval) |
+| Next concrete action | **Draft the NB-1 cell-by-cell plan in plan mode**, per `docs/notebook_template.md` + the approved chapter plan. One concept: **posterior ∝ prior × likelihood on ONE feature**, by hand from a `bill_length` 3-bin species×bin contingency table → prior P(species), likelihood P(bin∣species), posterior P(species∣bin), predict by argmax; "evidence cancels" as a one-line consequence; **exploit the live zero-frequency case** (a class with 0 count in a bin → posterior 0) to foreshadow NB 4 smoothing; "Your turn" 2–3 tiered. Present via ExitPlanMode; **Rémy validates the NB-1 plan alone (no reviewer gate at notebook-plan)**; on approval persist to `docs/plans/` + commit, phase `notebook-plan-approved`, then build → both reviewers → revise → Rémy visual → guards → commit → merge to chapter. |
 
 ## Notes / blockers
 
