@@ -21,6 +21,7 @@ point to the notebook that addresses it.
 |---|---|---|
 | KNN | "Distances don't need scaling." | A large-range feature dominates the distance; normalize. |
 | KNN | "The single nearest neighbour (k=1) is the most reliable guide." | One nearest point can be a noise stray; the majority vote over k≥3 neighbours is more robust near class overlap. The vote: `01_KNN/01`; choosing k: `01_KNN/03`. |
+| KNN | "Odd k avoids ties, so I'm safe." | True only for **two** classes. With 3+ classes an odd k can still tie (e.g. 1-1-1 at k=3); sklearn then breaks it by the lowest class label. | `01_KNN/04` |
 | Naive Bayes | "Features must really be independent." | The assumption is *conditional* independence, and the method is often useful even when it's violated. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |

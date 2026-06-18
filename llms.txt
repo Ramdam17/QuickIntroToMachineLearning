@@ -19,3 +19,4 @@
 - [notebooks/01_KNN/01_neighbourhood_vote.ipynb](notebooks/01_KNN/01_neighbourhood_vote.ipynb) — 01 — Predict by the neighbourhood vote — *Module 01 · k-Nearest Neighbours — notebook 1 of 6*
 - [notebooks/01_KNN/02_distance_and_scale.ipynb](notebooks/01_KNN/02_distance_and_scale.ipynb) — 02 — Distance & the scale trap — *Module 01 · k-Nearest Neighbours — notebook 2 of 6*
 - [notebooks/01_KNN/03_the_k_dial.ipynb](notebooks/01_KNN/03_the_k_dial.ipynb) — 03 — The k dial — *Module 01 · k-Nearest Neighbours — notebook 3 of 6*
+- [notebooks/01_KNN/04_estimator_and_parameters.ipynb](notebooks/01_KNN/04_estimator_and_parameters.ipynb) — 04 — The estimator & its parameters — *Module 01 · k-Nearest Neighbours — notebook 4 of 6*

@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `04_estimator_and_parameters` (plan APPROVED — building) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/01_KNN__04_estimator_and_parameters` |
-| Active plan | `docs/plans/01_KNN__04_estimator_and_parameters.md` (APPROVED) |
-| Next concrete action | **Build NB 4** per `docs/plans/01_KNN__04_estimator_and_parameters.md` — ~21 cells, the **method & parameters** notebook (real `KNeighborsClassifier`). **Measured anchors:** by-hand == sklearn k=15 (0 diff, 0.956); `cross_val_score(KNN(15))` = **0.919** (== NB 3's by-hand CV); **weights** uniform/distance k=15 .956/.967 … **k=151 .678/.833** (distance resists over-smoothing); **metric** @k=15 Manhattan p=1 0.967 / Euclid p=2 0.956 / Chebyshev 0.956; **CV picks weights**: uniform 0.919 vs distance **0.924** → test **0.967**; **even-k tie** (k=2, uniform) → lowest label 0 (ignores nearer; pt 26 [1,0] nearer=1 → 0) → odd k for binary. Figures: weights uniform-vs-distance boundary at k=51; metric compare. Reuse `viz.plot_decision_boundary`; by-hand `knn_predict` kept once for parity; no `src/` (pytest 14). Build via `nbformat`; **`--clear-output --inplace` before commit**. Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 04 — the estimator & its parameters` → merge to `chapter/01_KNN`. |
+| Current notebook | `05_demanding_case_curse` (not started — branch not yet created) |
+| Phase | `notebook-plan` |
+| Active branch | `chapter/01_KNN` (NB 4 committed + merged) |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 5 = demanding case: breast cancer & the curse) |
+| Next concrete action | **Open NB 5** (awaiting Rémy's go). The **demanding case** (notebook-5 role): full honest workflow on `load_breast_cancer` (sklearn built-in, **offline**; binary, 30-D, n=569). `Pipeline(StandardScaler, KNeighborsClassifier)` chosen by CV (k, maybe weights), one held-out eval, confusion matrix/scores, error analysis, when-to / not-to-use k-NN. **+ the curse of dimensionality, felt:** append pure-noise dims **at the signal's scale** → distances concentrate (near/far ratio collapses) → k-NN degrades (chapter plan measured ≈0.965 → ≈0.78). Figures: confusion matrix/scores; accuracy vs #noise-dims + the near/far-ratio collapse as the *why*. Reuse `viz.plot_confusion_matrix`, `plot_train_test_curve`; `Pipeline`/`StandardScaler` (NB 11), `cross_val_score`/`StratifiedKFold` (NB 10). From `chapter/01_KNN`: `git switch -c notebook/01_KNN__05_demanding_case_curse`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–4, plus 05, 10, 11. Rémy validates the plan before build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator & its parameters) built & merged to `chapter/01_KNN`.** Introduced
+  `KNeighborsClassifier`: parity with by-hand (0 diff, 0.956) and `cross_val_score` == NB 3's **0.919**;
+  walked `n_neighbors` / `weights` / `metric`. weights uniform vs distance (k=151: 0.678 vs 0.833,
+  boundary panels) — **mechanism corrected** after ml review: it is a graded 1/d *tilt* (effective
+  ~73/151, nearest-15 hold ~34 %), NOT "near dominates", and 0.833 stays well below uniform@15's 0.956
+  (degrades gracefully, doesn't recover). metric small effect (Manhattan p=1 0.967); chose weights by
+  `cross_val_score` (distance 0.924 → test 0.967); even-k tie → lowest-label argmax (== by-hand
+  `bincount().argmax()` convention) → odd k for binary (binary-only; 3-class can still tie). Pedagogy
+  PASS; ml-expert REVISE→fixed (1 MAJOR: false distance-weight mechanism, re-measured & corrected; +
+  MINORs: parity edge-case, argmax convention, figure wording). Rémy validated visually. `feat(01_knn):
+  notebook 04 — the estimator & its parameters`.
 - **NB 3 (the k dial) built & merged to `chapter/01_KNN`.** By-hand k-NN on `make_moons`: k as the
   bias–variance dial — boundaries k=1 (jagged/memorize) / 15 / 151 (over-smooth), contrasted with NB
   05's single bisector; train/test error vs k (log axis, the U; k=1 train err **0.000**); then the

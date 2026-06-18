@@ -70,7 +70,8 @@ no wrapper needed). The by-hand `knn_predict` is kept once, only for the parity 
 8. (code) `weights` uniform vs distance, test accuracy across k = 15/51/101/151.
 9. (md) **Read the output** — close at moderate k; as k grows, uniform underfits (the far crowd drowns
    the signal: 0.678 at k=151) while distance holds up (0.833) — it resists over-smoothing.
-10. (code) **boundary** — uniform vs distance at a large k (k = 51), two panels via
+10. (code) **boundary** — uniform vs distance at a large k (built at **k = 151**, not the planned 51:
+    it matches the table's most dramatic row, uniform 0.678 vs distance 0.833), two panels via
     `plot_decision_boundary`.
 11. (md) **Read the figure** — uniform at k=51 is washed out; distance at k=51 stays responsive near
     the data, the boundary bending back toward the crescents. Same k, different weighting.
