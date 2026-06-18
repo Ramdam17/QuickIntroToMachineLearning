@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `02_distance_and_scale` (not started — branch not yet created) |
+| Current notebook | `02_distance_and_scale` (planning — branch created) |
 | Phase | `notebook-plan` |
-| Active branch | `chapter/01_KNN` (NB 1 committed + merged) |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 2 = distance & the scale trap) |
-| Next concrete action | **Open NB 2** (awaiting Rémy's go). From `chapter/01_KNN`: `git switch -c notebook/01_KNN__02_distance_and_scale`, set STATE (phase `notebook-plan`, active branch), then enter plan mode and draft the NB 2 cell-by-cell plan — *distance & the scale trap* per `docs/plans/chapter_01_KNN.md` (NB 2). One concept: **k-NN is pure distance → the larger-range feature dominates → standardize** (the NB 11 payoff). Euclidean vs Manhattan introduced *in service of* this (metric as a tunable dial is NB 4, not here). Rescaled-axis moons shows the trap (chapter plan measured raw CV ≈ 0.79 → standardized ≈ 0.92 — **re-measure at plan/build**). Prereqs: NB 1, plus 02 & 11. Rémy validates the plan before build; then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Active branch | `notebook/01_KNN__02_distance_and_scale` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 2) — per-notebook plan being drafted in plan mode |
+| Next concrete action | **Draft & approve the NB 2 plan, then build.** Concept: the **scale trap** (k-NN is pure distance → the big-range feature dominates → standardize; the NB 11 payoff). **Measured by-hand anchors (single stratified 70/30 split, kNN k=5):** rescale feature 2 ×50 → raw acc **0.733**, standardized on train stats acc **0.956** (recovers *exactly* — standardizing erases the artificial scale; same recovery at ×10/×20/×50/×100, raw falls 0.878/0.811/0.733/0.700). At ×50, feature-2 span **149.9** vs feature-1 span **4.40** (the big axis dominates the Euclidean distance). Euclidean vs Manhattan barely differ on this isotropic data (**0.956 vs 0.944**) → **scale ≫ metric choice** (metric as a tunable dial = NB 4; metric geometry = NB 6). Key figure: raw-vs-standardized **decision boundary** (by-hand kNN over a meshgrid, or `viz.plot_decision_boundary` with a tiny by-hand wrapper — decide in plan). Prereqs: NB 1, plus 02 (distance) & 11 (standardize, fit-on-train). On ExitPlanMode approval → persist `docs/plans/01_KNN__02_distance_and_scale.md`, commit → build via `nbformat` → both reviewers (no BLOCK) → Rémy visual → guards (hex/llms/ruff/pytest) → commit → merge to `chapter/01_KNN`. |
 
 ## Notes / blockers
 
