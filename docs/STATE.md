@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `03_gaussian_likelihood_logspace` (NB 3 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging to chapter). |
-| Phase | `notebook-commit` → then open NB 4 |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` merges in, ff) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
-| Next concrete action | **Open NB 4 — "The estimators & their parameters"** (the first integration notebook). `git switch -c notebook/02_NaiveBayes__04_estimators_and_parameters` off the chapter branch; set STATE (phase `notebook-plan`); measure then plan mode. Per the approved chapter plan: parity recap (by-hand == `GaussianNB`); walk **`var_smoothing`** (variance floor; too-little spike / too-much wash), **`alpha`** (Laplace/Lidstone + the **zero-frequency cliff** and U-curve on a small text snippet — NB 4's CV *finds* α, no fixed optimum, α→0 = log(0) collapse), **`priors`/`fit_prior`** (set vs learn, effect under imbalance); **calibration as a TIGHT BRIDGE** (one intuition+figure+read that NB's posteriors are over-confident → full reliability-diagram+Brier treatment deferred to NB 5; `viz.plot_calibration_curve` likely lands in NB 5, may preview here). Choose a param by CV on TRAIN; one sealed test eval. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Current notebook | **`04_estimators_and_parameters`** (NB 4 of 5) — planning (NB 1–3 DONE & merged). |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/02_NaiveBayes__04_estimators_and_parameters` (off `chapter/02_NaiveBayes`) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__04_estimators_and_parameters.md` (to be written on Rémy's approval) |
+| Next concrete action | **Draft the NB-4 cell-by-cell plan in plan mode.** Integration notebook: the NB family (GaussianNB/MultinomialNB/BernoulliNB) + their dials, each *shown* (measured). **`var_smoothing`**: flat to 0.1 then collapses (1.0→0.989, 10→0.711). **`alpha`/Laplace**: heals NB 1's penguins zero by hand (α=0→P(long∣Adélie)=0; α=1→0.0065, posterior 0.018) — the library's MultinomialNB `alpha`, named→NB5; α→0 = log(0). **`priors`/`fit_prior`**: prior tilts the boundary (sweep P(Gentoo) 0.05→0.95 ⇒ predicted-Gentoo 122→130/274; borderline x=[40.8,208] flips Adélie→Gentoo); accuracy barely moves on separable data (honest mechanism, not an accuracy effect). **Choose a param by CV on TRAIN + one sealed test.** **Calibration NAMED, deferred to NB 5** (penguins Brier 0.0006 = too separable to show over-confidence — measure-driven choice to flag to Rémy vs the chapter plan's "bridge figure"). No `src/` add (calibration helper lands NB 5). Present via ExitPlanMode; Rémy validates alone; then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
