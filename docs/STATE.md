@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `01_bayes_from_counts` (NB 1 of 5) — **DONE** (both reviewers PASS, Rémy validated visually, committed; merging to chapter). |
-| Phase | `notebook-commit` → then open NB 2 |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__01_bayes_from_counts` merges in, ff) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
-| Next concrete action | **Open NB 2 — "The naive assumption"** (conditional independence). `git switch -c notebook/02_NaiveBayes__02_naive_assumption` off the chapter branch; set STATE (phase `notebook-plan`); plan mode for the cell-by-cell plan per the approved chapter plan: combine two features by multiplying per-feature likelihoods P(x₁,x₂∣y)≈P(x₁∣y)P(x₂∣y); what it buys / where it breaks (penguins within-class corr 0.33–0.66); measured punchline NB(0.9927)=LDA, > QDA(0.9890) **despite** the violation — GaussianNB = QDA-with-diagonal-covariance, the tie is an accuracy coincidence on near-separable data (Domingos & Pazzani 1997). Figures: independent (axis-aligned) vs real (tilted) density overlay; NB/QDA/LDA CV bars. Rémy validates the plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Current notebook | **`02_naive_assumption`** (NB 2 of 5) — planning (NB 1 DONE & merged). |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/02_NaiveBayes__02_naive_assumption` (off `chapter/02_NaiveBayes`) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__02_naive_assumption.md` (to be written on Rémy's approval) |
+| Next concrete action | **Draft the NB-2 cell-by-cell plan in plan mode** per the approved chapter plan. One concept: **conditional independence** — combine two features by multiplying per-feature likelihoods, P(x₁,x₂∣y) ≈ P(x₁∣y)·P(x₂∣y); what it buys (few parameters, tractable), where it breaks (penguins within-class corr 0.33–0.66); the measured punchline NB(0.9927) ties LDA & beats QDA(0.9890) **despite** the violation (GaussianNB = QDA with diagonal per-class covariance; the tie is an accuracy coincidence on near-separable 2-D data — Domingos & Pazzani 1997). Figures: independent (axis-aligned) vs real (tilted) density overlay; NB/QDA/LDA CV bars. Present via ExitPlanMode; **Rémy validates the plan alone**; on approval persist + commit, then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
