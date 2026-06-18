@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `03_the_k_dial` (planning — branch created) |
-| Phase | `notebook-plan` |
+| Current notebook | `03_the_k_dial` (plan APPROVED — building) |
+| Phase | `notebook-build` |
 | Active branch | `notebook/01_KNN__03_the_k_dial` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 3) — per-notebook plan being drafted in plan mode |
-| Next concrete action | **Draft & approve the NB 3 plan, then build.** Concept: **k is the bias–variance knob**; choose k by CV. **Measured anchors (by-hand k-NN, `make_moons(300,0.30,0)`, 210/90):** train_err/test_err vs k → k=1: **0.000 / 0.067** (memorizes; the gap = overfit), k=3: 0.071/0.033, k=15: 0.062/0.044, k=25: 0.081/0.078, k=151: 0.224/0.322 (underfit). **5-fold CV on TRAIN** picks **k=15** (cv acc 0.919); test acc @ k=15 = **0.956** (vs k=1 → 0.933, k=151 → 0.678). Honest point: test-curve min is k=3 but we may NOT choose on test — CV picks 15 from train only. Figures: train-vs-test error vs k (`viz.plot_train_test_curve`); CV acc vs k; boundaries at k=1/15/151 (`viz.plot_decision_boundary` + ByHandKNN). CV done **by hand** (`StratifiedKFold` + loop; KNeighborsClassifier stays NB 4). Prereqs: NB 1–2, plus 05, 09, 10. On ExitPlanMode approval → persist `docs/plans/01_KNN__03_the_k_dial.md`, commit → build. |
+| Active plan | `docs/plans/01_KNN__03_the_k_dial.md` (APPROVED) |
+| Next concrete action | **Build NB 3** per `docs/plans/01_KNN__03_the_k_dial.md` — ~19 cells, by-hand k-NN on `make_moons(300,0.30,0)` (210/90, original scale). Concept: **k = bias–variance knob, chosen by CV**. **Measured anchors:** train/test err vs k → k=1 **0.000/0.067** (memorizes; gap=overfit), k=3 .071/.033, k=15 .062/.044, k=151 .224/.322 (underfit); **5-fold CV on TRAIN picks k=15** (cv 0.919); test acc k=1→**0.933**, k=15→**0.956**, k=151→**0.678**. Honest: test-curve min is k=3 but selection uses CV (train only), never test. Figures: boundaries k=1/15/151 (`viz.plot_decision_boundary`+ByHandKNN); train-vs-test error vs k and CV-acc-vs-k (`viz.plot_train_test_curve`). CV **by hand** (`StratifiedKFold`+loop; KNeighborsClassifier stays NB 4). Build via `nbformat`; no `src/` (pytest 14). Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 03 — the k dial` → merge to `chapter/01_KNN`. |
 
 ## Notes / blockers
 
