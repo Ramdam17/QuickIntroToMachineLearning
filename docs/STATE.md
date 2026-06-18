@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `06_advanced_distances_and_k` (not started — branch not yet created) |
+| Current notebook | `06_advanced_distances_and_k` (planning — branch created) |
 | Phase | `notebook-plan` |
-| Active branch | `chapter/01_KNN` (NB 5 committed + merged) |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 6 = Advanced: distances & choosing k) |
-| Next concrete action | **Open NB 6** (awaiting Rémy's go) — the optional **Advanced** notebook (chapter's last; a Rémy-approved exception to the 5-ceiling, answering his two questions). Metric geometry: Minkowski p=1/2/∞ (Manhattan/Euclidean/**Chebyshev**) as neighbourhood *shape* — draw the **unit balls** (diamond/circle/square); **Mahalanobis** (covariance-aware) & **cosine**; the **metric × curse** (smaller/fractional p stays more discriminating in high-d, Aggarwal 2001 — ties to NB 5); choosing k/metric by CV → a peek at **nested CV**; and the honest clarification that **silhouette selects k-means clusters, not k-NN's k** (Rémy's question — supervised CV vs unsupervised silhouette, Rousseeuw 1987). Figures: unit balls L1/L2/L∞; metric impact on a boundary/accuracy; a nested-CV scheme. From `chapter/01_KNN`: `git switch -c notebook/01_KNN__06_advanced_distances_and_k`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–5. Rémy validates the plan before build. **Then chapter close → PR into `main` (6/6).** |
+| Active branch | `notebook/01_KNN__06_advanced_distances_and_k` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 6) — per-notebook plan being drafted in plan mode |
+| Next concrete action | **Draft & approve the NB 6 plan, then build.** Optional **Advanced** notebook answering Rémy's two questions. **Measured anchors:** **Q1 distance:** unit balls L1/L2/L∞ (geometry — diamond/circle/square); **Mahalanobis shown GEOMETRICALLY** (its unit ball = ellipse aligned to the covariance) — *not* an accuracy race (measured: maha ≈ euclid ≈ std ≈0.85 on correlated data; a clean win needs within-class cov = LDA territory, out of scope — stated honestly); **metric × curse** (Aggarwal 2001): near/far ratio smaller for smaller p (p=0.5<1<2 at every dim), and accuracy on breast_cancer+noise **p=1 0.877 vs p=2 0.842 at 1000 noise dims** (0.906 vs 0.860 at 200) → in high-d prefer smaller p (ties NB 5). Cosine named. **Q2 choosing k:** **nested CV** (inner tunes k, outer estimates) **0.960** honest vs naive/optimistic **0.967** (winner's curse); **silhouette** (Rousseeuw 1987) peaks at **3 clusters** on 3-blob data → it picks k-MEANS cluster count (unsupervised), NOT k-NN's k (supervised → CV). Figures: unit balls; Mahalanobis ellipse vs Euclidean circle; metric×curse (ratio/accuracy); silhouette-vs-clusters. From `chapter/01_KNN`: `git switch -c …` done; plan mode. Prereqs NB 1–5. On approval → persist plan, commit → build. **Then chapter close → PR into `main` (6/6).** |
 
 ## Notes / blockers
 
