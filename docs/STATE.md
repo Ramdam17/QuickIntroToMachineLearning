@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`01_bayes_from_counts`** (NB 1 of 5) — plan APPROVED, building. |
-| Phase | `notebook-plan-approved` → `notebook-build` |
-| Active branch | `notebook/02_NaiveBayes__01_bayes_from_counts` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__01_bayes_from_counts.md` (**APPROVED** 2026-06-18) |
-| Next concrete action | **Build NB 1** to `notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb` (~21 cells) via `uv run python - < /tmp/build_nb1.py` (stdin). Measured numbers to reconcile: priors 0.551/0.449; contingency Adélie [135,16,0] / Gentoo [3,67,53]; likelihood incl. P(long∣Adélie)=0; posteriors short→Adélie 0.978 / medium→Gentoo 0.807 / long→Gentoo 1.000; evidence 0.504/0.303/0.193. Then nbconvert-execute to /tmp + visually inspect figures; dispatch BOTH reviewers (no BLOCK); revise; Rémy visual; guards (`check_no_hardcoded_hex`, `gen_llms_txt`, `pytest`, `--clear-output`); commit `feat(02_naive_bayes): notebook 01 — Bayes' rule, from counts`; merge `notebook → chapter`. |
+| Current notebook | `01_bayes_from_counts` (NB 1 of 5) — **DONE** (both reviewers PASS, Rémy validated visually, committed; merging to chapter). |
+| Phase | `notebook-commit` → then open NB 2 |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__01_bayes_from_counts` merges in, ff) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
+| Next concrete action | **Open NB 2 — "The naive assumption"** (conditional independence). `git switch -c notebook/02_NaiveBayes__02_naive_assumption` off the chapter branch; set STATE (phase `notebook-plan`); plan mode for the cell-by-cell plan per the approved chapter plan: combine two features by multiplying per-feature likelihoods P(x₁,x₂∣y)≈P(x₁∣y)P(x₂∣y); what it buys / where it breaks (penguins within-class corr 0.33–0.66); measured punchline NB(0.9927)=LDA, > QDA(0.9890) **despite** the violation — GaussianNB = QDA-with-diagonal-covariance, the tie is an accuracy coincidence on near-separable data (Domingos & Pazzani 1997). Figures: independent (axis-aligned) vs real (tilted) density overlay; NB/QDA/LDA CV bars. Rémy validates the plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (Bayes' rule, from counts) built & merged to `chapter/02_NaiveBayes`.** By hand on the binary
+  penguins subset: the **prior** P(species) 0.551/0.449 by counting → `bill_length` 3-bin contingency
+  (Adélie [135,16,0] / Gentoo [3,67,53]) → **likelihood** P(bin∣species) by row-normalizing → **Bayes'
+  rule** (4 terms named) → **posterior** P(species∣bin) (short→Adélie 0.978, medium→Gentoo 0.807,
+  long→Gentoo 1.000) → predict by **argmax**, with "evidence cancels under argmax" *demonstrated*
+  (`joint.idxmax == posterior.idxmax` True). The bin `long` surfaces the **live zero-frequency case**
+  (no Adélie → P=0 → posterior exactly 0/1, overconfident) → foreshadows NB 4 smoothing. 21 cells, 3
+  figures (prior bar / likelihood grouped bar / posterior stacked bar), "Your turn" ×3, vocabulary box.
+  Both reviewers **PASS** (no BLOCK): ml-expert re-derived every number by exact fractions (45/46, 67/83);
+  pedagogy confirmed one-concept + voice. 4 MINORs folded (conditional-probability gloss + drop "joint"
+  cell 10; discrete-likelihood-normalization hedge cell 12; exhaustivity already in cell 6). Rémy
+  validated visually. `common_errors.md` gained a zero-frequency row; `llms.txt` regenerated; pytest 14
+  green (no `src/` change).
 - **Chapter 02 (Naive Bayes) plan APPROVED & persisted** (`docs/plans/chapter_02_NaiveBayes.md`).
   5 notebooks, standard arc: NB 1 Bayes from counts (one feature, by hand) → NB 2 the naive
   (conditional-independence) assumption → NB 3 the Gaussian likelihood + log-space → NB 4 the

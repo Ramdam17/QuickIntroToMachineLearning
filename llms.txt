@@ -22,3 +22,5 @@
 - [notebooks/01_KNN/04_estimator_and_parameters.ipynb](notebooks/01_KNN/04_estimator_and_parameters.ipynb) — 04 — The estimator & its parameters — *Module 01 · k-Nearest Neighbours — notebook 4 of 6*
 - [notebooks/01_KNN/05_demanding_case_curse.ipynb](notebooks/01_KNN/05_demanding_case_curse.ipynb) — 05 — Demanding case: breast cancer & the curse — *Module 01 · k-Nearest Neighbours — notebook 5 of 6*
 - [notebooks/01_KNN/06_advanced_distances_and_k.ipynb](notebooks/01_KNN/06_advanced_distances_and_k.ipynb) — 06 — Advanced: distances & choosing k — *Module 01 · k-Nearest Neighbours — notebook 6 of 6 (optional, advanced)*
+## 02_NaiveBayes
+- [notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb](notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb) — 01 — Bayes' rule, from counts — *Module 02 · Naive Bayes — notebook 1 of 5*

@@ -26,6 +26,7 @@ point to the notebook that addresses it.
 | KNN | "More features can only help." | For distance-based k-NN, irrelevant/noise features make all points look equally far (the curse of dimensionality; near/far distance ratio → 1), so accuracy *falls*. Select/reduce features. | `01_KNN/05` |
 | KNN | "A fancier distance (Mahalanobis, fractional p) will rescue my k-NN." | The metric matters mainly in high dimensions; in low-d, well-scaled data it is a wash. Fix scale (NB 2) and cut dimensions (NB 5) first. | `01_KNN/06` |
 | Naive Bayes | "Features must really be independent." | The assumption is *conditional* independence, and the method is often useful even when it's violated. |
+| Naive Bayes | "A likelihood/posterior of exactly 0 or 1 is a hard fact." | A category never seen in a class gives likelihood 0, which zeroes the whole product (the zero-frequency problem) — it means *unobserved*, not impossible. Smoothing (add a little to every count) cures the overconfidence. Surfaced in `02_NaiveBayes/01`; fixed in `02_NaiveBayes/04`. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |
 | SVM | "Forgot to scale." | SVMs are scale-sensitive; standardize features. |
