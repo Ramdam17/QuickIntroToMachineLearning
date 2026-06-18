@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`02_naive_assumption`** (NB 2 of 5) — planning (NB 1 DONE & merged). |
-| Phase | `notebook-plan` |
+| Current notebook | **`02_naive_assumption`** (NB 2 of 5) — plan APPROVED, building. |
+| Phase | `notebook-plan-approved` → `notebook-build` |
 | Active branch | `notebook/02_NaiveBayes__02_naive_assumption` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__02_naive_assumption.md` (to be written on Rémy's approval) |
-| Next concrete action | **Draft the NB-2 cell-by-cell plan in plan mode** per the approved chapter plan. One concept: **conditional independence** — combine two features by multiplying per-feature likelihoods, P(x₁,x₂∣y) ≈ P(x₁∣y)·P(x₂∣y); what it buys (few parameters, tractable), where it breaks (penguins within-class corr 0.33–0.66); the measured punchline NB(0.9927) ties LDA & beats QDA(0.9890) **despite** the violation (GaussianNB = QDA with diagonal per-class covariance; the tie is an accuracy coincidence on near-separable 2-D data — Domingos & Pazzani 1997). Figures: independent (axis-aligned) vs real (tilted) density overlay; NB/QDA/LDA CV bars. Present via ExitPlanMode; **Rémy validates the plan alone**; on approval persist + commit, then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__02_naive_assumption.md` (**APPROVED** 2026-06-18) |
+| Next concrete action | **Build NB 2** to `notebooks/02_NaiveBayes/02_naive_assumption.ipynb` (~21 cells) via `uv run python - < /tmp/build_nb2.py` (stdin). Measured: within-class corr 0.326/0.661 (overall 0.869); real−naive joint max 0.107; CV GaussianNB/QDA/LDA 0.9927/0.9890/0.9927. By-hand mechanism in binning (no Gaussian — deferred to NB 3); sklearn CV bars = forward-referenced punchline. Figures: scatter (tilt) / real-vs-naive-vs-difference joint heatmaps / CV bars. Then nbconvert-execute to /tmp + inspect figures; BOTH reviewers (no BLOCK); revise; Rémy visual; guards; commit `feat(02_naive_bayes): notebook 02 — the naive assumption`; merge → chapter. |
 
 ## Notes / blockers
 
