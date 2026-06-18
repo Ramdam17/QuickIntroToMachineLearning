@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 1 — `01_score_to_probability` (**planning**) |
-| Phase | `notebook-plan` |
+| Current notebook | NB 1 — `01_score_to_probability` (plan **APPROVED**; **building**) |
+| Phase | `notebook-build` |
 | Active branch | `notebook/03_LogisticRegression__01_score_to_probability` |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB-1 plan → `docs/plans/03_LogisticRegression__01_score_to_probability.md` (drafting in plan mode, **not yet written/approved**) |
-| Next concrete action | **Draft NB 1 cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation (notebook plans are validated by Rémy alone — no reviewer gate). NB 1 = **one concept: the sigmoid & log-odds** (~20 cells): header/prereqs → one line on **e** → code σ(z) from scratch & plot it → **p→odds→log-odds** table → name z = log-odds → apply σ to `bill_length` (**RAW mm**) with **hand-chosen** weights (labelled preview, "NB 3–4 *find* these"; never fitted) → mark the **≈43 mm** ½-crossing → "Read the figure" → Your turn (3 tiered: read P off curve / flip weight sign / solve for P=½ bill length) → What you built → References. Measured anchors: 1-D LogReg acc **0.947**, ~16 % of points in P∈[0.1,0.9]. On approval: write the NB-1 plan + commit, phase `notebook-plan-approved`, build. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Active plan | `docs/plans/03_LogisticRegression__01_score_to_probability.md` (**APPROVED**) |
+| Next concrete action | **Build NB 1** (`notebooks/03_LogisticRegression/01_score_to_probability.ipynb`) per the approved cell-by-cell plan (~19 cells, one concept: sigmoid & log-odds; hand-chosen weights w=1.0/b=−43, ½-crossing ≈43 mm; **no fitting**). Build via `uv run python - < /tmp/build_nb1.py` (stdin — avoids `/tmp/struct.py` shadow). Then: re-measure anchors at build, nbconvert-execute to /tmp (keep tracked file output-free), extract figures & inspect (one image per Read), **banned-word grep=0**, `check_no_hardcoded_hex`, `gen_llms_txt`, ruff/black; **both reviewers** (no BLOCK); **Rémy visual validation**; clear outputs; commit `feat(03_logistic_regression): notebook 01 — from a linear score to a probability`; merge `notebook → chapter`. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
