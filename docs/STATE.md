@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `02_NaiveBayes` — **COMPLETE (5/5)**, merging to `main` (chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `05_text_classification` (NB 5 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging). |
-| Phase | `chapter-merge` → then `idle` / open chapter 03 |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__05_text_classification` merges in, ff) → PR into `main` |
-| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (all 5 notebooks done) |
-| Next concrete action | **Close chapter 02 via PR into `main`** (protected): `git push -u origin chapter/02_NaiveBayes`; `gh pr create --base main --head chapter/02_NaiveBayes` (title `feat(02_naive_bayes): complete chapter — Naive Bayes`); `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 03 — Logistic Regression** (the idle edit rides onto the `chapter/03` branch, per the PR-only-main discipline — same as the ch-01→ch-02 handoff). |
+| Current chapter | `03_LogisticRegression` — **opened** off `main` (`726d13e`). Chapter 02 complete (5 notebooks, PR #2). |
+| Current notebook | — (chapter planning) |
+| Phase | `chapter-plan` |
+| Active branch | `chapter/03_LogisticRegression` |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (drafting in plan mode; **not yet written/approved**) |
+| Next concrete action | **Draft the chapter 03 plan in plan mode**, then reviewer-gate it. Per `docs/course_map.md` §03 + the per-method arc: NB 1–3 fundamentals (one concept each, by hand) — (1) a linear score → probability via the **sigmoid**; (2) the **decision boundary** & reading weights; (3) **fitting via log-loss** (what training optimizes, gradient intuition, no heavy calculus). NB 4 the estimator & its parameters — `LogisticRegression`: **C, L1/L2 regularization, multi-class** (one-vs-rest vs multinomial/softmax), coefficients under regularization. NB 5 the demanding case — **calibrated probabilities, threshold choice, error analysis** (LogReg is the calibrated discriminative foil to NB's over-confidence, ch 02 bridge). Then: dispatch BOTH reviewers on the draft (no BLOCK), ExitPlanMode for Rémy's approval, **write `docs/plans/chapter_03_LogisticRegression.md` + commit**, set phase `chapter-plan-approved`, open NB 1. The pending `idle` STATE edit was folded into this `chapter-plan` transition (committed on the chapter branch, not on protected `main`). |
 
 ## Notes / blockers
 
@@ -27,6 +27,12 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 03 (Logistic Regression) opened.** Branch `chapter/03_LogisticRegression` created off
+  `main` (synced @ `726d13e` after PR #2). Phase `chapter-plan`: drafting the chapter plan in plan
+  mode per `course_map.md` §03 and the per-method arc (sigmoid → boundary/weights → log-loss fitting;
+  NB 4 `LogisticRegression` C/L1-L2/multi-class; NB 5 calibration + threshold + error analysis —
+  LogReg as the calibrated discriminative foil to NB's over-confidence). The pending `idle` STATE
+  edit was folded into this transition (committed on the chapter branch, not on protected `main`).
 - **NB 5 (Text classification — the demanding case) built & merged; CHAPTER 02 COMPLETE (5/5).** The
   capstone, on 20-newsgroups: **by-hand bag-of-words on-ramp** (toy sentences → vocab → dense count
   matrix) → `CountVectorizer` (12 384 words, density 0.0043, fit-on-train-only) → `MultinomialNB`
