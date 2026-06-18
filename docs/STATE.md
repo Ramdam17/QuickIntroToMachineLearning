@@ -7,10 +7,10 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `04_estimators_and_parameters` (NB 4 of 5) — **DONE** (both reviewers PASS, Rémy validated & confirmed the count stays 5; committed; merging to chapter). |
-| Phase | `notebook-commit` → then open NB 5 (the last) |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__04_estimators_and_parameters` merges in, ff) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
+| Current notebook | **`05_text_classification`** (NB 5 of 5, the capstone) — planning (NB 1–4 DONE & merged). |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/02_NaiveBayes__05_text_classification` (off `chapter/02_NaiveBayes`) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__05_text_classification.md` (to be written on Rémy's approval) |
 | Next concrete action | **Open NB 5 — "Text classification" (the demanding case)**, the chapter capstone. `git switch -c notebook/02_NaiveBayes__05_text_classification` off the chapter branch; set STATE (phase `notebook-plan`); **measure** (fetch 20newsgroups subset; `CountVectorizer`+`MultinomialNB` acc; one-vs-rest imbalance; over-confidence/Brier vs LogReg; calibration curve) then plan mode. Per the approved chapter plan: **by-hand vectorization on-ramp** (toy sentences → hand vocab → dense count matrix → reveal `CountVectorizer` + sparsity — built, not "just happening"); fit-on-train-only; **honest eval under imbalance** (one-vs-rest sci.med ≈396 vs 1037 test → precision/recall/F1 + PR curve, not accuracy); **calibration in full** (reliability diagram + Brier — NB over-confident vs LogReg — the limit NB 4 named); the **Domingos-Pazzani loop closes** (independence wildly violated in text, KNN died of the curse, NB fast & strong); **generative-vs-discriminative bridge → ch 03** (Ng & Jordan 2001, named). **Likely `src/` adds (with tests):** `datasets.load_newsgroups()` (fetch-and-cache + visible logging) + `viz.plot_calibration_curve()`. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge → **chapter 02 closes via PR into `main`**. |
 
 ## Notes / blockers
