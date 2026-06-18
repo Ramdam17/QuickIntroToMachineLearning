@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `04_estimator_and_parameters` (planning — branch created) |
-| Phase | `notebook-plan` |
+| Current notebook | `04_estimator_and_parameters` (plan APPROVED — building) |
+| Phase | `notebook-build` |
 | Active branch | `notebook/01_KNN__04_estimator_and_parameters` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 4) — per-notebook plan being drafted in plan mode |
-| Next concrete action | **Draft & approve the NB 4 plan, then build.** NB 4 = the **method & parameters** notebook (walk the real `KNeighborsClassifier`). **Measured anchors (`make_moons(300,0.30,0)`, 210/90):** (1) **by-hand == sklearn** at k=15 (0 diff, acc 0.956); (2) **weights** uniform vs distance: k=15 .956/.967, k=51 .878/.922, k=101 .733/.889, **k=151 .678/.833** (distance resists over-smoothing, gap widens with k); (3) **metric** @k=15: Manhattan p=1 **0.967**, Euclidean p=2 0.956, Chebyshev 0.956 (small effect, cf NB 2); (4) **even-k tie** (k=2): sklearn `weights="uniform"` breaks 1-1 ties by **lowest class label (0)**, ignoring which neighbour is nearer (pt 26: 2-NN [1,0], nearer=1, predicts 0) → why odd k in binary. Plan: also a `cross_val_score` (NB 10) selection of weights now that the estimator is sklearn-compatible (measure at build). Figures: uniform-vs-distance boundary at large k; metric comparison. Prereqs: NB 1–3, plus 05. On ExitPlanMode approval → persist `docs/plans/01_KNN__04_estimator_and_parameters.md`, commit → build. |
+| Active plan | `docs/plans/01_KNN__04_estimator_and_parameters.md` (APPROVED) |
+| Next concrete action | **Build NB 4** per `docs/plans/01_KNN__04_estimator_and_parameters.md` — ~21 cells, the **method & parameters** notebook (real `KNeighborsClassifier`). **Measured anchors:** by-hand == sklearn k=15 (0 diff, 0.956); `cross_val_score(KNN(15))` = **0.919** (== NB 3's by-hand CV); **weights** uniform/distance k=15 .956/.967 … **k=151 .678/.833** (distance resists over-smoothing); **metric** @k=15 Manhattan p=1 0.967 / Euclid p=2 0.956 / Chebyshev 0.956; **CV picks weights**: uniform 0.919 vs distance **0.924** → test **0.967**; **even-k tie** (k=2, uniform) → lowest label 0 (ignores nearer; pt 26 [1,0] nearer=1 → 0) → odd k for binary. Figures: weights uniform-vs-distance boundary at k=51; metric compare. Reuse `viz.plot_decision_boundary`; by-hand `knn_predict` kept once for parity; no `src/` (pytest 14). Build via `nbformat`; **`--clear-output --inplace` before commit**. Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 04 — the estimator & its parameters` → merge to `chapter/01_KNN`. |
 
 ## Notes / blockers
 
