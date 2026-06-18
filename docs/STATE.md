@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`03_gaussian_likelihood_logspace`** (NB 3 of 5) — planning (NB 1–2 DONE & merged). |
-| Phase | `notebook-plan` |
+| Current notebook | **`03_gaussian_likelihood_logspace`** (NB 3 of 5) — plan APPROVED (chapter stays 5), building. |
+| Phase | `notebook-plan-approved` → `notebook-build` |
 | Active branch | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__03_gaussian_likelihood_logspace.md` (to be written on Rémy's approval) |
-| Next concrete action | **Draft the NB-3 cell-by-cell plan in plan mode.** One concept: model P(feature∣class) with a **continuous density** (the Gaussian), computed safely in **log-space**. Front-load **mass→density** as a *taught first-contact* (area not height; f(x) can exceed 1 — pedagogy MAJOR-2); fit μ,σ per class per feature (this IS GaussianNB), overlay the bell on NB 1's `bill_length` histogram; assemble a 2-feature by-hand Gaussian NB and check parity vs `GaussianNB`; **demonstrate underflow** (product of many small likelihoods → 0.0 in float) then redo with `np.log` (sum stays finite). Multinomial/Bernoulli **named, not built** → NB 5. **Split trigger:** if cell planning reads as >1 concept, split density-NB vs log-space-NB (→ 6 notebooks); default stays 5. Present via ExitPlanMode; **Rémy validates alone**; then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__03_gaussian_likelihood_logspace.md` (**APPROVED** 2026-06-18) |
+| Next concrete action | **Build NB 3** to `notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb` (~20 cells) via `uv run python - < /tmp/build_nb3.py` (stdin). Measured: Adélie μ38.79/σ2.65, Gentoo μ47.50/σ3.07; by-hand Gaussian NB == `GaussianNB` 100 %, acc 0.9927; product → 0.0 at N=324 (sum-of-logs −748 finite). Figures: density-histogram+bells (mass→density) / by-hand Gaussian-NB boundary (parity) / underflow cliff. density front-loaded; multinomial/Bernoulli named→NB5. Then nbconvert-execute to /tmp + inspect; BOTH reviewers (no BLOCK); revise; Rémy visual; guards; commit `feat(02_naive_bayes): notebook 03 — the Gaussian likelihood & log-space`; merge → chapter. |
 
 ## Notes / blockers
 
