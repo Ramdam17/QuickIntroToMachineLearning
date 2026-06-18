@@ -12,6 +12,7 @@ point to the notebook that addresses it.
 | Scaling/feature selection done on the whole dataset before the split | Leakage — test info bleeds into training. Fit preprocessing on train only. | `00_GettingStarted`, `01_KNN/02` |
 | "I changed the seed and the result changed — which is right?" | Single-seed results are noisy; fix and document the seed, and judge over CV folds. | per method, notebook 4 |
 | "I picked the k (or any hyperparameter) that scored best on the test set." | That tunes the model to the test set, so the reported score is optimistic. Choose hyperparameters by cross-validation on the training data; touch the test set once, at the end. | `00_GettingStarted` (NB 10), `01_KNN/03` |
+| "I'll report the best cross-validation score from my grid/sweep." | Optimistic too — you kept the luckiest setting (winner's curse). Estimate with nested CV (inner tunes, outer estimates), or a final sealed-test score. | `01_KNN/06` |
 | Comparing models on different splits/preprocessing | Not a fair comparison. Same splits, same pipeline. | per method, notebook 5 |
 | Accuracy looks great on imbalanced data | A constant predictor can score high. Use a metric that respects the minority class. | `02_NaiveBayes/05` |
 
@@ -23,6 +24,7 @@ point to the notebook that addresses it.
 | KNN | "The single nearest neighbour (k=1) is the most reliable guide." | One nearest point can be a noise stray; the majority vote over k≥3 neighbours is more robust near class overlap. The vote: `01_KNN/01`; choosing k: `01_KNN/03`. |
 | KNN | "Odd k avoids ties, so I'm safe." | True only for **two** classes. With 3+ classes an odd k can still tie (e.g. 1-1-1 at k=3); sklearn then breaks it by the lowest class label. | `01_KNN/04` |
 | KNN | "More features can only help." | For distance-based k-NN, irrelevant/noise features make all points look equally far (the curse of dimensionality; near/far distance ratio → 1), so accuracy *falls*. Select/reduce features. | `01_KNN/05` |
+| KNN | "A fancier distance (Mahalanobis, fractional p) will rescue my k-NN." | The metric matters mainly in high dimensions; in low-d, well-scaled data it is a wash. Fix scale (NB 2) and cut dimensions (NB 5) first. | `01_KNN/06` |
 | Naive Bayes | "Features must really be independent." | The assumption is *conditional* independence, and the method is often useful even when it's violated. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |
