@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `05_demanding_case_curse` (not started — branch not yet created) |
+| Current notebook | `05_demanding_case_curse` (planning — branch created) |
 | Phase | `notebook-plan` |
-| Active branch | `chapter/01_KNN` (NB 4 committed + merged) |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 5 = demanding case: breast cancer & the curse) |
-| Next concrete action | **Open NB 5** (awaiting Rémy's go). The **demanding case** (notebook-5 role): full honest workflow on `load_breast_cancer` (sklearn built-in, **offline**; binary, 30-D, n=569). `Pipeline(StandardScaler, KNeighborsClassifier)` chosen by CV (k, maybe weights), one held-out eval, confusion matrix/scores, error analysis, when-to / not-to-use k-NN. **+ the curse of dimensionality, felt:** append pure-noise dims **at the signal's scale** → distances concentrate (near/far ratio collapses) → k-NN degrades (chapter plan measured ≈0.965 → ≈0.78). Figures: confusion matrix/scores; accuracy vs #noise-dims + the near/far-ratio collapse as the *why*. Reuse `viz.plot_confusion_matrix`, `plot_train_test_curve`; `Pipeline`/`StandardScaler` (NB 11), `cross_val_score`/`StratifiedKFold` (NB 10). From `chapter/01_KNN`: `git switch -c notebook/01_KNN__05_demanding_case_curse`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–4, plus 05, 10, 11. Rémy validates the plan before build. |
+| Active branch | `notebook/01_KNN__05_demanding_case_curse` |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 5) — per-notebook plan being drafted in plan mode |
+| Next concrete action | **Draft & approve the NB 5 plan, then build.** The **demanding case**: full honest workflow on `load_breast_cancer` (offline; 569×30; malignant 212 / benign 357) + the curse, felt. **Measured anchors:** `Pipeline(StandardScaler, KNN)`, 5-fold CV on train picks **k=7** (CV **0.970**); **raw 0.935 vs scaled 0.970** (NB 2's scale trap on real data); held-out **test acc 0.947**; confusion `[[57,7],[2,105]]` (true mal/benign × pred); **malignant recall 0.891** = 7 of 64 cancers missed (the costly error — asymmetric cost, NB 7). **Curse:** append pure-noise dims at signal scale (standardized) → acc **0.947→0.789** at 0/30/100/300/1000/2000 dims, while **near/far ratio 0.121→0.909** (→1 = distance concentration, the *why*, Beyer 1999). Figures: CV acc vs k; `viz.plot_confusion_matrix`; curse (acc vs #noise-dims + near/far ratio vs #noise-dims). Reuse `Pipeline`/`StandardScaler` (NB 11), `cross_val_score`/`StratifiedKFold` (NB 10), `pairwise_distances` for the ratio. No `src/` (pytest 14). Prereqs: NB 1–4, plus 10, 11 (and 06–08 metrics). On ExitPlanMode approval → persist `docs/plans/01_KNN__05_demanding_case_curse.md`, commit → build. |
 
 ## Notes / blockers
 
