@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated, both REVISE→folded; **6 notebooks**, a Rémy-approved exception to the 5-ceiling). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 1 — `01_score_to_probability` (about to open) |
-| Phase | `chapter-plan-approved` (→ opening NB 1) |
-| Active branch | `chapter/03_LogisticRegression` |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (**APPROVED**) |
-| Next concrete action | **Open NB 1 — the sigmoid & log-odds.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__01_score_to_probability`; set STATE phase `notebook-plan`; enter plan mode and draft NB 1 cell-by-cell (~20 cells, one concept): one line on **e** → code σ(z) from scratch & plot it → **p→odds→log-odds** table → name z = log-odds → apply σ to `bill_length` (RAW mm) with **hand-chosen** weights (labelled preview, "NB 3–4 find these") → mark the **≈43 mm** ½-crossing → "Read the figure" → Your turn (3 tiered) → What you built → References. Measured: 1-D acc 0.947, ~16 % in [0.1,0.9]. Rémy validates the NB-1 plan (alone — no reviewer gate on notebook plans) → build → both reviewers → Rémy visual → guards → commit → merge to chapter. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer (calibration/threshold/error analysis). |
+| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
+| Current notebook | NB 1 — `01_score_to_probability` (**planning**) |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/03_LogisticRegression__01_score_to_probability` |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB-1 plan → `docs/plans/03_LogisticRegression__01_score_to_probability.md` (drafting in plan mode, **not yet written/approved**) |
+| Next concrete action | **Draft NB 1 cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation (notebook plans are validated by Rémy alone — no reviewer gate). NB 1 = **one concept: the sigmoid & log-odds** (~20 cells): header/prereqs → one line on **e** → code σ(z) from scratch & plot it → **p→odds→log-odds** table → name z = log-odds → apply σ to `bill_length` (**RAW mm**) with **hand-chosen** weights (labelled preview, "NB 3–4 *find* these"; never fitted) → mark the **≈43 mm** ½-crossing → "Read the figure" → Your turn (3 tiered: read P off curve / flip weight sign / solve for P=½ bill length) → What you built → References. Measured anchors: 1-D LogReg acc **0.947**, ~16 % of points in P∈[0.1,0.9]. On approval: write the NB-1 plan + commit, phase `notebook-plan-approved`, build. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
