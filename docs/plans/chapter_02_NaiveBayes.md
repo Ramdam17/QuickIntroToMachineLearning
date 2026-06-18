@@ -224,7 +224,7 @@ notebook; Rémy validates visually; commit per notebook; **chapter close via PR 
 |----|--------|--------|
 | 1 | `notebook/02_NaiveBayes__01_bayes_from_counts` | **done** — built (21 cells), both reviewers PASS (4 MINORs folded), Rémy validated visually, merged to `chapter/02_NaiveBayes` |
 | 2 | `notebook/02_NaiveBayes__02_naive_assumption` | **done** — built (21 cells), both reviewers PASS (shared MINOR "Read the table" folded), Rémy validated visually, merged to `chapter/02_NaiveBayes` |
-| 3 | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` | planned |
+| 3 | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` | **done** — built (20 cells), both reviewers PASS (3 banned words + honesty/NaN MINORs folded), Rémy validated visually, merged to `chapter/02_NaiveBayes`. Stayed at 5 (split not pulled). |
 | 4 | `notebook/02_NaiveBayes__04_estimators_and_parameters` | planned |
 | 5 | `notebook/02_NaiveBayes__05_text_classification` | planned |
 

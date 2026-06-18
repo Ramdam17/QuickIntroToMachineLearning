@@ -25,3 +25,4 @@
 ## 02_NaiveBayes
 - [notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb](notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb) — 01 — Bayes' rule, from counts — *Module 02 · Naive Bayes — notebook 1 of 5*
 - [notebooks/02_NaiveBayes/02_naive_assumption.ipynb](notebooks/02_NaiveBayes/02_naive_assumption.ipynb) — 02 — The "naive" assumption — *Module 02 · Naive Bayes — notebook 2 of 5*
+- [notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb](notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb) — 03 — The Gaussian likelihood, computed safely — *Module 02 · Naive Bayes — notebook 3 of 5*

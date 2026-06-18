@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`03_gaussian_likelihood_logspace`** (NB 3 of 5) — plan APPROVED (chapter stays 5), building. |
-| Phase | `notebook-plan-approved` → `notebook-build` |
-| Active branch | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__03_gaussian_likelihood_logspace.md` (**APPROVED** 2026-06-18) |
-| Next concrete action | **Build NB 3** to `notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb` (~20 cells) via `uv run python - < /tmp/build_nb3.py` (stdin). Measured: Adélie μ38.79/σ2.65, Gentoo μ47.50/σ3.07; by-hand Gaussian NB == `GaussianNB` 100 %, acc 0.9927; product → 0.0 at N=324 (sum-of-logs −748 finite). Figures: density-histogram+bells (mass→density) / by-hand Gaussian-NB boundary (parity) / underflow cliff. density front-loaded; multinomial/Bernoulli named→NB5. Then nbconvert-execute to /tmp + inspect; BOTH reviewers (no BLOCK); revise; Rémy visual; guards; commit `feat(02_naive_bayes): notebook 03 — the Gaussian likelihood & log-space`; merge → chapter. |
+| Current notebook | `03_gaussian_likelihood_logspace` (NB 3 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging to chapter). |
+| Phase | `notebook-commit` → then open NB 4 |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` merges in, ff) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
+| Next concrete action | **Open NB 4 — "The estimators & their parameters"** (the first integration notebook). `git switch -c notebook/02_NaiveBayes__04_estimators_and_parameters` off the chapter branch; set STATE (phase `notebook-plan`); measure then plan mode. Per the approved chapter plan: parity recap (by-hand == `GaussianNB`); walk **`var_smoothing`** (variance floor; too-little spike / too-much wash), **`alpha`** (Laplace/Lidstone + the **zero-frequency cliff** and U-curve on a small text snippet — NB 4's CV *finds* α, no fixed optimum, α→0 = log(0) collapse), **`priors`/`fit_prior`** (set vs learn, effect under imbalance); **calibration as a TIGHT BRIDGE** (one intuition+figure+read that NB's posteriors are over-confident → full reliability-diagram+Brier treatment deferred to NB 5; `viz.plot_calibration_curve` likely lands in NB 5, may preview here). Choose a param by CV on TRAIN; one sealed test eval. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (The Gaussian likelihood, computed safely) built & merged to `chapter/02_NaiveBayes`.** One
+  concept (chapter stays 5 — split not pulled): model P(feature∣class) with a continuous **density**,
+  computed in **log-space**. Bins (NB 1) were crude → **density first-contact** taught from scratch
+  (area not height; integrates to 1; can exceed 1) → per-class **Gaussian** fit (Adélie μ38.79/σ2.65,
+  Gentoo μ47.50/σ3.07) overlaid on the density histogram (mass→density; the zero-frequency trap
+  dissolves) → **by-hand Gaussian NB = sklearn `GaussianNB` 100 %** (acc 0.9927; curved boundary) →
+  likelihood is a choice (multinomial/Bernoulli named → NB 5) → **underflow** (product → 0.0 at N=324)
+  → **log-space** (sum of log-likelihoods, argmax unchanged). 20 cells, 4 figures, "Your turn" ×3. Both
+  reviewers **PASS** (no BLOCK); folded: **3 banned words** ("simply" ×2, "just"), `var_smoothing`
+  honesty (by-hand = GaussianNB with smoothing off; scores differ <1e-6 → NB 4 dial), the log-tie
+  clause, σ gloss, and a NaN/3rd-species hint on exercise (a). `common_errors.md` gained underflow +
+  density-height rows; `llms.txt` regenerated; pytest 14 (no `src/`). Rémy validated visually.
 - **NB 2 (The "naive" assumption) built & merged to `chapter/02_NaiveBayes`.** One concept:
   **conditional independence**. Two features need the joint P(bill,flipper∣species); estimating it
   directly is expensive (5×5 grid, **18/25 cells empty** — curse echo). The naive shortcut: assume
