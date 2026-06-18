@@ -49,12 +49,13 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimators & their parameters — `GaussianNB`/`MultinomialNB`/`BernoulliNB`; var_smoothing, alpha (the zero-frequency cure), priors; honest tuning; calibration named.
 5. Text classification (the demanding case) — bag-of-words + `MultinomialNB`; honest evaluation under imbalance; calibration; generative vs discriminative.
 
-## 03_LogisticRegression
-1. From a linear score to a probability: the sigmoid, by hand.
-2. The decision boundary; reading weights.
-3. Fitting: log-loss and what "training" optimizes (gradient intuition, no heavy calculus).
-4. Parameters: regularization (C, L1/L2), multi-class; coefficients under regularization.
-5. Demanding case: calibrated probabilities, threshold choice, error analysis.
+## 03_LogisticRegression  *(plan approved — six notebooks; gradient descent earns its own, like KNN's 6th)*
+1. From a linear score to a probability: the sigmoid & log-odds, by hand.
+2. The decision boundary; reading the weights (set by hand, not fitted).
+3. Fitting I — what we optimize: log-loss / cross-entropy (= negative log-likelihood of Bernoulli; why not squared error).
+4. Fitting II — how we find them: gradient descent by hand (the course's first optimizer; learning rate, convergence).
+5. The estimator & its parameters (`LogisticRegression`: C, `l1_ratio` for L1/L2, multinomial/softmax; honest tuning).
+6. Demanding case: breast_cancer — calibrated probabilities, threshold choice, error analysis, reading coefficients.
 
 ## 04_DecisionTree
 1. A question splits the data: impurity (Gini/entropy) by hand.

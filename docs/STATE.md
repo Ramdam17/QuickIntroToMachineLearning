@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `03_LogisticRegression` — **opened** off `main` (`726d13e`). Chapter 02 complete (5 notebooks, PR #2). |
-| Current notebook | — (chapter planning) |
-| Phase | `chapter-plan` |
+| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated, both REVISE→folded; **6 notebooks**, a Rémy-approved exception to the 5-ceiling). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
+| Current notebook | NB 1 — `01_score_to_probability` (about to open) |
+| Phase | `chapter-plan-approved` (→ opening NB 1) |
 | Active branch | `chapter/03_LogisticRegression` |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (drafting in plan mode; **not yet written/approved**) |
-| Next concrete action | **Draft the chapter 03 plan in plan mode**, then reviewer-gate it. Per `docs/course_map.md` §03 + the per-method arc: NB 1–3 fundamentals (one concept each, by hand) — (1) a linear score → probability via the **sigmoid**; (2) the **decision boundary** & reading weights; (3) **fitting via log-loss** (what training optimizes, gradient intuition, no heavy calculus). NB 4 the estimator & its parameters — `LogisticRegression`: **C, L1/L2 regularization, multi-class** (one-vs-rest vs multinomial/softmax), coefficients under regularization. NB 5 the demanding case — **calibrated probabilities, threshold choice, error analysis** (LogReg is the calibrated discriminative foil to NB's over-confidence, ch 02 bridge). Then: dispatch BOTH reviewers on the draft (no BLOCK), ExitPlanMode for Rémy's approval, **write `docs/plans/chapter_03_LogisticRegression.md` + commit**, set phase `chapter-plan-approved`, open NB 1. The pending `idle` STATE edit was folded into this `chapter-plan` transition (committed on the chapter branch, not on protected `main`). |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (**APPROVED**) |
+| Next concrete action | **Open NB 1 — the sigmoid & log-odds.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__01_score_to_probability`; set STATE phase `notebook-plan`; enter plan mode and draft NB 1 cell-by-cell (~20 cells, one concept): one line on **e** → code σ(z) from scratch & plot it → **p→odds→log-odds** table → name z = log-odds → apply σ to `bill_length` (RAW mm) with **hand-chosen** weights (labelled preview, "NB 3–4 find these") → mark the **≈43 mm** ½-crossing → "Read the figure" → Your turn (3 tiered) → What you built → References. Measured: 1-D acc 0.947, ~16 % in [0.1,0.9]. Rémy validates the NB-1 plan (alone — no reviewer gate on notebook plans) → build → both reviewers → Rémy visual → guards → commit → merge to chapter. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer (calibration/threshold/error analysis). |
 
 ## Notes / blockers
 
@@ -27,6 +27,22 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 03 (Logistic Regression) plan APPROVED & persisted** (`docs/plans/chapter_03_LogisticRegression.md`).
+  **SIX notebooks** (Rémy-approved exception to the 5-ceiling, like KNN's 6th): NB 1 sigmoid & log-odds
+  → NB 2 decision boundary & reading weights → NB 3 **log-loss** (the objective) → NB 4 **gradient
+  descent** (the optimizer — split from NB 3 on Rémy's go) → NB 5 estimator & parameters
+  (`LogisticRegression`: C, `l1_ratio` L1/L2, softmax) → NB 6 demanding case **breast_cancer**
+  (calibration/threshold/error analysis). First **discriminative** method; first trained by **iterative
+  optimization**; closes ch 02's generative-vs-discriminative loop. Reviewer-gated, both **REVISE→all
+  folded**: **ml-expert** (2 BLOCK — NB 1 sigmoid 30%/46mm self-contradiction → raw-mm acc 0.947 /
+  crossing ≈43 mm / ~16 %; breast_cancer CV unreproducible → pinned StratifiedKFold5-shuffle LogReg
+  **0.979** vs GaussianNB **0.930**; + GaussianNB calibration re-measured under one std pipeline Brier
+  **0.088**/pile 167, GD parity vs `C=np.inf`, ‖w‖₂ over 4 std feats, OvR 0.952) — verified the
+  **sklearn-1.9 API pivot** (`penalty` deprecated→`l1_ratio`; no `multi_class`→`OneVsRestClassifier`;
+  `saga` for L1) and gradient ∝(P−y)·x to machine precision; **pedagogy** (1 BLOCK 2 banned words; 3
+  MAJOR — split GD to its own NB, add odds/log-odds + gradient-as-slope first-contacts, give softmax its
+  own section). Measured at plan time on sklearn **1.9.0**. `course_map.md` §03 aligned to six titles.
+  Next: open NB 1.
 - **Chapter 03 (Logistic Regression) opened.** Branch `chapter/03_LogisticRegression` created off
   `main` (synced @ `726d13e` after PR #2). Phase `chapter-plan`: drafting the chapter plan in plan
   mode per `course_map.md` §03 and the per-method arc (sigmoid → boundary/weights → log-loss fitting;
