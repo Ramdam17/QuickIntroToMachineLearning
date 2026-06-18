@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`01_bayes_from_counts`** (NB 1 of 5) — planning. |
-| Phase | `notebook-plan` |
+| Current notebook | **`01_bayes_from_counts`** (NB 1 of 5) — plan APPROVED, building. |
+| Phase | `notebook-plan-approved` → `notebook-build` |
 | Active branch | `notebook/02_NaiveBayes__01_bayes_from_counts` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__01_bayes_from_counts.md` (to be written on Rémy's approval) |
-| Next concrete action | **Draft the NB-1 cell-by-cell plan in plan mode**, per `docs/notebook_template.md` + the approved chapter plan. One concept: **posterior ∝ prior × likelihood on ONE feature**, by hand from a `bill_length` 3-bin species×bin contingency table → prior P(species), likelihood P(bin∣species), posterior P(species∣bin), predict by argmax; "evidence cancels" as a one-line consequence; **exploit the live zero-frequency case** (a class with 0 count in a bin → posterior 0) to foreshadow NB 4 smoothing; "Your turn" 2–3 tiered. Present via ExitPlanMode; **Rémy validates the NB-1 plan alone (no reviewer gate at notebook-plan)**; on approval persist to `docs/plans/` + commit, phase `notebook-plan-approved`, then build → both reviewers → revise → Rémy visual → guards → commit → merge to chapter. |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__01_bayes_from_counts.md` (**APPROVED** 2026-06-18) |
+| Next concrete action | **Build NB 1** to `notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb` (~21 cells) via `uv run python - < /tmp/build_nb1.py` (stdin). Measured numbers to reconcile: priors 0.551/0.449; contingency Adélie [135,16,0] / Gentoo [3,67,53]; likelihood incl. P(long∣Adélie)=0; posteriors short→Adélie 0.978 / medium→Gentoo 0.807 / long→Gentoo 1.000; evidence 0.504/0.303/0.193. Then nbconvert-execute to /tmp + visually inspect figures; dispatch BOTH reviewers (no BLOCK); revise; Rémy visual; guards (`check_no_hardcoded_hex`, `gen_llms_txt`, `pytest`, `--clear-output`); commit `feat(02_naive_bayes): notebook 01 — Bayes' rule, from counts`; merge `notebook → chapter`. |
 
 ## Notes / blockers
 
