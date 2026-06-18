@@ -106,8 +106,12 @@ chapter-merge            chapter complete; merging chapter → main
 
 - Phase = `chapter-merge`. Ensure every notebook of the chapter is merged into the chapter branch and
   `llms.txt` is current.
-- `git switch main && git merge --no-ff chapter/NN_Method` with a message
-  `feat(NN_method): complete chapter — <method>`.
+- **Open a PR from the chapter branch into `main`** and merge it there — the remote `main` is
+  **PR-only** (a global pre-push hook blocks direct pushes; see the `git-push-policy` memory). Push the
+  chapter branch (`git push -u origin chapter/NN_Method`), `gh pr create --base main --head
+  chapter/NN_Method` with title `feat(NN_method): complete chapter — <method>`, then merge the PR as a
+  merge commit (`--no-ff`) so each chapter is a visible unit; `git switch main && git pull` to sync.
+  (Chapter 00 was bootstrapped with a one-time `ALLOW_PUSH_TO_MAIN=1` override; chapters 01+ use PRs.)
 - Set `STATE.md`: phase = `idle`, next action = "open chapter (NN+1)".
 
 ## Reviewer gate (both levels)

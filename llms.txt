@@ -15,3 +15,10 @@
 - [notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb](notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb) — 09 — Over-/under-fitting and the generalization gap — *Module 00 · Getting Started — notebook 9 of 11*
 - [notebooks/00_GettingStarted/10_cross_validation.ipynb](notebooks/00_GettingStarted/10_cross_validation.ipynb) — 10 — Validating honestly: cross-validation — *Module 00 · Getting Started — notebook 10 of 11*
 - [notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb](notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb) — 11 — Preprocessing & leakage — *Module 00 · Getting Started — notebook 11 of 11*
+## 01_KNN
+- [notebooks/01_KNN/01_neighbourhood_vote.ipynb](notebooks/01_KNN/01_neighbourhood_vote.ipynb) — 01 — Predict by the neighbourhood vote — *Module 01 · k-Nearest Neighbours — notebook 1 of 6*
+- [notebooks/01_KNN/02_distance_and_scale.ipynb](notebooks/01_KNN/02_distance_and_scale.ipynb) — 02 — Distance & the scale trap — *Module 01 · k-Nearest Neighbours — notebook 2 of 6*
+- [notebooks/01_KNN/03_the_k_dial.ipynb](notebooks/01_KNN/03_the_k_dial.ipynb) — 03 — The k dial — *Module 01 · k-Nearest Neighbours — notebook 3 of 6*
+- [notebooks/01_KNN/04_estimator_and_parameters.ipynb](notebooks/01_KNN/04_estimator_and_parameters.ipynb) — 04 — The estimator & its parameters — *Module 01 · k-Nearest Neighbours — notebook 4 of 6*
+- [notebooks/01_KNN/05_demanding_case_curse.ipynb](notebooks/01_KNN/05_demanding_case_curse.ipynb) — 05 — Demanding case: breast cancer & the curse — *Module 01 · k-Nearest Neighbours — notebook 5 of 6*
+- [notebooks/01_KNN/06_advanced_distances_and_k.ipynb](notebooks/01_KNN/06_advanced_distances_and_k.ipynb) — 06 — Advanced: distances & choosing k — *Module 01 · k-Nearest Neighbours — notebook 6 of 6 (optional, advanced)*

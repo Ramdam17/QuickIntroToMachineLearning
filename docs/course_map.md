@@ -35,11 +35,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 11. Preprocessing & leakage — scaling, encoding, fit-on-train-only, the `Pipeline`; data leakage (the wrong way to cross-validate).
 
 ## 01_KNN — k-Nearest Neighbours
-1. Prediction = vote of the neighbourhood; k = size of the neighbourhood (by hand, 2D).
-2. Distance, and the scale trap (Euclidean vs Manhattan; why normalize).
-3. The k dial: under- vs over-fitting; choosing k on held-out points.
-4. The estimator & its parameters (k, weights, metric); decision boundary vs k.
-5. Demanding case: full workflow on a small realistic set; curse of dimensionality, felt.
+1. Predict by the neighbourhood vote; k = neighbourhood size; the lazy learner (by hand, on make_moons).
+2. Distance & the scale trap (Euclidean vs Manhattan; k-NN is pure distance → standardize).
+3. The k dial: under- vs over-fitting; choose k by cross-validation.
+4. The estimator & its parameters (KNeighborsClassifier: k, weights, metric); decision boundary vs k.
+5. Demanding case: breast_cancer (30-D) — full honest workflow; the curse of dimensionality, felt.
+6. Advanced (optional): distances & choosing k — Minkowski p (L1/L2/L∞), Mahalanobis, cosine; the metric matters in high dimensions, not low (penguins vs noisy breast_cancer); nested CV.
 
 ## 02_NaiveBayes
 1. From counts to probabilities; Bayes' rule by hand.

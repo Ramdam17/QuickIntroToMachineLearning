@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `00_GettingStarted` — **COMPLETE (11 of 11)**, merged to `main` |
-| Current notebook | — (chapter 00 done) |
-| Phase | `idle` (between chapters) |
-| Active branch | `main` |
-| Active plan | — (next: chapter `01_KNN` plan) |
-| Next concrete action | **Open chapter 01 — k-Nearest Neighbours.** `git switch main && git switch -c chapter/01_KNN`; phase `chapter-plan`; enter plan mode; plan the chapter from `docs/course_map.md` (01_KNN: 5 notebooks — prediction = neighbourhood vote & k; distance + the scale trap; the k dial / under-vs-over-fitting; the estimator & its parameters; demanding case + the curse of dimensionality). Reviewer-gate the chapter plan (both reviewers, no BLOCK); Rémy validates before any notebook is built. Reuse the fetch-and-cache penguins data layer; KNN is distance-based, so the standardization from NB 11 is load-bearing here. |
+| Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
+| Current notebook | `06_advanced_distances_and_k` (v2 done — both reviewers PASS, Rémy validated) |
+| Phase | `chapter-merge` |
+| Active branch | `notebook/01_KNN__06_advanced_distances_and_k` (→ merge to chapter → PR to main) |
+| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED v2) |
+| Next concrete action | **Close chapter 01 (6/6 done).** Commit NB 6 → merge to `chapter/01_KNN` → `git push -u origin chapter/01_KNN` → `gh pr create --base main --head chapter/01_KNN` (title `feat(01_knn): complete chapter — k-Nearest Neighbours`) → `gh pr merge --merge` (preserve per-notebook history; main is PR-only) → `git switch main && git pull`. Then set phase `idle`, next = open chapter `02_NaiveBayes`. |
 
 ## Notes / blockers
 
@@ -27,6 +27,77 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (advanced: distances & choosing k) built & merged — chapter complete (6/6).** Optional Advanced
+  capstone, **rebuilt from scratch (v1 scrapped by Rémy as too table-heavy)** → visualization-first, 28
+  cells, **9 figures**: unit balls L1/L2/L∞; metric decision boundaries on moons; Mahalanobis ellipse +
+  Euclidean-vs-Mahalanobis boundary on penguins; distance-concentration histogram (d=2/50/1000);
+  near/far ratio by p; accuracy-vs-noise curve (penguins wash vs breast_cancer p=1>p=2, averaged over 8
+  draws); nested-CV schematic + fold-score strip (naive 0.967 vs nested 0.960). Both datasets featured;
+  silhouette dropped (it concerns k-means cluster count, not k-NN's k). Pedagogy PASS; ml-expert
+  REVISE→fixed (L1 unit-ball geometry — vertices on axes, not sides; "staircase"→tendency; LDA→incise).
+  Rémy validated. `feat(01_knn): notebook 06 — advanced: distances & choosing k`. **Note:** a stray
+  `/tmp/struct.py` shadows stdlib `struct` for `python /tmp/*.py` → build via `uv run python - < file`.
+- **NB 5 (demanding case: breast cancer & the curse) built & merged to `chapter/01_KNN`.** Full honest
+  workflow on `load_breast_cancer` (569×30): pandas look → `Pipeline(StandardScaler, KNN)` (raw CV
+  0.935 vs scaled **0.970**, NB 2 scale trap on real data) → CV picks **k=7** → one held-out eval (test
+  **0.947**) → error analysis: confusion `[[57,7],[2,105]]`, **malignant recall 0.891 = 7 of 64 cancers
+  missed** (accuracy hid it; threshold → NB 8) → when to/not use k-NN → **the curse, felt**: CV acc
+  **0.970→0.771** as noise dims grow, near/far ratio **0.121→0.909** (→1, the *why*, Beyer 1999). Curse
+  via `cross_val_score` on TRAIN (test stays used-once); near/far = pure geometry. Both reviewers PASS
+  (re-derived leak-free, near/far = Beyer's inverse relevant-contrast confirmed; applied MINORs:
+  plan-table→CV numbers, curse-is-CV framing + Pipeline-rescales note, asymptotic wording, prereqs
+  +06/+08). Rémy validated. `feat(01_knn): notebook 05 — demanding case: breast cancer & the curse`.
+  **Build note:** a stray `/tmp/struct.py` (a notebook cell-lister) shadows stdlib `struct` for `python
+  /tmp/*.py` (sys.path[0]=/tmp) → run builders via `uv run python - < /tmp/x.py` (stdin) instead.
+- **NB 4 (the estimator & its parameters) built & merged to `chapter/01_KNN`.** Introduced
+  `KNeighborsClassifier`: parity with by-hand (0 diff, 0.956) and `cross_val_score` == NB 3's **0.919**;
+  walked `n_neighbors` / `weights` / `metric`. weights uniform vs distance (k=151: 0.678 vs 0.833,
+  boundary panels) — **mechanism corrected** after ml review: it is a graded 1/d *tilt* (effective
+  ~73/151, nearest-15 hold ~34 %), NOT "near dominates", and 0.833 stays well below uniform@15's 0.956
+  (degrades gracefully, doesn't recover). metric small effect (Manhattan p=1 0.967); chose weights by
+  `cross_val_score` (distance 0.924 → test 0.967); even-k tie → lowest-label argmax (== by-hand
+  `bincount().argmax()` convention) → odd k for binary (binary-only; 3-class can still tie). Pedagogy
+  PASS; ml-expert REVISE→fixed (1 MAJOR: false distance-weight mechanism, re-measured & corrected; +
+  MINORs: parity edge-case, argmax convention, figure wording). Rémy validated visually. `feat(01_knn):
+  notebook 04 — the estimator & its parameters`.
+- **NB 3 (the k dial) built & merged to `chapter/01_KNN`.** By-hand k-NN on `make_moons`: k as the
+  bias–variance dial — boundaries k=1 (jagged/memorize) / 15 / 151 (over-smooth), contrasted with NB
+  05's single bisector; train/test error vs k (log axis, the U; k=1 train err **0.000**); then the
+  honest selection — show the test curve, **refuse to use it**, **5-fold CV on TRAIN picks k=15** (cv
+  0.919), one sealed test eval → **0.956** (vs k=1 0.933, k=151 0.678). Surfaces (not hides) the
+  test-min=k3 vs CV=k15 disagreement. CV by hand (`StratifiedKFold`+loop); `KNeighborsClassifier` /
+  `cross_val_score` deferred to NB 4. Both reviewers **PASS** (re-derived CV leak-free; applied 6 fixes:
+  variance-inferred-not-measured nod to NB 09, gap *indicates* overfit, CV-fold-seed wobble, odd-k
+  explained, boundaries-on-train named, k15/0.956 seed-caveat). Rémy validated visually. `feat(01_knn):
+  notebook 03 — the k dial`.
+- **NB 2 (distance & the scale trap) built & merged to `chapter/01_KNN`.** By-hand k-NN on
+  `make_moons`: Euclidean vs Manhattan (a genuine L1/L2 ranking flip — q=(0,0): L2 picks B=(0.7,0.7),
+  L1 picks A=(1,0)), then the scale trap — feature 2 ×50 collapses test acc **0.956 → 0.733**,
+  standardizing on **train stats** recovers it **exactly** (caveat stated: exact recovery is special to
+  a pure rescale); raw-vs-standardized **decision boundary** (horizontal bands slicing the crescents →
+  the two-moon S recovered, both PNGs eyeballed). Honest scoping: metric (0.956 vs 0.944 = **one** test
+  point of 90) ≪ scale (~20 pts). Tiny in-notebook `ByHandKNN` wrapper reuses
+  `viz.plot_decision_boundary` (single split; CV deferred to NB 3). Both reviewers **PASS**
+  (re-measured; applied 5 fixes: "34× linear → ~34²≈1000× in the squared sum", metric-gap-is-one-point,
+  ISLR §2.2.3 **& ch. 4**, a `ByHandKNN` framing cell naming the fit/predict interface, forced axis
+  labels). Rémy validated visually. `feat(01_knn): notebook 02 — distance & the scale trap`.
+- **NB 1 (predict by the neighbourhood vote) built & merged to `chapter/01_KNN`.** k-NN by hand on
+  `make_moons(300, 0.30, 0)` (210/90): the majority vote, *k* = neighbourhood size, and the lazy cost
+  **felt live** (fit flat ~µs vs predict super-linear at n=300/3000/30000). At build, the running query
+  was **re-measured and corrected**: the planned q=(0.60,0.14) sat on the Bayes boundary (~50/50, so
+  "true class 0" was dishonest); replaced with **q=(-0.23,0.75)** — a region only the class-0 crescent
+  reaches (~85% class 0 → class 0 is the right answer), nearest training labels [1,0,0,0,0], votes
+  k1=1/k3=0/k5=0. Both reviewers **PASS** (each re-measured & confirmed truth/votes/timing; 3 MINOR
+  polish applied — NB09 ref → module-00 callback, "nothing learned by fitting", Cover&Hart asymptotic
+  1-NN qualifier). Rémy validated visually. `common_errors.md` gained a KNN k=1-noise row; `llms.txt`
+  regenerated. Commit `feat(01_knn): notebook 01 — predict by the neighbourhood vote`.
+- Chapter 01 (k-NN) plan **approved & persisted** (`docs/plans/chapter_01_KNN.md`) — 6 notebooks: vote
+  → distance/scale trap → k-dial → estimator/params → demanding case (breast_cancer + the curse) → an
+  optional **NB 6 Advanced** (metric geometry L1/L2/L∞ + Mahalanobis/cosine, metric×curse, nested CV,
+  and the silhouette≠k-NN clarification — a deliberate, Rémy-approved exception to the 5-ceiling).
+  `make_moons` for NB 1–4 (penguins too separable, measured: 0/69 flips), breast_cancer for NB 5; all
+  offline. Reviewer-gated (both REVISE→incorporated). `WORKFLOW.md` updated: chapter close now via PR
+  (`main` is protected by a global pre-push hook).
 - **Chapter 00 (Getting Started) COMPLETE — 11 notebooks, merged to `main` (`--no-ff`).** The on-ramp:
   what ML is → features/feature space → EDA → split & leakage → nearest centroid → accuracy/baseline →
   confusion/precision-recall → scores/ROC/AUC → over/under-fitting → cross-validation → preprocessing &
