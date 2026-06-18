@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `02_NaiveBayes` — **chapter planning** (chapter `01_KNN` is COMPLETE, merged to `main` via PR #1 `110c081`). |
-| Current notebook | — (planning the chapter) |
-| Phase | `chapter-plan` |
+| Current chapter | `02_NaiveBayes` — **chapter plan APPROVED** (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
+| Current notebook | — (about to open NB 1) |
+| Phase | `chapter-plan-approved` |
 | Active branch | `chapter/02_NaiveBayes` (off `main` @ `110c081`) |
-| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (to be written on Rémy's approval) |
-| Next concrete action | **Draft the Naive Bayes chapter plan in plan mode.** Decide together: (1) the primordial concepts and their distribution across NB 1–3 (one concept each, by hand) — probability/conditional probability/Bayes' rule, the "naive" conditional-independence assumption, likelihoods (Gaussian vs multinomial/Bernoulli) + log-probabilities/underflow; (2) NB 4 — the estimators & parameters (`GaussianNB`/`MultinomialNB`/`BernoulliNB`: var_smoothing, alpha, priors) + calibration; (3) NB 5 — the demanding case (text or tabular; honest evaluation under imbalance). Cross-check `course_map.md` §02. Then reviewer-gate the chapter plan (BOTH reviewers, no BLOCK), ExitPlanMode for Rémy's approval, persist to `docs/plans/` + commit, set phase `chapter-plan-approved`. |
+| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (**APPROVED**; 5 notebooks, standard arc) |
+| Next concrete action | **Open NB 1 — "Bayes' rule, from counts".** `git switch -c notebook/02_NaiveBayes__01_bayes_from_counts` off the chapter branch; set STATE (notebook = `01_bayes_from_counts`, phase `notebook-plan`); enter plan mode and draft the NB-1 cell-by-cell plan per `docs/notebook_template.md` and the approved chapter plan (one concept: posterior ∝ prior × likelihood on ONE feature, by hand from a `bill_length` 3-bin contingency table; evidence = normalizer; argmax; exploit the live zero-frequency case; "Your turn" 2–3 tiered). Rémy validates the NB-1 plan alone (no reviewer gate at notebook-plan), then build → both reviewers → revise → Rémy visual → guards → commit → merge to chapter. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 02 (Naive Bayes) plan APPROVED & persisted** (`docs/plans/chapter_02_NaiveBayes.md`).
+  5 notebooks, standard arc: NB 1 Bayes from counts (one feature, by hand) → NB 2 the naive
+  (conditional-independence) assumption → NB 3 the Gaussian likelihood + log-space → NB 4 the
+  estimators & parameters (var_smoothing, alpha/zero-frequency, priors, calibration-bridge) → NB 5
+  demanding case = **text classification** (20newsgroups, MultinomialNB, honest eval under imbalance,
+  the over-confidence limit, generative-vs-discriminative bridge to ch 03). Datasets: penguins (NB 1–4,
+  Gaussian) + a 20newsgroups subset (NB 5, fetch-and-cache). Reviewer-gated: **ml-expert REVISE→1 BLOCK
+  fixed** (the headline error: GaussianNB is **QDA with diagonal per-class covariance**, *not* LDA — the
+  0.9927 NB/LDA/QDA tie is an accuracy coincidence on near-separable 2-D data; re-checked PASS at the
+  parameter level), unfair NB(raw)-vs-LogReg(scaled) → both raw, α-curve marked version-indicative.
+  **pedagogy REVISE→no BLOCK** (4 MAJORs folded: NB 3 re-scoped to one concept with mass→density as a
+  taught first-contact; bag-of-words built by hand in NB 5; NB 4 calibration as a tight bridge; "Your
+  turn" per NB). Measured at plan time: within-class corr 0.326/0.661/0.486; NB/QDA/LDA 0.9927/0.9890/
+  0.9927; text acc ≈0.89 (4-cat) / ≈0.70 (hard binary); α→0 = log(0) collapse. Next: open NB 1.
 - **Chapter 02 (Naive Bayes) opened.** Branch `chapter/02_NaiveBayes` created off `main` (synced to
   `110c081` after PR #1). Phase `chapter-plan`: drafting the chapter plan in plan mode per
   `course_map.md` §02 and the per-method arc. The pending `idle` STATE edit was folded into this
