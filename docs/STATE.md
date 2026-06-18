@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `02_naive_assumption` (NB 2 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging to chapter). |
-| Phase | `notebook-commit` → then open NB 3 |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__02_naive_assumption` merges in, ff) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
-| Next concrete action | **Open NB 3 — "The Gaussian likelihood, computed safely"** (one concept: model P(feature∣class) with a **density**, computed in **log-space**). `git switch -c notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` off the chapter branch; set STATE (phase `notebook-plan`); measure (per-class Gaussian fit on `bill_length`; the underflow demo) then plan mode. Front-load **mass→density** as a *taught first-contact* (area not height; f(x) can exceed 1 — pedagogy MAJOR); fit μ,σ per class per feature (= GaussianNB), overlay bell on NB 1's histogram; assemble 2-feature by-hand Gaussian NB; **demonstrate underflow** (product → 0.0) then `np.log` (sum stays finite). Multinomial/Bernoulli **named, not built** → NB 5. **Split trigger:** if it reads as >1 concept at cell planning, split density-NB vs log-space-NB (→ 6 notebooks); default stays 5. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Current notebook | **`03_gaussian_likelihood_logspace`** (NB 3 of 5) — planning (NB 1–2 DONE & merged). |
+| Phase | `notebook-plan` |
+| Active branch | `notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` (off `chapter/02_NaiveBayes`) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__03_gaussian_likelihood_logspace.md` (to be written on Rémy's approval) |
+| Next concrete action | **Draft the NB-3 cell-by-cell plan in plan mode.** One concept: model P(feature∣class) with a **continuous density** (the Gaussian), computed safely in **log-space**. Front-load **mass→density** as a *taught first-contact* (area not height; f(x) can exceed 1 — pedagogy MAJOR-2); fit μ,σ per class per feature (this IS GaussianNB), overlay the bell on NB 1's `bill_length` histogram; assemble a 2-feature by-hand Gaussian NB and check parity vs `GaussianNB`; **demonstrate underflow** (product of many small likelihoods → 0.0 in float) then redo with `np.log` (sum stays finite). Multinomial/Bernoulli **named, not built** → NB 5. **Split trigger:** if cell planning reads as >1 concept, split density-NB vs log-space-NB (→ 6 notebooks); default stays 5. Present via ExitPlanMode; **Rémy validates alone**; then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
