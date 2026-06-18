@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `01_neighbourhood_vote` (planning) |
-| Phase | `notebook-plan` |
+| Current notebook | `01_neighbourhood_vote` (plan APPROVED — ready to build) |
+| Phase | `notebook-plan-approved` |
 | Active branch | `notebook/01_KNN__01_neighbourhood_vote` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (APPROVED); NB 1 cell plan drafting in plan mode |
-| Next concrete action | **In plan mode for NB 1** (the neighbourhood vote). Draft cell-by-cell from the chapter plan: the k-NN rule (k nearest → **majority vote**) **by hand on `make_moons`** (Euclidean distances to all training points → k smallest → vote; k = 1, 3, 5, including a borderline query where k changes the call); the **lazy learner** (fit = store) with its cost **felt** (time fit ≈ instant vs per-query distance work; predict cost grows with n); figure = a query with its k nearest neighbours highlighted + the vote. Prereqs 02, 04. No new `src/` expected (in-notebook figure). Rémy validates the cell plan; then build (both reviewers + visual). |
+| Active plan | `docs/plans/01_KNN__01_neighbourhood_vote.md` (APPROVED) |
+| Next concrete action | **Build NB 1** per `docs/plans/01_KNN__01_neighbourhood_vote.md` — 18 cells, by-hand k-NN vote on `make_moons(300, noise=0.30, random_state=0)` (stratified 70/30 → 210/90). **Measured anchors:** running query q=(0.60, 0.14), true class 0; its 5 nearest training labels [1,0,0,1,0] (dists 0.07–0.15) → votes **k1=1 / k3=0 / k5=0** (k=1 overfits a noisy neighbour; the vote recovers the truth); lazy cost = fit stores (trivial) vs predict = distances to all n (time grows with n; KD-tree nuance noted). Build via an `nbformat` builder script (like NB 10/11); `mkdir notebooks/01_KNN/`; in-notebook figure (query + ringed neighbours) using `ml_course.colors`; no new `src/` (pytest stays 14). Then both reviewers (no BLOCK) → revise → Rémy visual (/tmp HTML) → guards (hex, gen_llms_txt, ruff, pytest) → clear outputs → commit `feat(01_knn): notebook 01 — predict by the neighbourhood vote` → merge to `chapter/01_KNN`. |
 
 ## Notes / blockers
 
