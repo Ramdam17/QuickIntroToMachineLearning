@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `06_advanced_distances_and_k` (planning — branch created) |
-| Phase | `notebook-plan` |
+| Current notebook | `06_advanced_distances_and_k` (plan APPROVED — building) |
+| Phase | `notebook-build` |
 | Active branch | `notebook/01_KNN__06_advanced_distances_and_k` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 6) — per-notebook plan being drafted in plan mode |
-| Next concrete action | **Draft & approve the NB 6 plan, then build.** Optional **Advanced** notebook answering Rémy's two questions. **Measured anchors:** **Q1 distance:** unit balls L1/L2/L∞ (geometry — diamond/circle/square); **Mahalanobis shown GEOMETRICALLY** (its unit ball = ellipse aligned to the covariance) — *not* an accuracy race (measured: maha ≈ euclid ≈ std ≈0.85 on correlated data; a clean win needs within-class cov = LDA territory, out of scope — stated honestly); **metric × curse** (Aggarwal 2001): near/far ratio smaller for smaller p (p=0.5<1<2 at every dim), and accuracy on breast_cancer+noise **p=1 0.877 vs p=2 0.842 at 1000 noise dims** (0.906 vs 0.860 at 200) → in high-d prefer smaller p (ties NB 5). Cosine named. **Q2 choosing k:** **nested CV** (inner tunes k, outer estimates) **0.960** honest vs naive/optimistic **0.967** (winner's curse); **silhouette** (Rousseeuw 1987) peaks at **3 clusters** on 3-blob data → it picks k-MEANS cluster count (unsupervised), NOT k-NN's k (supervised → CV). Figures: unit balls; Mahalanobis ellipse vs Euclidean circle; metric×curse (ratio/accuracy); silhouette-vs-clusters. From `chapter/01_KNN`: `git switch -c …` done; plan mode. Prereqs NB 1–5. On approval → persist plan, commit → build. **Then chapter close → PR into `main` (6/6).** |
+| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED) |
+| Next concrete action | **Build NB 6** per `docs/plans/01_KNN__06_advanced_distances_and_k.md` — ~21 cells, optional Advanced. **Measured anchors:** unit balls L1/L2/L∞ (geometry); Mahalanobis shown GEOMETRICALLY (ellipse vs circle — no accuracy race, stated why = LDA/within-class cov out of scope); metric×curse: near/far ratio p=0.5<1<2 at all dims, accuracy breast_cancer+noise **p=1 0.877 vs p=2 0.842 at +1000**; **nested CV 0.960 vs naive 0.967**; **silhouette peaks at 3 clusters** (k-means cluster count, NOT k-NN's k). Figures: unit balls; Mahalanobis ellipse; metric×curse ratio; silhouette-vs-clusters. **Build via `uv run python - < /tmp/build_nb6.py`** (stdin — dodges `/tmp/struct.py` shadow); `--clear-output --inplace` before commit; no `src/` (pytest 14). Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 06 — advanced: distances & choosing k` → merge to `chapter/01_KNN` → **chapter 01 close: PR into `main` (6/6)**. |
 
 ## Notes / blockers
 
