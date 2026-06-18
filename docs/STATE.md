@@ -7,8 +7,8 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`04_estimators_and_parameters`** (NB 4 of 5) — planning (NB 1–3 DONE & merged). |
-| Phase | `notebook-plan` |
+| Current notebook | **`04_estimators_and_parameters`** (NB 4 of 5) — plan APPROVED (calibration → NB 5), building. |
+| Phase | `notebook-plan-approved` → `notebook-build` |
 | Active branch | `notebook/02_NaiveBayes__04_estimators_and_parameters` (off `chapter/02_NaiveBayes`) |
 | Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__04_estimators_and_parameters.md` (to be written on Rémy's approval) |
 | Next concrete action | **Draft the NB-4 cell-by-cell plan in plan mode.** Integration notebook: the NB family (GaussianNB/MultinomialNB/BernoulliNB) + their dials, each *shown* (measured). **`var_smoothing`**: flat to 0.1 then collapses (1.0→0.989, 10→0.711). **`alpha`/Laplace**: heals NB 1's penguins zero by hand (α=0→P(long∣Adélie)=0; α=1→0.0065, posterior 0.018) — the library's MultinomialNB `alpha`, named→NB5; α→0 = log(0). **`priors`/`fit_prior`**: prior tilts the boundary (sweep P(Gentoo) 0.05→0.95 ⇒ predicted-Gentoo 122→130/274; borderline x=[40.8,208] flips Adélie→Gentoo); accuracy barely moves on separable data (honest mechanism, not an accuracy effect). **Choose a param by CV on TRAIN + one sealed test.** **Calibration NAMED, deferred to NB 5** (penguins Brier 0.0006 = too separable to show over-confidence — measure-driven choice to flag to Rémy vs the chapter plan's "bridge figure"). No `src/` add (calibration helper lands NB 5). Present via ExitPlanMode; Rémy validates alone; then build → both reviewers → Rémy visual → guards → commit → merge. |
