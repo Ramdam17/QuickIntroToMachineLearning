@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`04_estimators_and_parameters`** (NB 4 of 5) — plan APPROVED (calibration → NB 5), building. |
-| Phase | `notebook-plan-approved` → `notebook-build` |
-| Active branch | `notebook/02_NaiveBayes__04_estimators_and_parameters` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__04_estimators_and_parameters.md` (to be written on Rémy's approval) |
-| Next concrete action | **Draft the NB-4 cell-by-cell plan in plan mode.** Integration notebook: the NB family (GaussianNB/MultinomialNB/BernoulliNB) + their dials, each *shown* (measured). **`var_smoothing`**: flat to 0.1 then collapses (1.0→0.989, 10→0.711). **`alpha`/Laplace**: heals NB 1's penguins zero by hand (α=0→P(long∣Adélie)=0; α=1→0.0065, posterior 0.018) — the library's MultinomialNB `alpha`, named→NB5; α→0 = log(0). **`priors`/`fit_prior`**: prior tilts the boundary (sweep P(Gentoo) 0.05→0.95 ⇒ predicted-Gentoo 122→130/274; borderline x=[40.8,208] flips Adélie→Gentoo); accuracy barely moves on separable data (honest mechanism, not an accuracy effect). **Choose a param by CV on TRAIN + one sealed test.** **Calibration NAMED, deferred to NB 5** (penguins Brier 0.0006 = too separable to show over-confidence — measure-driven choice to flag to Rémy vs the chapter plan's "bridge figure"). No `src/` add (calibration helper lands NB 5). Present via ExitPlanMode; Rémy validates alone; then build → both reviewers → Rémy visual → guards → commit → merge. |
+| Current notebook | `04_estimators_and_parameters` (NB 4 of 5) — **DONE** (both reviewers PASS, Rémy validated & confirmed the count stays 5; committed; merging to chapter). |
+| Phase | `notebook-commit` → then open NB 5 (the last) |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__04_estimators_and_parameters` merges in, ff) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
+| Next concrete action | **Open NB 5 — "Text classification" (the demanding case)**, the chapter capstone. `git switch -c notebook/02_NaiveBayes__05_text_classification` off the chapter branch; set STATE (phase `notebook-plan`); **measure** (fetch 20newsgroups subset; `CountVectorizer`+`MultinomialNB` acc; one-vs-rest imbalance; over-confidence/Brier vs LogReg; calibration curve) then plan mode. Per the approved chapter plan: **by-hand vectorization on-ramp** (toy sentences → hand vocab → dense count matrix → reveal `CountVectorizer` + sparsity — built, not "just happening"); fit-on-train-only; **honest eval under imbalance** (one-vs-rest sci.med ≈396 vs 1037 test → precision/recall/F1 + PR curve, not accuracy); **calibration in full** (reliability diagram + Brier — NB over-confident vs LogReg — the limit NB 4 named); the **Domingos-Pazzani loop closes** (independence wildly violated in text, KNN died of the curse, NB fast & strong); **generative-vs-discriminative bridge → ch 03** (Ng & Jordan 2001, named). **Likely `src/` adds (with tests):** `datasets.load_newsgroups()` (fetch-and-cache + visible logging) + `viz.plot_calibration_curve()`. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge → **chapter 02 closes via PR into `main`**. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (The estimators & their parameters) built & merged to `chapter/02_NaiveBayes`.** The
+  integration notebook: the NB family (Gaussian/Multinomial/Bernoulli) + each dial *measured* —
+  **`var_smoothing`** (flat 0.9927 → 1.0:0.989 → 10:0.711, the flood), **`alpha`/Laplace** healing NB 1's
+  penguins zero by hand (α=0→0; α=1→0.0065/post 0.018; verified by-hand == `MultinomialNB.feature_log_prob_`),
+  **`priors`/`fit_prior`** tilting the boundary (124↔127 predicted Gentoo; borderline x=[40.8,208] flips
+  Adélie→Gentoo at P(Gentoo) 0.15/0.5/0.85), and **honest tuning** (GridSearchCV on train, one sealed
+  test). **Calibration named & deferred to NB 5** (penguins too separable, well-calibrated). 20 cells,
+  3 figures. Both reviewers **PASS** (no BLOCK): ml-expert REVISE → the asserted Brier 0.0006 reframed as
+  a NB-5 forward reference (split-dependent, unshown) + 2 MINORs; pedagogy PASS + 2 MINORs (flip sweep
+  aligned to the panels). Rémy questioned whether NB 4 was a 4th concept notebook → confirmed it is the
+  role-4 "method & parameters" notebook; chapter stays **5**. `common_errors.md` gained a
+  "don't max out smoothing" row; `llms.txt` regenerated; pytest 14. Rémy validated visually.
 - **NB 3 (The Gaussian likelihood, computed safely) built & merged to `chapter/02_NaiveBayes`.** One
   concept (chapter stays 5 — split not pulled): model P(feature∣class) with a continuous **density**,
   computed in **log-space**. Bins (NB 1) were crude → **density first-contact** taught from scratch
