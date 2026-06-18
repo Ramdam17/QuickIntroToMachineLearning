@@ -157,3 +157,68 @@ def penguins_xy(df: pd.DataFrame | None = None) -> tuple[pd.DataFrame, pd.Series
     if df is None:
         df = load_penguins()
     return df[PENGUINS_FEATURES], df[PENGUINS_TARGET]
+
+
+def load_newsgroups(
+    categories: list[str] | None = None,
+    subset: str = "train",
+    *,
+    remove: tuple[str, ...] = ("headers", "footers", "quotes"),
+    random_state: int = 0,
+) -> pd.DataFrame:
+    """Fetch a subset of the 20 Newsgroups text corpus as a tidy DataFrame.
+
+    Wraps :func:`sklearn.datasets.fetch_20newsgroups` (downloaded once, then cached under
+    ``~/scikit_learn_data``) and returns one row per document with its raw ``text`` and its
+    ``category`` label. Progress is logged at INFO (never silenced).
+
+    Parameters
+    ----------
+    categories : list of str, optional
+        Newsgroup names to keep (e.g. ``["sci.med", "comp.graphics"]``). ``None`` keeps all 20.
+    subset : {"train", "test"}, default "train"
+        Which split to load; 20 Newsgroups ships a fixed train/test split (by post date).
+    remove : tuple of str, default ("headers", "footers", "quotes")
+        Metadata stripped from each document, so the classifier learns the *content* rather than
+        headers/signatures that would leak the label.
+    random_state : int, default 0
+        Seed for the document shuffle.
+
+    Returns
+    -------
+    pandas.DataFrame, shape (n_documents, 2)
+        Columns ``text`` (str, the document) and ``category`` (str, the newsgroup name). One row =
+        one document.
+
+    When to use
+    -----------
+    For the text-classification notebook (module 02): a real, high-dimensional, sparse problem where
+    Naive Bayes shines. For the small 2-D penguins teaching set, use :func:`load_penguins`.
+
+    Notes
+    -----
+    The first call downloads ~14 MB (network required); later calls read the cache and need no
+    network — the same fetch-and-cache pattern as :func:`load_penguins_full`.
+
+    References
+    ----------
+    Lang K (1995). NewsWeeder: learning to filter netnews. Proc. ICML, 331-339.
+    https://doi.org/10.1016/B978-1-55860-377-6.50048-7
+
+    Examples
+    --------
+    >>> df = load_newsgroups(["sci.med", "comp.graphics"], subset="train")  # doctest: +SKIP
+    >>> list(df.columns)  # doctest: +SKIP
+    ['text', 'category']
+    """
+    from sklearn.datasets import fetch_20newsgroups
+
+    logger.info("Loading 20 newsgroups (subset=%s, categories=%s) ...", subset, categories or "all")
+    bunch = fetch_20newsgroups(
+        subset=subset, categories=categories, remove=remove, random_state=random_state
+    )
+    names = [bunch.target_names[t] for t in bunch.target]
+    logger.info(
+        "Loaded %d documents across %d categories.", len(bunch.data), len(bunch.target_names)
+    )
+    return pd.DataFrame({"text": bunch.data, "category": names})

@@ -42,12 +42,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 5. Demanding case: breast_cancer (30-D) — full honest workflow; the curse of dimensionality, felt.
 6. Advanced (optional): distances & choosing k — Minkowski p (L1/L2/L∞), Mahalanobis, cosine; the metric matters in high dimensions, not low (penguins vs noisy breast_cancer); nested CV.
 
-## 02_NaiveBayes
-1. From counts to probabilities; Bayes' rule by hand.
-2. The "naive" conditional-independence assumption — what it buys, where it breaks.
-3. Likelihoods: Gaussian vs multinomial/Bernoulli; log-probabilities and underflow.
-4. The estimators & parameters (var smoothing, priors, alpha); calibration.
-5. Demanding case: text or tabular classification; honest evaluation under imbalance.
+## 02_NaiveBayes  *(complete — 5 notebooks, merged to `main`)*
+1. Bayes' rule, from counts — prior, likelihood, posterior, evidence; predict by argmax (by hand on one binned feature).
+2. The "naive" assumption (conditional independence) — what it buys, where it breaks, and why classification survives (Domingos & Pazzani).
+3. The Gaussian likelihood, computed safely — continuous density; by-hand Gaussian NB == `GaussianNB`; log-space vs underflow.
+4. The estimators & their parameters — `GaussianNB`/`MultinomialNB`/`BernoulliNB`; var_smoothing, alpha (the zero-frequency cure), priors; honest tuning; calibration named.
+5. Text classification (the demanding case) — bag-of-words + `MultinomialNB`; honest evaluation under imbalance; calibration; generative vs discriminative.
 
 ## 03_LogisticRegression
 1. From a linear score to a probability: the sigmoid, by hand.

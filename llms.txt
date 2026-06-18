@@ -22,3 +22,9 @@
 - [notebooks/01_KNN/04_estimator_and_parameters.ipynb](notebooks/01_KNN/04_estimator_and_parameters.ipynb) — 04 — The estimator & its parameters — *Module 01 · k-Nearest Neighbours — notebook 4 of 6*
 - [notebooks/01_KNN/05_demanding_case_curse.ipynb](notebooks/01_KNN/05_demanding_case_curse.ipynb) — 05 — Demanding case: breast cancer & the curse — *Module 01 · k-Nearest Neighbours — notebook 5 of 6*
 - [notebooks/01_KNN/06_advanced_distances_and_k.ipynb](notebooks/01_KNN/06_advanced_distances_and_k.ipynb) — 06 — Advanced: distances & choosing k — *Module 01 · k-Nearest Neighbours — notebook 6 of 6 (optional, advanced)*
+## 02_NaiveBayes
+- [notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb](notebooks/02_NaiveBayes/01_bayes_from_counts.ipynb) — 01 — Bayes' rule, from counts — *Module 02 · Naive Bayes — notebook 1 of 5*
+- [notebooks/02_NaiveBayes/02_naive_assumption.ipynb](notebooks/02_NaiveBayes/02_naive_assumption.ipynb) — 02 — The "naive" assumption — *Module 02 · Naive Bayes — notebook 2 of 5*
+- [notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb](notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb) — 03 — The Gaussian likelihood, computed safely — *Module 02 · Naive Bayes — notebook 3 of 5*
+- [notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb](notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb) — 04 — The estimators & their parameters — *Module 02 · Naive Bayes — notebook 4 of 5*
+- [notebooks/02_NaiveBayes/05_text_classification.ipynb](notebooks/02_NaiveBayes/05_text_classification.ipynb) — 05 — Text classification (the demanding case) — *Module 02 · Naive Bayes — notebook 5 of 5*

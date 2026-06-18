@@ -45,3 +45,13 @@ def test_penguins_xy_split() -> None:
     assert list(X.columns) == datasets.PENGUINS_FEATURES
     assert y.name == datasets.PENGUINS_TARGET
     assert len(X) == len(y) == 274
+
+
+def test_load_newsgroups_schema() -> None:
+    # First run fetches ~14 MB and caches it; later runs read the cache (offline).
+    df = datasets.load_newsgroups(["sci.med", "comp.graphics"], subset="train")
+    assert isinstance(df, pd.DataFrame)
+    assert list(df.columns) == ["text", "category"]
+    assert sorted(df["category"].unique()) == ["comp.graphics", "sci.med"]
+    assert len(df) > 0
+    assert df["text"].map(type).eq(str).all()

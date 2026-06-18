@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `06_advanced_distances_and_k` (v2 done — both reviewers PASS, Rémy validated) |
-| Phase | `chapter-merge` |
-| Active branch | `notebook/01_KNN__06_advanced_distances_and_k` (→ merge to chapter → PR to main) |
-| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED v2) |
-| Next concrete action | **Close chapter 01 (6/6 done).** Commit NB 6 → merge to `chapter/01_KNN` → `git push -u origin chapter/01_KNN` → `gh pr create --base main --head chapter/01_KNN` (title `feat(01_knn): complete chapter — k-Nearest Neighbours`) → `gh pr merge --merge` (preserve per-notebook history; main is PR-only) → `git switch main && git pull`. Then set phase `idle`, next = open chapter `02_NaiveBayes`. |
+| Current chapter | `02_NaiveBayes` — **COMPLETE (5/5)**, merging to `main` (chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
+| Current notebook | `05_text_classification` (NB 5 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging). |
+| Phase | `chapter-merge` → then `idle` / open chapter 03 |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__05_text_classification` merges in, ff) → PR into `main` |
+| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (all 5 notebooks done) |
+| Next concrete action | **Close chapter 02 via PR into `main`** (protected): `git push -u origin chapter/02_NaiveBayes`; `gh pr create --base main --head chapter/02_NaiveBayes` (title `feat(02_naive_bayes): complete chapter — Naive Bayes`); `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 03 — Logistic Regression** (the idle edit rides onto the `chapter/03` branch, per the PR-only-main discipline — same as the ch-01→ch-02 handoff). |
 
 ## Notes / blockers
 
@@ -27,6 +27,95 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (Text classification — the demanding case) built & merged; CHAPTER 02 COMPLETE (5/5).** The
+  capstone, on 20-newsgroups: **by-hand bag-of-words on-ramp** (toy sentences → vocab → dense count
+  matrix) → `CountVectorizer` (12 384 words, density 0.0043, fit-on-train-only) → `MultinomialNB`
+  (fit ≈ms, acc **0.887**, confusion → religion hardest) → **honest eval under imbalance** (one-vs-rest
+  sci.med: acc **0.930** vs **baseline 0.724**, P/R/F1 0.887/0.854/0.870, PR AP 0.935) → **calibration**
+  (MNB piles 1205/1433 at 0/1 = over-confident *in shape*; Brier 0.056 < LogReg 0.080 here because the
+  task is easy → "trust the ranking, not the number"; cost shown on the confusable pair in Your turn) →
+  Domingos-Pazzani at scale + **generative-vs-discriminative bridge to ch 03**. 27 cells, 5 figures.
+  **2 `src/` additions with tests** (`datasets.load_newsgroups` fetch-and-cache + visible logging;
+  `viz.plot_calibration_curve` reliability diagram) → **pytest 16**. Both reviewers **PASS** (no BLOCK):
+  ml-expert verified every number + measured that keeping metadata leaks the label (0.887→0.955, so
+  `remove=` is right); pedagogy confirmed the by-hand on-ramp + honest calibration framing. 5 MINORs
+  folded (calibration wording, "crushes most", no-skill label value, multinomial pointer). `common_errors`
+  + `course_map` §02 + `llms.txt` updated. Rémy validated visually. Next: PR `chapter/02_NaiveBayes` →
+  `main`, then open chapter 03 (Logistic Regression).
+- **NB 4 (The estimators & their parameters) built & merged to `chapter/02_NaiveBayes`.** The
+  integration notebook: the NB family (Gaussian/Multinomial/Bernoulli) + each dial *measured* —
+  **`var_smoothing`** (flat 0.9927 → 1.0:0.989 → 10:0.711, the flood), **`alpha`/Laplace** healing NB 1's
+  penguins zero by hand (α=0→0; α=1→0.0065/post 0.018; verified by-hand == `MultinomialNB.feature_log_prob_`),
+  **`priors`/`fit_prior`** tilting the boundary (124↔127 predicted Gentoo; borderline x=[40.8,208] flips
+  Adélie→Gentoo at P(Gentoo) 0.15/0.5/0.85), and **honest tuning** (GridSearchCV on train, one sealed
+  test). **Calibration named & deferred to NB 5** (penguins too separable, well-calibrated). 20 cells,
+  3 figures. Both reviewers **PASS** (no BLOCK): ml-expert REVISE → the asserted Brier 0.0006 reframed as
+  a NB-5 forward reference (split-dependent, unshown) + 2 MINORs; pedagogy PASS + 2 MINORs (flip sweep
+  aligned to the panels). Rémy questioned whether NB 4 was a 4th concept notebook → confirmed it is the
+  role-4 "method & parameters" notebook; chapter stays **5**. `common_errors.md` gained a
+  "don't max out smoothing" row; `llms.txt` regenerated; pytest 14. Rémy validated visually.
+- **NB 3 (The Gaussian likelihood, computed safely) built & merged to `chapter/02_NaiveBayes`.** One
+  concept (chapter stays 5 — split not pulled): model P(feature∣class) with a continuous **density**,
+  computed in **log-space**. Bins (NB 1) were crude → **density first-contact** taught from scratch
+  (area not height; integrates to 1; can exceed 1) → per-class **Gaussian** fit (Adélie μ38.79/σ2.65,
+  Gentoo μ47.50/σ3.07) overlaid on the density histogram (mass→density; the zero-frequency trap
+  dissolves) → **by-hand Gaussian NB = sklearn `GaussianNB` 100 %** (acc 0.9927; curved boundary) →
+  likelihood is a choice (multinomial/Bernoulli named → NB 5) → **underflow** (product → 0.0 at N=324)
+  → **log-space** (sum of log-likelihoods, argmax unchanged). 20 cells, 4 figures, "Your turn" ×3. Both
+  reviewers **PASS** (no BLOCK); folded: **3 banned words** ("simply" ×2, "just"), `var_smoothing`
+  honesty (by-hand = GaussianNB with smoothing off; scores differ <1e-6 → NB 4 dial), the log-tie
+  clause, σ gloss, and a NaN/3rd-species hint on exercise (a). `common_errors.md` gained underflow +
+  density-height rows; `llms.txt` regenerated; pytest 14 (no `src/`). Rémy validated visually.
+- **NB 2 (The "naive" assumption) built & merged to `chapter/02_NaiveBayes`.** One concept:
+  **conditional independence**. Two features need the joint P(bill,flipper∣species); estimating it
+  directly is expensive (5×5 grid, **18/25 cells empty** — curse echo). The naive shortcut: assume
+  independence given the class → joint = product of 1-D marginals. **Where it breaks**, measured: real
+  vs naive joint heatmaps + a **difference panel** (the discarded correlation), within-class corr
+  **0.326/0.661** (vs overall 0.869 = mostly between-class). **Does the decision survive?** CV
+  GaussianNB **0.9927** ties LDA, beats QDA **0.9890** (Domingos & Pazzani 1997). Honest: GaussianNB =
+  QDA with diagonal covariance; the tie is an accuracy coincidence on near-separable data (NB/LDA
+  boundaries differ on 11.5 %, NB/QDA on 18.2 % — verified by ml-expert), *not* a model identity; the
+  probabilities suffer even when the decision holds (→ NB 5 calibration). 21 cells, 3 figures, "Your
+  turn" ×3. Both reviewers **PASS** (no BLOCK); shared MINOR folded ("Read the table" for the count
+  grid). `common_errors.md` gained an overall-vs-within-class-correlation row; `llms.txt` regenerated;
+  pytest 14 (no `src/` change). Rémy validated visually.
+- **NB 1 (Bayes' rule, from counts) built & merged to `chapter/02_NaiveBayes`.** By hand on the binary
+  penguins subset: the **prior** P(species) 0.551/0.449 by counting → `bill_length` 3-bin contingency
+  (Adélie [135,16,0] / Gentoo [3,67,53]) → **likelihood** P(bin∣species) by row-normalizing → **Bayes'
+  rule** (4 terms named) → **posterior** P(species∣bin) (short→Adélie 0.978, medium→Gentoo 0.807,
+  long→Gentoo 1.000) → predict by **argmax**, with "evidence cancels under argmax" *demonstrated*
+  (`joint.idxmax == posterior.idxmax` True). The bin `long` surfaces the **live zero-frequency case**
+  (no Adélie → P=0 → posterior exactly 0/1, overconfident) → foreshadows NB 4 smoothing. 21 cells, 3
+  figures (prior bar / likelihood grouped bar / posterior stacked bar), "Your turn" ×3, vocabulary box.
+  Both reviewers **PASS** (no BLOCK): ml-expert re-derived every number by exact fractions (45/46, 67/83);
+  pedagogy confirmed one-concept + voice. 4 MINORs folded (conditional-probability gloss + drop "joint"
+  cell 10; discrete-likelihood-normalization hedge cell 12; exhaustivity already in cell 6). Rémy
+  validated visually. `common_errors.md` gained a zero-frequency row; `llms.txt` regenerated; pytest 14
+  green (no `src/` change).
+- **Chapter 02 (Naive Bayes) plan APPROVED & persisted** (`docs/plans/chapter_02_NaiveBayes.md`).
+  5 notebooks, standard arc: NB 1 Bayes from counts (one feature, by hand) → NB 2 the naive
+  (conditional-independence) assumption → NB 3 the Gaussian likelihood + log-space → NB 4 the
+  estimators & parameters (var_smoothing, alpha/zero-frequency, priors, calibration-bridge) → NB 5
+  demanding case = **text classification** (20newsgroups, MultinomialNB, honest eval under imbalance,
+  the over-confidence limit, generative-vs-discriminative bridge to ch 03). Datasets: penguins (NB 1–4,
+  Gaussian) + a 20newsgroups subset (NB 5, fetch-and-cache). Reviewer-gated: **ml-expert REVISE→1 BLOCK
+  fixed** (the headline error: GaussianNB is **QDA with diagonal per-class covariance**, *not* LDA — the
+  0.9927 NB/LDA/QDA tie is an accuracy coincidence on near-separable 2-D data; re-checked PASS at the
+  parameter level), unfair NB(raw)-vs-LogReg(scaled) → both raw, α-curve marked version-indicative.
+  **pedagogy REVISE→no BLOCK** (4 MAJORs folded: NB 3 re-scoped to one concept with mass→density as a
+  taught first-contact; bag-of-words built by hand in NB 5; NB 4 calibration as a tight bridge; "Your
+  turn" per NB). Measured at plan time: within-class corr 0.326/0.661/0.486; NB/QDA/LDA 0.9927/0.9890/
+  0.9927; text acc ≈0.89 (4-cat) / ≈0.70 (hard binary); α→0 = log(0) collapse. Next: open NB 1.
+- **Chapter 02 (Naive Bayes) opened.** Branch `chapter/02_NaiveBayes` created off `main` (synced to
+  `110c081` after PR #1). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §02 and the per-method arc. The pending `idle` STATE edit was folded into this
+  transition (committed on the chapter branch, not on protected `main`).
+- **Chapter 01 (k-Nearest Neighbours) COMPLETE — 6 notebooks merged to `main` via PR #1** (merge commit
+  `110c081`, `gh pr merge --merge` — per-notebook history preserved; pushed to
+  `Ramdam17/QuickIntroToMachineLearning`). The arc: the vote → distance & the scale trap → the k dial →
+  the estimator & its parameters → demanding case + the curse → advanced distances & nested CV. The
+  two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`) + Rémy's visual validation held on
+  every notebook; NB 6 was rebuilt from scratch (v1 was visually thin). Next: chapter `02_NaiveBayes`.
 - **NB 6 (advanced: distances & choosing k) built & merged — chapter complete (6/6).** Optional Advanced
   capstone, **rebuilt from scratch (v1 scrapped by Rémy as too table-heavy)** → visualization-first, 28
   cells, **9 figures**: unit balls L1/L2/L∞; metric decision boundaries on moons; Mahalanobis ellipse +
