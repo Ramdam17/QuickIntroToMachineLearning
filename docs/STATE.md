@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `02_distance_and_scale` (plan APPROVED — building) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/01_KNN__02_distance_and_scale` |
-| Active plan | `docs/plans/01_KNN__02_distance_and_scale.md` (APPROVED) |
-| Next concrete action | **Build NB 2** per `docs/plans/01_KNN__02_distance_and_scale.md` — ~19 cells, by-hand k-NN on `make_moons(300,0.30,0)` (stratified 70/30, 210/90). **Measured anchors:** rescale feature 2 ×50 → raw acc **0.733**, standardized on train stats **0.956** (exact recovery; raw falls 0.956/0.878/0.811/0.733/0.700 at ×1/×10/×20/×50/×100); spans **4.40** (f1) vs **149.9** (f2 ×50); Euclidean **0.956** vs Manhattan **0.944** standardized → **scale ≫ metric**. Concept = the scale trap. Key figure: raw-vs-standardized **decision boundary** via `viz.plot_decision_boundary` fed a tiny in-notebook `ByHandKNN` wrapper (fit stores, predict votes). Build via an `nbformat` builder; by-hand distance fns (L2/L1) in-notebook; no `src/` change (pytest stays 14). Then both reviewers (no BLOCK) → revise → Rémy visual (/tmp HTML) → guards (hex/llms/ruff/pytest) → commit `feat(01_knn): notebook 02 — distance & the scale trap` → merge to `chapter/01_KNN`. |
+| Current notebook | `03_the_k_dial` (not started — branch not yet created) |
+| Phase | `notebook-plan` |
+| Active branch | `chapter/01_KNN` (NB 2 committed + merged) |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 3 = the k dial) |
+| Next concrete action | **Open NB 3** (awaiting Rémy's go). From `chapter/01_KNN`: `git switch -c notebook/01_KNN__03_the_k_dial`, set STATE, enter plan mode, draft the NB 3 cell-by-cell plan — *the k dial: under- vs over-fitting; choose k by CV*. Concept: **k is the bias–variance knob** — k=1 overfits (jagged boundary, train≈1.0), large k underfits (over-smooth); **choose k by cross-validation** (odd-k grid for binary; CV *selects* k, the held-out test of NB 5 *evaluates* it). Contrast k-NN's local boundary with NB 05's single bisector. Reuse `viz.plot_decision_boundary` (boundaries at k=1/15/large), `viz.plot_train_test_curve` (train/test error vs k), `cross_val_score`/`StratifiedKFold` (NB 10). **Measure anchors at plan** (train/test error vs k; CV-selected k; boundary panels). Prereqs: NB 1–2, plus 05, 09, 10. Rémy validates the plan before build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (distance & the scale trap) built & merged to `chapter/01_KNN`.** By-hand k-NN on
+  `make_moons`: Euclidean vs Manhattan (a genuine L1/L2 ranking flip — q=(0,0): L2 picks B=(0.7,0.7),
+  L1 picks A=(1,0)), then the scale trap — feature 2 ×50 collapses test acc **0.956 → 0.733**,
+  standardizing on **train stats** recovers it **exactly** (caveat stated: exact recovery is special to
+  a pure rescale); raw-vs-standardized **decision boundary** (horizontal bands slicing the crescents →
+  the two-moon S recovered, both PNGs eyeballed). Honest scoping: metric (0.956 vs 0.944 = **one** test
+  point of 90) ≪ scale (~20 pts). Tiny in-notebook `ByHandKNN` wrapper reuses
+  `viz.plot_decision_boundary` (single split; CV deferred to NB 3). Both reviewers **PASS**
+  (re-measured; applied 5 fixes: "34× linear → ~34²≈1000× in the squared sum", metric-gap-is-one-point,
+  ISLR §2.2.3 **& ch. 4**, a `ByHandKNN` framing cell naming the fit/predict interface, forced axis
+  labels). Rémy validated visually. `feat(01_knn): notebook 02 — distance & the scale trap`.
 - **NB 1 (predict by the neighbourhood vote) built & merged to `chapter/01_KNN`.** k-NN by hand on
   `make_moons(300, 0.30, 0)` (210/90): the majority vote, *k* = neighbourhood size, and the lazy cost
   **felt live** (fit flat ~µs vs predict super-linear at n=300/3000/30000). At build, the running query

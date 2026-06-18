@@ -102,7 +102,7 @@ visually; commit per notebook; **chapter close via PR into `main`** (protected).
 | NB | Branch | Status |
 |----|--------|--------|
 | 1 | `notebook/01_KNN__01_neighbourhood_vote` | **done** — built, both reviewers PASS, Rémy validated, merged to `chapter/01_KNN` (query corrected to q=(-0.23,0.75) for honesty) |
-| 2 | `notebook/01_KNN__02_distance_and_scale` | not started |
+| 2 | `notebook/01_KNN__02_distance_and_scale` | **done** — built, both reviewers PASS, Rémy validated, merged to `chapter/01_KNN` |
 | 3 | `notebook/01_KNN__03_the_k_dial` | not started |
 | 4 | `notebook/01_KNN__04_estimator_and_parameters` | not started |
 | 5 | `notebook/01_KNN__05_demanding_case_curse` | not started |
