@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `05_demanding_case_curse` (plan APPROVED — building) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/01_KNN__05_demanding_case_curse` |
-| Active plan | `docs/plans/01_KNN__05_demanding_case_curse.md` (APPROVED) |
-| Next concrete action | **Build NB 5** per `docs/plans/01_KNN__05_demanding_case_curse.md` — ~21 cells, the demanding case on `load_breast_cancer` (569×30; mal 212/benign 357; stratified 70/30 seed 0). **Measured anchors:** raw CV **0.935** vs `Pipeline(scaler,KNN)` **0.970**; CV picks **k=7** (0.970); test acc **0.947**; confusion `[[57,7],[2,105]]`; **malignant recall 0.891** (7 of 64 missed); curse (noise dims 0→2000): acc **0.947→0.789**, near/far ratio **0.121→0.909** (→1, Beyer 1999). Figures: CV-acc-vs-k; `viz.plot_confusion_matrix`; curse two-panel (acc + near/far ratio vs #noise-dims). Reuse `Pipeline`/`StandardScaler` (NB 11), `cross_val_score`/`StratifiedKFold` (NB 10), `pairwise_distances`; no `src/` (pytest 14). Build via `nbformat`; **`--clear-output --inplace` before commit**. Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 05 — demanding case: breast cancer & the curse` → merge to `chapter/01_KNN`. |
+| Current notebook | `06_advanced_distances_and_k` (not started — branch not yet created) |
+| Phase | `notebook-plan` |
+| Active branch | `chapter/01_KNN` (NB 5 committed + merged) |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 6 = Advanced: distances & choosing k) |
+| Next concrete action | **Open NB 6** (awaiting Rémy's go) — the optional **Advanced** notebook (chapter's last; a Rémy-approved exception to the 5-ceiling, answering his two questions). Metric geometry: Minkowski p=1/2/∞ (Manhattan/Euclidean/**Chebyshev**) as neighbourhood *shape* — draw the **unit balls** (diamond/circle/square); **Mahalanobis** (covariance-aware) & **cosine**; the **metric × curse** (smaller/fractional p stays more discriminating in high-d, Aggarwal 2001 — ties to NB 5); choosing k/metric by CV → a peek at **nested CV**; and the honest clarification that **silhouette selects k-means clusters, not k-NN's k** (Rémy's question — supervised CV vs unsupervised silhouette, Rousseeuw 1987). Figures: unit balls L1/L2/L∞; metric impact on a boundary/accuracy; a nested-CV scheme. From `chapter/01_KNN`: `git switch -c notebook/01_KNN__06_advanced_distances_and_k`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–5. Rémy validates the plan before build. **Then chapter close → PR into `main` (6/6).** |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (demanding case: breast cancer & the curse) built & merged to `chapter/01_KNN`.** Full honest
+  workflow on `load_breast_cancer` (569×30): pandas look → `Pipeline(StandardScaler, KNN)` (raw CV
+  0.935 vs scaled **0.970**, NB 2 scale trap on real data) → CV picks **k=7** → one held-out eval (test
+  **0.947**) → error analysis: confusion `[[57,7],[2,105]]`, **malignant recall 0.891 = 7 of 64 cancers
+  missed** (accuracy hid it; threshold → NB 8) → when to/not use k-NN → **the curse, felt**: CV acc
+  **0.970→0.771** as noise dims grow, near/far ratio **0.121→0.909** (→1, the *why*, Beyer 1999). Curse
+  via `cross_val_score` on TRAIN (test stays used-once); near/far = pure geometry. Both reviewers PASS
+  (re-derived leak-free, near/far = Beyer's inverse relevant-contrast confirmed; applied MINORs:
+  plan-table→CV numbers, curse-is-CV framing + Pipeline-rescales note, asymptotic wording, prereqs
+  +06/+08). Rémy validated. `feat(01_knn): notebook 05 — demanding case: breast cancer & the curse`.
+  **Build note:** a stray `/tmp/struct.py` (a notebook cell-lister) shadows stdlib `struct` for `python
+  /tmp/*.py` (sys.path[0]=/tmp) → run builders via `uv run python - < /tmp/x.py` (stdin) instead.
 - **NB 4 (the estimator & its parameters) built & merged to `chapter/01_KNN`.** Introduced
   `KNeighborsClassifier`: parity with by-hand (0 diff, 0.956) and `cross_val_score` == NB 3's **0.919**;
   walked `n_neighbors` / `weights` / `metric`. weights uniform vs distance (k=151: 0.678 vs 0.833,

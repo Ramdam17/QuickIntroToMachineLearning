@@ -28,21 +28,22 @@ Prereqs: NB 1–4, plus 07 (confusion/precision/recall), 10 (CV), 11 (Pipeline/s
   0.947 hides that ~11 % of cancers are missed; in screening, a missed malignancy costs far more than a
   false alarm (the asymmetric-cost lesson of NB 07; thresholding is NB 08). Benign precision 0.938,
   recall 0.981, F1 0.959.
-- **The curse of dimensionality, felt.** Append pure-noise features (N(0,1), i.e. **at the signal's
-  scale** after standardization) and watch k-NN degrade. Measured held-out accuracy and the mean
-  **near/far ratio** (per test point, distance to nearest train / distance to farthest), across
-  0/30/100/300/1000/2000 noise dims:
+- **The curse of dimensionality, felt.** Append pure-noise features (N(0,1) — at the signal's unit
+  scale after the Pipeline standardizes) and watch k-NN degrade. The accuracy curve uses
+  **`cross_val_score` on the training set** (so the sealed test set is still used exactly once, in the
+  held-out eval, cell 11); the mean **near/far ratio** (per test point, nearest-train distance /
+  farthest) is pure geometry. Across 0/30/100/300/1000/2000 noise dims:
 
-  | noise dims | accuracy | near/far ratio |
+  | noise dims | CV accuracy | near/far ratio |
   |---|---|---|
-  | 0 | 0.947 | 0.121 |
-  | 30 | 0.936 | 0.309 |
-  | 100 | 0.918 | 0.499 |
-  | 300 | 0.883 | 0.708 |
-  | 1000 | 0.854 | 0.860 |
-  | 2000 | 0.789 | 0.909 |
+  | 0 | 0.970 | 0.121 |
+  | 30 | 0.922 | 0.311 |
+  | 100 | 0.894 | 0.505 |
+  | 300 | 0.887 | 0.711 |
+  | 1000 | 0.792 | 0.856 |
+  | 2000 | 0.771 | 0.909 |
 
-  Accuracy falls 0.947 → 0.789 **and the near/far ratio climbs toward 1** — that ratio is the *why*:
+  CV accuracy falls 0.970 → 0.771 **and the near/far ratio climbs toward 1** — that ratio is the *why*:
   when the nearest neighbour is nearly as far as the farthest, "nearest" carries almost no information
   and the vote degrades (distance concentration, Beyer 1999). The signal never changed; we buried it.
 
@@ -121,11 +122,10 @@ intuition→figure→"Read the figure" rhythm; target stays ~21 cells.)*
 - The **demanding case** integrates everything; it does not introduce a *new* method concept. It uses
   metrics (NB 06–08), the Pipeline (NB 11), and CV (NB 10) as established tools.
 - **No leakage:** the scaler is fit inside CV (Pipeline) and inside the final fit-on-train; the test
-  set is evaluated exactly once (cell 11). The curse curve is a **controlled illustration** of a
-  geometric phenomenon (deliberately injected noise) — flagged as such, in the spirit of NB 3's
-  illustrative test-error curve; it is not model selection. *(If the reviewers prefer, the curse
-  accuracy curve can be switched to `cross_val_score` on the training set at revise; the near/far ratio
-  is pure geometry.)*
+  set is evaluated exactly once (cell 11). The curse accuracy curve uses **`cross_val_score` on the
+  training set** (not the test set), so the "test used once" promise holds; it is a controlled
+  illustration of a geometric phenomenon (deliberately injected noise), not model selection. The
+  near/far ratio is pure geometry (distances only, no labels, no fitting).
 - The curse is shown with **pure-noise** dims for a clean signal-vs-noise contrast; the notebook states
   that real high-d data is rarely pure noise but routinely carries many weak/irrelevant features, which
   exert the same distance-concentration pressure (Beyer 1999; the deeper metric-in-high-d story is NB
@@ -137,7 +137,7 @@ intuition→figure→"Read the figure" rhythm; target stays ~21 cells.)*
 ## Verification
 
 Measured anchors (raw 0.935 vs scaled 0.970; CV-best k = 7; test 0.947; confusion `[[57,7],[2,105]]`;
-malignant recall 0.891; curse 0.947→0.789 with near/far 0.121→0.909) re-run in the notebook and
+malignant recall 0.891; curse CV 0.970→0.771 with near/far 0.121→0.909) re-run in the notebook and
 reconciled into prose at build. Runs top-to-bottom (nbconvert to /tmp; output-free; **`--clear-output
 --inplace` before commit**); `check_no_hardcoded_hex` passes; `gen_llms_txt` re-run; `pytest` green
 (14, no `src/` change); both reviewers pass (no BLOCK); Rémy validates visually; commit + merge
