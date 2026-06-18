@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `03_the_k_dial` (plan APPROVED — building) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/01_KNN__03_the_k_dial` |
-| Active plan | `docs/plans/01_KNN__03_the_k_dial.md` (APPROVED) |
-| Next concrete action | **Build NB 3** per `docs/plans/01_KNN__03_the_k_dial.md` — ~19 cells, by-hand k-NN on `make_moons(300,0.30,0)` (210/90, original scale). Concept: **k = bias–variance knob, chosen by CV**. **Measured anchors:** train/test err vs k → k=1 **0.000/0.067** (memorizes; gap=overfit), k=3 .071/.033, k=15 .062/.044, k=151 .224/.322 (underfit); **5-fold CV on TRAIN picks k=15** (cv 0.919); test acc k=1→**0.933**, k=15→**0.956**, k=151→**0.678**. Honest: test-curve min is k=3 but selection uses CV (train only), never test. Figures: boundaries k=1/15/151 (`viz.plot_decision_boundary`+ByHandKNN); train-vs-test error vs k and CV-acc-vs-k (`viz.plot_train_test_curve`). CV **by hand** (`StratifiedKFold`+loop; KNeighborsClassifier stays NB 4). Build via `nbformat`; no `src/` (pytest 14). Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 03 — the k dial` → merge to `chapter/01_KNN`. |
+| Current notebook | `04_estimator_and_parameters` (not started — branch not yet created) |
+| Phase | `notebook-plan` |
+| Active branch | `chapter/01_KNN` (NB 3 committed + merged) |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 4 = the estimator & its parameters) |
+| Next concrete action | **Open NB 4** (awaiting Rémy's go). NB 4 is the **method & parameters** notebook (the role changes: not one new concept — walk the real estimator). Introduce `KNeighborsClassifier` and its hyperparameters: **n_neighbors** (recall the k dial, NB 3), **weights** (uniform vs distance — distance visibly resists over-smoothing at large k), **metric / p** (the NB 2 metric, now a *tuned* dial; deep geometry stays NB 6). Show the **even-k tie** resolved deterministically by sklearn (lowest class label) — why odd k for binary. Confirm **by-hand == sklearn** (ties NB 1–3 to the library). Boundary panels: uniform vs distance at large k; a metric comparison. From `chapter/01_KNN`: `git switch -c notebook/01_KNN__04_estimator_and_parameters`, set STATE, plan mode, **measure anchors at plan**. Prereqs: NB 1–3, plus 05. Rémy validates the plan before build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (the k dial) built & merged to `chapter/01_KNN`.** By-hand k-NN on `make_moons`: k as the
+  bias–variance dial — boundaries k=1 (jagged/memorize) / 15 / 151 (over-smooth), contrasted with NB
+  05's single bisector; train/test error vs k (log axis, the U; k=1 train err **0.000**); then the
+  honest selection — show the test curve, **refuse to use it**, **5-fold CV on TRAIN picks k=15** (cv
+  0.919), one sealed test eval → **0.956** (vs k=1 0.933, k=151 0.678). Surfaces (not hides) the
+  test-min=k3 vs CV=k15 disagreement. CV by hand (`StratifiedKFold`+loop); `KNeighborsClassifier` /
+  `cross_val_score` deferred to NB 4. Both reviewers **PASS** (re-derived CV leak-free; applied 6 fixes:
+  variance-inferred-not-measured nod to NB 09, gap *indicates* overfit, CV-fold-seed wobble, odd-k
+  explained, boundaries-on-train named, k15/0.956 seed-caveat). Rémy validated visually. `feat(01_knn):
+  notebook 03 — the k dial`.
 - **NB 2 (distance & the scale trap) built & merged to `chapter/01_KNN`.** By-hand k-NN on
   `make_moons`: Euclidean vs Manhattan (a genuine L1/L2 ranking flip — q=(0,0): L2 picks B=(0.7,0.7),
   L1 picks A=(1,0)), then the scale trap — feature 2 ×50 collapses test acc **0.956 → 0.733**,

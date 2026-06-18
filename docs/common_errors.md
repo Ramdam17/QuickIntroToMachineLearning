@@ -11,6 +11,7 @@ point to the notebook that addresses it.
 | "My accuracy is 100% on the data I trained on." | You measured memorization, not generalization. Evaluate on held-out data. | `00_GettingStarted` |
 | Scaling/feature selection done on the whole dataset before the split | Leakage — test info bleeds into training. Fit preprocessing on train only. | `00_GettingStarted`, `01_KNN/02` |
 | "I changed the seed and the result changed — which is right?" | Single-seed results are noisy; fix and document the seed, and judge over CV folds. | per method, notebook 4 |
+| "I picked the k (or any hyperparameter) that scored best on the test set." | That tunes the model to the test set, so the reported score is optimistic. Choose hyperparameters by cross-validation on the training data; touch the test set once, at the end. | `00_GettingStarted` (NB 10), `01_KNN/03` |
 | Comparing models on different splits/preprocessing | Not a fair comparison. Same splits, same pipeline. | per method, notebook 5 |
 | Accuracy looks great on imbalanced data | A constant predictor can score high. Use a metric that respects the minority class. | `02_NaiveBayes/05` |
 
