@@ -19,6 +19,7 @@ point to the notebook that addresses it.
 | Method | Trap | Note |
 |---|---|---|
 | KNN | "Distances don't need scaling." | A large-range feature dominates the distance; normalize. |
+| KNN | "The single nearest neighbour (k=1) is the most reliable guide." | One nearest point can be a noise stray; the majority vote over k≥3 neighbours is more robust near class overlap. The vote: `01_KNN/01`; choosing k: `01_KNN/03`. |
 | Naive Bayes | "Features must really be independent." | The assumption is *conditional* independence, and the method is often useful even when it's violated. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |

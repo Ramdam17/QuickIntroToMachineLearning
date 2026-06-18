@@ -15,3 +15,5 @@
 - [notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb](notebooks/00_GettingStarted/09_overfitting_generalization_gap.ipynb) — 09 — Over-/under-fitting and the generalization gap — *Module 00 · Getting Started — notebook 9 of 11*
 - [notebooks/00_GettingStarted/10_cross_validation.ipynb](notebooks/00_GettingStarted/10_cross_validation.ipynb) — 10 — Validating honestly: cross-validation — *Module 00 · Getting Started — notebook 10 of 11*
 - [notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb](notebooks/00_GettingStarted/11_preprocessing_leakage.ipynb) — 11 — Preprocessing & leakage — *Module 00 · Getting Started — notebook 11 of 11*
+## 01_KNN
+- [notebooks/01_KNN/01_neighbourhood_vote.ipynb](notebooks/01_KNN/01_neighbourhood_vote.ipynb) — 01 — Predict by the neighbourhood vote — *Module 01 · k-Nearest Neighbours — notebook 1 of 6*

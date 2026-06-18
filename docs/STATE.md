@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `01_neighbourhood_vote` (plan APPROVED — ready to build) |
-| Phase | `notebook-plan-approved` |
-| Active branch | `notebook/01_KNN__01_neighbourhood_vote` |
-| Active plan | `docs/plans/01_KNN__01_neighbourhood_vote.md` (APPROVED) |
-| Next concrete action | **Build NB 1** per `docs/plans/01_KNN__01_neighbourhood_vote.md` — 18 cells, by-hand k-NN vote on `make_moons(300, noise=0.30, random_state=0)` (stratified 70/30 → 210/90). **Measured anchors:** running query q=(0.60, 0.14), true class 0; its 5 nearest training labels [1,0,0,1,0] (dists 0.07–0.15) → votes **k1=1 / k3=0 / k5=0** (k=1 overfits a noisy neighbour; the vote recovers the truth); lazy cost = fit stores (trivial) vs predict = distances to all n (time grows with n; KD-tree nuance noted). Build via an `nbformat` builder script (like NB 10/11); `mkdir notebooks/01_KNN/`; in-notebook figure (query + ringed neighbours) using `ml_course.colors`; no new `src/` (pytest stays 14). Then both reviewers (no BLOCK) → revise → Rémy visual (/tmp HTML) → guards (hex, gen_llms_txt, ruff, pytest) → clear outputs → commit `feat(01_knn): notebook 01 — predict by the neighbourhood vote` → merge to `chapter/01_KNN`. |
+| Current notebook | `02_distance_and_scale` (not started — branch not yet created) |
+| Phase | `notebook-plan` |
+| Active branch | `chapter/01_KNN` (NB 1 committed + merged) |
+| Active plan | `docs/plans/chapter_01_KNN.md` (NB 2 = distance & the scale trap) |
+| Next concrete action | **Open NB 2** (awaiting Rémy's go). From `chapter/01_KNN`: `git switch -c notebook/01_KNN__02_distance_and_scale`, set STATE (phase `notebook-plan`, active branch), then enter plan mode and draft the NB 2 cell-by-cell plan — *distance & the scale trap* per `docs/plans/chapter_01_KNN.md` (NB 2). One concept: **k-NN is pure distance → the larger-range feature dominates → standardize** (the NB 11 payoff). Euclidean vs Manhattan introduced *in service of* this (metric as a tunable dial is NB 4, not here). Rescaled-axis moons shows the trap (chapter plan measured raw CV ≈ 0.79 → standardized ≈ 0.92 — **re-measure at plan/build**). Prereqs: NB 1, plus 02 & 11. Rémy validates the plan before build; then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (predict by the neighbourhood vote) built & merged to `chapter/01_KNN`.** k-NN by hand on
+  `make_moons(300, 0.30, 0)` (210/90): the majority vote, *k* = neighbourhood size, and the lazy cost
+  **felt live** (fit flat ~µs vs predict super-linear at n=300/3000/30000). At build, the running query
+  was **re-measured and corrected**: the planned q=(0.60,0.14) sat on the Bayes boundary (~50/50, so
+  "true class 0" was dishonest); replaced with **q=(-0.23,0.75)** — a region only the class-0 crescent
+  reaches (~85% class 0 → class 0 is the right answer), nearest training labels [1,0,0,0,0], votes
+  k1=1/k3=0/k5=0. Both reviewers **PASS** (each re-measured & confirmed truth/votes/timing; 3 MINOR
+  polish applied — NB09 ref → module-00 callback, "nothing learned by fitting", Cover&Hart asymptotic
+  1-NN qualifier). Rémy validated visually. `common_errors.md` gained a KNN k=1-noise row; `llms.txt`
+  regenerated. Commit `feat(01_knn): notebook 01 — predict by the neighbourhood vote`.
 - Chapter 01 (k-NN) plan **approved & persisted** (`docs/plans/chapter_01_KNN.md`) — 6 notebooks: vote
   → distance/scale trap → k-dial → estimator/params → demanding case (breast_cancer + the curse) → an
   optional **NB 6 Advanced** (metric geometry L1/L2/L∞ + Mahalanobis/cosine, metric×curse, nested CV,
