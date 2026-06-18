@@ -40,7 +40,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 3. The k dial: under- vs over-fitting; choose k by cross-validation.
 4. The estimator & its parameters (KNeighborsClassifier: k, weights, metric); decision boundary vs k.
 5. Demanding case: breast_cancer (30-D) — full honest workflow; the curse of dimensionality, felt.
-6. Advanced (optional): distances & choosing k — Minkowski p (L1/L2/L∞), Mahalanobis, cosine; metric × the curse; nested CV; silhouette is for clustering, not k-NN.
+6. Advanced (optional): distances & choosing k — Minkowski p (L1/L2/L∞), Mahalanobis, cosine; the metric matters in high dimensions, not low (penguins vs noisy breast_cancer); nested CV.
 
 ## 02_NaiveBayes
 1. From counts to probabilities; Bayes' rule by hand.

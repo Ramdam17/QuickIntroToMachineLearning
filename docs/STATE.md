@@ -7,10 +7,10 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `06_advanced_distances_and_k` (plan APPROVED — building) |
+| Current notebook | `06_advanced_distances_and_k` (**v2 plan APPROVED — building**; visualization-first, ~28–30 cells, no ceiling) |
 | Phase | `notebook-build` |
 | Active branch | `notebook/01_KNN__06_advanced_distances_and_k` |
-| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED) |
+| Active plan | `docs/plans/01_KNN__06_advanced_distances_and_k.md` (APPROVED v2) |
 | Next concrete action | **Build NB 6** per `docs/plans/01_KNN__06_advanced_distances_and_k.md` — ~21 cells, optional Advanced. **Measured anchors:** unit balls L1/L2/L∞ (geometry); Mahalanobis shown GEOMETRICALLY (ellipse vs circle — no accuracy race, stated why = LDA/within-class cov out of scope); metric×curse: near/far ratio p=0.5<1<2 at all dims, accuracy breast_cancer+noise **p=1 0.877 vs p=2 0.842 at +1000**; **nested CV 0.960 vs naive 0.967**; **silhouette peaks at 3 clusters** (k-means cluster count, NOT k-NN's k). Figures: unit balls; Mahalanobis ellipse; metric×curse ratio; silhouette-vs-clusters. **Build via `uv run python - < /tmp/build_nb6.py`** (stdin — dodges `/tmp/struct.py` shadow); `--clear-output --inplace` before commit; no `src/` (pytest 14). Then both reviewers (no BLOCK) → revise → Rémy visual → guards → commit `feat(01_knn): notebook 06 — advanced: distances & choosing k` → merge to `chapter/01_KNN` → **chapter 01 close: PR into `main` (6/6)**. |
 
 ## Notes / blockers

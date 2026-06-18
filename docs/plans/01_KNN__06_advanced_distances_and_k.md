@@ -1,139 +1,139 @@
-# Notebook plan — 01_KNN / 06_advanced_distances_and_k
+# Notebook plan — 01_KNN / 06_advanced_distances_and_k  (v2 — rebuilt from scratch)
 
-> Status: **APPROVED** (2026-06-18, by Rémy). Notebook plans validated by Rémy alone; reviewers return
-> on the built notebook. Drives `notebooks/01_KNN/06_advanced_distances_and_k.ipynb`. Build via
-> `uv run python - < /tmp/build_nb6.py` (stdin) to dodge the stray `/tmp/struct.py` shadow.
+> Status: **APPROVED** (2026-06-18, by Rémy). v1 was scrapped (too few visualizations); this v2 is
+> visualization-first and freed from the ~20-cell ceiling. Build via `uv run python - <
+> /tmp/build_nb6.py` (stdin) to dodge the stray `/tmp/struct.py` shadow.
 
 ## Context
 
-The chapter's optional **Advanced** notebook (a Rémy-approved exception to the 5-notebook ceiling),
-written to answer the two questions Rémy raised: **(1) does the *definition* of distance matter for
-classification — L1/L2/L∞, Mahalanobis, cosine?** and **(2) is there a principled way to choose k —
-and what is that "silhouette" algorithm?** It deepens NB 2 (distance) and NB 3 (choosing k) without
-introducing a new method. Prereqs: NB 1–5.
+The chapter's optional **Advanced** capstone, **rebuilt from scratch** after v1 was scrapped: v1 was
+table-heavy and visually poor for a notebook whose whole subject — the *geometry of distance* — begs
+to be **seen**. This version is **visualization-first** (nine figures), features **both** course
+datasets (penguins for 2-D geometry, breast cancer for high-D), and is **freed from the ~20-cell
+ceiling** (≈28–30 cells; that ceiling is a floor for fundamentals, not a cap on a serious capstone). It
+answers Rémy's two questions: **(1) does the *definition* of distance matter?** and **(2) how do you
+choose k rigorously?** Deepens NB 2 (distance) and NB 3 (choosing k); no new method. Prereqs: NB 1–5.
 
-## Design (measured)
+## Design (every figure below was generated and visually inspected at plan time)
 
-**Q1 — the metric is a choice (geometry first, then where it bites).**
-- **Minkowski unit balls** (geometry, no fitting): the set {x : ‖x‖_p = 1} is a **diamond (p=1)**,
-  **circle (p=2)**, **square (p=∞)**. The unit ball *is* the shape of "within distance r" — the metric
-  defines the neighbourhood's shape.
-- **Mahalanobis = covariance-aware distance.** Standardization (NB 2) fixes per-feature *scale* but not
-  *correlation*; Mahalanobis whitens by the covariance, so its unit ball is an **ellipse aligned to the
-  data**. Shown **geometrically** (Euclidean circle vs Mahalanobis ellipse on correlated data). **Honest
-  scope note:** we do *not* stage an accuracy race — measured, Mahalanobis ≈ Euclidean ≈ standardized
-  (~0.85) on correlated 2-class data, because a clean Mahalanobis win needs the *within-class*
-  covariance (LDA territory, out of scope). We show what it *is*, not a contrived victory. **Cosine** is
-  named (angle not magnitude; for direction/text data).
-- **Metric × the curse** (Aggarwal 2001, ties to NB 5): smaller p resists distance concentration.
-  Measured **near/far ratio** on pure N(0,1) noise (lower = better contrast):
+**Part 1 — a distance is a choice, and it has a geometry that reaches the decision boundary.**
+- **Unit balls** {‖x‖_p = 1}: diamond (p=1) / circle (p=2) / square (p=∞).
+- **The metric reshapes the decision boundary.** k-NN(15) boundaries on **moons** (overlap reveals it)
+  for p=1 / 2 / ∞: Manhattan gives axis-aligned, staircase segments; Euclidean is smooth; Chebyshev is
+  blocky/diagonal — *confirmed visually distinct*. (moons, not penguins, because penguins separate so
+  cleanly the three boundaries nearly coincide — itself the Part-3 point.)
 
-  | dims | p=0.5 | p=1 | p=2 |
-  |---|---|---|---|
-  | 2 | 0.032 | 0.037 | 0.040 |
-  | 20 | 0.383 | 0.427 | 0.447 |
-  | 100 | 0.653 | 0.690 | 0.711 |
-  | 500 | 0.832 | 0.852 | 0.864 |
-  | 1000 | 0.874 | 0.890 | 0.899 |
+**Part 2 — Mahalanobis: a distance that learns the data's shape (on the penguins).**
+- Standardization (NB 2) equalizes *scale* but not *correlation*; penguins' two features correlate
+  **0.869** even standardized. **Unit ball → ellipse:** Euclidean circle vs Mahalanobis ellipse on the
+  standardized penguin cloud (tilts ~45° along the cloud). *Confirmed.*
+- **The consequence — the boundary reshapes:** Euclidean vs Mahalanobis **k-NN decision boundary** on
+  the penguins, side by side — Mahalanobis bends the boundary along the correlation. *Confirmed
+  visually distinct.* Honest: both separate the penguins well; the metric changes the *shape* of the
+  decision, shown as geometry — a fair accuracy contest needs the within-class covariance (LDA), out of
+  scope. **Cosine** named (angle, not magnitude).
 
-  And in **accuracy** (breast_cancer, standardized, + noise dims; k=7): p=1 vs p=2 = **0.947/0.947** at
-  0 noise, **0.906/0.860** at +200, **0.877/0.842** at +1000 → in high dimensions Manhattan (smaller p)
-  degrades **slower** than Euclidean. The bigger lever is still reducing dimensionality (NB 5); the
-  metric is a secondary, real high-d effect.
+**Part 3 — when does the metric matter? Low vs high dimension — both datasets.**
+- **The curse, made visceral:** histogram of pairwise-distance / mean-distance at **d = 2 / 50 / 1000**
+  (pure noise). At d=2 distances span 0–4× the mean; at d=1000 they collapse onto 1 — "nearest" ≈
+  "farthest". *Confirmed striking.* (Charter colours in the build.)
+- **near/far ratio by Minkowski p** (0.5 / 1 / 2) vs dims: smaller p concentrates more slowly
+  (p=0.5 < 1 < 2 at every dim) — the robust mechanism (Aggarwal 2001; a simpler cousin of their
+  *relative contrast*, which favours fractional p<1).
+- **Accuracy, both datasets:** **penguins** = a *wash* (Manhattan/Euclidean/Chebyshev all **0.993** at
+  k=5). **breast cancer + noise** (k=7, **averaged over 8 noise draws**, mean±std): a two-line curve,
+  p=1 vs p=2, vs #noise-dims {0,50,100,200,500,1000} = (0.947/0.947), (0.938/0.928), (0.928/0.909),
+  (0.920/0.902), (0.885/0.858), (**0.839/0.803**). p=1 ≥ p=2 at every level and the **gap widens with
+  dimension**. The single-draw spread (±0.02–0.04) is comparable to the effect — so we average and say
+  so. **Lesson:** the metric is a wash in low dimensions (penguins) but matters — modestly, on
+  average — in high ones (noisy breast cancer); reducing dimensions (NB 5) is the bigger lever.
 
-**Q2 — choosing k, rigorously.**
-- **Nested CV.** Choosing k by CV *and* reporting that same CV score is optimistic (you keep the
-  luckiest k — a winner's curse). Nest: inner CV tunes k, outer CV estimates honestly. Measured on
-  breast_cancer: naive (best inner-CV) **0.967** vs nested **0.960** — small here, but in the expected
-  direction; the principle is essential (NB 5's single held-out test is the simplest honest estimate).
-- **"silhouette" — the honest clarification (Rémy's question).** The silhouette coefficient
-  (Rousseeuw 1987) is real and *does* pick a "k" — but the number of **clusters** for an
-  **unsupervised** method like k-means, by within- vs between-cluster distances. Measured on 3-blob
-  data, k-means silhouette peaks at **n_clusters = 3** (the true count). It does **not** choose k-NN's
-  k: k-NN is **supervised** (we have labels) → choose k by **cross-validation against accuracy**. Same
-  word "k", different problems.
+**Part 4 — choosing k rigorously: nested cross-validation.**
+- A **schematic** of the nested loops (outer folds for estimation; inside each, an inner CV picks k).
+- **The winner's curse, visualized:** the 5 outer-fold scores [0.938, 0.988, 0.938, 0.975, 0.962] as a
+  strip/box, with the **nested mean 0.960** and the **optimistic naive best-inner-CV 0.967** marked —
+  the naive number sits above the honest mean and ignores the fold-to-fold spread. *Confirmed.*
 
 ## Library additions / figures
 
-**None to `src/`.** Uses `KNeighborsClassifier` (incl. `metric="mahalanobis"`/Minkowski `p`),
-`sklearn.cluster.KMeans`, `silhouette_score`, `GridSearchCV`, `cross_val_score`, `StratifiedKFold`,
-`pairwise_distances`, `make_blobs`, `load_breast_cancer`, matplotlib for the unit balls / ellipse.
-Figures use `ml_course.colors`/`viz`. `pytest` stays 14.
+**None to `src/`.** Reuse `viz.plot_decision_boundary` (metric & Mahalanobis boundaries),
+`viz.use_course_style`, `ml_course.colors`, `ml_course.datasets.penguins_xy`. sklearn:
+`KNeighborsClassifier` (Minkowski p, `metric="mahalanobis"`/`"chebyshev"`), `GridSearchCV`,
+`cross_val_score`, `StratifiedKFold`, `train_test_split`, `StandardScaler`, `make_pipeline`,
+`pairwise_distances`, `make_moons`, `load_breast_cancer`. Unit balls, concentration histogram, ratio
+curve, accuracy curve, nested-CV schematic & fold-strip are one-off in-notebook figures (charter
+colours). `pytest` stays 14.
 
-## Cell-by-cell (~21 cells)
+## Cell-by-cell (~28–30 cells; visualization-first; "Read the figure" after every figure)
 
-1. (md) **Header** — `# 06 — Advanced: distances & choosing k`; *Module 01 · k-NN — notebook 6 of 6
-   (optional, advanced)*; purpose (answer two deeper questions); `Prerequisites: 01–05`; objectives
-   (see how the metric reshapes the neighbourhood; meet Mahalanobis & cosine; see why the metric
-   matters more in high-d; choose k by nested CV; tell silhouette apart from k-NN's k). Frame it as
-   optional depth for the curious.
-2. (code) imports + seed + `use_course_style()`.
-3. (md) **Q1 — distance is a choice.** The Minkowski family (`p`): p=2 Euclidean, p=1 Manhattan, p→∞
-   Chebyshev. We will *see* each as a neighbourhood shape, then meet two non-Minkowski distances.
-4. (code) **unit balls** — plot {‖x‖_p = 1} for p = 1, 2, ∞ (one panel, three curves).
-5. (md) **Read the figure** — diamond / circle / square. The unit ball is the set of points "within
-   distance 1"; the metric is literally the shape of a neighbourhood, so it changes who is nearest.
-6. (md) **Mahalanobis — covariance-aware.** Standardization equalized feature *scales* (NB 2) but left
-   *correlations*; Mahalanobis whitens by the covariance Σ, so its unit ball {x : xᵀΣ⁻¹x = 1} is an
-   ellipse aligned to the data.
-7. (code) correlated 2-D cloud + Euclidean unit **circle** vs Mahalanobis unit **ellipse** (from the
-   sample covariance).
-8. (md) **Read the figure** — the circle treats every direction equally; the ellipse stretches along
-   the cloud, so a step across the data's narrow direction counts as "farther". (Honest note: a clean
-   accuracy win needs the within-class covariance — LDA territory, beyond this chapter; here we show
-   the geometry. **Cosine distance** is named: it compares *direction*, ignoring magnitude — natural
-   for text / counts.)
-9. (md) **Metric × the curse** — in high dimensions the metric matters more (Aggarwal 2001): smaller p
-   resists the distance concentration we felt in NB 5.
-10. (code) (a) near/far ratio on pure noise for p = 0.5 / 1 / 2 across dims; (b) accuracy on
-    breast_cancer + noise dims, p=1 vs p=2. Print both; plot the ratio curves.
-11. (md) **Read the output** — smaller p concentrates a little slower, and at +1000 noise dims
-    Manhattan (0.877) beats Euclidean (0.842). So in high-d prefer smaller p — but the dominant fix is
-    still fewer dimensions (NB 5); the metric is a secondary lever.
-12. (md) **Q2 — choosing k, rigorously.** We picked k by CV (NB 3). Two refinements follow.
-13. (md) **Nested CV.** If you tune k on CV and then quote that CV number, it is optimistic — you kept
-    the luckiest k. Nest it: an inner CV tunes k, an outer CV estimates performance on data the tuning
-    never saw.
-14. (code) naive (`GridSearchCV.best_score_`) vs nested (`cross_val_score` of the grid) on
-    breast_cancer.
-15. (md) **Read the output** — naive 0.967 vs nested 0.960: the tuned CV score is optimistic; nested CV
-    is the honest estimate. (Small gap here; larger when grids are big or data small. The single
-    held-out test in NB 5 is the simplest honest estimate of all.)
-16. (md) **"silhouette" — a clarification.** The algorithm Rémy recalled is real (Rousseeuw 1987): it
-    scores how tight-and-separated clusters are, and is used to pick the number of **clusters** for
-    **unsupervised** methods like k-means — not k-NN's k.
-17. (code) silhouette vs `n_clusters` for k-means on 3 well-separated blobs.
-18. (md) **Read the output** — silhouette peaks at **3**, the true cluster count. That is a different
-    question: k-means has no labels and asks "how many groups?"; k-NN has labels and asks "how many
-    neighbours vote?" — chosen by CV against accuracy. Same letter k, different problems.
-19. (md) **Your turn** — (a) why is reporting the tuned CV score optimistic, and what does nested CV
-    fix? (b) on a 500-feature problem, which metric would you reach for first, and why? (c) you have
-    labelled data and want k for k-NN — silhouette or cross-validation? why?
-20. (md) **What you built** + vocabulary — Minkowski p & the unit ball; Mahalanobis (covariance-aware);
-    cosine; metric × the curse; nested CV; silhouette (clusters) ≠ k-NN's k.
-21. (md) **References** — C. Aggarwal, A. Hinneburg, D. Keim (2001), *On the surprising behavior of
-    distance metrics in high dimensional space* (ICDT); K. Beyer et al. (1999); P. Mahalanobis (1936);
-    P. Rousseeuw (1987), *Silhouettes*, J. Comp. Appl. Math. 20:53–65, DOI 10.1016/0377-0427(87)90125-7;
-    ESL §13.3. `Previous: 05 — Demanding case` · `Next: Module 02 — Naive Bayes` (chapter 01 complete).
+1. (md) **Header** — `# 06 — Advanced: distances & choosing k`; *notebook 6 of 6 (optional, advanced)*;
+   purpose; `Prerequisites: 01–05`; objectives; a note that this is a longer, optional deep dive.
+2. (code) imports + seed + `use_course_style()` + load penguins & make_moons & breast_cancer up front;
+   print their shapes.
+3. (md) **Part 1 — a distance is a choice.** Minkowski p (formula); the unit ball.
+4. (code) unit balls p=1/2/∞.
+5. (md) Read the figure — diamond/circle/square; the metric is the shape of a neighbourhood.
+6. (md) **From the ball to the boundary** — that shape propagates: k-NN's boundary inherits the
+   metric's geometry. We use moons (overlap makes it visible).
+7. (code) k-NN(15) boundary on moons, p=1/2/∞ (3 panels).
+8. (md) Read the figure — Manhattan's axis-aligned steps, Euclidean's smooth curve, Chebyshev's blocky
+   diagonal: the metric's signature, in the decision itself.
+9. (md) **Part 2 — Mahalanobis: a distance that learns the data's shape.** Scale vs correlation; the
+   penguins correlate 0.869 even standardized; Mahalanobis whitens by Σ.
+10. (code) Mahalanobis ellipse vs Euclidean circle on standardized penguins.
+11. (md) Read the figure — the ellipse tilts along the cloud; that tilt is the correlation
+    standardization left behind.
+12. (code) Euclidean vs Mahalanobis **k-NN boundary** on penguins (2 panels).
+13. (md) Read the figure — Mahalanobis bends the boundary along the correlation. Honest note (geometry,
+    not an accuracy race; LDA out of scope). **Cosine** named.
+14. (md) **Part 3 — when does the metric matter? It depends on the dimension.** Set up the question on
+    both datasets; recall the curse (NB 5) and Aggarwal's prediction.
+15. (code) distance-concentration histogram, d = 2 / 50 / 1000 (charter colours).
+16. (md) Read the figure — at d=1000 all distances collapse onto the mean: "nearest" stops carrying
+    information.
+17. (code) near/far ratio by p (0.5/1/2) vs dims.
+18. (md) Read the figure — smaller p concentrates more slowly (Aggarwal 2001; relative contrast;
+    fractional p).
+19. (code) accuracy: penguins (all metrics ≈ 0.993) printed; breast_cancer + noise, p=1 vs p=2,
+    averaged over draws → the two-line curve vs #noise-dims.
+20. (md) Read the figure/output — penguins a wash (low-d); breast cancer the gap opens with dimension
+    (p=1 ahead, modest, averaged, per-draw noisy). The contrast **is** the lesson; NB 5 is the bigger
+    lever.
+21. (md) **Part 4 — choosing k rigorously: nested cross-validation.** The winner's curse of reporting
+    a tuned CV score.
+22. (code) nested-CV **schematic** (drawn rectangles: outer folds; inner CV inside one).
+23. (md) Read the figure — inner loop picks k, outer loop estimates on data the tuning never saw.
+24. (code) naive (`GridSearchCV.best_score_`) vs nested (`cross_val_score` of the grid) + the 5
+    outer-fold scores; figure = fold scores as a strip with naive (0.967) and nested-mean (0.960) lines.
+25. (md) Read the figure — the naive point sits above the honest mean and hides the fold-to-fold
+    spread; nested CV reports both. NB 5's single sealed test is the simplest honest estimate.
+26. (md) **Your turn** — (a) why the tuned CV score is optimistic & what nested CV fixes; (b) what
+    decides whether the metric matters (low-d vs high-d); (c) which p first on 500 features, and what
+    helps more (NB 5); (d) Mahalanobis reshaped the boundary but barely moved accuracy on penguins — why?
+27. (md) **What you built** + vocabulary (Minkowski p / unit ball; metric → boundary shape;
+    Mahalanobis; cosine; distance concentration / metric × dimension; nested CV) + the **chapter close**.
+28. (md) **References** — Aggarwal 2001; Beyer 1999; Mahalanobis 1936; ESL §13.3 (+ §7.10 for CV).
+    `Previous: 05` · `Next: Module 02 — Naive Bayes` (chapter 01 complete).
 
 ## Honest limits / no pre-emption
 
-- This is the **optional advanced** capstone of the chapter; it deepens NB 2/NB 3, introduces no new
-  method, and stays within k-NN.
-- **Mahalanobis is shown geometrically, not as an accuracy win** — because a fair win requires the
-  within-class covariance (LDA), which is out of scope; stated plainly rather than faked.
-- The metric × curse effect is **real but secondary** to dimensionality reduction (NB 5) — stated, so
-  the learner does not over-rate metric choice.
-- Nested-CV gap is **small on this dataset** (0.967 vs 0.960); the notebook teaches the *principle*
-  (the tuned score is biased up) and flags that the gap grows with bigger grids / smaller data.
-- The silhouette section is a **conceptual clarification** (supervised CV vs unsupervised silhouette),
-  not a clustering tutorial; k-means is used only to make the contrast concrete.
+- Optional advanced capstone; deepens NB 2/3; no new method; LDA explicitly out of scope.
+- **Mahalanobis is shown as geometry + boundary shape, not a faked accuracy win** (within-class
+  covariance / LDA out of scope) — stated.
+- **Metric-accuracy effect is modest and per-draw noisy** — shown by averaging (mean ± std) and a
+  curve; the robust mechanism is the near/far ratio. Metric is *secondary* to dimensionality reduction
+  (NB 5) — stated.
+- moons is used for the metric-boundary panels (separable penguins would hide the effect — itself the
+  Part-3 lesson); penguins carry Mahalanobis + the low-d wash; breast cancer carries the high-d curve.
+- No silhouette (it concerns k-means cluster count, not k-NN's k — dropped in v1 review as out-of-scope
+  noise for a learner).
 
 ## Verification
 
-Measured anchors (unit-ball geometry; Mahalanobis ellipse; near/far ratio p=0.5<1<2; metric×curse
-accuracy p=1 0.877 vs p=2 0.842 at +1000; nested 0.960 vs naive 0.967; silhouette peak at 3) re-run in
-the notebook and reconciled at build. Runs top-to-bottom (nbconvert to /tmp; output-free;
-**`--clear-output --inplace` before commit**); `check_no_hardcoded_hex` passes; `gen_llms_txt` re-run;
-`pytest` green (14); both reviewers pass (no BLOCK); Rémy validates visually; commit + merge `notebook
-→ chapter`; **then chapter 01 closes via PR into `main`**.
+All nine figures were generated and inspected at plan time. At build, every number is re-run and
+reconciled (penguins corr 0.869; metrics 0.993; accuracy curve incl. 0.839/0.803 at +1000; near/far
+p=0.5<1<2; nested 0.967 vs 0.960, folds [0.938,0.988,0.938,0.975,0.962]). Runs top-to-bottom
+(nbconvert to /tmp; output-free; `--clear-output --inplace` before commit); `check_no_hardcoded_hex`
+passes (charter colours in every figure); `gen_llms_txt` re-run; `pytest` green (14); both reviewers
+pass (no BLOCK); Rémy validates visually; commit + merge `notebook → chapter`; **then chapter 01
+closes via PR into `main`**.
