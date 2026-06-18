@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `02_NaiveBayes` — chapter plan APPROVED (2026-06-18; chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | **`02_naive_assumption`** (NB 2 of 5) — plan APPROVED, building. |
-| Phase | `notebook-plan-approved` → `notebook-build` |
-| Active branch | `notebook/02_NaiveBayes__02_naive_assumption` (off `chapter/02_NaiveBayes`) |
-| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED); notebook: `docs/plans/02_NaiveBayes__02_naive_assumption.md` (**APPROVED** 2026-06-18) |
-| Next concrete action | **Build NB 2** to `notebooks/02_NaiveBayes/02_naive_assumption.ipynb` (~21 cells) via `uv run python - < /tmp/build_nb2.py` (stdin). Measured: within-class corr 0.326/0.661 (overall 0.869); real−naive joint max 0.107; CV GaussianNB/QDA/LDA 0.9927/0.9890/0.9927. By-hand mechanism in binning (no Gaussian — deferred to NB 3); sklearn CV bars = forward-referenced punchline. Figures: scatter (tilt) / real-vs-naive-vs-difference joint heatmaps / CV bars. Then nbconvert-execute to /tmp + inspect figures; BOTH reviewers (no BLOCK); revise; Rémy visual; guards; commit `feat(02_naive_bayes): notebook 02 — the naive assumption`; merge → chapter. |
+| Current notebook | `02_naive_assumption` (NB 2 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging to chapter). |
+| Phase | `notebook-commit` → then open NB 3 |
+| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__02_naive_assumption` merges in, ff) |
+| Active plan | chapter: `docs/plans/chapter_02_NaiveBayes.md` (APPROVED) |
+| Next concrete action | **Open NB 3 — "The Gaussian likelihood, computed safely"** (one concept: model P(feature∣class) with a **density**, computed in **log-space**). `git switch -c notebook/02_NaiveBayes__03_gaussian_likelihood_logspace` off the chapter branch; set STATE (phase `notebook-plan`); measure (per-class Gaussian fit on `bill_length`; the underflow demo) then plan mode. Front-load **mass→density** as a *taught first-contact* (area not height; f(x) can exceed 1 — pedagogy MAJOR); fit μ,σ per class per feature (= GaussianNB), overlay bell on NB 1's histogram; assemble 2-feature by-hand Gaussian NB; **demonstrate underflow** (product → 0.0) then `np.log` (sum stays finite). Multinomial/Bernoulli **named, not built** → NB 5. **Split trigger:** if it reads as >1 concept at cell planning, split density-NB vs log-space-NB (→ 6 notebooks); default stays 5. Rémy validates plan alone, then build → both reviewers → Rémy visual → guards → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (The "naive" assumption) built & merged to `chapter/02_NaiveBayes`.** One concept:
+  **conditional independence**. Two features need the joint P(bill,flipper∣species); estimating it
+  directly is expensive (5×5 grid, **18/25 cells empty** — curse echo). The naive shortcut: assume
+  independence given the class → joint = product of 1-D marginals. **Where it breaks**, measured: real
+  vs naive joint heatmaps + a **difference panel** (the discarded correlation), within-class corr
+  **0.326/0.661** (vs overall 0.869 = mostly between-class). **Does the decision survive?** CV
+  GaussianNB **0.9927** ties LDA, beats QDA **0.9890** (Domingos & Pazzani 1997). Honest: GaussianNB =
+  QDA with diagonal covariance; the tie is an accuracy coincidence on near-separable data (NB/LDA
+  boundaries differ on 11.5 %, NB/QDA on 18.2 % — verified by ml-expert), *not* a model identity; the
+  probabilities suffer even when the decision holds (→ NB 5 calibration). 21 cells, 3 figures, "Your
+  turn" ×3. Both reviewers **PASS** (no BLOCK); shared MINOR folded ("Read the table" for the count
+  grid). `common_errors.md` gained an overall-vs-within-class-correlation row; `llms.txt` regenerated;
+  pytest 14 (no `src/` change). Rémy validated visually.
 - **NB 1 (Bayes' rule, from counts) built & merged to `chapter/02_NaiveBayes`.** By hand on the binary
   penguins subset: the **prior** P(species) 0.551/0.449 by counting → `bill_length` 3-bin contingency
   (Adélie [135,16,0] / Gentoo [3,67,53]) → **likelihood** P(bin∣species) by row-normalizing → **Bayes'

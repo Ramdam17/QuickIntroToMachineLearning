@@ -24,8 +24,8 @@ mechanism).
 - **Where it breaks — measured violation:** within-class correlation of the two features is
   **0.326 (Adélie) / 0.661 (Gentoo)** (the conditional quantity the assumption is about; the overall
   0.869 is mostly *between*-class and is the wrong number to quote). Real binned joint vs naive
-  outer-product differ by up to **0.107** per cell (Gentoo, 5×5 bins) — the correlation the product
-  throws away.
+  outer-product differ by up to **0.112** per cell (Gentoo, full 5×5 grid via `np.histogram2d`) — the
+  correlation the product throws away.
 - **Does classification survive? — the honest CV punchline:** GaussianNB (naive, diagonal per-class
   covariance) **0.9927** ties LDA (shared full covariance) **0.9927** and *beats* QDA (per-class full
   covariance) **0.9890** — 5-fold CV, seed 0, raw. The violation cost **no accuracy here**. Framed

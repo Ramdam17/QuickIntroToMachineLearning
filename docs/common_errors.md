@@ -27,6 +27,7 @@ point to the notebook that addresses it.
 | KNN | "A fancier distance (Mahalanobis, fractional p) will rescue my k-NN." | The metric matters mainly in high dimensions; in low-d, well-scaled data it is a wash. Fix scale (NB 2) and cut dimensions (NB 5) first. | `01_KNN/06` |
 | Naive Bayes | "Features must really be independent." | The assumption is *conditional* independence, and the method is often useful even when it's violated. |
 | Naive Bayes | "A likelihood/posterior of exactly 0 or 1 is a hard fact." | A category never seen in a class gives likelihood 0, which zeroes the whole product (the zero-frequency problem) — it means *unobserved*, not impossible. Smoothing (add a little to every count) cures the overconfidence. Surfaced in `02_NaiveBayes/01`; fixed in `02_NaiveBayes/04`. |
+| Naive Bayes | "The features are correlated overall (r≈0.87), so naive Bayes must fail." | The naive assumption is about *within-class* (conditional) correlation; the overall number is mostly the gap *between* classes. Measure the within-class value (here 0.33/0.66) — and even when it's nonzero, the *decision* often survives (the probabilities suffer more). `02_NaiveBayes/02`. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |
 | SVM | "Forgot to scale." | SVMs are scale-sensitive; standardize features. |
