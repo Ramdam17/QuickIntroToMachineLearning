@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `01_KNN` (plan APPROVED, 6 notebooks) |
-| Current notebook | `02_distance_and_scale` (planning — branch created) |
-| Phase | `notebook-plan` |
+| Current notebook | `02_distance_and_scale` (plan APPROVED — building) |
+| Phase | `notebook-build` |
 | Active branch | `notebook/01_KNN__02_distance_and_scale` |
-| Active plan | `docs/plans/chapter_01_KNN.md` (NB 2) — per-notebook plan being drafted in plan mode |
-| Next concrete action | **Draft & approve the NB 2 plan, then build.** Concept: the **scale trap** (k-NN is pure distance → the big-range feature dominates → standardize; the NB 11 payoff). **Measured by-hand anchors (single stratified 70/30 split, kNN k=5):** rescale feature 2 ×50 → raw acc **0.733**, standardized on train stats acc **0.956** (recovers *exactly* — standardizing erases the artificial scale; same recovery at ×10/×20/×50/×100, raw falls 0.878/0.811/0.733/0.700). At ×50, feature-2 span **149.9** vs feature-1 span **4.40** (the big axis dominates the Euclidean distance). Euclidean vs Manhattan barely differ on this isotropic data (**0.956 vs 0.944**) → **scale ≫ metric choice** (metric as a tunable dial = NB 4; metric geometry = NB 6). Key figure: raw-vs-standardized **decision boundary** (by-hand kNN over a meshgrid, or `viz.plot_decision_boundary` with a tiny by-hand wrapper — decide in plan). Prereqs: NB 1, plus 02 (distance) & 11 (standardize, fit-on-train). On ExitPlanMode approval → persist `docs/plans/01_KNN__02_distance_and_scale.md`, commit → build via `nbformat` → both reviewers (no BLOCK) → Rémy visual → guards (hex/llms/ruff/pytest) → commit → merge to `chapter/01_KNN`. |
+| Active plan | `docs/plans/01_KNN__02_distance_and_scale.md` (APPROVED) |
+| Next concrete action | **Build NB 2** per `docs/plans/01_KNN__02_distance_and_scale.md` — ~19 cells, by-hand k-NN on `make_moons(300,0.30,0)` (stratified 70/30, 210/90). **Measured anchors:** rescale feature 2 ×50 → raw acc **0.733**, standardized on train stats **0.956** (exact recovery; raw falls 0.956/0.878/0.811/0.733/0.700 at ×1/×10/×20/×50/×100); spans **4.40** (f1) vs **149.9** (f2 ×50); Euclidean **0.956** vs Manhattan **0.944** standardized → **scale ≫ metric**. Concept = the scale trap. Key figure: raw-vs-standardized **decision boundary** via `viz.plot_decision_boundary` fed a tiny in-notebook `ByHandKNN` wrapper (fit stores, predict votes). Build via an `nbformat` builder; by-hand distance fns (L2/L1) in-notebook; no `src/` change (pytest stays 14). Then both reviewers (no BLOCK) → revise → Rémy visual (/tmp HTML) → guards (hex/llms/ruff/pytest) → commit `feat(01_knn): notebook 02 — distance & the scale trap` → merge to `chapter/01_KNN`. |
 
 ## Notes / blockers
 
