@@ -33,6 +33,7 @@ point to the notebook that addresses it.
 | Naive Bayes | "Turn `var_smoothing` (or `alpha`) up to be safe." | Smoothing is a floor, not a free lunch: too much inflates every variance (or flattens every count) until the classes stop differing and accuracy collapses toward the majority baseline. It's a safety net to tune, not a knob to max out. `02_NaiveBayes/04`. |
 | Naive Bayes | "It reported 99%, so it's almost certainly right." | NB is **over-confident**: treating correlated features as independent double-counts evidence and piles probabilities at 0/1. Trust its *ranking*, not the raw number; recalibrate (`CalibratedClassifierCV`) if you need a probability. `02_NaiveBayes/05`. |
 | Logistic Regression | "It's regression." | It's a classifier; the output is a probability via the sigmoid. |
+| Logistic Regression | "The linear score w·x+b is the probability." | The score is unbounded (any real number) — it is the **log-odds**, not the probability; pass it through the sigmoid σ(z)=1/(1+e⁻ᶻ) to land in (0,1). (The log in the logit is the **natural** log, base e — the inverse of σ's exponential.) `03_LogisticRegression/01`. |
 | Decision Tree | "Deeper is better." | Depth is the complexity dial; too deep memorizes. |
 | SVM | "Forgot to scale." | SVMs are scale-sensitive; standardize features. |
 | Random Forest | "Feature importance = causal importance." | Impurity importance is biased toward high-cardinality features; read it with care. |

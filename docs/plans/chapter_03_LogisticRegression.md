@@ -275,7 +275,7 @@ notebook; **chapter close via PR into `main`** (protected).
 
 | NB | Branch | Status |
 |----|--------|--------|
-| 1 | `notebook/03_LogisticRegression__01_score_to_probability` | pending |
+| 1 | `notebook/03_LogisticRegression__01_score_to_probability` | **done** — built (19 cells), both reviewers PASS (2 MINORs folded: log=natural-log; "a fifth" tied to the P∈[0.1,0.9] band), Rémy validated visually, merged to `chapter/03_LogisticRegression` |
 | 2 | `notebook/03_LogisticRegression__02_boundary_and_weights` | pending |
 | 3 | `notebook/03_LogisticRegression__03_logloss_objective` | pending |
 | 4 | `notebook/03_LogisticRegression__04_gradient_descent` | pending |

@@ -28,3 +28,5 @@
 - [notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb](notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb) — 03 — The Gaussian likelihood, computed safely — *Module 02 · Naive Bayes — notebook 3 of 5*
 - [notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb](notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb) — 04 — The estimators & their parameters — *Module 02 · Naive Bayes — notebook 4 of 5*
 - [notebooks/02_NaiveBayes/05_text_classification.ipynb](notebooks/02_NaiveBayes/05_text_classification.ipynb) — 05 — Text classification (the demanding case) — *Module 02 · Naive Bayes — notebook 5 of 5*
+## 03_LogisticRegression
+- [notebooks/03_LogisticRegression/01_score_to_probability.ipynb](notebooks/03_LogisticRegression/01_score_to_probability.ipynb) — 01 — From a linear score to a probability — *Notebook 1 of 6 — Logistic Regression*

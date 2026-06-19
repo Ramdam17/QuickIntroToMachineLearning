@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 1 — `01_score_to_probability` (plan **APPROVED**; **building**) |
-| Phase | `notebook-build` |
-| Active branch | `notebook/03_LogisticRegression__01_score_to_probability` |
-| Active plan | `docs/plans/03_LogisticRegression__01_score_to_probability.md` (**APPROVED**) |
-| Next concrete action | **Build NB 1** (`notebooks/03_LogisticRegression/01_score_to_probability.ipynb`) per the approved cell-by-cell plan (~19 cells, one concept: sigmoid & log-odds; hand-chosen weights w=1.0/b=−43, ½-crossing ≈43 mm; **no fitting**). Build via `uv run python - < /tmp/build_nb1.py` (stdin — avoids `/tmp/struct.py` shadow). Then: re-measure anchors at build, nbconvert-execute to /tmp (keep tracked file output-free), extract figures & inspect (one image per Read), **banned-word grep=0**, `check_no_hardcoded_hex`, `gen_llms_txt`, ruff/black; **both reviewers** (no BLOCK); **Rémy visual validation**; clear outputs; commit `feat(03_logistic_regression): notebook 01 — from a linear score to a probability`; merge `notebook → chapter`. **6-notebook arc:** NB1 sigmoid+log-odds · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 1 — `01_score_to_probability` **DONE** (both reviewers PASS, Rémy validated). Next: NB 2. |
+| Phase | `notebook-commit` (NB 1 committed + merged → chapter; ready to open NB 2) |
+| Active branch | `notebook/03_LogisticRegression__01_score_to_probability` → merging to `chapter/03_LogisticRegression` |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Open NB 2 — the decision boundary & reading the weights.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__02_boundary_and_weights`; set STATE phase `notebook-plan`; enter plan mode and draft NB 2 cell-by-cell (one concept): on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". Rémy validates the NB-2 plan → build. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (From a linear score to a probability) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the sigmoid & log-odds**, fully by hand, pre-fitting. σ(z)=1/(1+e⁻ᶻ) coded from
+  scratch & plotted → **p→odds→log-odds** table (the score *is* the log-odds; σ and logit are
+  inverses) → σ applied to `bill_length` (**raw mm**) with **hand-chosen** weights (w=1.0, b=−43,
+  ½-crossing **43 mm**; nothing fitted — "NB 3–4 find these") → ½-threshold prediction → borderline
+  42.9 mm example (P=0.475). Build-measured: hand-rule acc **0.945** (≈ fitted 0.947, never called the
+  optimum), transition band ~**21.5 %**. 19 cells, 2 figures. Both reviewers **PASS** (no BLOCK):
+  ml-expert verified σ↔logit to 1e-14, the no-fitting promise airtight (no hidden `.fit`), all 3 DOIs
+  resolve, calibration correctly **not** claimed; pedagogy confirmed one-concept + e/σ/odds-log-odds
+  built from scratch. **2 MINORs folded** (log=natural-log base e; "a fifth" tied to the P∈[0.1,0.9]
+  band); **skipped a 3rd** ("all 15 errors in the band") — measured 12/15 in band, 3 confidently-wrong
+  → false, and that nuance belongs to NB 6. `common_errors` gained a score-vs-probability/log-odds row;
+  `llms.txt` regenerated; ruff fixed (notebook import order I001); pytest 16. Rémy validated visually.
+  Next: open NB 2.
 - **Chapter 03 (Logistic Regression) plan APPROVED & persisted** (`docs/plans/chapter_03_LogisticRegression.md`).
   **SIX notebooks** (Rémy-approved exception to the 5-ceiling, like KNN's 6th): NB 1 sigmoid & log-odds
   → NB 2 decision boundary & reading weights → NB 3 **log-loss** (the objective) → NB 4 **gradient
