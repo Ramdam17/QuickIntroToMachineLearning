@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 4 — `04_gradient_descent` **DONE** (both reviewers PASS, Rémy validated). Next: NB 5. |
-| Phase | `notebook-commit` (NB 4 committed + merged → chapter; ready to open NB 5) |
-| Active branch | `chapter/03_LogisticRegression` (NB 4 merged; NB 5 branch next) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Open NB 5 — the estimator & its parameters.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__05_estimator_and_parameters`; set STATE phase `notebook-plan`; plan cell-by-cell (the role-4 "method & parameters" notebook): meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** Rémy validates the NB-5 plan → build. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 5 — `05_estimator_and_parameters` **OPEN** (planning). NB 1–4 done (merged `1b68bc7`). |
+| Phase | `notebook-plan` (NB 5 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Active branch | `notebook/03_LogisticRegression__05_estimator_and_parameters` (off `chapter/03_LogisticRegression`) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 5 plan being drafted → `docs/plans/03_LogisticRegression__05_estimator_and_parameters.md` (pending) |
+| Next concrete action | **Draft the NB 5 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. The role-4 "method & parameters" notebook: meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the estimator & its parameters) OPENED.** Branch
+  `notebook/03_LogisticRegression__05_estimator_and_parameters` off `chapter/03_LogisticRegression`
+  (@ `1b68bc7`). Phase `notebook-plan`: drafting cell-by-cell in plan mode — the role-4 "method &
+  parameters" notebook (first to use the real `sklearn LogisticRegression`). **sklearn 1.9 API verified
+  at plan time:** `l1_ratio` present, **`penalty` deprecated** (FutureWarning 1.8→1.10: use l1_ratio=0/1,
+  C=np.inf), **`multi_class` REMOVED**; `saga` for L1. Anchors measured on 1.9.0: L2 path ‖w‖₂ =
+  0.84/1.91/3.28/6.80 (C=0.01/0.1/1/100, 4 std feats, plateau 8.46); separation→divergence — full 2-feat
+  (1 overlap pt) MLE finite ‖w‖≈11 vs the slice with that point removed runs to ‖w‖≈29+; L1 (l1_ratio=1,
+  saga) zeroes the 4 injected noise cols exactly (4/8 nonzero) while L2 keeps all 8; L1 on 4 real feats
+  4/4 (1/4 at C=0.01); multinomial vs OvR (3 species) CV 0.956/0.956, **0.0% disagreement**, coef_ (3,2).
+  4 figures planned (L2 path, separation→divergence, L1-vs-L2 noise bars, 3-class softmax boundaries) +
+  honest GridSearchCV tuning. Next: Rémy validates the NB-5 plan → build.
 - **NB 4 (Fitting II — gradient descent) built & merged to `chapter/03_LogisticRegression`.**
   One concept: **the optimizer** (the course's first), by hand on standardized 1-D `bill_length` (w & b).
   Gradient **(P−y)·x** stated & **verified** (finite-diff err 2e-11; σ′ cancels); update w←w−η∇L; descent
