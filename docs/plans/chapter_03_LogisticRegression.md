@@ -278,7 +278,7 @@ notebook; **chapter close via PR into `main`** (protected).
 | 1 | `notebook/03_LogisticRegression__01_score_to_probability` | **done** — built (19 cells), both reviewers PASS (2 MINORs folded: log=natural-log; "a fifth" tied to the P∈[0.1,0.9] band), Rémy validated visually, merged to `chapter/03_LogisticRegression` |
 | 2 | `notebook/03_LogisticRegression__02_boundary_and_weights` | **done** — built (21 cells, 3 figures), both reviewers folded (ml-expert PASS; pedagogy REVISE→`set_aspect("equal")` fix + 2 MINORs), Rémy validated, merged to `chapter/03_LogisticRegression` |
 | 3 | `notebook/03_LogisticRegression__03_logloss_objective` | **done** — built (19 cells, 2 figures), both reviewers folded (ml-expert REVISE→1 BLOCK banned-word "simply" fixed; pedagogy PASS), Rémy validated, merged to `chapter/03_LogisticRegression` |
-| 4 | `notebook/03_LogisticRegression__04_gradient_descent` | pending |
+| 4 | `notebook/03_LogisticRegression__04_gradient_descent` | **done** — built (22 cells, 4 figures), both reviewers PASS (MINORs folded: divergence wording softened to "overshoots"; lr-panel η 90→400), Rémy validated, merged to `chapter/03_LogisticRegression` |
 | 5 | `notebook/03_LogisticRegression__05_estimator_and_parameters` | pending |
 | 6 | `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` | pending |
 

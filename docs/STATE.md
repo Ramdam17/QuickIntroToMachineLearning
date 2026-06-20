@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 4 — `04_gradient_descent` **building** (plan APPROVED). NB 1–3 done (merged `6940caf`). |
-| Phase | `notebook-build` (NB 4 — plan approved by Rémy; building ~22 cells, then reviewers + Rémy visual) |
-| Active branch | `notebook/03_LogisticRegression__04_gradient_descent` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/03_LogisticRegression__04_gradient_descent.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Build NB 4 — Fitting II: gradient descent** (~22 cells, 4 figures) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. One concept, the course's **first optimizer**: the **gradient** is the direction the loss rises fastest; step the **opposite** way by a **learning rate**, repeat → the weights roll to the bottom of NB 3's bowl. Gradient **∝ (P−y)·x** (stated & used; full derivation pointed to). Build gradient-as-slope on a 1-D bowl first; run gradient descent **by hand** on standardized 1-D `bill_length` (2 params w,b → a visualizable loss surface); confirm by-hand ≈ `LogisticRegression(C=np.inf)` (NOT default C=1). Figures: gradient-on-bowl; loss surface + descent path; loss vs iteration; **learning-rate panel** (too small crawls / good / too big diverges). Plan persisted & approved → now building. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 4 — `04_gradient_descent` **DONE** (both reviewers PASS, Rémy validated). Next: NB 5. |
+| Phase | `notebook-commit` (NB 4 committed + merged → chapter; ready to open NB 5) |
+| Active branch | `chapter/03_LogisticRegression` (NB 4 merged; NB 5 branch next) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Open NB 5 — the estimator & its parameters.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__05_estimator_and_parameters`; set STATE phase `notebook-plan`; plan cell-by-cell (the role-4 "method & parameters" notebook): meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** Rémy validates the NB-5 plan → build. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (Fitting II — gradient descent) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the optimizer** (the course's first), by hand on standardized 1-D `bill_length` (w & b).
+  Gradient **(P−y)·x** stated & **verified** (finite-diff err 2e-11; σ′ cancels); update w←w−η∇L; descent
+  on NB 3's convex bowl (figB surface+path → bottom; figC loss → floor 0.140). **Parity exact**: by-hand
+  GD = `LogisticRegression(C=∞)` (6.29704 / −0.56139) — "the library is not magic". Learning-rate panel
+  (figD): 0.1 crawls / 2 glides / 400 overshoots; raw-feature knife-edge (0.003 vs 0.005) = the
+  "why standardize" tie-in. Convergence **shown, not proved** (leans on NB 3 convexity); SGD/backprop only
+  named (→ ch 11–12). 22 cells, 4 figures. Both reviewers **PASS** (0 BLOCK/MAJOR): every number
+  re-derived to machine precision; parity against C=∞ verified (default C=1 → w=4.25, different, so the
+  choice is load-bearing). **MINORs folded:** softened "diverges/explodes/leaps past" → "overshoots /
+  climbs the wrong way" (on this flat loss η=400 stays bounded, not →∞ — honest); **lr-panel η 90→400
+  deviation from the approved plan** (90 did not visibly diverge on the well-conditioned loss — a
+  correctness fix; title/legend/read all updated). `common_errors` gained a learning-rate row; `llms.txt`
+  regenerated; ruff/hex/banned clean; pytest 16. Rémy validated visually. Next: open NB 5 (estimator &
+  parameters).
 - **NB 4 (Fitting II — gradient descent) OPENED.** Branch
   `notebook/03_LogisticRegression__04_gradient_descent` off `chapter/03_LogisticRegression` (@ `6940caf`).
   Phase `notebook-plan`: drafting cell-by-cell in plan mode — one concept, **the course's first
