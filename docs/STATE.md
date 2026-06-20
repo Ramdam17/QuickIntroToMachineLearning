@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 1 — `01_score_to_probability` **DONE** (both reviewers PASS, Rémy validated). Next: NB 2. |
-| Phase | `notebook-commit` (NB 1 committed + merged → chapter; ready to open NB 2) |
-| Active branch | `notebook/03_LogisticRegression__01_score_to_probability` → merging to `chapter/03_LogisticRegression` |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Open NB 2 — the decision boundary & reading the weights.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__02_boundary_and_weights`; set STATE phase `notebook-plan`; enter plan mode and draft NB 2 cell-by-cell (one concept): on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". Rémy validates the NB-2 plan → build. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 2 — `02_boundary_and_weights` **OPEN** (planning). NB 1 `01_score_to_probability` done (merged `cbf90d0`). |
+| Phase | `notebook-plan` (NB 2 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Active branch | `notebook/03_LogisticRegression__02_boundary_and_weights` (off `chapter/03_LogisticRegression`) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 2 plan being drafted → `docs/plans/03_LogisticRegression__02_boundary_and_weights.md` (pending) |
+| Next concrete action | **Draft the NB 2 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept: on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". On approval: persist plan to `docs/plans/03_LogisticRegression__02_boundary_and_weights.md`, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,14 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (decision boundary & reading the weights) OPENED.** Branch
+  `notebook/03_LogisticRegression__02_boundary_and_weights` created off `chapter/03_LogisticRegression`
+  (@ `cbf90d0`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, on
+  **standardized** bill+flipper: the weighted line z=w₁x₁+w₂x₂+b, the **decision boundary** (z=0, P=½),
+  **w ⟂ the boundary** & sets steepness, each **wⱼ = Δ log-odds per standardized unit**; weights **set by
+  hand** (rotate with w, shift with b), contrasted with module-00 nearest-centroid's *unweighted* bisector;
+  **nothing fitted** (NB 3–4 find the weights). Anchors measured at plan time (scaler stats, fitted std
+  coefs as the ballpark, NC-normal vs logistic-w angle). Next: Rémy validates the NB-2 plan → build.
 - **NB 1 (From a linear score to a probability) built & merged to `chapter/03_LogisticRegression`.**
   One concept: **the sigmoid & log-odds**, fully by hand, pre-fitting. σ(z)=1/(1+e⁻ᶻ) coded from
   scratch & plotted → **p→odds→log-odds** table (the score *is* the log-odds; σ and logit are
