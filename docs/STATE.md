@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 5 — `05_estimator_and_parameters` **DONE** (both reviewers folded, Rémy validated). Next: NB 6 (final). |
-| Phase | `notebook-commit` (NB 5 committed + merged → chapter; ready to open NB 6 — the final notebook) |
-| Active branch | `chapter/03_LogisticRegression` (NB 5 merged; NB 6 branch next) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Open NB 6 — a demanding case: breast cancer (calibration, threshold, error analysis).** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold`; set STATE phase `notebook-plan`; plan cell-by-cell — the chapter capstone, **visualization-first**. Likely `src/` add: `datasets.load_breast_cancer()` pandas-first wrapper (30 named features + target) → pytest 16→17, with a test. Arc: look (class balance, standardized `Pipeline`) → fit `LogisticRegression` → CV **0.979** → one sealed test; **calibration** (reliability + Brier, LogReg **0.027** vs GaussianNB **0.088**, both under one std pipeline; pile-up 123 vs 167/171) — closes ch 02's loop; **threshold** (malignant = costly miss; 0.5 → recall 0.953 / 3 missed; 0.3 → 0.969 / 2 missed); **L1 feature selection** (3/8/14 of 30); coefficient story; bridge to trees (ch 04). **Re-measure every number** (pinned `StratifiedKFold(5, shuffle, seed 0)`, one std `Pipeline` for both estimators). Rémy validates the NB-6 plan → build, then **CHAPTER 03 closes via PR into `main`**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 breast_cancer. |
+| Current notebook | NB 6 — `06_breast_cancer_calibration_threshold` **OPEN** (planning). NB 1–5 done (merged `c2110e7`). |
+| Phase | `notebook-plan` (NB 6 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Active branch | `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` (off `chapter/03_LogisticRegression`) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 6 plan being drafted → `docs/plans/03_LogisticRegression__06_breast_cancer_calibration_threshold.md` (pending) |
+| Next concrete action | **Draft the NB 6 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation — the chapter capstone, **visualization-first**. Likely `src/` add: `datasets.load_breast_cancer()` pandas-first wrapper (30 named features + target) → pytest 16→17, with a test. Arc: look (class balance, standardized `Pipeline`) → fit `LogisticRegression` → CV **0.979** → one sealed test; **calibration** (reliability + Brier, **re-measured**: LogReg **0.033** vs GaussianNB **0.098** ≈3× under one std pipeline; pile-up 119 vs 166/171 — GaussianNB over-confident) — closes ch 02's loop; **threshold** (malignant = costly miss; **re-measured** 0.5 → recall 0.938 / 4 missed vs 0.1 → 0.984 / 1 missed, 14 false alarms — the cost-asymmetric policy); **L1 feature selection** (3/10/14 of 30 at C=0.02/0.2/1.0); coefficient story (radius/concavity → malignant); bridge to trees (ch 04). On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge, then **CHAPTER 03 closes via PR into `main`**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (demanding case: breast cancer — calibration, threshold, error analysis) OPENED.** Branch
+  `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` off `chapter/03` (@ `c2110e7`).
+  Phase `notebook-plan`: drafting cell-by-cell — the chapter capstone (**visualization-first**). Anchors
+  re-measured on sklearn 1.9 (breast_cancer 569×30, **malignant = positive** 212 / benign 357; 70/30 seed0
+  stratify, one std `Pipeline`, StratifiedKFold5-shuffle-seed0): CV LogReg **0.979** vs GaussianNB
+  **0.930**; test LogReg acc 0.953 / Brier **0.033** vs GaussianNB 0.895 / **0.098** (≈3×; pile-up 119 vs
+  166/171 — GaussianNB over-confident, closes ch 02's loop); threshold 0.5 → recall 0.938 (4/64 missed)
+  vs 0.1 → 0.984 (1 missed, 14 false alarms); L1 nonzero **3/10/14** of 30 at C=0.02/0.2/1.0; top
+  malignant-driving coefs radius error / worst radius / mean concave points. **Several numbers differ
+  from the chapter plan's preliminary figures** (Brier 0.033/0.098 vs 0.027/0.088; threshold 4/3-missed
+  vs 3/2; L1 middle 10 vs 8) — qualitative stories intact, measured values used. Likely `src/` add
+  `datasets.load_breast_cancer()` pandas wrapper + test (pytest 16→17). Next: Rémy validates the NB-6
+  plan → build → chapter PR into `main`.
 - **NB 5 (the estimator & its parameters) built & merged to `chapter/03_LogisticRegression`.**
   Role-4: the real `sklearn LogisticRegression` on the **1.9 API** (verified: `l1_ratio` not the deprecated
   `penalty`; no `multi_class`; `saga` for L1; `C=np.inf`=none). Parity vs by-hand (NB 4). Knobs *shown*:
