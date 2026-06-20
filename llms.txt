@@ -28,3 +28,10 @@
 - [notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb](notebooks/02_NaiveBayes/03_gaussian_likelihood_logspace.ipynb) — 03 — The Gaussian likelihood, computed safely — *Module 02 · Naive Bayes — notebook 3 of 5*
 - [notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb](notebooks/02_NaiveBayes/04_estimators_and_parameters.ipynb) — 04 — The estimators & their parameters — *Module 02 · Naive Bayes — notebook 4 of 5*
 - [notebooks/02_NaiveBayes/05_text_classification.ipynb](notebooks/02_NaiveBayes/05_text_classification.ipynb) — 05 — Text classification (the demanding case) — *Module 02 · Naive Bayes — notebook 5 of 5*
+## 03_LogisticRegression
+- [notebooks/03_LogisticRegression/01_score_to_probability.ipynb](notebooks/03_LogisticRegression/01_score_to_probability.ipynb) — 01 — From a linear score to a probability — *Notebook 1 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/02_boundary_and_weights.ipynb](notebooks/03_LogisticRegression/02_boundary_and_weights.ipynb) — 02 — The decision boundary & reading the weights — *Notebook 2 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/03_logloss_objective.ipynb](notebooks/03_LogisticRegression/03_logloss_objective.ipynb) — 03 — Fitting I: what we optimize (log-loss) — *Notebook 3 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/04_gradient_descent.ipynb](notebooks/03_LogisticRegression/04_gradient_descent.ipynb) — 04 — Fitting II: gradient descent — *Notebook 4 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/05_estimator_and_parameters.ipynb](notebooks/03_LogisticRegression/05_estimator_and_parameters.ipynb) — 05 — The estimator & its parameters — *Notebook 5 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/06_breast_cancer_calibration_threshold.ipynb](notebooks/03_LogisticRegression/06_breast_cancer_calibration_threshold.ipynb) — 06 — A demanding case: breast cancer — *Notebook 6 of 6 — Logistic Regression*

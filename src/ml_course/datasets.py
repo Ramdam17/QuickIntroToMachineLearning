@@ -222,3 +222,52 @@ def load_newsgroups(
         "Loaded %d documents across %d categories.", len(bunch.data), len(bunch.target_names)
     )
     return pd.DataFrame({"text": bunch.data, "category": names})
+
+
+def load_breast_cancer() -> pd.DataFrame:
+    """Load the Wisconsin breast-cancer diagnostic dataset as a tidy DataFrame.
+
+    Wraps :func:`sklearn.datasets.load_breast_cancer` (bundled, no download) into a pandas-first
+    frame: the 30 named numeric features plus the diagnosis ``target``. One row = one
+    tumour's fine-needle-aspirate measurements.
+
+    Returns
+    -------
+    pandas.DataFrame, shape (569, 31)
+        The 30 feature columns (e.g. ``mean radius``, ``worst concave points``) and ``target``
+        (int: **0 = malignant, 1 = benign** — scikit-learn's convention). No missing values.
+
+    When to use
+    -----------
+    For the demanding logistic-regression case (module 03, NB 6): a real diagnostic problem with
+    calibration, threshold choice under asymmetric cost, and L1 feature selection. The same dataset
+    KNN met in module 01 NB 5.
+
+    Notes
+    -----
+    scikit-learn encodes **malignant as 0 and benign as 1**. A task that treats *malignant* as the
+    positive class (the costly miss) should flip it: ``y = (df["target"] == 0)``.
+
+    References
+    ----------
+    Street WN, Wolberg WH, Mangasarian OL (1993). Nuclear feature extraction for breast tumor
+    diagnosis. Proc. SPIE 1905, Biomedical Image Processing. https://doi.org/10.1117/12.148698
+
+    Examples
+    --------
+    >>> df = load_breast_cancer()  # doctest: +SKIP
+    >>> df.shape  # doctest: +SKIP
+    (569, 31)
+    """
+    from sklearn.datasets import load_breast_cancer as _sk_load_breast_cancer
+
+    logger.info("Loading the Wisconsin breast-cancer dataset (scikit-learn bundled) ...")
+    bunch = _sk_load_breast_cancer()
+    df = pd.DataFrame(bunch.data, columns=bunch.feature_names)
+    df["target"] = bunch.target
+    logger.info(
+        "Loaded %d tumours, %d features (target: 0=malignant, 1=benign).",
+        df.shape[0],
+        len(bunch.feature_names),
+    )
+    return df

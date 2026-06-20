@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `02_NaiveBayes` — **COMPLETE (5/5)**, merging to `main` (chapter `01_KNN` COMPLETE via PR #1 `110c081`). |
-| Current notebook | `05_text_classification` (NB 5 of 5) — **DONE** (both reviewers PASS, Rémy validated; committed; merging). |
-| Phase | `chapter-merge` → then `idle` / open chapter 03 |
-| Active branch | `chapter/02_NaiveBayes` (after `notebook/02_NaiveBayes__05_text_classification` merges in, ff) → PR into `main` |
-| Active plan | `docs/plans/chapter_02_NaiveBayes.md` (all 5 notebooks done) |
-| Next concrete action | **Close chapter 02 via PR into `main`** (protected): `git push -u origin chapter/02_NaiveBayes`; `gh pr create --base main --head chapter/02_NaiveBayes` (title `feat(02_naive_bayes): complete chapter — Naive Bayes`); `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 03 — Logistic Regression** (the idle edit rides onto the `chapter/03` branch, per the PR-only-main discipline — same as the ch-01→ch-02 handoff). |
+| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
+| Current notebook | **CHAPTER COMPLETE (6/6).** NB 6 `06_breast_cancer_calibration_threshold` **DONE** (both reviewers folded, Rémy validated). |
+| Phase | `chapter-merge` (NB 6 merged → chapter; **chapter 03 complete**; ready to PR `chapter/03 → main`) |
+| Active branch | `chapter/03_LogisticRegression` (all 6 notebooks merged; PR into `main` next) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (all 6 NBs done) |
+| Next concrete action | **Close CHAPTER 03 via a PR into `main`.** All 6 notebooks are merged onto `chapter/03_LogisticRegression`. Push the chapter branch and open a PR `chapter/03_LogisticRegression → main` (`main` is protected by the global pre-push hook; use a `--no-ff` merge to preserve per-notebook history), per `docs/WORKFLOW.md`. On Rémy's go: `gh pr create` (body ends with the 🤖 Generated-with line), then `gh pr merge --merge`. Then sync `main`, set STATE `idle`; the next chapter is **04_DecisionTree**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 ✓. |
 
 ## Notes / blockers
 
@@ -27,6 +27,166 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (demanding case: breast cancer) built & merged — CHAPTER 03 COMPLETE (6/6).** The capstone,
+  visualization-first (5 figures), on breast_cancer (569×30, malignant = positive). Honest workflow, no
+  leakage: split → CV **on train** (LogReg **0.985** > GaussianNB **0.932**) → one sealed test (acc 0.953).
+  **Calibration** closes ch 02's loop: LogReg Brier **0.033** vs GaussianNB **0.098** (~3×); a pile-up
+  histogram makes GaussianNB's over-confidence visible (166 vs 119/171 at the extremes); reliability diagram
+  with the y=x reference. **Threshold = clinical policy** (malignant the costly miss): 0.5 → recall 0.938
+  (4/64 missed) vs 0.1 → 0.984 (1 missed, 14 false alarms). **L1** keeps 3/10/14 of 30; **coefficient story**
+  (radius/concavity → malignant, clinically sensible). Bridge to trees (ch 04). **src/ add:**
+  `datasets.load_breast_cancer()` pandas wrapper + schema test → **pytest 17**. Both reviewers folded
+  (ml-expert REVISE→cell-8 truncated sentence + coef-read MINORs; pedagogy PASS→added the reliability
+  diagonal, reworded ex-3 for the 1.9 `CalibratedClassifierCV`/`FrozenEstimator` API; several anchors
+  re-measured vs the chapter plan — measured values used). `common_errors` gained a 0.5-threshold row;
+  `llms.txt` regenerated; ruff/black/hex/banned clean. Rémy validated visually. **Next: PR chapter/03 →
+  main, then chapter 04 (Decision Trees).**
+- **NB 6 (demanding case: breast cancer — calibration, threshold, error analysis) OPENED.** Branch
+  `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` off `chapter/03` (@ `c2110e7`).
+  Phase `notebook-plan`: drafting cell-by-cell — the chapter capstone (**visualization-first**). Anchors
+  re-measured on sklearn 1.9 (breast_cancer 569×30, **malignant = positive** 212 / benign 357; 70/30 seed0
+  stratify, one std `Pipeline`, StratifiedKFold5-shuffle-seed0): CV LogReg **0.979** vs GaussianNB
+  **0.930**; test LogReg acc 0.953 / Brier **0.033** vs GaussianNB 0.895 / **0.098** (≈3×; pile-up 119 vs
+  166/171 — GaussianNB over-confident, closes ch 02's loop); threshold 0.5 → recall 0.938 (4/64 missed)
+  vs 0.1 → 0.984 (1 missed, 14 false alarms); L1 nonzero **3/10/14** of 30 at C=0.02/0.2/1.0; top
+  malignant-driving coefs radius error / worst radius / mean concave points. **Several numbers differ
+  from the chapter plan's preliminary figures** (Brier 0.033/0.098 vs 0.027/0.088; threshold 4/3-missed
+  vs 3/2; L1 middle 10 vs 8) — qualitative stories intact, measured values used. Likely `src/` add
+  `datasets.load_breast_cancer()` pandas wrapper + test (pytest 16→17). Next: Rémy validates the NB-6
+  plan → build → chapter PR into `main`.
+- **NB 5 (the estimator & its parameters) built & merged to `chapter/03_LogisticRegression`.**
+  Role-4: the real `sklearn LogisticRegression` on the **1.9 API** (verified: `l1_ratio` not the deprecated
+  `penalty`; no `multi_class`; `saga` for L1; `C=np.inf`=none). Parity vs by-hand (NB 4). Knobs *shown*:
+  **`C`** reg-path ‖w‖₂ 0.84→6.80 → **separation→divergence** (1 overlap pt = finite ‖w‖≈11 vs separable
+  slice ≈29); **`l1_ratio`** L1 zeroes the 4 injected noise cols (4/8) vs L2 8/8; **softmax vs OvR** (3
+  species, CV 0.956/0.956, 0% disagreement, coef_ (3,2)); honest GridSearchCV (best C≈0.08, sealed test
+  1.000 — flagged as easy-split, NB 6 is the real case). 24 cells, 4 figures. **ml-expert REVISE→fixed**
+  (API exhaustively verified on 1.9.0, every number bit-for-bit; **1 MAJOR**: the reg-path/divergence
+  plateau wrongly blamed on the iteration limit → it is **convergence/tolerance** (`n_iter_`≈14 ≪ 200000)
+  → reworded cells 8/11 **+ added a `print(n_iter_)` that proves it**; MINORs: ≈8.5 not "nearly 7", OvR
+  renormalizes in predict_proba), **pedagogy PASS** (added "defaults are regularized → parity uses
+  `C=np.inf`"). `common_errors` gained a C-is-inverse row; `llms.txt` regenerated; ruff/hex/banned clean;
+  pytest 16. Rémy validated visually. Next: open NB 6 (breast cancer) → then chapter PR into `main`.
+- **NB 5 (the estimator & its parameters) OPENED.** Branch
+  `notebook/03_LogisticRegression__05_estimator_and_parameters` off `chapter/03_LogisticRegression`
+  (@ `1b68bc7`). Phase `notebook-plan`: drafting cell-by-cell in plan mode — the role-4 "method &
+  parameters" notebook (first to use the real `sklearn LogisticRegression`). **sklearn 1.9 API verified
+  at plan time:** `l1_ratio` present, **`penalty` deprecated** (FutureWarning 1.8→1.10: use l1_ratio=0/1,
+  C=np.inf), **`multi_class` REMOVED**; `saga` for L1. Anchors measured on 1.9.0: L2 path ‖w‖₂ =
+  0.84/1.91/3.28/6.80 (C=0.01/0.1/1/100, 4 std feats, plateau 8.46); separation→divergence — full 2-feat
+  (1 overlap pt) MLE finite ‖w‖≈11 vs the slice with that point removed runs to ‖w‖≈29+; L1 (l1_ratio=1,
+  saga) zeroes the 4 injected noise cols exactly (4/8 nonzero) while L2 keeps all 8; L1 on 4 real feats
+  4/4 (1/4 at C=0.01); multinomial vs OvR (3 species) CV 0.956/0.956, **0.0% disagreement**, coef_ (3,2).
+  4 figures planned (L2 path, separation→divergence, L1-vs-L2 noise bars, 3-class softmax boundaries) +
+  honest GridSearchCV tuning. Next: Rémy validates the NB-5 plan → build.
+- **NB 4 (Fitting II — gradient descent) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the optimizer** (the course's first), by hand on standardized 1-D `bill_length` (w & b).
+  Gradient **(P−y)·x** stated & **verified** (finite-diff err 2e-11; σ′ cancels); update w←w−η∇L; descent
+  on NB 3's convex bowl (figB surface+path → bottom; figC loss → floor 0.140). **Parity exact**: by-hand
+  GD = `LogisticRegression(C=∞)` (6.29704 / −0.56139) — "the library is not magic". Learning-rate panel
+  (figD): 0.1 crawls / 2 glides / 400 overshoots; raw-feature knife-edge (0.003 vs 0.005) = the
+  "why standardize" tie-in. Convergence **shown, not proved** (leans on NB 3 convexity); SGD/backprop only
+  named (→ ch 11–12). 22 cells, 4 figures. Both reviewers **PASS** (0 BLOCK/MAJOR): every number
+  re-derived to machine precision; parity against C=∞ verified (default C=1 → w=4.25, different, so the
+  choice is load-bearing). **MINORs folded:** softened "diverges/explodes/leaps past" → "overshoots /
+  climbs the wrong way" (on this flat loss η=400 stays bounded, not →∞ — honest); **lr-panel η 90→400
+  deviation from the approved plan** (90 did not visibly diverge on the well-conditioned loss — a
+  correctness fix; title/legend/read all updated). `common_errors` gained a learning-rate row; `llms.txt`
+  regenerated; ruff/hex/banned clean; pytest 16. Rémy validated visually. Next: open NB 5 (estimator &
+  parameters).
+- **NB 4 (Fitting II — gradient descent) OPENED.** Branch
+  `notebook/03_LogisticRegression__04_gradient_descent` off `chapter/03_LogisticRegression` (@ `6940caf`).
+  Phase `notebook-plan`: drafting cell-by-cell in plan mode — one concept, **the course's first
+  optimizer**: gradient = steepest-ascent direction; step opposite by a learning rate; the weights roll to
+  the bottom of NB 3's convex bowl. Gradient **(P−y)·x** (verified vs finite-diff to 2e-11). Anchors
+  measured: by-hand full-batch GD on standardized 1-D `bill_length` (w,b) → `LogisticRegression(C=∞)`
+  w*=6.297 / b*=−0.561 (gap 4e-4 at lr=1, 1e-7 at lr=2; ~1000 it at lr=0.5); learning-rate panel
+  **standardized** (lr 0.1 crawls / 2 glides / 90 oscillates; surface flat, λ_max=0.041, stable to ~48) —
+  divergence shown on **raw** bill as the knife-edge (0.003 crawls, 0.005 explodes → the "why standardize"
+  tie-in). 4 figures planned (gradient-on-bowl, surface+path, loss-vs-iter, lr panel). Next: Rémy validates
+  the NB-4 plan → build.
+- **NB 3 (Fitting I — what we optimize: log-loss) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the training objective**, by hand, pre-fitting. **log-loss = cross-entropy = −log-
+  likelihood** of the Bernoulli model (the bridge from ch 02's likelihood); punishes confident-and-wrong
+  without bound (−log P; P=0.01→4.6) where squared error caps at 1 (Figure A); **convex** (one bottom,
+  2nd-diff ≥ 0, min 0.146 at w≈6.2) vs **squared-error-on-sigmoid non-convex with stalling plateaus**
+  (2nd-diff < 0, plateau slope ~3e-4) (Figure B); one number ranks weight choices (w=1/3/6.2 →
+  0.39/0.19/0.146). 1-D std bill, **b held at 0**, no sklearn, nothing fitted (NB 4 minimizes). 19 cells,
+  2 figures. **ml-expert REVISE→fixed** (every number verified to machine precision incl. gradient
+  (P−y)·x and analytic convexity L''≥0; **1 BLOCK = banned word "simply" cell 18 → "exactly"**; MINOR
+  bowl-ylim wording), **pedagogy PASS** (added a Bernoulli coin-flip gloss; the honest "single min, not
+  bumps" framing praised). **Process fix:** the banned-word guard now parses the JSON real text — the old
+  raw-`.ipynb` grep missed words glued after a literal `\n` (that is how "simply" slipped past); NB 1–2
+  re-scanned **clean**. `common_errors` gained a "train with squared error" row; `llms.txt` regenerated;
+  ruff/hex/banned clean; pytest 16. Rémy validated visually. Next: open NB 4 (gradient descent).
+- **NB 3 (Fitting I — what we optimize: log-loss) OPENED.** Branch
+  `notebook/03_LogisticRegression__03_logloss_objective` off `chapter/03_LogisticRegression` (@ `d15035d`).
+  Phase `notebook-plan`: drafting cell-by-cell in plan mode — one concept, **the objective**: log-loss =
+  cross-entropy = −log-likelihood of the Bernoulli model (bridge from ch 02's likelihood), punishes
+  confident-and-wrong (−log P unbounded); **log-loss convex** (one bottom) vs **squared-error-on-sigmoid
+  non-convex with stalling plateaus**. Anchors measured (1-D std bill: w*≈6.29 / b*≈−0.56, log-loss convex
+  min 0.140; MSE 2nd-diff < 0, plateau slope ~3e-4 at w=20; per-example y=1/P=0.01 → log-loss 4.6 vs MSE
+  0.98; hand weights w=1/3/6.3 → 0.398/0.188/0.140). **Note:** real 1-D data shows non-convex + plateaus
+  (single min), not multiple "bumps" — framing adjusted from the chapter plan's "bumpy", flagged to Rémy.
+  Next: Rémy validates the NB-3 plan → build.
+- **NB 2 (decision boundary & reading the weights) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the weighted line & what its weights mean**, by hand, pre-fitting. On **standardized**
+  bill+flipper: z=w₁x₁+w₂x₂+b, the **decision boundary** (z=0, P=½), **w ⟂ boundary** & ‖w‖=steepness,
+  each **wⱼ = Δ log-odds per std unit** (×e^wⱼ to the odds: bill ×2.7, flipper ×7.4). Hand weights
+  w=(1,2), b=0 (nothing fitted — "NB 3–4 find them"): acc **0.9891**, ‖w‖ 2.24, band ~37 % (the 3 errors
+  all in-band). Contrast **nearest-centroid** unweighted bisector → **tilt 16.3°** = the weighting (NC acc
+  0.9927). Figure C: weights rotate the line, b shifts it. 21 cells, 3 figures. Both reviewers folded:
+  **ml-expert PASS** (every number re-measured exact; ‖w‖=steepness verified = ‖w‖/4 slope at z=0; no
+  hidden `.fit`; 3 DOIs resolve), **pedagogy REVISE→all folded** (MAJOR: the w arrow didn't render
+  perpendicular under unequal axes → `set_aspect("equal")` on figs A/B/C; MINORs: white→blue wording, and
+  named that the borderline example is a real in-band error). Dropped the optional ~64° fit teaser (both
+  reviewers preferred the clean no-fitting wall). `common_errors` gained a weight-magnitude/standardize
+  row; `llms.txt` regenerated; ruff/hex/banned-word clean; pytest 16. Rémy validated visually. Next: open
+  NB 3 (log-loss).
+- **NB 2 (decision boundary & reading the weights) OPENED.** Branch
+  `notebook/03_LogisticRegression__02_boundary_and_weights` created off `chapter/03_LogisticRegression`
+  (@ `cbf90d0`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, on
+  **standardized** bill+flipper: the weighted line z=w₁x₁+w₂x₂+b, the **decision boundary** (z=0, P=½),
+  **w ⟂ the boundary** & sets steepness, each **wⱼ = Δ log-odds per standardized unit**; weights **set by
+  hand** (rotate with w, shift with b), contrasted with module-00 nearest-centroid's *unweighted* bisector;
+  **nothing fitted** (NB 3–4 find the weights). Anchors measured at plan time (scaler stats, fitted std
+  coefs as the ballpark, NC-normal vs logistic-w angle). Next: Rémy validates the NB-2 plan → build.
+- **NB 1 (From a linear score to a probability) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the sigmoid & log-odds**, fully by hand, pre-fitting. σ(z)=1/(1+e⁻ᶻ) coded from
+  scratch & plotted → **p→odds→log-odds** table (the score *is* the log-odds; σ and logit are
+  inverses) → σ applied to `bill_length` (**raw mm**) with **hand-chosen** weights (w=1.0, b=−43,
+  ½-crossing **43 mm**; nothing fitted — "NB 3–4 find these") → ½-threshold prediction → borderline
+  42.9 mm example (P=0.475). Build-measured: hand-rule acc **0.945** (≈ fitted 0.947, never called the
+  optimum), transition band ~**21.5 %**. 19 cells, 2 figures. Both reviewers **PASS** (no BLOCK):
+  ml-expert verified σ↔logit to 1e-14, the no-fitting promise airtight (no hidden `.fit`), all 3 DOIs
+  resolve, calibration correctly **not** claimed; pedagogy confirmed one-concept + e/σ/odds-log-odds
+  built from scratch. **2 MINORs folded** (log=natural-log base e; "a fifth" tied to the P∈[0.1,0.9]
+  band); **skipped a 3rd** ("all 15 errors in the band") — measured 12/15 in band, 3 confidently-wrong
+  → false, and that nuance belongs to NB 6. `common_errors` gained a score-vs-probability/log-odds row;
+  `llms.txt` regenerated; ruff fixed (notebook import order I001); pytest 16. Rémy validated visually.
+  Next: open NB 2.
+- **Chapter 03 (Logistic Regression) plan APPROVED & persisted** (`docs/plans/chapter_03_LogisticRegression.md`).
+  **SIX notebooks** (Rémy-approved exception to the 5-ceiling, like KNN's 6th): NB 1 sigmoid & log-odds
+  → NB 2 decision boundary & reading weights → NB 3 **log-loss** (the objective) → NB 4 **gradient
+  descent** (the optimizer — split from NB 3 on Rémy's go) → NB 5 estimator & parameters
+  (`LogisticRegression`: C, `l1_ratio` L1/L2, softmax) → NB 6 demanding case **breast_cancer**
+  (calibration/threshold/error analysis). First **discriminative** method; first trained by **iterative
+  optimization**; closes ch 02's generative-vs-discriminative loop. Reviewer-gated, both **REVISE→all
+  folded**: **ml-expert** (2 BLOCK — NB 1 sigmoid 30%/46mm self-contradiction → raw-mm acc 0.947 /
+  crossing ≈43 mm / ~16 %; breast_cancer CV unreproducible → pinned StratifiedKFold5-shuffle LogReg
+  **0.979** vs GaussianNB **0.930**; + GaussianNB calibration re-measured under one std pipeline Brier
+  **0.088**/pile 167, GD parity vs `C=np.inf`, ‖w‖₂ over 4 std feats, OvR 0.952) — verified the
+  **sklearn-1.9 API pivot** (`penalty` deprecated→`l1_ratio`; no `multi_class`→`OneVsRestClassifier`;
+  `saga` for L1) and gradient ∝(P−y)·x to machine precision; **pedagogy** (1 BLOCK 2 banned words; 3
+  MAJOR — split GD to its own NB, add odds/log-odds + gradient-as-slope first-contacts, give softmax its
+  own section). Measured at plan time on sklearn **1.9.0**. `course_map.md` §03 aligned to six titles.
+  Next: open NB 1.
+- **Chapter 03 (Logistic Regression) opened.** Branch `chapter/03_LogisticRegression` created off
+  `main` (synced @ `726d13e` after PR #2). Phase `chapter-plan`: drafting the chapter plan in plan
+  mode per `course_map.md` §03 and the per-method arc (sigmoid → boundary/weights → log-loss fitting;
+  NB 4 `LogisticRegression` C/L1-L2/multi-class; NB 5 calibration + threshold + error analysis —
+  LogReg as the calibrated discriminative foil to NB's over-confidence). The pending `idle` STATE
+  edit was folded into this transition (committed on the chapter branch, not on protected `main`).
 - **NB 5 (Text classification — the demanding case) built & merged; CHAPTER 02 COMPLETE (5/5).** The
   capstone, on 20-newsgroups: **by-hand bag-of-words on-ramp** (toy sentences → vocab → dense count
   matrix) → `CountVectorizer` (12 384 words, density 0.0043, fit-on-train-only) → `MultinomialNB`
