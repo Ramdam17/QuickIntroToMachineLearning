@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 2 — `02_boundary_and_weights` **DONE** (both reviewers folded, Rémy validated). Next: NB 3. |
-| Phase | `notebook-commit` (NB 2 committed + merged → chapter; ready to open NB 3) |
-| Active branch | `chapter/03_LogisticRegression` (NB 2 merged; NB 3 branch next) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Open NB 3 — Fitting I: what we optimize (log-loss).** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__03_logloss_objective`; set STATE phase `notebook-plan`; plan cell-by-cell (one concept): **log-loss = cross-entropy = the negative log-likelihood of the Bernoulli model** (the bridge from ch 02's likelihood) — it punishes confident-and-wrong hardest; **why not squared error** (non-convex on the sigmoid, a descent can stall) vs log-loss **convex** (one bottom). For a 1-D fit, **plot log-loss vs a weight (a convex bowl)** beside **squared-error-on-sigmoid (bumpy)**; compute the loss of a few hand-set weights. Rémy validates the NB-3 plan → build. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 3 — `03_logloss_objective` **OPEN** (planning). NB 1–2 done (merged `d15035d`). |
+| Phase | `notebook-plan` (NB 3 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Active branch | `notebook/03_LogisticRegression__03_logloss_objective` (off `chapter/03_LogisticRegression`) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 3 plan being drafted → `docs/plans/03_LogisticRegression__03_logloss_objective.md` (pending) |
+| Next concrete action | **Draft the NB 3 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept: **log-loss = cross-entropy = the negative log-likelihood of the Bernoulli model** (the bridge from ch 02's likelihood) — it punishes confident-and-wrong hardest; **why not squared error** (non-convex on the sigmoid, a descent can stall) vs log-loss **convex** (one bottom). For a 1-D fit, **plot log-loss vs a weight (a convex bowl)** beside **squared-error-on-sigmoid (bumpy)**; compute the loss of a few hand-set weights. On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (Fitting I — what we optimize: log-loss) OPENED.** Branch
+  `notebook/03_LogisticRegression__03_logloss_objective` off `chapter/03_LogisticRegression` (@ `d15035d`).
+  Phase `notebook-plan`: drafting cell-by-cell in plan mode — one concept, **the objective**: log-loss =
+  cross-entropy = −log-likelihood of the Bernoulli model (bridge from ch 02's likelihood), punishes
+  confident-and-wrong (−log P unbounded); **log-loss convex** (one bottom) vs **squared-error-on-sigmoid
+  non-convex with stalling plateaus**. Anchors measured (1-D std bill: w*≈6.29 / b*≈−0.56, log-loss convex
+  min 0.140; MSE 2nd-diff < 0, plateau slope ~3e-4 at w=20; per-example y=1/P=0.01 → log-loss 4.6 vs MSE
+  0.98; hand weights w=1/3/6.3 → 0.398/0.188/0.140). **Note:** real 1-D data shows non-convex + plateaus
+  (single min), not multiple "bumps" — framing adjusted from the chapter plan's "bumpy", flagged to Rémy.
+  Next: Rémy validates the NB-3 plan → build.
 - **NB 2 (decision boundary & reading the weights) built & merged to `chapter/03_LogisticRegression`.**
   One concept: **the weighted line & what its weights mean**, by hand, pre-fitting. On **standardized**
   bill+flipper: z=w₁x₁+w₂x₂+b, the **decision boundary** (z=0, P=½), **w ⟂ boundary** & ‖w‖=steepness,
