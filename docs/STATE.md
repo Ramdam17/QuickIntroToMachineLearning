@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 5 — `05_estimator_and_parameters` **building** (plan APPROVED). NB 1–4 done (merged `1b68bc7`). |
-| Phase | `notebook-build` (NB 5 — plan approved by Rémy; building ~24 cells, then reviewers + Rémy visual) |
-| Active branch | `notebook/03_LogisticRegression__05_estimator_and_parameters` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/03_LogisticRegression__05_estimator_and_parameters.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Build NB 5 — the estimator & its parameters** (~24 cells, 4 figures) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. The role-4 "method & parameters" notebook: meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** Plan persisted & approved → now building. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 5 — `05_estimator_and_parameters` **DONE** (both reviewers folded, Rémy validated). Next: NB 6 (final). |
+| Phase | `notebook-commit` (NB 5 committed + merged → chapter; ready to open NB 6 — the final notebook) |
+| Active branch | `chapter/03_LogisticRegression` (NB 5 merged; NB 6 branch next) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Open NB 6 — a demanding case: breast cancer (calibration, threshold, error analysis).** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold`; set STATE phase `notebook-plan`; plan cell-by-cell — the chapter capstone, **visualization-first**. Likely `src/` add: `datasets.load_breast_cancer()` pandas-first wrapper (30 named features + target) → pytest 16→17, with a test. Arc: look (class balance, standardized `Pipeline`) → fit `LogisticRegression` → CV **0.979** → one sealed test; **calibration** (reliability + Brier, LogReg **0.027** vs GaussianNB **0.088**, both under one std pipeline; pile-up 123 vs 167/171) — closes ch 02's loop; **threshold** (malignant = costly miss; 0.5 → recall 0.953 / 3 missed; 0.3 → 0.969 / 2 missed); **L1 feature selection** (3/8/14 of 30); coefficient story; bridge to trees (ch 04). **Re-measure every number** (pinned `StratifiedKFold(5, shuffle, seed 0)`, one std `Pipeline` for both estimators). Rémy validates the NB-6 plan → build, then **CHAPTER 03 closes via PR into `main`**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the estimator & its parameters) built & merged to `chapter/03_LogisticRegression`.**
+  Role-4: the real `sklearn LogisticRegression` on the **1.9 API** (verified: `l1_ratio` not the deprecated
+  `penalty`; no `multi_class`; `saga` for L1; `C=np.inf`=none). Parity vs by-hand (NB 4). Knobs *shown*:
+  **`C`** reg-path ‖w‖₂ 0.84→6.80 → **separation→divergence** (1 overlap pt = finite ‖w‖≈11 vs separable
+  slice ≈29); **`l1_ratio`** L1 zeroes the 4 injected noise cols (4/8) vs L2 8/8; **softmax vs OvR** (3
+  species, CV 0.956/0.956, 0% disagreement, coef_ (3,2)); honest GridSearchCV (best C≈0.08, sealed test
+  1.000 — flagged as easy-split, NB 6 is the real case). 24 cells, 4 figures. **ml-expert REVISE→fixed**
+  (API exhaustively verified on 1.9.0, every number bit-for-bit; **1 MAJOR**: the reg-path/divergence
+  plateau wrongly blamed on the iteration limit → it is **convergence/tolerance** (`n_iter_`≈14 ≪ 200000)
+  → reworded cells 8/11 **+ added a `print(n_iter_)` that proves it**; MINORs: ≈8.5 not "nearly 7", OvR
+  renormalizes in predict_proba), **pedagogy PASS** (added "defaults are regularized → parity uses
+  `C=np.inf`"). `common_errors` gained a C-is-inverse row; `llms.txt` regenerated; ruff/hex/banned clean;
+  pytest 16. Rémy validated visually. Next: open NB 6 (breast cancer) → then chapter PR into `main`.
 - **NB 5 (the estimator & its parameters) OPENED.** Branch
   `notebook/03_LogisticRegression__05_estimator_and_parameters` off `chapter/03_LogisticRegression`
   (@ `1b68bc7`). Phase `notebook-plan`: drafting cell-by-cell in plan mode — the role-4 "method &
