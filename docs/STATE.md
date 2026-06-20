@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 5 — `05_estimator_and_parameters` **OPEN** (planning). NB 1–4 done (merged `1b68bc7`). |
-| Phase | `notebook-plan` (NB 5 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Current notebook | NB 5 — `05_estimator_and_parameters` **building** (plan APPROVED). NB 1–4 done (merged `1b68bc7`). |
+| Phase | `notebook-build` (NB 5 — plan approved by Rémy; building ~24 cells, then reviewers + Rémy visual) |
 | Active branch | `notebook/03_LogisticRegression__05_estimator_and_parameters` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 5 plan being drafted → `docs/plans/03_LogisticRegression__05_estimator_and_parameters.md` (pending) |
-| Next concrete action | **Draft the NB 5 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. The role-4 "method & parameters" notebook: meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
+| Active plan | `docs/plans/03_LogisticRegression__05_estimator_and_parameters.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Build NB 5 — the estimator & its parameters** (~24 cells, 4 figures) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. The role-4 "method & parameters" notebook: meet `sklearn LogisticRegression` on the **sklearn 1.9 API** — **`C` + `l1_ratio`**, NOT the deprecated `penalty=`; no `multi_class` → `OneVsRestClassifier`; **`saga`** for L1. Parity first (by-hand GD ≈ `C=np.inf`). Then each knob **shown**: **`C`** (regularization path ‖w‖₂ vs C; separation→divergence demo on a constructed separable slice), **`l1_ratio`** (L2 shrinks / L1 zeroes — penguins + injected noise columns), **softmax/multinomial** in its own section+figure (3 species; multinomial vs OvR ≈ 0% disagreement), honest tuning (GridSearchCV on TRAIN, one sealed test). **Re-measure every number on sklearn 1.9.** Plan persisted & approved → now building. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
