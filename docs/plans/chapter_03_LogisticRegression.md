@@ -280,7 +280,7 @@ notebook; **chapter close via PR into `main`** (protected).
 | 3 | `notebook/03_LogisticRegression__03_logloss_objective` | **done** — built (19 cells, 2 figures), both reviewers folded (ml-expert REVISE→1 BLOCK banned-word "simply" fixed; pedagogy PASS), Rémy validated, merged to `chapter/03_LogisticRegression` |
 | 4 | `notebook/03_LogisticRegression__04_gradient_descent` | **done** — built (22 cells, 4 figures), both reviewers PASS (MINORs folded: divergence wording softened to "overshoots"; lr-panel η 90→400), Rémy validated, merged to `chapter/03_LogisticRegression` |
 | 5 | `notebook/03_LogisticRegression__05_estimator_and_parameters` | **done** — built (24 cells, 4 figures), both reviewers folded (ml-expert REVISE→1 MAJOR plateau-mechanism fixed = convergence/tolerance not iteration limit, + `n_iter_` proof; pedagogy PASS), Rémy validated, merged to `chapter/03_LogisticRegression` |
-| 6 | `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` | pending |
+| 6 | `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` | **done** — built (24 cells, 5 figures + `load_breast_cancer` src/test, pytest 17), both reviewers folded (ml-expert REVISE→cell-8 prose + coef-read; pedagogy PASS→reliability diagonal + ex-3 API), Rémy validated, merged to `chapter/03_LogisticRegression` |
 
 ## Reviewer notes (chapter-plan gate — both reviewers REVISE → folded; split decided by Rémy)
 

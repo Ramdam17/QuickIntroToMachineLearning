@@ -34,3 +34,4 @@
 - [notebooks/03_LogisticRegression/03_logloss_objective.ipynb](notebooks/03_LogisticRegression/03_logloss_objective.ipynb) — 03 — Fitting I: what we optimize (log-loss) — *Notebook 3 of 6 — Logistic Regression*
 - [notebooks/03_LogisticRegression/04_gradient_descent.ipynb](notebooks/03_LogisticRegression/04_gradient_descent.ipynb) — 04 — Fitting II: gradient descent — *Notebook 4 of 6 — Logistic Regression*
 - [notebooks/03_LogisticRegression/05_estimator_and_parameters.ipynb](notebooks/03_LogisticRegression/05_estimator_and_parameters.ipynb) — 05 — The estimator & its parameters — *Notebook 5 of 6 — Logistic Regression*
+- [notebooks/03_LogisticRegression/06_breast_cancer_calibration_threshold.ipynb](notebooks/03_LogisticRegression/06_breast_cancer_calibration_threshold.ipynb) — 06 — A demanding case: breast cancer — *Notebook 6 of 6 — Logistic Regression*

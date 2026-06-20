@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 6 — `06_breast_cancer_calibration_threshold` **building** (plan APPROVED). NB 1–5 done (merged `c2110e7`). |
-| Phase | `notebook-build` (NB 6 — plan approved by Rémy; building ~24 cells + `load_breast_cancer` src/test, then reviewers + Rémy visual) |
-| Active branch | `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/03_LogisticRegression__06_breast_cancer_calibration_threshold.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Build NB 6 — a demanding case: breast cancer** (~24 cells, ~5 figures + `load_breast_cancer` src/test) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. The chapter capstone, **visualization-first**. Likely `src/` add: `datasets.load_breast_cancer()` pandas-first wrapper (30 named features + target) → pytest 16→17, with a test. Arc: look (class balance, standardized `Pipeline`) → fit `LogisticRegression` → CV **0.979** → one sealed test; **calibration** (reliability + Brier, **re-measured**: LogReg **0.033** vs GaussianNB **0.098** ≈3× under one std pipeline; pile-up 119 vs 166/171 — GaussianNB over-confident) — closes ch 02's loop; **threshold** (malignant = costly miss; **re-measured** 0.5 → recall 0.938 / 4 missed vs 0.1 → 0.984 / 1 missed, 14 false alarms — the cost-asymmetric policy); **L1 feature selection** (3/10/14 of 30 at C=0.02/0.2/1.0); coefficient story (radius/concavity → malignant); bridge to trees (ch 04). Plan persisted & approved → now building, then **CHAPTER 03 closes via PR into `main`**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 breast_cancer. |
+| Current notebook | **CHAPTER COMPLETE (6/6).** NB 6 `06_breast_cancer_calibration_threshold` **DONE** (both reviewers folded, Rémy validated). |
+| Phase | `chapter-merge` (NB 6 merged → chapter; **chapter 03 complete**; ready to PR `chapter/03 → main`) |
+| Active branch | `chapter/03_LogisticRegression` (all 6 notebooks merged; PR into `main` next) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (all 6 NBs done) |
+| Next concrete action | **Close CHAPTER 03 via a PR into `main`.** All 6 notebooks are merged onto `chapter/03_LogisticRegression`. Push the chapter branch and open a PR `chapter/03_LogisticRegression → main` (`main` is protected by the global pre-push hook; use a `--no-ff` merge to preserve per-notebook history), per `docs/WORKFLOW.md`. On Rémy's go: `gh pr create` (body ends with the 🤖 Generated-with line), then `gh pr merge --merge`. Then sync `main`, set STATE `idle`; the next chapter is **04_DecisionTree**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 ✓. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (demanding case: breast cancer) built & merged — CHAPTER 03 COMPLETE (6/6).** The capstone,
+  visualization-first (5 figures), on breast_cancer (569×30, malignant = positive). Honest workflow, no
+  leakage: split → CV **on train** (LogReg **0.985** > GaussianNB **0.932**) → one sealed test (acc 0.953).
+  **Calibration** closes ch 02's loop: LogReg Brier **0.033** vs GaussianNB **0.098** (~3×); a pile-up
+  histogram makes GaussianNB's over-confidence visible (166 vs 119/171 at the extremes); reliability diagram
+  with the y=x reference. **Threshold = clinical policy** (malignant the costly miss): 0.5 → recall 0.938
+  (4/64 missed) vs 0.1 → 0.984 (1 missed, 14 false alarms). **L1** keeps 3/10/14 of 30; **coefficient story**
+  (radius/concavity → malignant, clinically sensible). Bridge to trees (ch 04). **src/ add:**
+  `datasets.load_breast_cancer()` pandas wrapper + schema test → **pytest 17**. Both reviewers folded
+  (ml-expert REVISE→cell-8 truncated sentence + coef-read MINORs; pedagogy PASS→added the reliability
+  diagonal, reworded ex-3 for the 1.9 `CalibratedClassifierCV`/`FrozenEstimator` API; several anchors
+  re-measured vs the chapter plan — measured values used). `common_errors` gained a 0.5-threshold row;
+  `llms.txt` regenerated; ruff/black/hex/banned clean. Rémy validated visually. **Next: PR chapter/03 →
+  main, then chapter 04 (Decision Trees).**
 - **NB 6 (demanding case: breast cancer — calibration, threshold, error analysis) OPENED.** Branch
   `notebook/03_LogisticRegression__06_breast_cancer_calibration_threshold` off `chapter/03` (@ `c2110e7`).
   Phase `notebook-plan`: drafting cell-by-cell — the chapter capstone (**visualization-first**). Anchors

@@ -55,3 +55,15 @@ def test_load_newsgroups_schema() -> None:
     assert sorted(df["category"].unique()) == ["comp.graphics", "sci.med"]
     assert len(df) > 0
     assert df["text"].map(type).eq(str).all()
+
+
+def test_load_breast_cancer_schema() -> None:
+    df = datasets.load_breast_cancer()
+    assert isinstance(df, pd.DataFrame)
+    assert df.shape == (569, 31)  # 30 features + target
+    assert "target" in df.columns
+    assert "mean radius" in df.columns
+    assert "worst concave points" in df.columns
+    # scikit-learn convention: target in {0 (malignant), 1 (benign)}; no missing values.
+    assert sorted(df["target"].unique()) == [0, 1]
+    assert not df.isna().any().any()
