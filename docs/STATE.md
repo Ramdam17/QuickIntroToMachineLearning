@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 4 — `04_gradient_descent` **OPEN** (planning). NB 1–3 done (merged `6940caf`). |
-| Phase | `notebook-plan` (NB 4 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Current notebook | NB 4 — `04_gradient_descent` **building** (plan APPROVED). NB 1–3 done (merged `6940caf`). |
+| Phase | `notebook-build` (NB 4 — plan approved by Rémy; building ~22 cells, then reviewers + Rémy visual) |
 | Active branch | `notebook/03_LogisticRegression__04_gradient_descent` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Draft the NB 4 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept, the course's **first optimizer**: the **gradient** is the direction the loss rises fastest; step the **opposite** way by a **learning rate**, repeat → the weights roll to the bottom of NB 3's bowl. Gradient **∝ (P−y)·x** (stated & used; full derivation pointed to). Build gradient-as-slope on a 1-D bowl first; run gradient descent **by hand** on standardized 1-D `bill_length` (2 params w,b → a visualizable loss surface); confirm by-hand ≈ `LogisticRegression(C=np.inf)` (NOT default C=1). Figures: gradient-on-bowl; loss surface + descent path; loss vs iteration; **learning-rate panel** (too small crawls / good / too big diverges). On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Active plan | `docs/plans/03_LogisticRegression__04_gradient_descent.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Build NB 4 — Fitting II: gradient descent** (~22 cells, 4 figures) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. One concept, the course's **first optimizer**: the **gradient** is the direction the loss rises fastest; step the **opposite** way by a **learning rate**, repeat → the weights roll to the bottom of NB 3's bowl. Gradient **∝ (P−y)·x** (stated & used; full derivation pointed to). Build gradient-as-slope on a 1-D bowl first; run gradient descent **by hand** on standardized 1-D `bill_length` (2 params w,b → a visualizable loss surface); confirm by-hand ≈ `LogisticRegression(C=np.inf)` (NOT default C=1). Figures: gradient-on-bowl; loss surface + descent path; loss vs iteration; **learning-rate panel** (too small crawls / good / too big diverges). Plan persisted & approved → now building. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
