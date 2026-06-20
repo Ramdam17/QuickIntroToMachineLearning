@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 3 — `03_logloss_objective` **DONE** (ml-expert REVISE→fixed, pedagogy PASS, Rémy validated). Next: NB 4. |
-| Phase | `notebook-commit` (NB 3 committed + merged → chapter; ready to open NB 4) |
-| Active branch | `chapter/03_LogisticRegression` (NB 3 merged; NB 4 branch next) |
+| Current notebook | NB 4 — `04_gradient_descent` **OPEN** (planning). NB 1–3 done (merged `6940caf`). |
+| Phase | `notebook-plan` (NB 4 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Active branch | `notebook/03_LogisticRegression__04_gradient_descent` (off `chapter/03_LogisticRegression`) |
 | Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Open NB 4 — Fitting II: gradient descent.** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__04_gradient_descent`; set STATE phase `notebook-plan`; plan cell-by-cell (one concept, the course's **first optimizer**): the **gradient** is the direction the loss rises fastest; step the **opposite** way by a **learning rate**, repeat → the weights roll to the bottom of NB 3's bowl. Gradient **∝ (P−y)·x** (stated & used; full derivation pointed to). Build gradient-as-slope on a 1-D bowl first; run gradient descent **by hand** on standardized 1-D `bill_length` (2 params w,b → a visualizable loss surface); confirm by-hand ≈ `LogisticRegression(C=np.inf)` (NOT default C=1). Figures: gradient-on-bowl; loss surface + descent path; loss vs iteration; **learning-rate panel** (too small crawls / good / too big diverges). Rémy validates the NB-4 plan → build. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Next concrete action | **Draft the NB 4 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept, the course's **first optimizer**: the **gradient** is the direction the loss rises fastest; step the **opposite** way by a **learning rate**, repeat → the weights roll to the bottom of NB 3's bowl. Gradient **∝ (P−y)·x** (stated & used; full derivation pointed to). Build gradient-as-slope on a 1-D bowl first; run gradient descent **by hand** on standardized 1-D `bill_length` (2 params w,b → a visualizable loss surface); confirm by-hand ≈ `LogisticRegression(C=np.inf)` (NOT default C=1). Figures: gradient-on-bowl; loss surface + descent path; loss vs iteration; **learning-rate panel** (too small crawls / good / too big diverges). On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (Fitting II — gradient descent) OPENED.** Branch
+  `notebook/03_LogisticRegression__04_gradient_descent` off `chapter/03_LogisticRegression` (@ `6940caf`).
+  Phase `notebook-plan`: drafting cell-by-cell in plan mode — one concept, **the course's first
+  optimizer**: gradient = steepest-ascent direction; step opposite by a learning rate; the weights roll to
+  the bottom of NB 3's convex bowl. Gradient **(P−y)·x** (verified vs finite-diff to 2e-11). Anchors
+  measured: by-hand full-batch GD on standardized 1-D `bill_length` (w,b) → `LogisticRegression(C=∞)`
+  w*=6.297 / b*=−0.561 (gap 4e-4 at lr=1, 1e-7 at lr=2; ~1000 it at lr=0.5); learning-rate panel
+  **standardized** (lr 0.1 crawls / 2 glides / 90 oscillates; surface flat, λ_max=0.041, stable to ~48) —
+  divergence shown on **raw** bill as the knife-edge (0.003 crawls, 0.005 explodes → the "why standardize"
+  tie-in). 4 figures planned (gradient-on-bowl, surface+path, loss-vs-iter, lr panel). Next: Rémy validates
+  the NB-4 plan → build.
 - **NB 3 (Fitting I — what we optimize: log-loss) built & merged to `chapter/03_LogisticRegression`.**
   One concept: **the training objective**, by hand, pre-fitting. **log-loss = cross-entropy = −log-
   likelihood** of the Bernoulli model (the bridge from ch 02's likelihood); punishes confident-and-wrong
