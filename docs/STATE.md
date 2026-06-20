@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 2 — `02_boundary_and_weights` **building** (plan APPROVED). NB 1 done (merged `cbf90d0`). |
-| Phase | `notebook-build` (NB 2 — plan approved by Rémy; building the 21 cells, then reviewers + Rémy visual) |
-| Active branch | `notebook/03_LogisticRegression__02_boundary_and_weights` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/03_LogisticRegression__02_boundary_and_weights.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
-| Next concrete action | **Build NB 2 — the decision boundary & reading the weights** (21 cells, 3 figures) per the approved plan; execute & clear outputs; both reviewers (no BLOCK); Rémy visual; guards (banned-word grep, hex, pytest 16, ruff/black, gen_llms_txt); commit; ff-merge → chapter. Concept: on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". Plan persisted & approved → now building. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Current notebook | NB 2 — `02_boundary_and_weights` **DONE** (both reviewers folded, Rémy validated). Next: NB 3. |
+| Phase | `notebook-commit` (NB 2 committed + merged → chapter; ready to open NB 3) |
+| Active branch | `chapter/03_LogisticRegression` (NB 2 merged; NB 3 branch next) |
+| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Open NB 3 — Fitting I: what we optimize (log-loss).** `git switch chapter/03_LogisticRegression && git switch -c notebook/03_LogisticRegression__03_logloss_objective`; set STATE phase `notebook-plan`; plan cell-by-cell (one concept): **log-loss = cross-entropy = the negative log-likelihood of the Bernoulli model** (the bridge from ch 02's likelihood) — it punishes confident-and-wrong hardest; **why not squared error** (non-convex on the sigmoid, a descent can stall) vs log-loss **convex** (one bottom). For a 1-D fit, **plot log-loss vs a weight (a convex bowl)** beside **squared-error-on-sigmoid (bumpy)**; compute the loss of a few hand-set weights. Rémy validates the NB-3 plan → build. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (decision boundary & reading the weights) built & merged to `chapter/03_LogisticRegression`.**
+  One concept: **the weighted line & what its weights mean**, by hand, pre-fitting. On **standardized**
+  bill+flipper: z=w₁x₁+w₂x₂+b, the **decision boundary** (z=0, P=½), **w ⟂ boundary** & ‖w‖=steepness,
+  each **wⱼ = Δ log-odds per std unit** (×e^wⱼ to the odds: bill ×2.7, flipper ×7.4). Hand weights
+  w=(1,2), b=0 (nothing fitted — "NB 3–4 find them"): acc **0.9891**, ‖w‖ 2.24, band ~37 % (the 3 errors
+  all in-band). Contrast **nearest-centroid** unweighted bisector → **tilt 16.3°** = the weighting (NC acc
+  0.9927). Figure C: weights rotate the line, b shifts it. 21 cells, 3 figures. Both reviewers folded:
+  **ml-expert PASS** (every number re-measured exact; ‖w‖=steepness verified = ‖w‖/4 slope at z=0; no
+  hidden `.fit`; 3 DOIs resolve), **pedagogy REVISE→all folded** (MAJOR: the w arrow didn't render
+  perpendicular under unequal axes → `set_aspect("equal")` on figs A/B/C; MINORs: white→blue wording, and
+  named that the borderline example is a real in-band error). Dropped the optional ~64° fit teaser (both
+  reviewers preferred the clean no-fitting wall). `common_errors` gained a weight-magnitude/standardize
+  row; `llms.txt` regenerated; ruff/hex/banned-word clean; pytest 16. Rémy validated visually. Next: open
+  NB 3 (log-loss).
 - **NB 2 (decision boundary & reading the weights) OPENED.** Branch
   `notebook/03_LogisticRegression__02_boundary_and_weights` created off `chapter/03_LogisticRegression`
   (@ `cbf90d0`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, on
