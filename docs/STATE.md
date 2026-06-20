@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 2 — `02_boundary_and_weights` **OPEN** (planning). NB 1 `01_score_to_probability` done (merged `cbf90d0`). |
-| Phase | `notebook-plan` (NB 2 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Current notebook | NB 2 — `02_boundary_and_weights` **building** (plan APPROVED). NB 1 done (merged `cbf90d0`). |
+| Phase | `notebook-build` (NB 2 — plan approved by Rémy; building the 21 cells, then reviewers + Rémy visual) |
 | Active branch | `notebook/03_LogisticRegression__02_boundary_and_weights` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 2 plan being drafted → `docs/plans/03_LogisticRegression__02_boundary_and_weights.md` (pending) |
-| Next concrete action | **Draft the NB 2 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept: on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". On approval: persist plan to `docs/plans/03_LogisticRegression__02_boundary_and_weights.md`, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Active plan | `docs/plans/03_LogisticRegression__02_boundary_and_weights.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Build NB 2 — the decision boundary & reading the weights** (21 cells, 3 figures) per the approved plan; execute & clear outputs; both reviewers (no BLOCK); Rémy visual; guards (banned-word grep, hex, pytest 16, ruff/black, gen_llms_txt); commit; ff-merge → chapter. Concept: on **standardized** bill+flipper, the score z=w₁x₁+w₂x₂+b, the **decision boundary** = the line z=0 (P=½), **w ⟂ the boundary** and sets steepness, each **wⱼ = change in log-odds per standardized unit** (sign=direction, magnitude=strength); weights **set by hand** (rotate with w, shift with b), contrast with module-00 nearest-centroid's unweighted bisector; **no fitting** (NB 3–4). Figure: boundary + w arrow + weight bar, each with "Read the figure". Plan persisted & approved → now building. **6-notebook arc:** NB1 sigmoid+log-odds (done) · NB2 boundary & weights · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
