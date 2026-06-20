@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | NB 3 — `03_logloss_objective` **OPEN** (planning). NB 1–2 done (merged `d15035d`). |
-| Phase | `notebook-plan` (NB 3 — drafting the cell-by-cell plan in plan mode; Rémy validates before build) |
+| Current notebook | NB 3 — `03_logloss_objective` **building** (plan APPROVED). NB 1–2 done (merged `d15035d`). |
+| Phase | `notebook-build` (NB 3 — plan approved by Rémy; building ~19 cells, then reviewers + Rémy visual) |
 | Active branch | `notebook/03_LogisticRegression__03_logloss_objective` (off `chapter/03_LogisticRegression`) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (approved); NB 3 plan being drafted → `docs/plans/03_LogisticRegression__03_logloss_objective.md` (pending) |
-| Next concrete action | **Draft the NB 3 plan cell-by-cell in plan mode**, then ExitPlanMode for Rémy's validation. One concept: **log-loss = cross-entropy = the negative log-likelihood of the Bernoulli model** (the bridge from ch 02's likelihood) — it punishes confident-and-wrong hardest; **why not squared error** (non-convex on the sigmoid, a descent can stall) vs log-loss **convex** (one bottom). For a 1-D fit, **plot log-loss vs a weight (a convex bowl)** beside **squared-error-on-sigmoid (bumpy)**; compute the loss of a few hand-set weights. On approval: persist plan, set phase `notebook-plan-approved`, build → both reviewers → Rémy visual → commit → ff-merge. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
+| Active plan | `docs/plans/03_LogisticRegression__03_logloss_objective.md` (**APPROVED** 2026-06-20); chapter `docs/plans/chapter_03_LogisticRegression.md` (approved) |
+| Next concrete action | **Build NB 3 — Fitting I: the log-loss objective** (~19 cells, 2 figures) per the approved plan; execute & clear; both reviewers (no BLOCK); Rémy visual; guards; commit; ff-merge → chapter. One concept: **log-loss = cross-entropy = the negative log-likelihood of the Bernoulli model** (the bridge from ch 02's likelihood) — it punishes confident-and-wrong hardest; **why not squared error** (non-convex on the sigmoid, a descent can stall) vs log-loss **convex** (one bottom). For a 1-D fit, **plot log-loss vs a weight (a convex bowl)** beside **squared-error-on-sigmoid (bumpy)**; compute the loss of a few hand-set weights. Plan persisted & approved → now building. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 log-loss · NB4 gradient descent · NB5 estimator & params · NB6 breast_cancer. |
 
 ## Notes / blockers
 
