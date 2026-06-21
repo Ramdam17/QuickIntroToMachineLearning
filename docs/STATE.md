@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | **05_breast_cancer_interpretability** (NB 5 of 5 — the **capstone**) — *interpretability vs accuracy; where a single tree fails*. |
-| Phase | `notebook-plan-approved` (NB-5 plan validated by Rémy; ready to build) |
-| Active branch | `notebook/04_DecisionTree__05_breast_cancer_interpretability` (off `chapter/04_DecisionTree` @ `e9447f4`) |
-| Active plan | `docs/plans/04_DecisionTree__05_breast_cancer_interpretability.md` (**APPROVED**, ~26 cells / 6 figures, visualization-first) |
-| Next concrete action | **Build NB 5** — create `notebooks/04_DecisionTree/05_breast_cancer_interpretability.ipynb` per the approved plan (capstone, ~26 cells, 6 figs: class balance; depth-3 tree rules; cross-method accuracy bar KNN/LogReg/tree/bagged-25; root-feature flips; Gini-vs-permutation importance; confusion matrix). Anchors: tree CV 0.940 < LogReg 0.985; tuned tree test 0.906; depth-3 test 0.918; spine KNN 0.942 → LogReg 0.953 → tree 0.906 → bagged-25 0.930; root-feature flips (concave points 15×…), std 0.021; Gini (concave points 0.74) vs permutation (worst area 0.27); confusion `[[95,12],[4,60]]`. Build via `uv run python - < <scratchpad>/build_ch04_nb5.py`; execute to scratchpad (output-free); guards (banned JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 05 …` → merge to chapter → **close CHAPTER 04 via PR into `main`**. |
+| Current chapter | **04_DecisionTree** — all **5 notebooks built & merged to `chapter/04_DecisionTree`**; closing via PR into `main`. Chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
+| Current notebook | — (NB 1–5 all shipped; chapter 04 complete on the chapter branch). |
+| Phase | `chapter-merge` (all 5 NBs merged; opening the chapter-04 → `main` PR) |
+| Active branch | `chapter/04_DecisionTree` (NB 1–5 merged; PR base = `main` @ `8cdcc73`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**all 5 NBs done**) |
+| Next concrete action | **Close CHAPTER 04 via PR into `main`** (remote `main` is PR-only). `git push -u origin chapter/04_DecisionTree`; `gh pr create --base main --head chapter/04_DecisionTree` (title `feat(04_decision_tree): complete chapter — decision trees`); merge the PR `--merge` (merge commit, per-notebook history preserved); `git switch main && git pull` to sync; verify `pytest` green on `main`. Then set STATE phase `idle`, next action = open chapter **05_SVM** (the pending `idle` edit folds into the chapter-05 opening, `main` being PR-only). |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (demanding case: breast cancer) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually. CHAPTER 04 COMPLETE (5/5), closing via PR into `main`.** The chapter
+  **capstone**, visualization-first: 26 cells, 6 figures (class balance; depth-3 tree rules via
+  `plot_tree`; cross-method accuracy bar KNN 0.942 / LogReg 0.953 / single tree 0.906 / bagged-25
+  0.930; root-feature flips; Gini-vs-permutation importance; confusion matrix). Full honest workflow on
+  breast_cancer (malignant=1): tree CV-on-train 0.940 < LogReg 0.985; tuned tree test 0.906 < 0.953;
+  depth-3 readable rules (test 0.918); single-tree variance (root feature flips: concave points 15× …,
+  std 0.021); **Gini (concave points 0.74) vs permutation (worst area 0.27) disagree** (NB 4's caveat
+  made real); confusion `[[95,12],[4,60]]` (4/64 cancers missed); **hand-bagged 25 trees → 0.930**
+  (the ensemble bridge to ch 06). **Both reviewers folded:** pedagogy PASS (2 MINORs); ml-expert
+  REVISE → 1 MAJOR fixed (cell-22 "LogReg caught more" conflated the default vs lowered threshold — at
+  0.5 both miss the same 4 cancers, LogReg's edge is fewer false alarms; reframed) + MINORs ("recovers
+  most"→"about half the gap", majority-vote comment, `worst fractal dimension` named). Guards: 0
+  banned, ruff clean, hex clean, pytest 17, output-free, `llms.txt` 43. **Last NB of chapter 04** —
+  next: Rémy visual → commit + merge → close chapter via PR into `main`.
 - **NB 5 (demanding case: breast cancer — interpretability vs accuracy; where a single tree fails)
   OPENED.** Branch `notebook/04_DecisionTree__05_breast_cancer_interpretability` off
   `chapter/04_DecisionTree` (@ `e9447f4`). Phase `notebook-plan`: drafting the cell-by-cell plan in
