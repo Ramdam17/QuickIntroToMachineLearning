@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | **03_overfitting_and_pruning** (NB 3 of 5) — *overfitting & pruning: depth is the complexity dial*. |
-| Phase | `notebook-plan-approved` (NB-3 plan validated by Rémy; ready to build) |
-| Active branch | `notebook/04_DecisionTree__03_overfitting_and_pruning` (off `chapter/04_DecisionTree` @ `774c1b2`) |
-| Active plan | `docs/plans/04_DecisionTree__03_overfitting_and_pruning.md` (**APPROVED**, ~21 cells / 4 figures) |
-| Next concrete action | **Build NB 3** — create `notebooks/04_DecisionTree/03_overfitting_and_pruning.ipynb` per the approved plan (~21 cells, 4 figs on `make_moons(300,0.30,0)`: 3 boundaries depth 1/6/unlimited; train/test error **U-curve** vs depth + CV-best line; **cost-complexity pruning** path test-acc & #leaves vs `ccp_alpha`; unpruned-23-leaf vs CV-pruned-8-leaf boundary). CV picks depth 6 (0.919) → sealed test 0.889; CV-best `ccp_alpha` ≈ 0.0087 → 8 leaves / test 0.900 > unpruned 0.878. Build via `uv run python - < <scratchpad>/build_ch04_nb3.py`; execute to scratchpad (output-free); guards (banned JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 03 …` → merge to chapter. |
+| Current notebook | — (NB 3 shipped & merged to `chapter/04_DecisionTree`; NB 4 not started). |
+| Phase | `notebook-commit` (NB 3 committed & merged; ready to open NB 4) |
+| Active branch | `chapter/04_DecisionTree` (NB 3 merged in; NB 4 branches off here) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–3/5 done**) |
+| Next concrete action | **Open NB 4 — the estimator & its parameters.** `git switch -c notebook/04_DecisionTree__04_estimator_and_parameters` off `chapter/04_DecisionTree`; set STATE notebook = 04, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (the integrative notebook, ~24-cell ceiling): **parity** vs NB 2's by-hand tree; **four shown dials** `max_depth` / `min_samples_leaf` (moons 1/5/20/50 → test 0.878/0.933/0.800/0.744) / `ccp_alpha` / `criterion` (default-depth near-tie 0.910/0.914/0.914; Gini = default for the no-log cost); **two named** `max_features` (RF foreshadow) / `class_weight`; **THE headline = variance/instability** (pinned recipe `default_rng(0)`, 20 resamples, `rs=0`, 150² grid → full std 0.032 / disagree 6.3 %, depth-3 0.022 / 5.6 %); **trees' native strengths** (scale-invariance raw==std; multiclass + NaN native — `penguins_full` 2 numeric-NaN rows CV 0.9535); **Gini importance + bias caveat** (permutation cross-check named, shown in NB 5); `GridSearchCV` tuning. Rémy validates the NB-4 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (overfitting & pruning) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually.** Rémy flagged the thin horizontal/vertical bands in the deep-tree boundaries as
+  surprising; **re-verified they are real tree regions** (unpruned tree: 13 x1-cuts min gap 0.0044, 9
+  x2-cuts min gap 0.0124 — fences around individual noise points; identical at render res 300 vs 800,
+  so not an aliasing artefact) and **tightened both "Read the figure" cells** to name them as real
+  overfitting, not a glitch (`common_errors` gained a matching row). 21 cells, 4 figures on
+  `make_moons(300, 0.30, 0)`: 3 boundaries (depth 1 underfit / 6 good / unlimited jagged); train/test
+  **error U-curve** vs depth (train→0 by depth 8, test U min ~depth 6–7) with the CV-best-depth line;
+  **cost-complexity pruning path** (test acc + #leaves vs `ccp_alpha`); **unpruned (23-leaf, jagged,
+  test 0.878) vs CV-pruned (8-leaf, smooth, test 0.900)** boundary. Honest selection: CV picks depth 6
+  (0.919) on train → sealed test 0.889 (deliberately *not* the test max 0.900 at depth 7); CV-best
+  `ccp_alpha` ≈ 0.0087 → 8 leaves / test 0.900. **Both reviewers PASS (no BLOCK).** ml-expert
+  reproduced every number, confirmed no leakage, `ccp_alphas[:-1]` root-drop correct; pedagogy
+  confirmed one-concept + charter + figure-read accuracy. MINORs folded (dangling "Figure A/C" →
+  content refs; "training error"→"training impurity"; a guard that CV-best=test-max here is the seed
+  being kind, not the rule; plateau "8–13 leaves"). Guards: 0 banned, ruff clean, hex clean, pytest 17,
+  output-free, `llms.txt` 41. Next: Rémy visual → commit + merge.
 - **NB 3 (overfitting & pruning: depth is the complexity dial) OPENED.** Branch
   `notebook/04_DecisionTree__03_overfitting_and_pruning` off `chapter/04_DecisionTree` (@ `774c1b2`).
   Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **overfitting &

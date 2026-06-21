@@ -38,3 +38,4 @@
 ## 04_DecisionTree
 - [notebooks/04_DecisionTree/01_impurity_and_splits.ipynb](notebooks/04_DecisionTree/01_impurity_and_splits.ipynb) — 01 — A question that splits the data: impurity — *Notebook 1 of 5 — Decision Trees*
 - [notebooks/04_DecisionTree/02_growing_and_reading.ipynb](notebooks/04_DecisionTree/02_growing_and_reading.ipynb) — 02 — Growing a tree, and reading it — *Notebook 2 of 5 — Decision Trees*
+- [notebooks/04_DecisionTree/03_overfitting_and_pruning.ipynb](notebooks/04_DecisionTree/03_overfitting_and_pruning.ipynb) — 03 — Overfitting & pruning: depth is the complexity dial — *Notebook 3 of 5 — Decision Trees*
