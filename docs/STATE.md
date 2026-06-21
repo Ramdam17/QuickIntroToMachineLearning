@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | **CHAPTER COMPLETE (6/6).** NB 6 `06_breast_cancer_calibration_threshold` **DONE** (both reviewers folded, Rémy validated). |
-| Phase | `chapter-merge` (NB 6 merged → chapter; **chapter 03 complete**; ready to PR `chapter/03 → main`) |
-| Active branch | `chapter/03_LogisticRegression` (all 6 notebooks merged; PR into `main` next) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (all 6 NBs done) |
-| Next concrete action | **Close CHAPTER 03 via a PR into `main`.** All 6 notebooks are merged onto `chapter/03_LogisticRegression`. Push the chapter branch and open a PR `chapter/03_LogisticRegression → main` (`main` is protected by the global pre-push hook; use a `--no-ff` merge to preserve per-notebook history), per `docs/WORKFLOW.md`. On Rémy's go: `gh pr create` (body ends with the 🤖 Generated-with line), then `gh pr merge --merge`. Then sync `main`, set STATE `idle`; the next chapter is **04_DecisionTree**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 ✓. |
+| Current chapter | **04_DecisionTree** — all **5 notebooks built & merged to `chapter/04_DecisionTree`**; closing via PR into `main`. Chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
+| Current notebook | — (NB 1–5 all shipped; chapter 04 complete on the chapter branch). |
+| Phase | `chapter-merge` (all 5 NBs merged; opening the chapter-04 → `main` PR) |
+| Active branch | `chapter/04_DecisionTree` (NB 1–5 merged; PR base = `main` @ `8cdcc73`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**all 5 NBs done**) |
+| Next concrete action | **Close CHAPTER 04 via PR into `main`** (remote `main` is PR-only). `git push -u origin chapter/04_DecisionTree`; `gh pr create --base main --head chapter/04_DecisionTree` (title `feat(04_decision_tree): complete chapter — decision trees`); merge the PR `--merge` (merge commit, per-notebook history preserved); `git switch main && git pull` to sync; verify `pytest` green on `main`. Then set STATE phase `idle`, next action = open chapter **05_SVM** (the pending `idle` edit folds into the chapter-05 opening, `main` being PR-only). |
 
 ## Notes / blockers
 
@@ -27,6 +27,150 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (demanding case: breast cancer) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually. CHAPTER 04 COMPLETE (5/5), closing via PR into `main`.** The chapter
+  **capstone**, visualization-first: 26 cells, 6 figures (class balance; depth-3 tree rules via
+  `plot_tree`; cross-method accuracy bar KNN 0.942 / LogReg 0.953 / single tree 0.906 / bagged-25
+  0.930; root-feature flips; Gini-vs-permutation importance; confusion matrix). Full honest workflow on
+  breast_cancer (malignant=1): tree CV-on-train 0.940 < LogReg 0.985; tuned tree test 0.906 < 0.953;
+  depth-3 readable rules (test 0.918); single-tree variance (root feature flips: concave points 15× …,
+  std 0.021); **Gini (concave points 0.74) vs permutation (worst area 0.27) disagree** (NB 4's caveat
+  made real); confusion `[[95,12],[4,60]]` (4/64 cancers missed); **hand-bagged 25 trees → 0.930**
+  (the ensemble bridge to ch 06). **Both reviewers folded:** pedagogy PASS (2 MINORs); ml-expert
+  REVISE → 1 MAJOR fixed (cell-22 "LogReg caught more" conflated the default vs lowered threshold — at
+  0.5 both miss the same 4 cancers, LogReg's edge is fewer false alarms; reframed) + MINORs ("recovers
+  most"→"about half the gap", majority-vote comment, `worst fractal dimension` named). Guards: 0
+  banned, ruff clean, hex clean, pytest 17, output-free, `llms.txt` 43. **Last NB of chapter 04** —
+  next: Rémy visual → commit + merge → close chapter via PR into `main`.
+- **NB 5 (demanding case: breast cancer — interpretability vs accuracy; where a single tree fails)
+  OPENED.** Branch `notebook/04_DecisionTree__05_breast_cancer_interpretability` off
+  `chapter/04_DecisionTree` (@ `e9447f4`). Phase `notebook-plan`: drafting the cell-by-cell plan in
+  plan mode — the chapter **capstone**, **visualization-first**. Full honest workflow on breast_cancer
+  (569×30, malignant=1): the readable depth-3 rule set vs the tree's accuracy cost (tree < LogReg), the
+  single tree's high variance (root-feature flips), Gini + permutation importance, the cross-method
+  test spine, and the bridge to ensembles (ch 06). Anchors in the chapter plan §NB 5; re-measured at
+  plan time. **This is the last notebook of chapter 04** — after it ships, the chapter closes via PR
+  into `main`. Next: Rémy validates the NB-5 plan → build.
+- **NB 4 (the estimator & its parameters) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually.** The integrative
+  notebook, 23 cells, 3 figures (min_samples_leaf 1-vs-5 boundaries; **two bootstrap trees side by
+  side = the variance headline**; Gini importance bar on penguins_full). Parity by-hand depth-2 ==
+  `DecisionTreeClassifier(max_depth=2)` (train 0.9964); 4 dials shown (`min_samples_leaf` 0.878/0.933/
+  0.800/0.744, `criterion` 0.910/0.914/0.914, `max_depth`/`ccp_alpha` recapped) + 2 named (`max_features`
+  None 0.910/1 0.886 = RF seed, `class_weight`); variance full std 0.032/6.3 % vs depth-3 0.022/5.6 %;
+  scale-invariance raw==std identical predictions; penguins_full 3-class + 2 NaN rows CV 0.9535;
+  importance flipper 0.55/bill 0.36 + Strobl bias caveat (permutation → NB 5); GridSearchCV → max_depth
+  6 / sealed test 0.889. **Both reviewers REVISE → folded:** MAJOR (both) — cell-13 read claimed the two
+  bootstrap trees' leaf counts differ, but both grow 17 → reframed to "same 17 leaves, different
+  boundary, test 0.900 vs 0.833 = variance"; MINOR — added a leakage note (whole-set standardization
+  before CV would leak for a scale-sensitive model, not a tree). Guards: 0 banned, ruff clean, hex
+  clean, pytest 17, output-free, `llms.txt` 42. Next: Rémy visual → commit + merge.
+- **NB 4 (the estimator & its parameters) OPENED.** Branch
+  `notebook/04_DecisionTree__04_estimator_and_parameters` off `chapter/04_DecisionTree` (@ `fb607f8`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — the **integrative** notebook
+  (~24-cell ceiling, dé-surcharged at chapter-plan): parity vs NB 2; 4 shown dials (`max_depth`,
+  `min_samples_leaf`, `ccp_alpha`, `criterion`) + 2 named (`max_features`, `class_weight`); the
+  **variance/instability headline** (the ensemble bridge); trees' native strengths (scale-invariance,
+  multiclass + NaN on `penguins_full`); Gini importance + bias caveat; `GridSearchCV`. Anchors from
+  the chapter plan; specifics re-measured at plan time. Next: Rémy validates the NB-4 plan → build.
+- **NB 3 (overfitting & pruning) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually.** Rémy flagged the thin horizontal/vertical bands in the deep-tree boundaries as
+  surprising; **re-verified they are real tree regions** (unpruned tree: 13 x1-cuts min gap 0.0044, 9
+  x2-cuts min gap 0.0124 — fences around individual noise points; identical at render res 300 vs 800,
+  so not an aliasing artefact) and **tightened both "Read the figure" cells** to name them as real
+  overfitting, not a glitch (`common_errors` gained a matching row). 21 cells, 4 figures on
+  `make_moons(300, 0.30, 0)`: 3 boundaries (depth 1 underfit / 6 good / unlimited jagged); train/test
+  **error U-curve** vs depth (train→0 by depth 8, test U min ~depth 6–7) with the CV-best-depth line;
+  **cost-complexity pruning path** (test acc + #leaves vs `ccp_alpha`); **unpruned (23-leaf, jagged,
+  test 0.878) vs CV-pruned (8-leaf, smooth, test 0.900)** boundary. Honest selection: CV picks depth 6
+  (0.919) on train → sealed test 0.889 (deliberately *not* the test max 0.900 at depth 7); CV-best
+  `ccp_alpha` ≈ 0.0087 → 8 leaves / test 0.900. **Both reviewers PASS (no BLOCK).** ml-expert
+  reproduced every number, confirmed no leakage, `ccp_alphas[:-1]` root-drop correct; pedagogy
+  confirmed one-concept + charter + figure-read accuracy. MINORs folded (dangling "Figure A/C" →
+  content refs; "training error"→"training impurity"; a guard that CV-best=test-max here is the seed
+  being kind, not the rule; plateau "8–13 leaves"). Guards: 0 banned, ruff clean, hex clean, pytest 17,
+  output-free, `llms.txt` 41. Next: Rémy visual → commit + merge.
+- **NB 3 (overfitting & pruning: depth is the complexity dial) OPENED.** Branch
+  `notebook/04_DecisionTree__03_overfitting_and_pruning` off `chapter/04_DecisionTree` (@ `774c1b2`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **overfitting &
+  pruning**, on `make_moons(300, 0.30, 0)` (the chapter's first move to the non-linear set; depth
+  boundaries 1/6/unlimited; train/test U-curve; cost-complexity `ccp_alpha`; CV choice). Anchors
+  (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (CV-best 0.919; test peak depth 7 = 0.900) →
+  unlimited train 1.000 / test 0.878; `ccp_alpha` 0.01 → 8 leaves / test 0.900. Next: Rémy validates
+  the NB-3 plan → build.
+- **NB 2 (growing a tree, and reading it) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy
+  validated visually.** 20 cells, 2
+  figures (a **custom charter-coloured flowchart** of the depth-2 tree — drawn by hand so Adélie/Gentoo
+  colours stay consistent, not sklearn's clashing blue/orange; decision regions depth-1 (2 boxes) vs
+  depth-2 (4 boxes)). By hand: recurse NB 1's `flipper ≤ 206` → left `bill ≤ 47.20`, right `bill ≤
+  40.85` → 4 leaves (149/0, 0/1, 1/0, 1/122); **by-hand == `DecisionTreeClassifier(max_depth=2)`**
+  (train 0.9964); CV depth-2 0.9855 > full 0.9818 (overfitting hook → NB 3); the one error = row 128 (a
+  long-flippered Adélie in the Gentoo box); greedy ≠ optimal (NP-hard); depth-3 adds a leaf but no
+  accuracy. **Both reviewers PASS (no BLOCK).** ml-expert verified parity, the depth-3 reason, the CV
+  reproduction, all DOIs; pedagogy verified one-concept + charter + figure-read accuracy. MINORs folded
+  (both flagged the "box-counting in NB 1" back-ref → reworded self-contained; CV got a "here"
+  single-seed qualifier + a one-line gloss + added to header prereqs; flowchart 47.2→47.20 for
+  symmetry). Guards: 0 banned (JSON scan), ruff clean, hex clean, pytest 17, output-free, `llms.txt` 40.
+  Next: Rémy visual → commit + merge.
+- **NB 2 (growing a tree, and reading it) OPENED.** Branch
+  `notebook/04_DecisionTree__02_growing_and_reading` off `chapter/04_DecisionTree` (@ `3ba6499`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **recursive greedy
+  growth + reading the tree**, by hand on penguins (recurse NB 1's `flipper ≤ 206` to depth 2 → 4
+  leaves; read it as a flowchart; trace a penguin; parity vs `DecisionTreeClassifier(max_depth=2)`).
+  Anchors (sklearn 1.9): depth-2 train 0.9964 / 4 leaves / CV 0.9855 > full 0.9818; rules root
+  `flipper ≤ 206`, then `bill ≤ 47.20` (left child) / `bill ≤ 40.85` (right child). Next: Rémy
+  validates the NB-2 plan → build.
+- **NB 1 (a question that splits the data: impurity) BUILT & MERGED to `chapter/04_DecisionTree` —
+  Rémy validated visually.** 23 cells, 4 figures (feature histograms; impurity-vs-p shapes;
+  decrease-vs-threshold, 2 panels sharing y so flipper's higher peak shows; the chosen split on the
+  cloud + child class-mix bars). One concept,
+  **by hand before the library** (the only sklearn call is the depth-1 parity at the end). All anchors
+  reproduce exactly: root Gini 0.4948 / entropy 0.9925; best split `flipper ≤ 206` Gini decrease 0.4732
+  vs `bill ≤ 43.25` 0.4044 (entropy picks the same thresholds); children 149A/1G (0.0132) & 2A/122G
+  (0.0317) → weighted 0.0216 → decrease 0.4732; stump root `flipper ≤ 206`, acc 0.9891; raw == std
+  (scale-invariance). Both reviewers folded: **pedagogy PASS** (2 MINORs — softened "single clean hump"
+  for the ragged bill curve; kept the "Read the result" twin convention); **ml-expert REVISE → 1 MAJOR
+  fixed** (the ch-03 `bill`-vs-`flipper` callback fabricated a false contrast — ch 03 introduced the
+  sigmoid on `bill` by *narrative* choice and a linear fit also favours `flipper` here → reframed to "we
+  *measure* which feature cuts best, not choose by eye"). Guards: 0 banned words (JSON-real-text scan),
+  ruff clean, hex clean, pytest 17, output-free, `llms.txt` 39 lines. Next: Rémy visual → commit + merge.
+- **NB 1 (a question that splits the data: impurity) OPENED.** Branch
+  `notebook/04_DecisionTree__01_impurity_and_splits` off `chapter/04_DecisionTree` (@ `ee99b25`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **impurity & the
+  best split**, by hand on the binary penguins subset (raw units). Anchors (sklearn 1.9.0): root
+  Gini 0.4948 / entropy 0.9925 bits; best split `flipper ≤ 206` (Gini decrease 0.4732) beats
+  `bill ≤ 43.25` (0.4044) — *the "best feature" depends on the criterion*; depth-1 stump 0.9891; the
+  split is a threshold ⇒ scale-invariant. Next: Rémy validates the NB-1 plan → build.
+- **Chapter 04 (Decision Trees) plan APPROVED & persisted** (`docs/plans/chapter_04_DecisionTree.md`,
+  commit `b2c9308`). **FIVE notebooks** (standard arc): NB 1 impurity & the best split (Gini/entropy,
+  by hand on penguins) → NB 2 greedy growth + reading the tree → NB 3 overfitting & pruning (the depth
+  dial, on `make_moons`) → NB 4 the estimator `DecisionTreeClassifier` & its parameters
+  (**variance/instability the headline**) → NB 5 demanding case **breast_cancer** (interpretability vs
+  accuracy; where a single tree fails → the bridge to ensembles). First **non-linear** method; the
+  **base learner** of ch 06–10. Reviewer-gated, both **REVISE → all folded** (every number re-measured
+  by Claude on sklearn 1.9.0): **ml-expert** (MAJOR — NB 5 CV → **CV-on-train** tree 0.940 / LogReg
+  0.985 matching shipped ch 03 NB 6; MAJOR — `criterion` re-measured at **default depth** 0.910 / 0.914
+  + the no-logarithm-cost argument; MINORs — depth 6 = CV-best not test-peak (peak is depth 7 / 0.900),
+  NaN = 2 numeric rows, variance recipe **pinned** `default_rng(0)`/20/`rs=0`/150² grid). **pedagogy**
+  (MAJOR — banned words cleaned; MAJOR — **NB 4 de-overloaded** to 4 shown knobs + 2 named, ~24-cell
+  ceiling; MINORs — box-count beat in NB 2, KNN spine re-measured 0.942 on the pinned split, charter
+  close named). Rémy chose **breast_cancer** for NB 5 (over `penguins_full` / a Titanic loader).
+  `course_map.md` §04 already aligned. Next: open NB 1.
+- **Chapter 04 (Decision Trees) opened.** Branch `chapter/04_DecisionTree` created off `main` (synced
+  @ `8cdcc73` after PR #3). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §04 and the per-method arc (a split & impurity by hand → grow & read a tree →
+  overfitting/pruning & the depth dial; NB 4 `DecisionTreeClassifier` & its parameters; NB 5 a
+  demanding case — interpretability vs accuracy, where a single tree fails). The first **non-linear,
+  axis-aligned partition** method, and the **base learner** the ensemble half of the course
+  (06 Random Forest → the boosting family) is built on. The pending `idle` STATE edit was folded
+  into this transition (committed on the chapter branch, not on protected `main`).
+- **CHAPTER 03 (Logistic Regression) COMPLETE — merged to `main` via PR #3** (merge commit `8cdcc73`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Six notebooks: score→probability · boundary & weights · log-loss · gradient descent · estimator &
+  parameters · breast_cancer (calibration/threshold). Added `datasets.load_breast_cancer()` + schema test
+  (`pytest` 17). The two-reviewer gate + Rémy's visual validation held on every notebook; the sklearn-1.9
+  API was pinned throughout; every number re-measured. `main` synced locally to `8cdcc73`, green. STATE
+  set to `idle` (pending edit, folds into the chapter-04 opening). Next: chapter `04_DecisionTree`.
 - **NB 6 (demanding case: breast cancer) built & merged — CHAPTER 03 COMPLETE (6/6).** The capstone,
   visualization-first (5 figures), on breast_cancer (569×30, malignant = positive). Honest workflow, no
   leakage: split → CV **on train** (LogReg **0.985** > GaussianNB **0.932**) → one sealed test (acc 0.953).
