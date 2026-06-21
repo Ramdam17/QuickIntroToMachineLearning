@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 3 shipped & merged to `chapter/04_DecisionTree`; NB 4 not started). |
-| Phase | `notebook-commit` (NB 3 committed & merged; ready to open NB 4) |
-| Active branch | `chapter/04_DecisionTree` (NB 3 merged in; NB 4 branches off here) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–3/5 done**) |
-| Next concrete action | **Open NB 4 — the estimator & its parameters.** `git switch -c notebook/04_DecisionTree__04_estimator_and_parameters` off `chapter/04_DecisionTree`; set STATE notebook = 04, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (the integrative notebook, ~24-cell ceiling): **parity** vs NB 2's by-hand tree; **four shown dials** `max_depth` / `min_samples_leaf` (moons 1/5/20/50 → test 0.878/0.933/0.800/0.744) / `ccp_alpha` / `criterion` (default-depth near-tie 0.910/0.914/0.914; Gini = default for the no-log cost); **two named** `max_features` (RF foreshadow) / `class_weight`; **THE headline = variance/instability** (pinned recipe `default_rng(0)`, 20 resamples, `rs=0`, 150² grid → full std 0.032 / disagree 6.3 %, depth-3 0.022 / 5.6 %); **trees' native strengths** (scale-invariance raw==std; multiclass + NaN native — `penguins_full` 2 numeric-NaN rows CV 0.9535); **Gini importance + bias caveat** (permutation cross-check named, shown in NB 5); `GridSearchCV` tuning. Rémy validates the NB-4 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Current notebook | **04_estimator_and_parameters** (NB 4 of 5) — *the estimator & its parameters*. |
+| Phase | `notebook-plan` (drafting the NB-4 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/04_DecisionTree__04_estimator_and_parameters` (off `chapter/04_DecisionTree` @ `fb607f8`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-4 plan drafting in plan mode → `docs/plans/04_DecisionTree__04_estimator_and_parameters.md` on approval |
+| Next concrete action | **Draft the NB-4 cell-by-cell plan in plan mode** (the **integrative** notebook, ~24-cell ceiling): **parity** vs NB 2's by-hand tree; **four shown dials** `max_depth` / `min_samples_leaf` (moons 1/5/20/50 → test 0.878 / 0.933 / 0.800 / 0.744) / `ccp_alpha` / `criterion` (default-depth near-tie 0.910 / 0.914 / 0.914; Gini = default for the no-log cost); **two named** `max_features` (RF foreshadow) / `class_weight`; **THE headline = variance/instability** (pinned recipe `default_rng(0)`, 20 resamples, `rs=0`, 150² grid → full std 0.032 / disagree 6.3 %, depth-3 0.022 / 5.6 %); **trees' native strengths** (scale-invariance raw == std; multiclass + NaN native — `penguins_full` 2 numeric-NaN rows CV 0.9535); **Gini importance + bias caveat** (permutation cross-check named, shown in NB 5); `GridSearchCV` tuning. Re-measure specifics at plan time (importances, GridSearchCV, scale-invariance demo). Rémy validates the NB-4 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,14 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator & its parameters) OPENED.** Branch
+  `notebook/04_DecisionTree__04_estimator_and_parameters` off `chapter/04_DecisionTree` (@ `fb607f8`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — the **integrative** notebook
+  (~24-cell ceiling, dé-surcharged at chapter-plan): parity vs NB 2; 4 shown dials (`max_depth`,
+  `min_samples_leaf`, `ccp_alpha`, `criterion`) + 2 named (`max_features`, `class_weight`); the
+  **variance/instability headline** (the ensemble bridge); trees' native strengths (scale-invariance,
+  multiclass + NaN on `penguins_full`); Gini importance + bias caveat; `GridSearchCV`. Anchors from
+  the chapter plan; specifics re-measured at plan time. Next: Rémy validates the NB-4 plan → build.
 - **NB 3 (overfitting & pruning) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
   visually.** Rémy flagged the thin horizontal/vertical bands in the deep-tree boundaries as
   surprising; **re-verified they are real tree regions** (unpruned tree: 13 x1-cuts min gap 0.0044, 9
