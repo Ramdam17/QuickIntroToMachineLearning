@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (chapter plan approved; opening NB 1). |
-| Phase | `chapter-plan-approved` (ready to open NB 1) |
-| Active branch | `chapter/04_DecisionTree` (off `main` @ `8cdcc73`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**APPROVED** — 5 notebooks) |
-| Next concrete action | **Open NB 1 — a question that splits the data: impurity.** `git switch -c notebook/04_DecisionTree__01_impurity_and_splits` off `chapter/04_DecisionTree`; set STATE notebook = 01, phase `notebook-plan`; in plan mode draft the NB-1 cell-by-cell plan (Gini/entropy by hand on penguins root: 0.4948 / 0.9925; the best split = max impurity decrease — `flipper ≤ 206` dec 0.4732 beats `bill ≤ 43.25` dec 0.4044; stump 0.9891; the split is a threshold ⇒ **scale-invariant**; figures: impurity-decrease-vs-threshold curve + the chosen split with child class-mix bars). Rémy validates the NB-1 plan via ExitPlanMode → build → both reviewers → visual check → commit → merge to chapter. |
+| Current notebook | **01_impurity_and_splits** (NB 1 of 5) — *a question that splits the data: impurity*. |
+| Phase | `notebook-plan` (drafting the NB-1 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/04_DecisionTree__01_impurity_and_splits` (off `chapter/04_DecisionTree` @ `ee99b25`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-1 plan drafting in plan mode → `docs/plans/04_DecisionTree__01_impurity_and_splits.md` on approval |
+| Next concrete action | **Draft the NB-1 cell-by-cell plan in plan mode** (one concept = impurity & the best split, by hand on penguins): Gini/entropy of the root (0.4948 / 0.9925) by hand then matched to sklearn; scan thresholds → max impurity decrease, `flipper ≤ 206` dec 0.4732 beats `bill ≤ 43.25` dec 0.4044; depth-1 **stump** 0.9891; the split is a threshold ⇒ **scale-invariant**; figures (impurity-decrease-vs-threshold curve; the chosen split with child class-mix bars), each + "Read the figure"; tiered "Your turn"; charter close. Rémy validates the NB-1 plan via ExitPlanMode → build → both reviewers (no BLOCK) → visual check → commit → merge to chapter. |
 
 ## Notes / blockers
 
@@ -27,6 +27,13 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (a question that splits the data: impurity) OPENED.** Branch
+  `notebook/04_DecisionTree__01_impurity_and_splits` off `chapter/04_DecisionTree` (@ `ee99b25`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **impurity & the
+  best split**, by hand on the binary penguins subset (raw units). Anchors (sklearn 1.9.0): root
+  Gini 0.4948 / entropy 0.9925 bits; best split `flipper ≤ 206` (Gini decrease 0.4732) beats
+  `bill ≤ 43.25` (0.4044) — *the "best feature" depends on the criterion*; depth-1 stump 0.9891; the
+  split is a threshold ⇒ scale-invariant. Next: Rémy validates the NB-1 plan → build.
 - **Chapter 04 (Decision Trees) plan APPROVED & persisted** (`docs/plans/chapter_04_DecisionTree.md`,
   commit `b2c9308`). **FIVE notebooks** (standard arc): NB 1 impurity & the best split (Gini/entropy,
   by hand on penguins) → NB 2 greedy growth + reading the tree → NB 3 overfitting & pruning (the depth
