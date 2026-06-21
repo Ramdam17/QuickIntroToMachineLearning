@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
 | Current notebook | **01_impurity_and_splits** (NB 1 of 5) — *a question that splits the data: impurity*. |
-| Phase | `notebook-plan` (drafting the NB-1 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-1 plan validated by Rémy; ready to build) |
 | Active branch | `notebook/04_DecisionTree__01_impurity_and_splits` (off `chapter/04_DecisionTree` @ `ee99b25`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-1 plan drafting in plan mode → `docs/plans/04_DecisionTree__01_impurity_and_splits.md` on approval |
-| Next concrete action | **Draft the NB-1 cell-by-cell plan in plan mode** (one concept = impurity & the best split, by hand on penguins): Gini/entropy of the root (0.4948 / 0.9925) by hand then matched to sklearn; scan thresholds → max impurity decrease, `flipper ≤ 206` dec 0.4732 beats `bill ≤ 43.25` dec 0.4044; depth-1 **stump** 0.9891; the split is a threshold ⇒ **scale-invariant**; figures (impurity-decrease-vs-threshold curve; the chosen split with child class-mix bars), each + "Read the figure"; tiered "Your turn"; charter close. Rémy validates the NB-1 plan via ExitPlanMode → build → both reviewers (no BLOCK) → visual check → commit → merge to chapter. |
+| Active plan | `docs/plans/04_DecisionTree__01_impurity_and_splits.md` (**APPROVED**, ~22 cells / 4 figures) |
+| Next concrete action | **Build NB 1** — create `notebooks/04_DecisionTree/01_impurity_and_splits.ipynb` per the approved plan (~22 cells, 4 figs: feature histograms; impurity-vs-p; decrease-vs-threshold; the chosen split + child class-mix). By hand before the library (parity vs `DecisionTreeClassifier(max_depth=1)` only at the end). Build via `uv run python - < <scratchpad>/build_nb1.py`; execute to scratchpad (tracked file output-free); guards (banned-word JSON scan, hex, ruff/black, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 01 …` → merge to chapter. |
 
 ## Notes / blockers
 
