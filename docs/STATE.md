@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 1 shipped & merged to `chapter/04_DecisionTree`; NB 2 not started). |
-| Phase | `notebook-commit` (NB 1 committed & merged; ready to open NB 2) |
-| Active branch | `chapter/04_DecisionTree` (NB 1 merged in; NB 2 branches off here) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1/5 done**) |
-| Next concrete action | **Open NB 2 — growing a tree, and reading it.** `git switch -c notebook/04_DecisionTree__02_growing_and_reading` off `chapter/04_DecisionTree`; set STATE notebook = 02, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (recurse NB 1's split to depth 2 **by hand** → 4 leaves; read the tree as a flowchart; trace a penguin to its leaf; parity vs `DecisionTreeClassifier(max_depth=2)`; the **4-box** axis-aligned decision region; greedy ≠ optimal). Anchors (sklearn 1.9): depth-2 train **0.9964** / 4 leaves / CV **0.9855** (> full 0.9818); rules `flipper ≤ 206` then a `bill` split on each side. Rémy validates the NB-2 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Current notebook | **02_growing_and_reading** (NB 2 of 5) — *growing a tree, and reading it*. |
+| Phase | `notebook-plan` (drafting the NB-2 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/04_DecisionTree__02_growing_and_reading` (off `chapter/04_DecisionTree` @ `3ba6499`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-2 plan drafting in plan mode → `docs/plans/04_DecisionTree__02_growing_and_reading.md` on approval |
+| Next concrete action | **Draft the NB-2 cell-by-cell plan in plan mode** (one concept = recursive greedy growth + reading a tree, by hand on penguins): recurse NB 1's `flipper ≤ 206` split to depth 2 → 4 leaves; read the tree as a flowchart; trace a penguin to its leaf; parity vs `DecisionTreeClassifier(max_depth=2)`; the **4-box** axis-aligned decision region; greedy ≠ globally optimal (NP-hard). Anchors (sklearn 1.9): depth-2 train **0.9964** / 4 leaves / CV **0.9855** (> full 0.9818); rules root `flipper ≤ 206`, then `bill ≤ 47.20` (left) / `bill ≤ 40.85` (right). Rémy validates the NB-2 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,14 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (growing a tree, and reading it) OPENED.** Branch
+  `notebook/04_DecisionTree__02_growing_and_reading` off `chapter/04_DecisionTree` (@ `3ba6499`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **recursive greedy
+  growth + reading the tree**, by hand on penguins (recurse NB 1's `flipper ≤ 206` to depth 2 → 4
+  leaves; read it as a flowchart; trace a penguin; parity vs `DecisionTreeClassifier(max_depth=2)`).
+  Anchors (sklearn 1.9): depth-2 train 0.9964 / 4 leaves / CV 0.9855 > full 0.9818; rules root
+  `flipper ≤ 206`, then `bill ≤ 47.20` (left child) / `bill ≤ 40.85` (right child). Next: Rémy
+  validates the NB-2 plan → build.
 - **NB 1 (a question that splits the data: impurity) BUILT & MERGED to `chapter/04_DecisionTree` —
   Rémy validated visually.** 23 cells, 4 figures (feature histograms; impurity-vs-p shapes;
   decrease-vs-threshold, 2 panels sharing y so flipper's higher peak shows; the chosen split on the
