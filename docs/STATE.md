@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | **04_estimator_and_parameters** (NB 4 of 5) — *the estimator & its parameters*. |
-| Phase | `notebook-plan-approved` (NB-4 plan validated by Rémy; ready to build) |
-| Active branch | `notebook/04_DecisionTree__04_estimator_and_parameters` (off `chapter/04_DecisionTree` @ `fb607f8`) |
-| Active plan | `docs/plans/04_DecisionTree__04_estimator_and_parameters.md` (**APPROVED**, ~23 cells / 3 figures) |
-| Next concrete action | **Build NB 4** — create `notebooks/04_DecisionTree/04_estimator_and_parameters.ipynb` per the approved plan (~23 cells, 3 figs: `min_samples_leaf` 1-vs-5 boundaries; **two bootstrap trees side by side = the variance headline**; Gini importance bar on `penguins_full`). Parity vs NB 2 (train 0.9964); 4 shown dials + 2 named; native strengths (scale-invariance raw==std identical; multiclass+NaN CV 0.954); importance flipper 0.55/bill 0.36 + bias caveat; GridSearchCV → max_depth 6 / test 0.889. Build via `uv run python - < <scratchpad>/build_ch04_nb4.py`; execute to scratchpad (output-free); guards (banned JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 04 …` → merge to chapter. |
+| Current notebook | — (NB 4 shipped & merged to `chapter/04_DecisionTree`; NB 5 not started). |
+| Phase | `notebook-commit` (NB 4 committed & merged; ready to open NB 5 — the chapter capstone) |
+| Active branch | `chapter/04_DecisionTree` (NB 4 merged in; NB 5 branches off here) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–4/5 done**) |
+| Next concrete action | **Open NB 5 — the demanding case: breast cancer (interpretability vs accuracy; where a single tree fails).** `git switch -c notebook/04_DecisionTree__05_breast_cancer_interpretability` off `chapter/04_DecisionTree`; set STATE notebook = 05, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (the chapter capstone — full honest workflow on breast_cancer 569×30, malignant=1). Anchors from the chapter plan §NB 5: tree CV-on-train **0.940** < LogReg **0.985**; tuned tree **test 0.906** < LogReg 0.953; depth-3 readable rules (test 0.918, 7 leaves, `mean concave points ≤ 0.05`…); **root-feature flips across bootstraps** (concave points 15× / worst perimeter 6× …, test std 0.021); Gini importance concave points 0.74 + permutation cross-check; cross-method **test** spine KNN 0.942 → LogReg 0.953 → tree 0.906; bridge to ensembles (ch 06; "hand-bag K trees" exercise). Re-measure all at plan time. Rémy validates the NB-5 plan via ExitPlanMode → build → both reviewers → visual → commit → **then close CHAPTER 04 via PR into `main`**. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator & its parameters) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
+  visually.** The integrative
+  notebook, 23 cells, 3 figures (min_samples_leaf 1-vs-5 boundaries; **two bootstrap trees side by
+  side = the variance headline**; Gini importance bar on penguins_full). Parity by-hand depth-2 ==
+  `DecisionTreeClassifier(max_depth=2)` (train 0.9964); 4 dials shown (`min_samples_leaf` 0.878/0.933/
+  0.800/0.744, `criterion` 0.910/0.914/0.914, `max_depth`/`ccp_alpha` recapped) + 2 named (`max_features`
+  None 0.910/1 0.886 = RF seed, `class_weight`); variance full std 0.032/6.3 % vs depth-3 0.022/5.6 %;
+  scale-invariance raw==std identical predictions; penguins_full 3-class + 2 NaN rows CV 0.9535;
+  importance flipper 0.55/bill 0.36 + Strobl bias caveat (permutation → NB 5); GridSearchCV → max_depth
+  6 / sealed test 0.889. **Both reviewers REVISE → folded:** MAJOR (both) — cell-13 read claimed the two
+  bootstrap trees' leaf counts differ, but both grow 17 → reframed to "same 17 leaves, different
+  boundary, test 0.900 vs 0.833 = variance"; MINOR — added a leakage note (whole-set standardization
+  before CV would leak for a scale-sensitive model, not a tree). Guards: 0 banned, ruff clean, hex
+  clean, pytest 17, output-free, `llms.txt` 42. Next: Rémy visual → commit + merge.
 - **NB 4 (the estimator & its parameters) OPENED.** Branch
   `notebook/04_DecisionTree__04_estimator_and_parameters` off `chapter/04_DecisionTree` (@ `fb607f8`).
   Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — the **integrative** notebook
