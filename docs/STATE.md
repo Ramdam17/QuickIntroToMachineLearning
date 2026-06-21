@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 4 shipped & merged to `chapter/04_DecisionTree`; NB 5 not started). |
-| Phase | `notebook-commit` (NB 4 committed & merged; ready to open NB 5 — the chapter capstone) |
-| Active branch | `chapter/04_DecisionTree` (NB 4 merged in; NB 5 branches off here) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–4/5 done**) |
-| Next concrete action | **Open NB 5 — the demanding case: breast cancer (interpretability vs accuracy; where a single tree fails).** `git switch -c notebook/04_DecisionTree__05_breast_cancer_interpretability` off `chapter/04_DecisionTree`; set STATE notebook = 05, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (the chapter capstone — full honest workflow on breast_cancer 569×30, malignant=1). Anchors from the chapter plan §NB 5: tree CV-on-train **0.940** < LogReg **0.985**; tuned tree **test 0.906** < LogReg 0.953; depth-3 readable rules (test 0.918, 7 leaves, `mean concave points ≤ 0.05`…); **root-feature flips across bootstraps** (concave points 15× / worst perimeter 6× …, test std 0.021); Gini importance concave points 0.74 + permutation cross-check; cross-method **test** spine KNN 0.942 → LogReg 0.953 → tree 0.906; bridge to ensembles (ch 06; "hand-bag K trees" exercise). Re-measure all at plan time. Rémy validates the NB-5 plan via ExitPlanMode → build → both reviewers → visual → commit → **then close CHAPTER 04 via PR into `main`**. |
+| Current notebook | **05_breast_cancer_interpretability** (NB 5 of 5 — the **capstone**) — *interpretability vs accuracy; where a single tree fails*. |
+| Phase | `notebook-plan` (drafting the NB-5 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/04_DecisionTree__05_breast_cancer_interpretability` (off `chapter/04_DecisionTree` @ `e9447f4`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-5 plan drafting in plan mode → `docs/plans/04_DecisionTree__05_breast_cancer_interpretability.md` on approval |
+| Next concrete action | **Draft the NB-5 cell-by-cell plan in plan mode** — the chapter **capstone**, **visualization-first** (~20+ cells, several figures): the full honest workflow on **breast_cancer** (569×30, malignant=1). Anchors from the chapter plan §NB 5 (re-measure all at plan time): tree CV-on-train **0.940** < LogReg **0.985**; tuned tree **test 0.906** < LogReg 0.953; depth-3 readable rules (test 0.918, 7 leaves, `mean concave points ≤ 0.05`…); **root-feature flips across bootstraps** (concave points 15× / worst perimeter 6× …, test std 0.021); Gini importance concave points 0.74 + permutation cross-check; cross-method **test** spine KNN 0.942 → LogReg 0.953 → tree 0.906; bridge to ensembles (ch 06; "hand-bag K trees" exercise). Rémy validates the NB-5 plan via ExitPlanMode → build → both reviewers → visual → commit → **then close CHAPTER 04 via PR into `main`**. |
 
 ## Notes / blockers
 
@@ -27,6 +27,15 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (demanding case: breast cancer — interpretability vs accuracy; where a single tree fails)
+  OPENED.** Branch `notebook/04_DecisionTree__05_breast_cancer_interpretability` off
+  `chapter/04_DecisionTree` (@ `e9447f4`). Phase `notebook-plan`: drafting the cell-by-cell plan in
+  plan mode — the chapter **capstone**, **visualization-first**. Full honest workflow on breast_cancer
+  (569×30, malignant=1): the readable depth-3 rule set vs the tree's accuracy cost (tree < LogReg), the
+  single tree's high variance (root-feature flips), Gini + permutation importance, the cross-method
+  test spine, and the bridge to ensembles (ch 06). Anchors in the chapter plan §NB 5; re-measured at
+  plan time. **This is the last notebook of chapter 04** — after it ships, the chapter closes via PR
+  into `main`. Next: Rémy validates the NB-5 plan → build.
 - **NB 4 (the estimator & its parameters) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
   visually.** The integrative
   notebook, 23 cells, 3 figures (min_samples_leaf 1-vs-5 boundaries; **two bootstrap trees side by
