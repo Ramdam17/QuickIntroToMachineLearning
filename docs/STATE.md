@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | **01_impurity_and_splits** (NB 1 of 5) — *a question that splits the data: impurity*. |
-| Phase | `notebook-plan-approved` (NB-1 plan validated by Rémy; ready to build) |
-| Active branch | `notebook/04_DecisionTree__01_impurity_and_splits` (off `chapter/04_DecisionTree` @ `ee99b25`) |
-| Active plan | `docs/plans/04_DecisionTree__01_impurity_and_splits.md` (**APPROVED**, ~22 cells / 4 figures) |
-| Next concrete action | **Build NB 1** — create `notebooks/04_DecisionTree/01_impurity_and_splits.ipynb` per the approved plan (~22 cells, 4 figs: feature histograms; impurity-vs-p; decrease-vs-threshold; the chosen split + child class-mix). By hand before the library (parity vs `DecisionTreeClassifier(max_depth=1)` only at the end). Build via `uv run python - < <scratchpad>/build_nb1.py`; execute to scratchpad (tracked file output-free); guards (banned-word JSON scan, hex, ruff/black, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 01 …` → merge to chapter. |
+| Current notebook | — (NB 1 shipped & merged to `chapter/04_DecisionTree`; NB 2 not started). |
+| Phase | `notebook-commit` (NB 1 committed & merged; ready to open NB 2) |
+| Active branch | `chapter/04_DecisionTree` (NB 1 merged in; NB 2 branches off here) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1/5 done**) |
+| Next concrete action | **Open NB 2 — growing a tree, and reading it.** `git switch -c notebook/04_DecisionTree__02_growing_and_reading` off `chapter/04_DecisionTree`; set STATE notebook = 02, phase `notebook-plan`; in plan mode draft the cell-by-cell plan (recurse NB 1's split to depth 2 **by hand** → 4 leaves; read the tree as a flowchart; trace a penguin to its leaf; parity vs `DecisionTreeClassifier(max_depth=2)`; the **4-box** axis-aligned decision region; greedy ≠ optimal). Anchors (sklearn 1.9): depth-2 train **0.9964** / 4 leaves / CV **0.9855** (> full 0.9818); rules `flipper ≤ 206` then a `bill` split on each side. Rémy validates the NB-2 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (a question that splits the data: impurity) BUILT & MERGED to `chapter/04_DecisionTree` —
+  Rémy validated visually.** 23 cells, 4 figures (feature histograms; impurity-vs-p shapes;
+  decrease-vs-threshold, 2 panels sharing y so flipper's higher peak shows; the chosen split on the
+  cloud + child class-mix bars). One concept,
+  **by hand before the library** (the only sklearn call is the depth-1 parity at the end). All anchors
+  reproduce exactly: root Gini 0.4948 / entropy 0.9925; best split `flipper ≤ 206` Gini decrease 0.4732
+  vs `bill ≤ 43.25` 0.4044 (entropy picks the same thresholds); children 149A/1G (0.0132) & 2A/122G
+  (0.0317) → weighted 0.0216 → decrease 0.4732; stump root `flipper ≤ 206`, acc 0.9891; raw == std
+  (scale-invariance). Both reviewers folded: **pedagogy PASS** (2 MINORs — softened "single clean hump"
+  for the ragged bill curve; kept the "Read the result" twin convention); **ml-expert REVISE → 1 MAJOR
+  fixed** (the ch-03 `bill`-vs-`flipper` callback fabricated a false contrast — ch 03 introduced the
+  sigmoid on `bill` by *narrative* choice and a linear fit also favours `flipper` here → reframed to "we
+  *measure* which feature cuts best, not choose by eye"). Guards: 0 banned words (JSON-real-text scan),
+  ruff clean, hex clean, pytest 17, output-free, `llms.txt` 39 lines. Next: Rémy visual → commit + merge.
 - **NB 1 (a question that splits the data: impurity) OPENED.** Branch
   `notebook/04_DecisionTree__01_impurity_and_splits` off `chapter/04_DecisionTree` (@ `ee99b25`).
   Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **impurity & the

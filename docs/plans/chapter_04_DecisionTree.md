@@ -308,7 +308,7 @@ trap. Both reviewers pass (no BLOCK) on each notebook; Rémy validates visually;
 
 | NB | Branch | Status |
 |----|--------|--------|
-| 1 | `notebook/04_DecisionTree__01_impurity_and_splits` | not started |
+| 1 | `notebook/04_DecisionTree__01_impurity_and_splits` | **done** — built (23 cells, 4 figures), both reviewers folded (pedagogy PASS; ml-expert REVISE → 1 MAJOR fixed: the ch-03 `bill`-vs-`flipper` callback reframed to "the criterion *measures* the best feature"), Rémy validated visually, merged to `chapter/04_DecisionTree` |
 | 2 | `notebook/04_DecisionTree__02_growing_and_reading` | not started |
 | 3 | `notebook/04_DecisionTree__03_overfitting_and_pruning` | not started |
 | 4 | `notebook/04_DecisionTree__04_estimator_and_parameters` | not started |
