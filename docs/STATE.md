@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 2 shipped & merged to `chapter/04_DecisionTree`; NB 3 not started). |
-| Phase | `notebook-commit` (NB 2 committed & merged; ready to open NB 3) |
-| Active branch | `chapter/04_DecisionTree` (NB 2 merged in; NB 3 branches off here) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–2/5 done**) |
-| Next concrete action | **Open NB 3 — overfitting & pruning: depth is the complexity dial.** `git switch -c notebook/04_DecisionTree__03_overfitting_and_pruning` off `chapter/04_DecisionTree`; set STATE notebook = 03, phase `notebook-plan`; in plan mode draft the cell-by-cell plan **on `make_moons(300, 0.30, 0)`** (depth-sweep boundaries 1 / 6 / unlimited; the train/test **U-curve** vs depth; cost-complexity **pruning** path; choose depth & `ccp_alpha` by CV). Anchors (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (**CV-best**; test peak depth 7 = 0.900) → unlimited train 1.000 / test 0.878; ccp_alpha 0.01 → 8 leaves / test 0.900; min_samples_leaf is NB 4. Rémy validates the NB-3 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Current notebook | **03_overfitting_and_pruning** (NB 3 of 5) — *overfitting & pruning: depth is the complexity dial*. |
+| Phase | `notebook-plan` (drafting the NB-3 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/04_DecisionTree__03_overfitting_and_pruning` (off `chapter/04_DecisionTree` @ `774c1b2`) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-3 plan drafting in plan mode → `docs/plans/04_DecisionTree__03_overfitting_and_pruning.md` on approval |
+| Next concrete action | **Draft the NB-3 cell-by-cell plan in plan mode** (one concept = overfitting & pruning; depth = the complexity dial), **on `make_moons(300, 0.30, 0)`** (the non-linear set logistic regression could not fit; first use in this chapter): depth-sweep boundaries 1 / 6 / unlimited; the train/test **U-curve** vs depth (00 NB 09's curve returns); **cost-complexity pruning** (`ccp_alpha`); choose depth & `ccp_alpha` by **CV** (module 00 NB 10). Anchors (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (CV-best 0.919; test peak depth 7 = 0.900) → unlimited train 1.000 / test 0.878; `ccp_alpha` 0.01 → 8 leaves / test 0.900. `min_samples_leaf` is NB 4. Rémy validates the NB-3 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,14 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (overfitting & pruning: depth is the complexity dial) OPENED.** Branch
+  `notebook/04_DecisionTree__03_overfitting_and_pruning` off `chapter/04_DecisionTree` (@ `774c1b2`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **overfitting &
+  pruning**, on `make_moons(300, 0.30, 0)` (the chapter's first move to the non-linear set; depth
+  boundaries 1/6/unlimited; train/test U-curve; cost-complexity `ccp_alpha`; CV choice). Anchors
+  (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (CV-best 0.919; test peak depth 7 = 0.900) →
+  unlimited train 1.000 / test 0.878; `ccp_alpha` 0.01 → 8 leaves / test 0.900. Next: Rémy validates
+  the NB-3 plan → build.
 - **NB 2 (growing a tree, and reading it) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy
   validated visually.** 20 cells, 2
   figures (a **custom charter-coloured flowchart** of the depth-2 tree — drawn by hand so Adélie/Gentoo
