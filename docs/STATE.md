@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
 | Current notebook | **04_estimator_and_parameters** (NB 4 of 5) — *the estimator & its parameters*. |
-| Phase | `notebook-plan` (drafting the NB-4 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-4 plan validated by Rémy; ready to build) |
 | Active branch | `notebook/04_DecisionTree__04_estimator_and_parameters` (off `chapter/04_DecisionTree` @ `fb607f8`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-4 plan drafting in plan mode → `docs/plans/04_DecisionTree__04_estimator_and_parameters.md` on approval |
-| Next concrete action | **Draft the NB-4 cell-by-cell plan in plan mode** (the **integrative** notebook, ~24-cell ceiling): **parity** vs NB 2's by-hand tree; **four shown dials** `max_depth` / `min_samples_leaf` (moons 1/5/20/50 → test 0.878 / 0.933 / 0.800 / 0.744) / `ccp_alpha` / `criterion` (default-depth near-tie 0.910 / 0.914 / 0.914; Gini = default for the no-log cost); **two named** `max_features` (RF foreshadow) / `class_weight`; **THE headline = variance/instability** (pinned recipe `default_rng(0)`, 20 resamples, `rs=0`, 150² grid → full std 0.032 / disagree 6.3 %, depth-3 0.022 / 5.6 %); **trees' native strengths** (scale-invariance raw == std; multiclass + NaN native — `penguins_full` 2 numeric-NaN rows CV 0.9535); **Gini importance + bias caveat** (permutation cross-check named, shown in NB 5); `GridSearchCV` tuning. Re-measure specifics at plan time (importances, GridSearchCV, scale-invariance demo). Rémy validates the NB-4 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Active plan | `docs/plans/04_DecisionTree__04_estimator_and_parameters.md` (**APPROVED**, ~23 cells / 3 figures) |
+| Next concrete action | **Build NB 4** — create `notebooks/04_DecisionTree/04_estimator_and_parameters.ipynb` per the approved plan (~23 cells, 3 figs: `min_samples_leaf` 1-vs-5 boundaries; **two bootstrap trees side by side = the variance headline**; Gini importance bar on `penguins_full`). Parity vs NB 2 (train 0.9964); 4 shown dials + 2 named; native strengths (scale-invariance raw==std identical; multiclass+NaN CV 0.954); importance flipper 0.55/bill 0.36 + bias caveat; GridSearchCV → max_depth 6 / test 0.889. Build via `uv run python - < <scratchpad>/build_ch04_nb4.py`; execute to scratchpad (output-free); guards (banned JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 04 …` → merge to chapter. |
 
 ## Notes / blockers
 
