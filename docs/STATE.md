@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
 | Current notebook | **03_overfitting_and_pruning** (NB 3 of 5) — *overfitting & pruning: depth is the complexity dial*. |
-| Phase | `notebook-plan` (drafting the NB-3 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-3 plan validated by Rémy; ready to build) |
 | Active branch | `notebook/04_DecisionTree__03_overfitting_and_pruning` (off `chapter/04_DecisionTree` @ `774c1b2`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-3 plan drafting in plan mode → `docs/plans/04_DecisionTree__03_overfitting_and_pruning.md` on approval |
-| Next concrete action | **Draft the NB-3 cell-by-cell plan in plan mode** (one concept = overfitting & pruning; depth = the complexity dial), **on `make_moons(300, 0.30, 0)`** (the non-linear set logistic regression could not fit; first use in this chapter): depth-sweep boundaries 1 / 6 / unlimited; the train/test **U-curve** vs depth (00 NB 09's curve returns); **cost-complexity pruning** (`ccp_alpha`); choose depth & `ccp_alpha` by **CV** (module 00 NB 10). Anchors (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (CV-best 0.919; test peak depth 7 = 0.900) → unlimited train 1.000 / test 0.878; `ccp_alpha` 0.01 → 8 leaves / test 0.900. `min_samples_leaf` is NB 4. Rémy validates the NB-3 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Active plan | `docs/plans/04_DecisionTree__03_overfitting_and_pruning.md` (**APPROVED**, ~21 cells / 4 figures) |
+| Next concrete action | **Build NB 3** — create `notebooks/04_DecisionTree/03_overfitting_and_pruning.ipynb` per the approved plan (~21 cells, 4 figs on `make_moons(300,0.30,0)`: 3 boundaries depth 1/6/unlimited; train/test error **U-curve** vs depth + CV-best line; **cost-complexity pruning** path test-acc & #leaves vs `ccp_alpha`; unpruned-23-leaf vs CV-pruned-8-leaf boundary). CV picks depth 6 (0.919) → sealed test 0.889; CV-best `ccp_alpha` ≈ 0.0087 → 8 leaves / test 0.900 > unpruned 0.878. Build via `uv run python - < <scratchpad>/build_ch04_nb3.py`; execute to scratchpad (output-free); guards (banned JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 03 …` → merge to chapter. |
 
 ## Notes / blockers
 
