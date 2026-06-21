@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | **02_growing_and_reading** (NB 2 of 5) — *growing a tree, and reading it*. |
-| Phase | `notebook-plan-approved` (NB-2 plan validated by Rémy; ready to build) |
-| Active branch | `notebook/04_DecisionTree__02_growing_and_reading` (off `chapter/04_DecisionTree` @ `3ba6499`) |
-| Active plan | `docs/plans/04_DecisionTree__02_growing_and_reading.md` (**APPROVED**, ~20 cells / 2 figures) |
-| Next concrete action | **Build NB 2** — create `notebooks/04_DecisionTree/02_growing_and_reading.ipynb` per the approved plan (~20 cells, 2 figs: a custom charter flowchart of the depth-2 tree; decision regions depth-1 vs depth-2). By hand (recurse NB 1's split → 4 leaves), parity vs `DecisionTreeClassifier(max_depth=2)` (identical, train 0.9964), CV 0.9855 > full 0.9818, the one error = row 128, greedy ≠ optimal, depth-3 adds a leaf but no accuracy. Build via `uv run python - < <scratchpad>/build_ch04_nb2.py`; execute to scratchpad (output-free); guards (banned-word JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 02 …` → merge to chapter. |
+| Current notebook | — (NB 2 shipped & merged to `chapter/04_DecisionTree`; NB 3 not started). |
+| Phase | `notebook-commit` (NB 2 committed & merged; ready to open NB 3) |
+| Active branch | `chapter/04_DecisionTree` (NB 2 merged in; NB 3 branches off here) |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED — **NB 1–2/5 done**) |
+| Next concrete action | **Open NB 3 — overfitting & pruning: depth is the complexity dial.** `git switch -c notebook/04_DecisionTree__03_overfitting_and_pruning` off `chapter/04_DecisionTree`; set STATE notebook = 03, phase `notebook-plan`; in plan mode draft the cell-by-cell plan **on `make_moons(300, 0.30, 0)`** (depth-sweep boundaries 1 / 6 / unlimited; the train/test **U-curve** vs depth; cost-complexity **pruning** path; choose depth & `ccp_alpha` by CV). Anchors (sklearn 1.9): depth 1 test 0.744 → depth 6 0.889 (**CV-best**; test peak depth 7 = 0.900) → unlimited train 1.000 / test 0.878; ccp_alpha 0.01 → 8 leaves / test 0.900; min_samples_leaf is NB 4. Rémy validates the NB-3 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (growing a tree, and reading it) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy
+  validated visually.** 20 cells, 2
+  figures (a **custom charter-coloured flowchart** of the depth-2 tree — drawn by hand so Adélie/Gentoo
+  colours stay consistent, not sklearn's clashing blue/orange; decision regions depth-1 (2 boxes) vs
+  depth-2 (4 boxes)). By hand: recurse NB 1's `flipper ≤ 206` → left `bill ≤ 47.20`, right `bill ≤
+  40.85` → 4 leaves (149/0, 0/1, 1/0, 1/122); **by-hand == `DecisionTreeClassifier(max_depth=2)`**
+  (train 0.9964); CV depth-2 0.9855 > full 0.9818 (overfitting hook → NB 3); the one error = row 128 (a
+  long-flippered Adélie in the Gentoo box); greedy ≠ optimal (NP-hard); depth-3 adds a leaf but no
+  accuracy. **Both reviewers PASS (no BLOCK).** ml-expert verified parity, the depth-3 reason, the CV
+  reproduction, all DOIs; pedagogy verified one-concept + charter + figure-read accuracy. MINORs folded
+  (both flagged the "box-counting in NB 1" back-ref → reworded self-contained; CV got a "here"
+  single-seed qualifier + a one-line gloss + added to header prereqs; flowchart 47.2→47.20 for
+  symmetry). Guards: 0 banned (JSON scan), ruff clean, hex clean, pytest 17, output-free, `llms.txt` 40.
+  Next: Rémy visual → commit + merge.
 - **NB 2 (growing a tree, and reading it) OPENED.** Branch
   `notebook/04_DecisionTree__02_growing_and_reading` off `chapter/04_DecisionTree` (@ `3ba6499`).
   Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **recursive greedy
