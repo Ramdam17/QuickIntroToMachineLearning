@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **04_DecisionTree** (opening). Chapter 03 (Logistic Regression, 6 NBs) complete — merged to `main` via PR #3 (merge `8cdcc73`). |
-| Current notebook | — (planning the chapter; NB 1–5 not yet built). |
-| Phase | `chapter-plan` (drafting the chapter plan in plan mode) |
+| Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
+| Current notebook | — (chapter plan approved; opening NB 1). |
+| Phase | `chapter-plan-approved` (ready to open NB 1) |
 | Active branch | `chapter/04_DecisionTree` (off `main` @ `8cdcc73`) |
-| Active plan | drafting `docs/plans/chapter_04_DecisionTree.md` (in plan mode; not yet approved) |
-| Next concrete action | **Draft the chapter 04 plan in plan mode** per `course_map.md` §04 and the per-method arc: primordial concepts → **NB 1–3** (one per notebook, by hand before any library — NB 1 a split & impurity (Gini/entropy) by hand; NB 2 grow a tree greedily & read it; NB 3 overfitting/pruning, depth as the complexity dial), **NB 4** the estimator `DecisionTreeClassifier` & its parameters (`max_depth`, `min_samples_*`, `criterion`; instability/variance), **NB 5** a demanding case (interpretability vs accuracy; where a single tree fails). Then dispatch BOTH reviewers on the plan (no BLOCK); Rémy validates via ExitPlanMode; on approval write + commit `docs/plans/chapter_04_DecisionTree.md` and set phase `chapter-plan-approved`. |
+| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**APPROVED** — 5 notebooks) |
+| Next concrete action | **Open NB 1 — a question that splits the data: impurity.** `git switch -c notebook/04_DecisionTree__01_impurity_and_splits` off `chapter/04_DecisionTree`; set STATE notebook = 01, phase `notebook-plan`; in plan mode draft the NB-1 cell-by-cell plan (Gini/entropy by hand on penguins root: 0.4948 / 0.9925; the best split = max impurity decrease — `flipper ≤ 206` dec 0.4732 beats `bill ≤ 43.25` dec 0.4044; stump 0.9891; the split is a threshold ⇒ **scale-invariant**; figures: impurity-decrease-vs-threshold curve + the chosen split with child class-mix bars). Rémy validates the NB-1 plan via ExitPlanMode → build → both reviewers → visual check → commit → merge to chapter. |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 04 (Decision Trees) plan APPROVED & persisted** (`docs/plans/chapter_04_DecisionTree.md`,
+  commit `b2c9308`). **FIVE notebooks** (standard arc): NB 1 impurity & the best split (Gini/entropy,
+  by hand on penguins) → NB 2 greedy growth + reading the tree → NB 3 overfitting & pruning (the depth
+  dial, on `make_moons`) → NB 4 the estimator `DecisionTreeClassifier` & its parameters
+  (**variance/instability the headline**) → NB 5 demanding case **breast_cancer** (interpretability vs
+  accuracy; where a single tree fails → the bridge to ensembles). First **non-linear** method; the
+  **base learner** of ch 06–10. Reviewer-gated, both **REVISE → all folded** (every number re-measured
+  by Claude on sklearn 1.9.0): **ml-expert** (MAJOR — NB 5 CV → **CV-on-train** tree 0.940 / LogReg
+  0.985 matching shipped ch 03 NB 6; MAJOR — `criterion` re-measured at **default depth** 0.910 / 0.914
+  + the no-logarithm-cost argument; MINORs — depth 6 = CV-best not test-peak (peak is depth 7 / 0.900),
+  NaN = 2 numeric rows, variance recipe **pinned** `default_rng(0)`/20/`rs=0`/150² grid). **pedagogy**
+  (MAJOR — banned words cleaned; MAJOR — **NB 4 de-overloaded** to 4 shown knobs + 2 named, ~24-cell
+  ceiling; MINORs — box-count beat in NB 2, KNN spine re-measured 0.942 on the pinned split, charter
+  close named). Rémy chose **breast_cancer** for NB 5 (over `penguins_full` / a Titanic loader).
+  `course_map.md` §04 already aligned. Next: open NB 1.
 - **Chapter 04 (Decision Trees) opened.** Branch `chapter/04_DecisionTree` created off `main` (synced
   @ `8cdcc73` after PR #3). Phase `chapter-plan`: drafting the chapter plan in plan mode per
   `course_map.md` §04 and the per-method arc (a split & impurity by hand → grow & read a tree →
