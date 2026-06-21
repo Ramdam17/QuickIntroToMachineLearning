@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **04_DecisionTree** (5 NBs). Chapter plan **APPROVED** (`docs/plans/chapter_04_DecisionTree.md`, commit `b2c9308`); chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
 | Current notebook | **02_growing_and_reading** (NB 2 of 5) — *growing a tree, and reading it*. |
-| Phase | `notebook-plan` (drafting the NB-2 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-2 plan validated by Rémy; ready to build) |
 | Active branch | `notebook/04_DecisionTree__02_growing_and_reading` (off `chapter/04_DecisionTree` @ `3ba6499`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (chapter, APPROVED); NB-2 plan drafting in plan mode → `docs/plans/04_DecisionTree__02_growing_and_reading.md` on approval |
-| Next concrete action | **Draft the NB-2 cell-by-cell plan in plan mode** (one concept = recursive greedy growth + reading a tree, by hand on penguins): recurse NB 1's `flipper ≤ 206` split to depth 2 → 4 leaves; read the tree as a flowchart; trace a penguin to its leaf; parity vs `DecisionTreeClassifier(max_depth=2)`; the **4-box** axis-aligned decision region; greedy ≠ globally optimal (NP-hard). Anchors (sklearn 1.9): depth-2 train **0.9964** / 4 leaves / CV **0.9855** (> full 0.9818); rules root `flipper ≤ 206`, then `bill ≤ 47.20` (left) / `bill ≤ 40.85` (right). Rémy validates the NB-2 plan via ExitPlanMode → build → both reviewers → visual → commit → merge. |
+| Active plan | `docs/plans/04_DecisionTree__02_growing_and_reading.md` (**APPROVED**, ~20 cells / 2 figures) |
+| Next concrete action | **Build NB 2** — create `notebooks/04_DecisionTree/02_growing_and_reading.ipynb` per the approved plan (~20 cells, 2 figs: a custom charter flowchart of the depth-2 tree; decision regions depth-1 vs depth-2). By hand (recurse NB 1's split → 4 leaves), parity vs `DecisionTreeClassifier(max_depth=2)` (identical, train 0.9964), CV 0.9855 > full 0.9818, the one error = row 128, greedy ≠ optimal, depth-3 adds a leaf but no accuracy. Build via `uv run python - < <scratchpad>/build_ch04_nb2.py`; execute to scratchpad (output-free); guards (banned-word JSON scan, hex, ruff, pytest 17, gen_llms_txt). Then BOTH reviewers (no BLOCK) → Rémy visual → commit `feat(04_decision_tree): notebook 02 …` → merge to chapter. |
 
 ## Notes / blockers
 
