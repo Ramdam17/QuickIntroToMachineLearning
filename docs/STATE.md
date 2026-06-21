@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | `03_LogisticRegression` — plan **APPROVED** (reviewer-gated; **6 notebooks**). Off `main` (`726d13e`); chapter 02 complete (PR #2). |
-| Current notebook | **CHAPTER COMPLETE (6/6).** NB 6 `06_breast_cancer_calibration_threshold` **DONE** (both reviewers folded, Rémy validated). |
-| Phase | `chapter-merge` (NB 6 merged → chapter; **chapter 03 complete**; ready to PR `chapter/03 → main`) |
-| Active branch | `chapter/03_LogisticRegression` (all 6 notebooks merged; PR into `main` next) |
-| Active plan | `docs/plans/chapter_03_LogisticRegression.md` (all 6 NBs done) |
-| Next concrete action | **Close CHAPTER 03 via a PR into `main`.** All 6 notebooks are merged onto `chapter/03_LogisticRegression`. Push the chapter branch and open a PR `chapter/03_LogisticRegression → main` (`main` is protected by the global pre-push hook; use a `--no-ff` merge to preserve per-notebook history), per `docs/WORKFLOW.md`. On Rémy's go: `gh pr create` (body ends with the 🤖 Generated-with line), then `gh pr merge --merge`. Then sync `main`, set STATE `idle`; the next chapter is **04_DecisionTree**. **6-notebook arc:** NB1 ✓ · NB2 ✓ · NB3 ✓ · NB4 ✓ · NB5 ✓ · NB6 ✓. |
+| Current chapter | **04_DecisionTree** (opening). Chapter 03 (Logistic Regression, 6 NBs) complete — merged to `main` via PR #3 (merge `8cdcc73`). |
+| Current notebook | — (planning the chapter; NB 1–5 not yet built). |
+| Phase | `chapter-plan` (drafting the chapter plan in plan mode) |
+| Active branch | `chapter/04_DecisionTree` (off `main` @ `8cdcc73`) |
+| Active plan | drafting `docs/plans/chapter_04_DecisionTree.md` (in plan mode; not yet approved) |
+| Next concrete action | **Draft the chapter 04 plan in plan mode** per `course_map.md` §04 and the per-method arc: primordial concepts → **NB 1–3** (one per notebook, by hand before any library — NB 1 a split & impurity (Gini/entropy) by hand; NB 2 grow a tree greedily & read it; NB 3 overfitting/pruning, depth as the complexity dial), **NB 4** the estimator `DecisionTreeClassifier` & its parameters (`max_depth`, `min_samples_*`, `criterion`; instability/variance), **NB 5** a demanding case (interpretability vs accuracy; where a single tree fails). Then dispatch BOTH reviewers on the plan (no BLOCK); Rémy validates via ExitPlanMode; on approval write + commit `docs/plans/chapter_04_DecisionTree.md` and set phase `chapter-plan-approved`. |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 04 (Decision Trees) opened.** Branch `chapter/04_DecisionTree` created off `main` (synced
+  @ `8cdcc73` after PR #3). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §04 and the per-method arc (a split & impurity by hand → grow & read a tree →
+  overfitting/pruning & the depth dial; NB 4 `DecisionTreeClassifier` & its parameters; NB 5 a
+  demanding case — interpretability vs accuracy, where a single tree fails). The first **non-linear,
+  axis-aligned partition** method, and the **base learner** the ensemble half of the course
+  (06 Random Forest → the boosting family) is built on. The pending `idle` STATE edit was folded
+  into this transition (committed on the chapter branch, not on protected `main`).
+- **CHAPTER 03 (Logistic Regression) COMPLETE — merged to `main` via PR #3** (merge commit `8cdcc73`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Six notebooks: score→probability · boundary & weights · log-loss · gradient descent · estimator &
+  parameters · breast_cancer (calibration/threshold). Added `datasets.load_breast_cancer()` + schema test
+  (`pytest` 17). The two-reviewer gate + Rémy's visual validation held on every notebook; the sklearn-1.9
+  API was pinned throughout; every number re-measured. `main` synced locally to `8cdcc73`, green. STATE
+  set to `idle` (pending edit, folds into the chapter-04 opening). Next: chapter `04_DecisionTree`.
 - **NB 6 (demanding case: breast cancer) built & merged — CHAPTER 03 COMPLETE (6/6).** The capstone,
   visualization-first (5 figures), on breast_cancer (569×30, malignant = positive). Honest workflow, no
   leakage: split → CV **on train** (LogReg **0.985** > GaussianNB **0.932**) → one sealed test (acc 0.953).
