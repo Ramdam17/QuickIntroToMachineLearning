@@ -8,7 +8,9 @@ matplotlib.use("Agg")  # headless backend for CI / tests
 
 import numpy as np
 import pandas as pd
+import pytest
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 
 from ml_course import colors, viz
 
@@ -98,3 +100,24 @@ def test_plot_calibration_curve_returns_figure() -> None:
     p = np.array([0.1, 0.4, 0.35, 0.8, 0.9, 0.2, 0.7, 0.3])
     fig = viz.plot_calibration_curve(y, p, n_bins=3)
     assert fig is not None
+
+
+def test_plot_svm_decision_returns_figure_and_rings_support_vectors() -> None:
+    X = np.array([[-2.0, -2.0], [-1.8, -2.1], [-2.1, -1.7], [2.0, 2.0], [1.9, 1.7], [2.1, 2.2]])
+    y = np.array([0, 0, 0, 1, 1, 1])
+    clf = SVC(kernel="linear", C=1e6).fit(X, y)
+    fig = viz.plot_svm_decision(clf, X, y, resolution=40)
+    assert fig is not None
+    # The street's support vectors are ringed: a legend entry "support vectors" is drawn.
+    legends = [ax.get_legend() for ax in fig.axes]
+    labels = [t.get_text() for lg in legends if lg is not None for t in lg.get_texts()]
+    assert "support vectors" in labels
+
+
+def test_plot_svm_decision_rejects_multiclass() -> None:
+    rng = np.random.default_rng(0)
+    X = np.vstack([rng.normal(center, 0.3, size=(6, 2)) for center in (-3.0, 0.0, 3.0)])
+    y = np.array([0] * 6 + [1] * 6 + [2] * 6)
+    clf = SVC(kernel="linear").fit(X, y)  # 3 classes -> 2-D decision_function, no single street
+    with pytest.raises(ValueError):
+        viz.plot_svm_decision(clf, X, y, resolution=30)

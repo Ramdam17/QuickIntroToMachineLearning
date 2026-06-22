@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (NB 1 of 5, planning). Arc per `course_map.md` §05. |
-| Current notebook | **01_maximum_margin** — the widest margin & support vectors (NB 1 of 5). |
-| Phase | `notebook-plan-approved` (NB-1 plan validated by Rémy; building) |
-| Active branch | `notebook/05_SVM__01_maximum_margin` (off `chapter/05_SVM` @ `8f1f982`) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-1 `docs/plans/05_SVM__01_maximum_margin.md` to be written on Rémy's approval |
-| Next concrete action | **Build NB 1** (`notebooks/05_SVM/01_maximum_margin.ipynb`, ~22 cells, 3 figures) per `docs/plans/05_SVM__01_maximum_margin.md` (APPROVED): one concept (the widest margin & support vectors, by hand on separable blobs → `SVC(linear)` parity); add **`viz.plot_svm_decision`** + a smoke test (pytest 17→18). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 01 — the maximum margin` → merge notebook→chapter. |
+| Current chapter | **05_SVM — Support Vector Machines** (1 of 5 notebooks done; NB 2 next). Arc per `course_map.md` §05. |
+| Current notebook | — (NB 1 done & merged to `chapter/05_SVM`; NB 2 next). |
+| Phase | `notebook-commit` → NB 1 merged; ready to open NB 2 |
+| Active branch | `chapter/05_SVM` (NB 1 merged in; NB 2 branches off here) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-1 `docs/plans/05_SVM__01_maximum_margin.md` (done) |
+| Next concrete action | **Open notebook 2 — the soft margin & the cost `C`.** `git switch -c notebook/05_SVM__02_soft_margin_C` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-2 plan per `docs/plans/chapter_05_SVM.md` §NB 2 (penguins, real & near-separable: hard margin infeasible → slack; sweep `C` — margin 2.28→0.35, SVs 124→6; the hinge loss `max(0,1−y·f(x))` with `y∈{−1,+1}`, tied to ch-03 log-loss; figures: hinge-vs-log-loss, small/large-C street, margin/SVs-vs-C). Rémy validates the NB-2 plan before build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the maximum margin) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 22 cells,
+  4 figures (candidate lines + margins; the max-margin street via the new
+  `viz.plot_svm_decision`; support-vector invariance delete/move; LogReg contrast). By-hand → `SVC(linear,
+  C=1e6)` parity **exact**: street 1.7224 = 2/‖w‖, ‖w‖ 1.1612, SVs [23,26], cos 1.0, functional margins
+  ±1; LogReg nearest-point 0.774 < SVM 0.861. **`src/` add:** `viz.plot_svm_decision` (street ±1 contours
+  + ringed SVs) + 2 tests → **pytest 19**. Reviewers: **pedagogy PASS** (3 MINOR folded — ±1-scaling
+  sentence, exercise-3 panel ref, exercise-1 figure anchor); **ml-expert REVISE → folded** (MAJOR — the
+  closest-pair/perpendicular-bisector recipe is a *special case* → added the **convex-hull scope caveat**
+  in cells 7/9/20/21; MINORs — Figure-A tilted-band note, `C=1e6 ≈ hard margin` flagged in prose).
+  Guards: 0 banned, ruff clean, hex clean, output-free, `llms.txt` 45. Next: Rémy visual → commit + merge.
 - **NB 1 (the maximum margin) OPENED.** Branch `notebook/05_SVM__01_maximum_margin` off
   `chapter/05_SVM` (@ `8f1f982`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode —
   one concept, **the widest margin & support vectors**, by hand on a separable blob set (measure
