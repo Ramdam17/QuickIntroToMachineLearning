@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **05_SVM — Support Vector Machines** (NB 1 of 5, planning). Arc per `course_map.md` §05. |
 | Current notebook | **01_maximum_margin** — the widest margin & support vectors (NB 1 of 5). |
-| Phase | `notebook-plan` (drafting the NB-1 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-1 plan validated by Rémy; building) |
 | Active branch | `notebook/05_SVM__01_maximum_margin` (off `chapter/05_SVM` @ `8f1f982`) |
 | Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-1 `docs/plans/05_SVM__01_maximum_margin.md` to be written on Rémy's approval |
-| Next concrete action | **Draft the NB-1 plan in plan mode**, then present for Rémy's validation (NB plans are validated by Rémy alone — no reviewer gate at this stage). One concept: **the widest margin & support vectors**, by hand on a separable blob set (measure several lines' margins → the widest; the 2 support vectors; `margin = 2/‖w‖`) → `SVC(kernel="linear", C=1e6)` parity (‖w‖≈1.16 / margin≈1.72 / 2 SVs). Introduce **`viz.plot_svm_decision`** (the street ±1 contours + ringed SVs) with a smoke test (pytest 17→18). On approval: write the NB-1 plan, phase `notebook-plan-approved`, build. |
+| Next concrete action | **Build NB 1** (`notebooks/05_SVM/01_maximum_margin.ipynb`, ~22 cells, 3 figures) per `docs/plans/05_SVM__01_maximum_margin.md` (APPROVED): one concept (the widest margin & support vectors, by hand on separable blobs → `SVC(linear)` parity); add **`viz.plot_svm_decision`** + a smoke test (pytest 17→18). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 01 — the maximum margin` → merge notebook→chapter. |
 
 ## Notes / blockers
 
