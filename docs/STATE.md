@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **05_SVM — Support Vector Machines** (NB 2 of 5, planning; 1 done). Arc per `course_map.md` §05. |
 | Current notebook | **02_soft_margin_C** — the soft margin & the cost `C` (NB 2 of 5). |
-| Phase | `notebook-plan` (drafting the NB-2 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-2 plan validated by Rémy; building) |
 | Active branch | `notebook/05_SVM__02_soft_margin_C` (off `chapter/05_SVM` @ `0383cd3`) |
 | Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-2 `docs/plans/05_SVM__02_soft_margin_C.md` to be written on Rémy's approval |
-| Next concrete action | **Draft the NB-2 plan in plan mode**, then present for Rémy's validation. One concept: **the soft margin (slack) & the cost `C`**, by hand on penguins (real, near-separable — a hard margin is infeasible → slack); sweep `C` (margin 2.28→0.35, support vectors 124→6, accuracy ~flat = `C` sets the geometry); the **hinge loss** `max(0,1−y·f(x))` in the `y∈{−1,+1}` convention, tied to ch-03 log-loss. Figures: hinge-vs-log-loss; small-`C` vs large-`C` street; margin width & #SVs vs `C`. On approval: write the NB-2 plan, phase `notebook-plan-approved`, build. |
+| Next concrete action | **Build NB 2** (`notebooks/05_SVM/02_soft_margin_C.ipynb`, ~22 cells, 3 figures) per `docs/plans/05_SVM__02_soft_margin_C.md` (APPROVED): one concept (slack & the cost `C`, by hand on penguins — hard margin infeasible → hinge; `C`-sweep margin 2.28→0.35, SVs 124→6). Reuse `viz.plot_svm_decision`; no `src/` change (pytest stays 19). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 02 — the soft margin and the cost C` → merge notebook→chapter. |
 
 ## Notes / blockers
 
