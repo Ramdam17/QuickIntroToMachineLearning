@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **04_DecisionTree** — all **5 notebooks built & merged to `chapter/04_DecisionTree`**; closing via PR into `main`. Chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 1–5 all shipped; chapter 04 complete on the chapter branch). |
-| Phase | `chapter-merge` (all 5 NBs merged; opening the chapter-04 → `main` PR) |
-| Active branch | `chapter/04_DecisionTree` (NB 1–5 merged; PR base = `main` @ `8cdcc73`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**all 5 NBs done**) |
-| Next concrete action | **Close CHAPTER 04 via PR into `main`** (remote `main` is PR-only). `git push -u origin chapter/04_DecisionTree`; `gh pr create --base main --head chapter/04_DecisionTree` (title `feat(04_decision_tree): complete chapter — decision trees`); merge the PR `--merge` (merge commit, per-notebook history preserved); `git switch main && git pull` to sync; verify `pytest` green on `main`. Then set STATE phase `idle`, next action = open chapter **05_SVM** (the pending `idle` edit folds into the chapter-05 opening, `main` being PR-only). |
+| Current chapter | **05_SVM — Support Vector Machines** (planning). Fifth method; arc per `course_map.md` §05. |
+| Current notebook | — (chapter just opened; planning the chapter, no notebook yet). |
+| Phase | `chapter-plan` (drafting the chapter plan in plan mode) |
+| Active branch | `chapter/05_SVM` (off `main` @ `5f61e56` after PR #4) |
+| Active plan | none yet — `docs/plans/chapter_05_SVM.md` to be written on approval |
+| Next concrete action | **Draft the chapter 05 plan in plan mode.** Run the concept tour over SVM scope, then distribute: **NB 1–3** one concept each (the widest-margin idea by hand on separable 2-D → soft margin / cost `C` → the kernel trick), **NB 4** = the estimator `SVC` & its parameters (`C`, `kernel`, `gamma`; the bias/variance picture they control), **NB 5** = demanding case (scaling matters; CV model selection; honest limits on large data — kernel `SVC` is ~O(n²–n³)). Cross-check `course_map.md` §05. Both reviewers gate the plan (no BLOCK); Rémy validates before any notebook is built. |
 
 ## Notes / blockers
 
@@ -27,8 +27,26 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 05 (Support Vector Machines) opened.** Branch `chapter/05_SVM` created off `main` (synced
+  @ `5f61e56` after PR #4). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §05 and the per-method arc (the widest-margin idea by hand on separable 2-D → soft
+  margin / cost `C` → the kernel trick → parameters `C`/`kernel`/`gamma` and the bias/variance picture
+  they control → demanding case: scaling matters, CV model selection, honest limits on large data). The
+  fifth method — the first built on the **maximum-margin** principle, the bridge from linear boundaries
+  (ch 03) to kernels. The pending `idle` STATE edit was folded into this transition (committed on the
+  chapter branch, not on protected `main`).
+- **CHAPTER 04 (Decision Trees) COMPLETE — merged to `main` via PR #4** (merge commit `5f61e56`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Five notebooks: impurity & the best split · growing & reading a tree · overfitting & pruning · the
+  estimator & its parameters · breast_cancer (interpretability vs accuracy). The first **non-linear**,
+  rule-based method and the **base learner** for the ensemble half of the course. **No `src/` change**
+  (pytest stays 17; `load_breast_cancer` reused from ch 03). The two-reviewer gate + Rémy's visual
+  validation held on every notebook; sklearn-1.9 anchors re-measured throughout; Rémy's spot-checks
+  caught real issues that were fixed (NB 3 thin-band rendering → verified real tree regions; NB 4
+  leaf-count read; NB 5 threshold conflation). `main` synced locally to `5f61e56`, green (pytest 17).
+  STATE set to `idle` (pending edit, folds into the chapter-05 opening). Next: chapter `05_SVM`.
 - **NB 5 (demanding case: breast cancer) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
-  visually. CHAPTER 04 COMPLETE (5/5), closing via PR into `main`.** The chapter
+  visually. CHAPTER 04 COMPLETE (5/5).** The chapter
   **capstone**, visualization-first: 26 cells, 6 figures (class balance; depth-3 tree rules via
   `plot_tree`; cross-method accuracy bar KNN 0.942 / LogReg 0.953 / single tree 0.906 / bagged-25
   0.930; root-feature flips; Gini-vs-permutation importance; confusion matrix). Full honest workflow on
