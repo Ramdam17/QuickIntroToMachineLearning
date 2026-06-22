@@ -64,7 +64,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. Parameters (max_depth, min_samples, criterion); instability and variance.
 5. Demanding case: interpretability vs accuracy; where a single tree fails.
 
-## 05_SVM
+## 05_SVM  *(plan approved — five notebooks, reviewer-gated)*
 1. The widest-margin idea, by hand on separable 2D data.
 2. Soft margin: the cost of mistakes (C).
 3. The kernel trick: non-linear boundaries without leaving the notebook's intuition.

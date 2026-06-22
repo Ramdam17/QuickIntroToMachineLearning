@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (planning). Fifth method; arc per `course_map.md` §05. |
-| Current notebook | — (chapter just opened; planning the chapter, no notebook yet). |
-| Phase | `chapter-plan` (drafting the chapter plan in plan mode) |
+| Current chapter | **05_SVM — Support Vector Machines** (plan APPROVED). Fifth method; arc per `course_map.md` §05. |
+| Current notebook | — (chapter plan approved; about to open & plan NB 1). |
+| Phase | `chapter-plan-approved` (plan validated by Rémy + reviewer-gated; ready to plan notebook 1) |
 | Active branch | `chapter/05_SVM` (off `main` @ `5f61e56` after PR #4) |
-| Active plan | none yet — `docs/plans/chapter_05_SVM.md` to be written on approval |
-| Next concrete action | **Draft the chapter 05 plan in plan mode.** Run the concept tour over SVM scope, then distribute: **NB 1–3** one concept each (the widest-margin idea by hand on separable 2-D → soft margin / cost `C` → the kernel trick), **NB 4** = the estimator `SVC` & its parameters (`C`, `kernel`, `gamma`; the bias/variance picture they control), **NB 5** = demanding case (scaling matters; CV model selection; honest limits on large data — kernel `SVC` is ~O(n²–n³)). Cross-check `course_map.md` §05. Both reviewers gate the plan (no BLOCK); Rémy validates before any notebook is built. |
+| Active plan | **`docs/plans/chapter_05_SVM.md` (APPROVED)** |
+| Next concrete action | **Open notebook 1 — the maximum margin.** `git switch -c notebook/05_SVM__01_maximum_margin` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-1 cell-by-cell plan (one concept: **the widest margin & support vectors**, by hand on a separable blob set — measure margins → `SVC(linear, C=1e6)` parity, ‖w‖≈1.16 / margin≈1.72 / 2 SVs; the proposed **`viz.plot_svm_decision`** helper lands here with a test, pytest 17→18). Rémy validates the NB-1 plan before build. (Anchors in the chapter plan; re-measured at build.) |
 
 ## Notes / blockers
 
@@ -27,6 +27,22 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 05 (Support Vector Machines) plan APPROVED & persisted** (`docs/plans/chapter_05_SVM.md`,
+  this commit). **FIVE notebooks** (standard arc): NB 1 the maximum margin & support vectors (by hand
+  on separable blobs → `SVC(linear)` parity, ‖w‖≈1.16 / margin≈1.72 / 2 SVs) → NB 2 the soft margin &
+  cost `C` (penguins; margin 2.28→0.35, SVs 124→6; hinge loss tied to ch-03 log-loss) → NB 3 the kernel
+  trick (`make_circles`: linear CV 0.557 → `r²` lift → RBF 0.997; poly degree must match the geometry —
+  deg-2 1.000 / deg-3 0.613) → NB 4 the estimator `SVC` & its parameters (the `C×gamma` bias-variance
+  map; `kernel`; OvO; `decision_function`→calibration, `probability=True` deprecation pinned) → NB 5
+  demanding case **breast_cancer** (scaling headline raw 0.910→std 0.965; GridSearch test 0.965; spine
+  KNN 0.942 / tree 0.906 / LogReg 0.953 / **SVM 0.965**; measured fit-time ~n^1.6 = the large-data
+  limit). First **margin-based** method; the **kernel trick**. Reviewer-gated: **pedagogy PASS** (3
+  build-MINORs folded); **ml-expert REVISE → all folded** (MAJOR: default poly degree-3 fails on circles
+  CV 0.613 → pin degree-2 + the *degree-must-match-geometry* beat; MINORs: calibration provenance, hinge
+  `{−1,+1}`, n^1.6 framing). **21/22 anchors reproduced** on sklearn 1.9.0; API facts (`probability=True`
+  deprecation, `gamma='scale'`, OvO) **verified on the live install**. **`src/` addition planned:**
+  `viz.plot_svm_decision` (NB 1, reused NB 1–4) + test → pytest 17→18. `course_map.md` §05 annotated.
+  Next: open NB 1.
 - **Chapter 05 (Support Vector Machines) opened.** Branch `chapter/05_SVM` created off `main` (synced
   @ `5f61e56` after PR #4). Phase `chapter-plan`: drafting the chapter plan in plan mode per
   `course_map.md` §05 and the per-method arc (the widest-margin idea by hand on separable 2-D → soft
