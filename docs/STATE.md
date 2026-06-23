@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | **NB 1 — `01_averaging_cuts_variance`** (the wisdom of trees: averaging cuts variance / bagging). |
-| Phase | `notebook-build` (NB-1 plan APPROVED by Rémy & persisted; building the notebook) |
-| Active branch | `notebook/06_RandomForest__01_averaging_cuts_variance` (off `chapter/06_RandomForest` @ `413cc4a`) |
-| Active plan | **`docs/plans/06_RandomForest__01_averaging_cuts_variance.md`** (APPROVED — ~22 cells) |
-| Next concrete action | **Build NB 1, then gate it.** Build the notebook from the approved plan (bagging by hand on `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; parity hand-bag == `RF(max_features=None)`); execute end-to-end to scratchpad; rebuild the tracked file **output-free**; run guards (banned-word JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); fold; present for **Rémy's visual validation** → commit `feat(06_random_forest): notebook 01 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
+| Current notebook | — (NB 1 `01_averaging_cuts_variance` **built, reviewed, Rémy-validated, merged** to `chapter/06_RandomForest`; NB 2 next). |
+| Phase | `notebook-commit` done for NB 1 → between notebooks; ready to open NB 2 |
+| Active branch | `chapter/06_RandomForest` (NB 1 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; NB 1 done, NB 2 next) |
+| Next concrete action | **Open NB 2 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__02_decorrelating_trees` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the cell-by-cell plan — one concept, **decorrelating the trees** (the "random" in random forest): on breast_cancer, feature subsampling lowers pairwise tree correlation (ρ 0.82→0.80) and lifts the ensemble (0.924→0.95) while individual trees stay equal (the gain is decorrelation); **derive Var = ρσ² + (1−ρ)σ²/B from scratch** (B variance + B(B−1) covariance terms; B→∞ → ρσ² floor); `max_features` as the decorrelation dial (ρ rises monotonically). Anchors in `chapter_06_RandomForest.md` §NB 2; re-measured at build. Rémy validates the NB-2 plan → build. No reviewer gate at the NB-plan stage. |
 
 ## Notes / blockers
 
@@ -27,6 +27,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the wisdom of trees: averaging cuts variance / bagging) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (five
+  jagged single bootstrap-tree boundaries vs the smooth bagged-100 boundary; test-accuracy & run-to-run
+  std vs number of trees). Built entirely by hand: a single deep tree is high-variance (test **0.878**,
+  bootstrap std **0.031**) → bootstrap (the ~37 % left-out fraction, n=10 → 0.349 vs the n→∞ limit
+  1/e ≈ 0.368) → majority vote (`HandBag` estimator) → **0.933**, run-to-run std **0.0465→0.0053
+  (÷8.8)**; honest parity hand-bag(200) == `RandomForestClassifier(max_features=None)` = **0.9333**,
+  `RF(default sqrt)` **0.900** a deliberate hook for NB 2. Reviewers: **pedagogy PASS** ("cleanest
+  concept-boundary I've reviewed in this course"); **ml-expert REVISE → folded** (MAJOR — the honest
+  anchor "averaging cancels variance, not bias" was missing → added cell 16; MINORs — empirical-vs-
+  formula n=10 wording, std-non-monotone clause, even-B tie comment, ch 04 back-refs corrected to
+  NB 4/5). Guards: 0 banned (JSON scan), ruff clean, hex clean, output-free, `pytest` 19 (no `src/`
+  change), `llms.txt` regenerated; `common_errors` gained a "more trees ≠ better / variance-not-bias"
+  row. Canonical nbconvert exec end-to-end (exit 0); both figures eyeballed. Next: open NB 2
+  (decorrelating the trees).
 - **NB 1 (the wisdom of trees: averaging cuts variance / bagging) OPENED.** Branch
   `notebook/06_RandomForest__01_averaging_cuts_variance` off `chapter/06_RandomForest` (@ `413cc4a`).
   Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — one concept, **bagging by hand

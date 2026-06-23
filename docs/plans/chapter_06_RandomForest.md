@@ -339,7 +339,7 @@ validates visually; commit per notebook; chapter close via PR into `main` (prote
 
 | NB | Branch | Status |
 |----|--------|--------|
-| 1 | `notebook/06_RandomForest__01_averaging_cuts_variance` | planned |
+| 1 | `notebook/06_RandomForest__01_averaging_cuts_variance` | **done** — built (22 cells, 2 figures: 5 jagged single-tree boundaries vs the smooth bagged one; test-acc & run-to-run std vs B), both reviewers folded (pedagogy **PASS** — "cleanest concept-boundary"; ml-expert **REVISE** → 1 MAJOR fixed: the "variance, not bias" honest anchor added (cell 16) + MINORs: empirical-vs-formula n=10 wording, std-non-monotone clause, even-B tie comment, ch 04 back-refs corrected). Anchors: single tree 0.878, bag 0.933, run-to-run std ÷8.8, parity hand-bag == `RF(max_features=None)` 0.9333, `RF(sqrt)` 0.900. No `src/` change (pytest 19). Rémy validated visually, merged to `chapter/06_RandomForest` |
 | 2 | `notebook/06_RandomForest__02_decorrelating_trees` | planned |
 | 3 | `notebook/06_RandomForest__03_out_of_bag` | planned |
 | 4 | `notebook/06_RandomForest__04_estimator_and_parameters` | planned |
