@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | **NB 2 — `02_decorrelating_trees`** (the "random" in the forest: decorrelating the trees). |
-| Phase | `notebook-build` (NB-2 plan APPROVED by Rémy & persisted; building the notebook) |
-| Active branch | `notebook/06_RandomForest__02_decorrelating_trees` (off `chapter/06_RandomForest` @ `065c84f`) |
-| Active plan | **`docs/plans/06_RandomForest__02_decorrelating_trees.md`** (APPROVED — ~22 cells) |
-| Next concrete action | **Build NB 2, then gate it.** Build from the approved plan (decorrelation on breast_cancer: measure ρ for bagging ≈0.82 → RF(sqrt) ≈0.80, CV 0.947→0.957, individual trees equal; derive Var = ρσ² + (1−ρ)σ²/B + Monte-Carlo check; `max_features` sweep ρ 0.70→0.82; resolve the moons puzzle); execute end-to-end (nbconvert **from project cwd**); rebuild tracked file **output-free**; guards (banned JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (no BLOCK); fold; **Rémy visual** → commit `feat(06_random_forest): notebook 02 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
+| Current notebook | — (NB 2 `02_decorrelating_trees` **built, reviewed, Rémy-validated, merged** to `chapter/06_RandomForest`; NB 3 next). |
+| Phase | `notebook-commit` done for NB 2 → between notebooks; ready to open NB 3 |
+| Active branch | `chapter/06_RandomForest` (NB 1 + NB 2 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; NB 1–2 done, NB 3 next) |
+| Next concrete action | **Open NB 3 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__03_out_of_bag` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the cell-by-cell plan — one concept, **out-of-bag estimation**: each bootstrap omits ~1/e ≈ 37 % of points (derive `(1−1/n)^n → 1/e`, measure); the trees that *didn't* see a point form a held-out mini-forest → the forest scores itself for free (OOB ≈ test, here ≈ 0.96 vs ≈ 0.94, mildly optimistic); OOB unreliable with too few trees (sklearn warns); OOB-error vs n_estimators converging to test error. Anchors in `chapter_06_RandomForest.md` §NB 3; re-measure at plan time. Rémy validates the NB-3 plan → build. No reviewer gate at the NB-plan stage. |
 
 ## Notes / blockers
 
@@ -27,6 +27,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (the "random" in the forest: decorrelating the trees) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (ρ vs
+  `max_features` rising→saturating; ensemble-CV vs mean-individual-tree across `max_features`). One
+  concept: feature subsampling decorrelates the trees. On breast_cancer, ρ **0.822 → 0.797** (robust on
+  every seed) at **equal individual-tree accuracy** (0.910 ≈ 0.909); the **Var = ρσ² + (1−ρ)σ²/B** law
+  **derived from scratch** + Monte-Carlo-verified (the ρσ² floor); `max_features` the decorrelation dial
+  (ρ 0.70→0.82, saturating); moons puzzle resolved (RF sqrt 0.900 < bag 0.933 on 2 features). Reviewers:
+  **pedagogy PASS**; **ml-expert REVISE → folded** (MAJOR — the gem's CV gain 0.947→0.957 is seed-fragile
+  (flips on 2/6 seeds) → re-anchored on the robust ρ-drop + individual-tree equality, *by elimination*,
+  CV framed within the ±0.01 seed band; MINORs — ρ "saturates" not "monotone", ρ = proxy for
+  error-correlation, cell-12↔16 fence, moons reframed, exercise-2 enriched). Guards: 0 banned, ruff
+  clean, hex clean, output-free, `pytest` 19 (no `src/` change), `llms.txt` regenerated; `common_errors`
+  gained two rows (the ρσ² floor; subsampling needs many features). Canonical nbconvert exec (exit 0);
+  both figures eyeballed. Next: open NB 3 (out-of-bag estimation).
 - **NB 2 (the "random" in the forest: decorrelating the trees) OPENED.** Branch
   `notebook/06_RandomForest__02_decorrelating_trees` off `chapter/06_RandomForest` (@ `065c84f`).
   Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — one concept, **feature

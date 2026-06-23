@@ -49,3 +49,4 @@
 - [notebooks/05_SVM/05_breast_cancer_scaling_limits.ipynb](notebooks/05_SVM/05_breast_cancer_scaling_limits.ipynb) — 05 — A demanding case: breast cancer — *Notebook 5 of 5 · Support Vector Machines*
 ## 06_RandomForest
 - [notebooks/06_RandomForest/01_averaging_cuts_variance.ipynb](notebooks/06_RandomForest/01_averaging_cuts_variance.ipynb) — 01 — The wisdom of trees: averaging cuts variance — *Chapter 06 — Random Forests · Notebook 1 of 5*
+- [notebooks/06_RandomForest/02_decorrelating_trees.ipynb](notebooks/06_RandomForest/02_decorrelating_trees.ipynb) — 02 — The "random" in the forest: decorrelating the trees — *Chapter 06 — Random Forests · Notebook 2 of 5*
