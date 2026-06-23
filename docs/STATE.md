@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
 | Current notebook | — (chapter-planning; no notebook opened yet). |
-| Phase | `chapter-plan` (drafting the chapter 06 plan in plan mode) |
+| Phase | `chapter-plan-approved` (chapter 06 plan approved by Rémy; NB 5 dataset = covtype) |
 | Active branch | `chapter/06_RandomForest` (off `main` @ `b5c00f7`) |
-| Active plan | none yet — chapter 06 plan being drafted (→ `docs/plans/chapter_06_RandomForest.md` on approval) |
-| Next concrete action | **Draft the chapter 06 plan in plan mode**, per `course_map.md` §06 and the per-method arc: run the concept tour over Random Forests, then distribute the primordial concepts across **NB 1–3** (one concept each — why averaging many trees reduces variance / bagging, by hand → bootstrap samples + feature subsampling that decorrelate the trees → out-of-bag estimation & feature-importance caveats), settle **NB 4** (the estimator `RandomForestClassifier` & its parameters: `n_estimators`/`max_features`/depth, diminishing returns), and choose **NB 5** (the demanding case: a strong tabular baseline, reading importances honestly). Both reviewers gate the plan (no BLOCK); Rémy validates before any notebook is built. The first **ensemble** method — the direct answer to the single tree's variance seen in ch 04 (NB 5's hand-bagged 25-tree bar was a first taste). |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (APPROVED — five notebooks) |
+| Next concrete action | **Open NB 1 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__01_averaging_cuts_variance` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the NB-1 cell-by-cell plan — one concept, **averaging cuts variance (bagging), by hand on `make_moons`**: resume ch 04's wobbly moons tree (test 0.878), draw bootstrap samples, majority-vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); honest parity hand-bag == `RF(max_features=None)`; figures (12 single-tree boundaries vs the smooth averaged one; test-acc & std vs B). Anchors in `chapter_06_RandomForest.md` §NB 1; re-measured at build. Rémy validates the NB-1 plan → build (no reviewer gate at the NB-plan stage; reviewers return on the built notebook). |
 
 ## Notes / blockers
 
@@ -27,6 +27,30 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 06 (Random Forests) plan APPROVED & persisted** (`docs/plans/chapter_06_RandomForest.md`,
+  this commit). **FIVE notebooks** (standard arc): NB 1 averaging cuts variance / bagging (by hand on
+  `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; hand-bag == `RF(max_features=None)`)
+  → NB 2 decorrelating the trees (feature subsampling on breast_cancer: ρ 0.82→0.80, ensemble
+  0.924→0.95 while individual trees stay equal; the **Var = ρσ² + (1−ρ)σ²/B** law derived from scratch)
+  → NB 3 out-of-bag estimation (the ~1/e left out per tree = free validation; OOB ≈ test) → NB 4 the
+  estimator `RandomForestClassifier` & its parameters (`n_estimators` diminishing returns, `max_features`
+  the decorrelation dial, depth; feature importance introduced) → NB 5 demanding case **covtype** (forest
+  cover type — the forest **wins** on non-linear: RF 0.846 ≫ LogReg 0.728; honest eval under imbalance
+  macro-F1 0.733; reading importances honestly: Elevation 0.231 vs 40 one-hot Soil cols combined 0.140;
+  RF scales ~linearly vs ch 05's SVM n^1.6). First **ensemble** method; base learner of ch 07–10.
+  **Refinement of `course_map.md` §06:** NB 3 = OOB only, feature importance → NB 4 (intro) + NB 5
+  (honest reading), mirroring ch 04's importance arc; §06 aligned. Reviewer-gated, both **REVISE → all
+  folded** (every number re-measured on sklearn 1.9.0): **ml-expert** (MAJORs — SVM foil `n^1.67`→`n^1.6`
+  matching shipped ch 05; RF scaling `n^1.18`→"roughly linear ≈ n^1.0–1.2"; `max_features` decorrelation
+  headline now the **monotone ρ trend**, not the seed-fragile per-mf test ranking; MINORs — MDI leader
+  read at build not hard-coded, RF `random_state` pinned, Aspen n, covtype cache ≈ 14 MB) — praised the
+  ρ-law (Monte-Carlo verified), the decorrelation gem, the exact OOB fraction, the covtype section
+  reproducing to three decimals, the honest reversal. **pedagogy** (MAJORs — the ch 04→NB 1 bridge
+  conflated two datasets, now states the breast_cancer-hand-bag/moons-variance split plainly; the
+  variance law is now **derived** before the NB 2 exercise leans on it; MINORs — NB 5 cell count a
+  *floor*, "clearly wins" softened, macro-vs-weighted re-laid in NB 5) — praised the first-contact
+  fencing, NB 1 vs NB 2 distinctness, the sound NB 3 refinement. **Rémy chose covtype for NB 5.** **No
+  `src/` change forced** (`viz.plot_feature_importances` possible at NB 4, → pytest 19→20). Next: open NB 1.
 - **Chapter 06 (Random Forests) opened.** Branch `chapter/06_RandomForest` created off `main` (synced
   @ `b5c00f7` after PR #5). Phase `chapter-plan`: drafting the chapter plan in plan mode per
   `course_map.md` §06 and the per-method arc (why averaging many trees reduces variance — bagging, by

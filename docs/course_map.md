@@ -71,12 +71,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. Parameters (C, kernel, gamma); the bias/variance picture they control.
 5. Demanding case: scaling matters; model selection by CV; honest limits on large data.
 
-## 06_RandomForest
-1. Why average many trees: variance reduction (bagging), by hand.
-2. Bootstrap samples and feature subsampling; decorrelating trees.
-3. Out-of-bag estimation; feature importance (and its caveats).
-4. Parameters (n_estimators, max_features, depth); diminishing returns.
-5. Demanding case: a strong tabular baseline; reading importances honestly.
+## 06_RandomForest  *(plan approved — five notebooks; NB 3 = OOB only, feature importance → NB 4/5; NB 5 = covtype)*
+1. The wisdom of trees — averaging cuts variance (bagging), by hand on `make_moons`.
+2. The "random" in the forest — bootstrap + feature subsampling decorrelate the trees (the Var = ρσ² + (1−ρ)σ²/B law, derived).
+3. Out-of-bag estimation — the bootstrap's free validation set (the ~1/e left out per tree).
+4. The estimator `RandomForestClassifier` & its parameters (n_estimators, max_features, depth); diminishing returns; feature importance introduced.
+5. Demanding case: a strong tabular baseline on forest cover type (covtype); honest evaluation under imbalance; reading importances honestly.
 
 ## 07_AdaBoost
 1. Boosting intuition: focus on the mistakes; reweighting, by hand.
