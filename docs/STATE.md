@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (2 of 5 notebooks done; NB 3 next). Arc per `course_map.md` §05. |
-| Current notebook | — (NB 2 done & merged to `chapter/05_SVM`; NB 3 next). |
-| Phase | `notebook-commit` → NB 2 merged; ready to open NB 3 |
-| Active branch | `chapter/05_SVM` (NB 1–2 merged in; NB 3 branches off here) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-2 `docs/plans/05_SVM__02_soft_margin_C.md` (done) |
-| Next concrete action | **Open notebook 3 — the kernel trick.** `git switch -c notebook/05_SVM__03_kernel_trick` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-3 plan per `docs/plans/chapter_05_SVM.md` §NB 3 (`make_circles`: linear fails CV 0.557 → add `r²=x₁²+x₂²` → linearly separable in 3-D → RBF 0.997 *without* forming `r²`; the kernel = inner product in the lifted space; poly **degree 2 works (1.000) / default degree 3 fails (0.613)** — the degree must match the geometry). Rémy validates the NB-3 plan before build. |
+| Current chapter | **05_SVM — Support Vector Machines** (NB 3 of 5, planning; 2 done). Arc per `course_map.md` §05. |
+| Current notebook | **03_kernel_trick** — the kernel trick (NB 3 of 5). |
+| Phase | `notebook-plan` (drafting the NB-3 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/05_SVM__03_kernel_trick` (off `chapter/05_SVM` @ `1ccc47f`) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-3 `docs/plans/05_SVM__03_kernel_trick.md` to be written on Rémy's approval |
+| Next concrete action | **Draft the NB-3 plan in plan mode**, then present for Rémy's validation. One concept: **the kernel trick** (lift → kernelize), by hand on `make_circles` (linear fails CV 0.557 → add `r²=x₁²+x₂²` → linearly separable in 3-D → RBF 0.997 *without* forming `r²`; the optimization needs only dot products → replace with a kernel). Poly **degree 2 (1.000) vs default degree 3 (0.613)** — the degree must match the geometry. Figures: circles 2-D→3-D lift with a separating plane; RBF & poly boundaries in 2-D. On approval: write the NB-3 plan, phase `notebook-plan-approved`, build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,13 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (the kernel trick) OPENED.** Branch `notebook/05_SVM__03_kernel_trick` off `chapter/05_SVM`
+  (@ `1ccc47f`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **the
+  kernel trick** (lift → kernelize), by hand on `make_circles` (linear fails CV 0.557 → add
+  `r²=x₁²+x₂²` → separable by a plane in 3-D → RBF 0.997 without forming `r²`; the optimization needs
+  only dot products → swap in a kernel). Poly **degree 2 (1.000) vs default degree 3 (0.613)** — the
+  degree must match the geometry. Anchors in the chapter plan §NB 3; re-measured at build. Next: Rémy
+  validates the NB-3 plan → build.
 - **NB 2 (the soft margin & the cost `C`) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
   visually.** 22 cells, 3 figures (hinge-vs-log-loss; small-`C` vs large-`C`
   street; margin & #SV vs `C`). By hand on penguins: hard margin infeasible (1 error, idx 128) → slack;
