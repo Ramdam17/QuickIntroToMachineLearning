@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | — (chapter-planning; no notebook opened yet). |
-| Phase | `chapter-plan-approved` (chapter 06 plan approved by Rémy; NB 5 dataset = covtype) |
-| Active branch | `chapter/06_RandomForest` (off `main` @ `b5c00f7`) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (APPROVED — five notebooks) |
-| Next concrete action | **Open NB 1 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__01_averaging_cuts_variance` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the NB-1 cell-by-cell plan — one concept, **averaging cuts variance (bagging), by hand on `make_moons`**: resume ch 04's wobbly moons tree (test 0.878), draw bootstrap samples, majority-vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); honest parity hand-bag == `RF(max_features=None)`; figures (12 single-tree boundaries vs the smooth averaged one; test-acc & std vs B). Anchors in `chapter_06_RandomForest.md` §NB 1; re-measured at build. Rémy validates the NB-1 plan → build (no reviewer gate at the NB-plan stage; reviewers return on the built notebook). |
+| Current notebook | **NB 1 — `01_averaging_cuts_variance`** (the wisdom of trees: averaging cuts variance / bagging). |
+| Phase | `notebook-plan` (drafting the NB-1 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/06_RandomForest__01_averaging_cuts_variance` (off `chapter/06_RandomForest` @ `413cc4a`) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED); NB-1 plan being drafted (→ `docs/plans/06_RandomForest__01_averaging_cuts_variance.md` on approval) |
+| Next concrete action | **Rémy validates the NB-1 cell-by-cell plan** (presented now, ~22 cells) — one concept, **averaging cuts variance (bagging), by hand on `make_moons`**: resume ch 04's wobbly moons tree (test 0.878) → bootstrap by hand → majority-vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); honest parity hand-bag == `RF(max_features=None)` (= 0.9333), `RF(default sqrt)` 0.900 a hook for NB 2; figures (single jagged trees vs the smooth averaged boundary; test-acc & run-to-run std vs B). On approval: write `docs/plans/06_RandomForest__01_averaging_cuts_variance.md`, set phase `notebook-plan-approved`, build. No reviewer gate at the NB-plan stage (reviewers return on the built notebook); no `src/` change in NB 1 (pytest stays 19). |
 
 ## Notes / blockers
 
@@ -27,6 +27,15 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the wisdom of trees: averaging cuts variance / bagging) OPENED.** Branch
+  `notebook/06_RandomForest__01_averaging_cuts_variance` off `chapter/06_RandomForest` (@ `413cc4a`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — one concept, **bagging by hand
+  on `make_moons`**: a single deep tree is high-variance (test 0.878, bootstrap std 0.031) → bootstrap
+  resampling + majority vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); the σ²/B variance-reduction
+  intuition; honest parity **hand-bag == `RF(max_features=None)`** (0.9333), with `RF(default sqrt)`
+  0.900 a deliberate hook for NB 2. ~22 cells, 2 figures (single jagged trees vs the smooth averaged
+  boundary; test-acc & run-to-run std vs B). No `src/` change (pytest stays 19). Next: Rémy validates
+  the NB-1 plan → build.
 - **Chapter 06 (Random Forests) plan APPROVED & persisted** (`docs/plans/chapter_06_RandomForest.md`,
   this commit). **FIVE notebooks** (standard arc): NB 1 averaging cuts variance / bagging (by hand on
   `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; hand-bag == `RF(max_features=None)`)
