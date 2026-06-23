@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **05_SVM — Support Vector Machines** (NB 3 of 5, planning; 2 done). Arc per `course_map.md` §05. |
 | Current notebook | **03_kernel_trick** — the kernel trick (NB 3 of 5). |
-| Phase | `notebook-plan` (drafting the NB-3 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-3 plan validated by Rémy; building) |
 | Active branch | `notebook/05_SVM__03_kernel_trick` (off `chapter/05_SVM` @ `1ccc47f`) |
 | Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-3 `docs/plans/05_SVM__03_kernel_trick.md` to be written on Rémy's approval |
-| Next concrete action | **Draft the NB-3 plan in plan mode**, then present for Rémy's validation. One concept: **the kernel trick** (lift → kernelize), by hand on `make_circles` (linear fails CV 0.557 → add `r²=x₁²+x₂²` → linearly separable in 3-D → RBF 0.997 *without* forming `r²`; the optimization needs only dot products → replace with a kernel). Poly **degree 2 (1.000) vs default degree 3 (0.613)** — the degree must match the geometry. Figures: circles 2-D→3-D lift with a separating plane; RBF & poly boundaries in 2-D. On approval: write the NB-3 plan, phase `notebook-plan-approved`, build. |
+| Next concrete action | **Build NB 3** (`notebooks/05_SVM/03_kernel_trick.ipynb`, ~22 cells, 4 figures) per `docs/plans/05_SVM__03_kernel_trick.md` (APPROVED): one concept (the kernel trick, by hand on `make_circles` — `r²` lift → 3-D plane → RBF 0.997 without forming `r²`; poly degree-2 1.000 / degree-3 0.613). Reuse `viz.plot_svm_decision`; Fig A = matplotlib 3-D lift; no `src/` change (pytest 19). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 03 — the kernel trick` → merge notebook→chapter. |
 
 ## Notes / blockers
 
