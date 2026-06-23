@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
 | Current notebook | **NB 2 — `02_decorrelating_trees`** (the "random" in the forest: decorrelating the trees). |
-| Phase | `notebook-plan` (drafting the NB-2 cell-by-cell plan in plan mode) |
+| Phase | `notebook-build` (NB-2 plan APPROVED by Rémy & persisted; building the notebook) |
 | Active branch | `notebook/06_RandomForest__02_decorrelating_trees` (off `chapter/06_RandomForest` @ `065c84f`) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED); NB-2 plan being drafted (→ `docs/plans/06_RandomForest__02_decorrelating_trees.md` on approval) |
-| Next concrete action | **Draft & present the NB-2 cell-by-cell plan** (plan mode) — one concept, **decorrelating the trees**: on breast_cancer, feature subsampling lowers pairwise tree correlation (ρ 0.82→0.80) and lifts the ensemble (CV 0.945→0.955) while individual trees stay equal (the gain is decorrelation); **derive Var = ρσ² + (1−ρ)σ²/B from scratch** (B variance + B(B−1) covariance terms; B→∞ → ρσ² floor; Monte-Carlo-checked); `max_features` as the decorrelation dial (ρ rises monotonically 0.70→0.82); resolve NB 1's moons puzzle (sqrt starves 2 features, decorrelates 30). Re-measure anchors at plan time (pinned `random_state`). On approval: write `docs/plans/06_RandomForest__02_decorrelating_trees.md`, set phase `notebook-plan-approved`, build. No reviewer gate at the NB-plan stage. |
+| Active plan | **`docs/plans/06_RandomForest__02_decorrelating_trees.md`** (APPROVED — ~22 cells) |
+| Next concrete action | **Build NB 2, then gate it.** Build from the approved plan (decorrelation on breast_cancer: measure ρ for bagging ≈0.82 → RF(sqrt) ≈0.80, CV 0.947→0.957, individual trees equal; derive Var = ρσ² + (1−ρ)σ²/B + Monte-Carlo check; `max_features` sweep ρ 0.70→0.82; resolve the moons puzzle); execute end-to-end (nbconvert **from project cwd**); rebuild tracked file **output-free**; guards (banned JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (no BLOCK); fold; **Rémy visual** → commit `feat(06_random_forest): notebook 02 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
 
 ## Notes / blockers
 
@@ -34,7 +34,8 @@
   the ensemble rises (CV 0.945→0.955) while individual trees stay equal (the gain is decorrelation);
   the **Var = ρσ² + (1−ρ)σ²/B** law derived from scratch (the ρσ² floor bagging cannot pass); `max_features`
   the decorrelation dial (ρ monotone 0.70→0.82); resolves NB 1's moons puzzle. Anchors re-measured at
-  plan time, `random_state` pinned. Next: Rémy validates the NB-2 plan → build.
+  plan time, `random_state` pinned. Plan **APPROVED** by Rémy & persisted
+  (`docs/plans/06_RandomForest__02_decorrelating_trees.md`); building now.
 - **NB 1 (the wisdom of trees: averaging cuts variance / bagging) BUILT & MERGED to
   `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (five
   jagged single bootstrap-tree boundaries vs the smooth bagged-100 boundary; test-accuracy & run-to-run
