@@ -762,3 +762,101 @@ def plot_calibration_curve(
     ax.set_ylim(-0.02, 1.02)
     ax.legend(loc="upper left")
     return fig
+
+
+def plot_feature_importances(
+    names,
+    importances,
+    *,
+    std=None,
+    top: int = 10,
+    label: str | None = None,
+    color: str | None = None,
+    ax: plt.Axes | None = None,
+) -> plt.Figure:
+    """Plot the top feature importances as a sorted horizontal bar chart (largest at the top).
+
+    Ranks features by ``importances`` and draws the ``top`` most important as horizontal bars,
+    optionally with error bars. Use it to read a model's ``feature_importances_`` (impurity / MDI)
+    or a permutation-importance vector — and, by drawing two on side-by-side axes, to *contrast*
+    them (a single tree's spike vs a forest's spread; MDI vs permutation).
+
+    Parameters
+    ----------
+    names : sequence of str, shape (n_features,)
+        Feature names, aligned with ``importances``.
+    importances : array-like, shape (n_features,)
+        One importance value per feature (e.g. ``model.feature_importances_``).
+    std : array-like, shape (n_features,), optional
+        Per-feature spread (e.g. across trees, or permutation repeats), drawn as horizontal error
+        bars and aligned with ``importances``.
+    top : int, default 10
+        How many of the highest-importance features to show (capped at ``n_features``).
+    label : str, optional
+        Legend label for the bars (handy to annotate which measure is plotted).
+    color : str, optional
+        Bar colour; defaults to the charter ``model`` colour.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure is created when omitted.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the bar chart.
+
+    Raises
+    ------
+    ValueError
+        If ``names`` and ``importances`` have different lengths.
+
+    When to use
+    -----------
+    To rank and compare feature importances. Read it at the *group* level: impurity (MDI) importance
+    spreads credit across correlated features and is biased toward continuous / high-cardinality
+    ones, so cross-check with permutation importance rather than trusting a single bar.
+
+    References
+    ----------
+    Strobl C, Boulesteix A-L, Zeileis A, Hothorn T (2007). Bias in random forest variable importance
+    measures. BMC Bioinformatics 8:25. https://doi.org/10.1186/1471-2105-8-25
+
+    Examples
+    --------
+    >>> _ = plot_feature_importances(["a", "b", "c"], [0.1, 0.7, 0.2], top=3)
+    """
+    names = [str(n) for n in names]
+    importances = np.asarray(importances, dtype=float)
+    if len(names) != importances.shape[0]:
+        raise ValueError(
+            f"names and importances must align; got {len(names)} names, "
+            f"{importances.shape[0]} importances."
+        )
+    std_arr = None if std is None else np.asarray(std, dtype=float)
+
+    k = min(top, importances.shape[0])
+    # Top-k by importance, then reverse to ascending so barh draws the largest at the top.
+    order = np.argsort(importances)[::-1][:k][::-1]
+    y_pos = np.arange(k)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 0.45 * k + 1.5))
+    else:
+        fig = ax.figure
+
+    ax.barh(
+        y_pos,
+        importances[order],
+        xerr=None if std_arr is None else std_arr[order],
+        color=color or COLORS["model"],
+        edgecolor=COLORS["text"],
+        linewidth=0.6,
+        ecolor=COLORS["muted"],
+        label=label,
+    )
+    ax.set_yticks(y_pos, [names[i] for i in order])
+    ax.set_xlabel("importance")
+    ax.set_axisbelow(True)
+    ax.grid(True, axis="x")
+    if label:
+        ax.legend()
+    return fig

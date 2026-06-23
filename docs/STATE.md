@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | **`04_estimator_and_parameters`** (NB 4 of 5 — **OPENED**; drafting the cell-by-cell plan in plan mode). |
-| Phase | `notebook-plan-approved` (NB 4) — plan persisted & committed; **building next** |
-| Active branch | `notebook/06_RandomForest__04_estimator_and_parameters` (off `chapter/06_RandomForest` @ `4bb235a`) |
-| Active plan | **`docs/plans/06_RandomForest__04_estimator_and_parameters.md`** (NB 4, APPROVED) — under the chapter plan `docs/plans/chapter_06_RandomForest.md` (NB 1–3 done, NB 4 building) |
-| Next concrete action | **Build NB 4** (phase `notebook-build`). Write the `.ipynb` (~24 cells, 3 figures) per the approved plan; **add `viz.plot_feature_importances(names, importances, *, std=None, top=10, ax=None)` + smoke test (pytest 19→20)**; build via `uv run python - < <scratchpad>/build_ch06_nb4.py` (stdin); re-measure anchors (parity hand-bag 0.9357 == RF(mf=None) 0.9357 / RF(sqrt) 0.9415; n_estimators OOB-err 0.271→0.040, no overfit, warns ≤10; max_features OOB/CV flat 0.947–0.962; max_depth single-tree wobble vs forest 0.918→0.942 plateau, std 0.0163 vs 0.0043; MDI peak 0.146 vs single-tree 0.740; GridSearch {'log2',1,None} CV 0.957 → test 0.947 vs default 0.955/0.942; scale-invariance raw==std 1.000); execute end-to-end (nbconvert from project cwd to scratchpad copy; tracked file output-free); guards (JSON banned-scan=0, hex, gen_llms_txt, pytest 20, ruff/black); then **both reviewers** (no BLOCK) → revise → Rémy visual → commit `feat(06_random_forest): notebook 04 — the estimator & its parameters` → ff-merge to `chapter/06_RandomForest`. |
+| Current notebook | — (NB 4 `04_estimator_and_parameters` **built, reviewed, Rémy-validated, merged** to `chapter/06_RandomForest`; NB 5 next). |
+| Phase | `notebook-commit` done for NB 4 → between notebooks; ready to open NB 5 (the demanding case — covtype) |
+| Active branch | `chapter/06_RandomForest` (NB 1–4 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; NB 1–4 done, NB 5 next) |
+| Next concrete action | **Open NB 5 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__05_covtype_strong_baseline` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the cell-by-cell plan — the **demanding case & capstone**, **visualization-first** (~24–26 cells a **floor**, figures may exceed six): forest cover type (`fetch_covtype`, 30 000-row stratified subsample, 7 classes, 54 features); **the forest wins** RF ≈ 0.846 ≫ single tree ≈ 0.775 ≫ LogReg ≈ 0.728 (the reverse of breast_cancer, referenced); **honest eval under imbalance** (re-lay macro vs weighted; accuracy 0.846 vs macro-F1 ≈ 0.733; per-class recall incl. Aspen ≈ 0.28; 7×7 confusion); **reading importance honestly** — Elevation dominates (MDI ≈ 0.231 ≈ permutation ≈ 0.286, they *agree* when one feature truly dominates) while 40 one-hot Soil_* combine to ≈ 0.140 (the dilution caveat, **permutation put to work** as promised in NB 4); OOB ≈ test at scale; **RF fit-time ≈ linear in n** (≈ n^1.0–1.2) — the counterpoint to ch 05's SVM ≈ n^1.6 wall; honest close (strong low-effort baseline, no longer one readable tree, boosting often edges it → ch 07–10). One-time ≈ 14 MB covtype fetch (visible INFO logging, the `load_newsgroups` pattern). Reuse `viz.plot_feature_importances` (NB 4), `plot_confusion_matrix`, `plot_class_balance`. **Re-measure all anchors at plan time**, every RF `random_state`-pinned. Rémy validates the NB-5 plan → build. **NB 5 is the last of chapter 06 — after it ships, close the chapter via PR into `main`.** |
 
 ## Notes / blockers
 
@@ -27,6 +27,27 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `RandomForestClassifier` & its parameters) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 24 cells (7 code / 17 md), 3 figures (OOB &
+  test error vs `n_estimators`; single-tree vs forest test vs `max_depth`; single-tree MDI spike vs
+  forest MDI spread). The integrative notebook: **honest parity** hand-bag **0.9357** ==
+  `RF(max_features=None)` 0.9357 (accuracy match at B=200, tie-break-sensitive — rs=0 fixed gives
+  0.9357, rs=b gives 0.9415; framed as "not a tree-for-tree clone"), `RF(sqrt)` **0.9415**;
+  **`n_estimators`** OOB-err 0.271→0.040, **never overfits** (sklearn warns ≤10, surfaced not
+  silenced); **`max_features`** OOB/CV **flat** 0.947–0.962 → forest is *forgiving*, `'sqrt'` robust,
+  mechanism = NB 2's ρ (no test-acc ranking); **`max_depth`** single-tree test wobble 0.86–0.918 vs
+  forest 0.918→0.942 plateau (both train **1.000**), run-to-run std **0.0163 vs 0.0043** (≈4×);
+  knobs `bootstrap`/`class_weight`/`n_jobs` named; **feature importance** single-tree spike **0.740**
+  vs forest peak **0.146** (spread over the correlated group; Strobl bias + dilution caveat;
+  **permutation named** → NB 5); **`GridSearchCV`** `{None,'log2',1}` CV 0.957 → test **0.947** vs
+  default 0.955/0.942 (**tuning barely beats the default**). Reviewers: **both PASS** (no BLOCK/MAJOR);
+  ml-expert re-verified parity across 3 splits/2 B-values (diverges at B=50, converges at B=200) and
+  endorsed deferring permutation to NB 5; folded 3 MINOR/nit (Fig C shared-x-scale note; cell-13
+  train=1.000 print added; "variance" not "spread" for σ²/B). **`src/` add:**
+  `viz.plot_feature_importances` + smoke test → **pytest 20**. Guards: 0 banned (JSON scan), ruff/black
+  clean, hex clean, output-free, `llms.txt` 54. `common_errors` gained 3 RF rows (deep-on-purpose;
+  forgiving/tuning; importance spread). Canonical nbconvert exec (exit 0); all 3 figures eyeballed.
+  Next: open NB 5 (demanding case — covtype), the chapter capstone.
 - **NB 4 (the estimator `RandomForestClassifier` & its parameters) OPENED.** Branch
   `notebook/06_RandomForest__04_estimator_and_parameters` off `chapter/06_RandomForest` (@ `4bb235a`).
   Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — the **integrative** notebook

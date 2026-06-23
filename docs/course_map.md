@@ -71,7 +71,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. Parameters (C, kernel, gamma); the bias/variance picture they control.
 5. Demanding case: scaling matters; model selection by CV; honest limits on large data.
 
-## 06_RandomForest  *(plan approved — five notebooks; NB 3 = OOB only, feature importance → NB 4/5; NB 5 = covtype)*
+## 06_RandomForest  *(NB 1–4 built; NB 5 = covtype, next — five notebooks; NB 3 = OOB only, feature importance → NB 4/5)*
 1. The wisdom of trees — averaging cuts variance (bagging), by hand on `make_moons`.
 2. The "random" in the forest — bootstrap + feature subsampling decorrelate the trees (the Var = ρσ² + (1−ρ)σ²/B law, derived).
 3. Out-of-bag estimation — the bootstrap's free validation set (the ~1/e left out per tree).
