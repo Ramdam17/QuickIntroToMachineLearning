@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
 | Current notebook | **NB 1 — `01_averaging_cuts_variance`** (the wisdom of trees: averaging cuts variance / bagging). |
-| Phase | `notebook-plan` (drafting the NB-1 cell-by-cell plan in plan mode) |
+| Phase | `notebook-build` (NB-1 plan APPROVED by Rémy & persisted; building the notebook) |
 | Active branch | `notebook/06_RandomForest__01_averaging_cuts_variance` (off `chapter/06_RandomForest` @ `413cc4a`) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED); NB-1 plan being drafted (→ `docs/plans/06_RandomForest__01_averaging_cuts_variance.md` on approval) |
-| Next concrete action | **Rémy validates the NB-1 cell-by-cell plan** (presented now, ~22 cells) — one concept, **averaging cuts variance (bagging), by hand on `make_moons`**: resume ch 04's wobbly moons tree (test 0.878) → bootstrap by hand → majority-vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); honest parity hand-bag == `RF(max_features=None)` (= 0.9333), `RF(default sqrt)` 0.900 a hook for NB 2; figures (single jagged trees vs the smooth averaged boundary; test-acc & run-to-run std vs B). On approval: write `docs/plans/06_RandomForest__01_averaging_cuts_variance.md`, set phase `notebook-plan-approved`, build. No reviewer gate at the NB-plan stage (reviewers return on the built notebook); no `src/` change in NB 1 (pytest stays 19). |
+| Active plan | **`docs/plans/06_RandomForest__01_averaging_cuts_variance.md`** (APPROVED — ~22 cells) |
+| Next concrete action | **Build NB 1, then gate it.** Build the notebook from the approved plan (bagging by hand on `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; parity hand-bag == `RF(max_features=None)`); execute end-to-end to scratchpad; rebuild the tracked file **output-free**; run guards (banned-word JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); fold; present for **Rémy's visual validation** → commit `feat(06_random_forest): notebook 01 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
 
 ## Notes / blockers
 
@@ -34,8 +34,8 @@
   resampling + majority vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); the σ²/B variance-reduction
   intuition; honest parity **hand-bag == `RF(max_features=None)`** (0.9333), with `RF(default sqrt)`
   0.900 a deliberate hook for NB 2. ~22 cells, 2 figures (single jagged trees vs the smooth averaged
-  boundary; test-acc & run-to-run std vs B). No `src/` change (pytest stays 19). Next: Rémy validates
-  the NB-1 plan → build.
+  boundary; test-acc & run-to-run std vs B). No `src/` change (pytest stays 19). Plan **APPROVED** by
+  Rémy & persisted (`docs/plans/06_RandomForest__01_averaging_cuts_variance.md`); building now.
 - **Chapter 06 (Random Forests) plan APPROVED & persisted** (`docs/plans/chapter_06_RandomForest.md`,
   this commit). **FIVE notebooks** (standard arc): NB 1 averaging cuts variance / bagging (by hand on
   `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; hand-bag == `RF(max_features=None)`)
