@@ -362,7 +362,7 @@ close via PR into `main`** (protected).
 | NB | Branch | Status |
 |----|--------|--------|
 | 1 | `notebook/05_SVM__01_maximum_margin` | **done** — built (22 cells, 4 figures: candidate-lines/margins, the max-margin street via the new `viz.plot_svm_decision`, support-vector invariance, the LogReg contrast), both reviewers folded (pedagogy PASS; ml-expert REVISE → 1 MAJOR fixed: the closest-pair/perpendicular-bisector recipe reframed as a special case with the **convex-hull** scope caveat + MINORs), Rémy validated visually, merged to `chapter/05_SVM`. `src/` added `viz.plot_svm_decision` + 2 tests (pytest 19). |
-| 2 | `notebook/05_SVM__02_soft_margin_C` | planned |
+| 2 | `notebook/05_SVM__02_soft_margin_C` | **done** — built (22 cells, 3 figures: hinge-vs-log-loss, small-`C` vs large-`C` street, margin & #SV vs `C`), both reviewers folded (pedagogy PASS; ml-expert REVISE → 1 MAJOR fixed: "support vector = pays slack" corrected to SV = `m ≤ 1`, on-edge SVs pay zero slack, 17 SVs vs 15 slack-payers + reconnected to NB 1 + MINORs), Rémy validated visually, merged to `chapter/05_SVM`. No `src/` change (pytest 19). |
 | 3 | `notebook/05_SVM__03_kernel_trick` | planned |
 | 4 | `notebook/05_SVM__04_estimator_and_parameters` | planned |
 | 5 | `notebook/05_SVM__05_breast_cancer_scaling_limits` | planned |
