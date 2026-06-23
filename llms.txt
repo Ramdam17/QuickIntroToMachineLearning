@@ -44,3 +44,4 @@
 ## 05_SVM
 - [notebooks/05_SVM/01_maximum_margin.ipynb](notebooks/05_SVM/01_maximum_margin.ipynb) — 01 — The widest street: the maximum margin — *Notebook 1 of 5 · Support Vector Machines*
 - [notebooks/05_SVM/02_soft_margin_C.ipynb](notebooks/05_SVM/02_soft_margin_C.ipynb) — 02 — The soft margin and the cost C — *Notebook 2 of 5 · Support Vector Machines*
+- [notebooks/05_SVM/03_kernel_trick.ipynb](notebooks/05_SVM/03_kernel_trick.ipynb) — 03 — The kernel trick — *Notebook 3 of 5 · Support Vector Machines*

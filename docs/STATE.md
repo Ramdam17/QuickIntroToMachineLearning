@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (NB 3 of 5, planning; 2 done). Arc per `course_map.md` §05. |
-| Current notebook | **03_kernel_trick** — the kernel trick (NB 3 of 5). |
-| Phase | `notebook-plan-approved` (NB-3 plan validated by Rémy; building) |
-| Active branch | `notebook/05_SVM__03_kernel_trick` (off `chapter/05_SVM` @ `1ccc47f`) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-3 `docs/plans/05_SVM__03_kernel_trick.md` to be written on Rémy's approval |
-| Next concrete action | **Build NB 3** (`notebooks/05_SVM/03_kernel_trick.ipynb`, ~22 cells, 4 figures) per `docs/plans/05_SVM__03_kernel_trick.md` (APPROVED): one concept (the kernel trick, by hand on `make_circles` — `r²` lift → 3-D plane → RBF 0.997 without forming `r²`; poly degree-2 1.000 / degree-3 0.613). Reuse `viz.plot_svm_decision`; Fig A = matplotlib 3-D lift; no `src/` change (pytest 19). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 03 — the kernel trick` → merge notebook→chapter. |
+| Current chapter | **05_SVM — Support Vector Machines** (3 of 5 notebooks done; NB 4 next). Arc per `course_map.md` §05. |
+| Current notebook | — (NB 3 done & merged to `chapter/05_SVM`; NB 4 next). |
+| Phase | `notebook-commit` → NB 3 merged; ready to open NB 4 |
+| Active branch | `chapter/05_SVM` (NB 1–3 merged in; NB 4 branches off here) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-3 `docs/plans/05_SVM__03_kernel_trick.md` (done) |
+| Next concrete action | **Open notebook 4 — the estimator `SVC` & its parameters.** `git switch -c notebook/05_SVM__04_estimator_and_parameters` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-4 plan per `docs/plans/chapter_05_SVM.md` §NB 4: parity vs NB-1's by-hand line; the **`C × gamma` CV heatmap** on make_moons (the bias–variance map) + a boundary grid; `kernel`; **OvO** on `load_penguins_full` (3-class CV 0.956); `decision_function`→calibration with the **`probability=True` deprecation pinned → `CalibratedClassifierCV`**; `LinearSVC`/`class_weight` named. **~24-cell ceiling, four-shown/two-named discipline.** Rémy validates the NB-4 plan before build. |
 
 ## Notes / blockers
 
@@ -27,13 +27,15 @@
 
 ## Progress log (most recent first)
 
-- **NB 3 (the kernel trick) OPENED.** Branch `notebook/05_SVM__03_kernel_trick` off `chapter/05_SVM`
-  (@ `1ccc47f`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode — one concept, **the
-  kernel trick** (lift → kernelize), by hand on `make_circles` (linear fails CV 0.557 → add
-  `r²=x₁²+x₂²` → separable by a plane in 3-D → RBF 0.997 without forming `r²`; the optimization needs
-  only dot products → swap in a kernel). Poly **degree 2 (1.000) vs default degree 3 (0.613)** — the
-  degree must match the geometry. Anchors in the chapter plan §NB 3; re-measured at build. Next: Rémy
-  validates the NB-3 plan → build.
+- **NB 3 (the kernel trick) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 21 cells,
+  4 figures (2-D→3-D `r²` lift with a separating plane; the RBF circular
+  boundary; poly degree-2 vs degree-3; RBF on moons). By hand on `make_circles`: linear CV 0.557 → `r²`
+  lift separates (inner [0.05,1.48] vs outer [1.96,5.26], threshold acc 1.000) → RBF **0.997** (38 SVs)
+  without forming `r²`; poly **deg-2 1.000 / deg-3 0.613** (degree must match the geometry); moons
+  0.840→0.970. Reviewers: **both PASS**; 3 MINOR polish folded (named the poly default `coef0=0` as the
+  reason odd degrees miss the radial form; noted RBF default `gamma='scale'`; flagged `make_circles` as
+  new vocabulary). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 47. No `src/` change
+  (pytest 19). Next: Rémy visual → commit + merge.
 - **NB 2 (the soft margin & the cost `C`) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
   visually.** 22 cells, 3 figures (hinge-vs-log-loss; small-`C` vs large-`C`
   street; margin & #SV vs `C`). By hand on penguins: hard margin infeasible (1 error, idx 128) → slack;
