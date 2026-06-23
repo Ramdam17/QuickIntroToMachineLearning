@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
 | Current notebook | **`04_estimator_and_parameters`** (NB 4 of 5 — **OPENED**; drafting the cell-by-cell plan in plan mode). |
-| Phase | `notebook-plan` (NB 4) — drafting the cell-by-cell plan (plan mode); re-measuring anchors on sklearn 1.9.0 |
+| Phase | `notebook-plan-approved` (NB 4) — plan persisted & committed; **building next** |
 | Active branch | `notebook/06_RandomForest__04_estimator_and_parameters` (off `chapter/06_RandomForest` @ `4bb235a`) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; NB 1–3 done, NB 4 in planning) → NB-4 plan written to `docs/plans/06_RandomForest__04_estimator_and_parameters.md` on Rémy's approval |
-| Next concrete action | **Draft the NB-4 plan (plan mode), then Rémy validates → persist + commit → build.** The integrative **estimator & parameters** notebook (~22–24 cells, soft ceiling): parity hand-bag == `RF(max_features=None)`; **`n_estimators`** (OOB/test diminishing returns, never systematically overfits); **`max_features`** the central dial (NB 2's ρ); **`max_depth`/`min_samples_leaf`** (RF grows deep, tolerates it); `bootstrap`/`class_weight`/`n_jobs` named; **feature importance introduced** (MDI spreads vs single-tree's ≈0.8 spike — re-measure; bias caveat; permutation named → NB 5); `GridSearchCV` honest tuning → sealed test; possible `viz.plot_feature_importances` helper (+test, pytest 19→20). Anchors in `chapter_06_RandomForest.md` §NB 4; **re-measured at plan time**. No reviewer gate at the NB-plan stage (Rémy validates alone; reviewers return on the built notebook). |
+| Active plan | **`docs/plans/06_RandomForest__04_estimator_and_parameters.md`** (NB 4, APPROVED) — under the chapter plan `docs/plans/chapter_06_RandomForest.md` (NB 1–3 done, NB 4 building) |
+| Next concrete action | **Build NB 4** (phase `notebook-build`). Write the `.ipynb` (~24 cells, 3 figures) per the approved plan; **add `viz.plot_feature_importances(names, importances, *, std=None, top=10, ax=None)` + smoke test (pytest 19→20)**; build via `uv run python - < <scratchpad>/build_ch06_nb4.py` (stdin); re-measure anchors (parity hand-bag 0.9357 == RF(mf=None) 0.9357 / RF(sqrt) 0.9415; n_estimators OOB-err 0.271→0.040, no overfit, warns ≤10; max_features OOB/CV flat 0.947–0.962; max_depth single-tree wobble vs forest 0.918→0.942 plateau, std 0.0163 vs 0.0043; MDI peak 0.146 vs single-tree 0.740; GridSearch {'log2',1,None} CV 0.957 → test 0.947 vs default 0.955/0.942; scale-invariance raw==std 1.000); execute end-to-end (nbconvert from project cwd to scratchpad copy; tracked file output-free); guards (JSON banned-scan=0, hex, gen_llms_txt, pytest 20, ruff/black); then **both reviewers** (no BLOCK) → revise → Rémy visual → commit `feat(06_random_forest): notebook 04 — the estimator & its parameters` → ff-merge to `chapter/06_RandomForest`. |
 
 ## Notes / blockers
 
@@ -37,10 +37,15 @@
   `min_samples_leaf`** (RF grows deep and tolerates it), **`bootstrap`/`class_weight`/`n_jobs`** named
   lightly; **feature importance introduced** (MDI over the forest **spreads** vs the single tree's
   ≈0.8 spike — leader read at build; bias caveat restated; **permutation named** → honest reading in
-  NB 5); **`GridSearchCV` honest tuning** on TRAIN → one sealed test. Possible `src/` add
-  `viz.plot_feature_importances` (+ smoke test → pytest 19→20), decided at build. Anchors in the
-  chapter plan §NB 4; **re-measured at plan time**, every RF `random_state`-pinned. Next: Rémy
-  validates the NB-4 plan → persist + commit → build.
+  NB 5); **`GridSearchCV` honest tuning** on TRAIN → one sealed test. `src/` add
+  `viz.plot_feature_importances` (+ smoke test → pytest 19→20) **approved** (the recommended option).
+  Anchors **re-measured at plan time** on sklearn 1.9.0, every RF `random_state`-pinned (parity
+  hand-bag 0.9357 == RF(mf=None) 0.9357 / RF(sqrt) 0.9415; n_estimators OOB-err 0.271→0.040 no
+  overfit, warns ≤10; max_features OOB/CV **flat** 0.947–0.962 = forgiving; max_depth single-tree
+  wobble vs forest 0.918→0.942 plateau, run-to-run std 0.0163 vs 0.0043; MDI peak 0.146 vs single-tree
+  0.740; GridSearch {'log2',1,None} CV 0.957 → test 0.947 vs default 0.955/0.942; raw==std 1.000). Plan
+  **APPROVED** by Rémy & persisted (`docs/plans/06_RandomForest__04_estimator_and_parameters.md`);
+  building now.
 - **NB 3 (out-of-bag estimation) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
   visually.** 20 cells (6 code / 14 md), 2 figures (in-bag/OOB schematic; OOB-error vs test-error vs
   `n_estimators`). One concept: OOB = the bootstrap's free validation set. Derived `(1−1/n)ⁿ → 1/e`
