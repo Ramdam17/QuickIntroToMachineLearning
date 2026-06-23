@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
 | Current notebook | **NB 3 — `03_out_of_bag`** (out-of-bag estimation: the bootstrap's free validation set). |
-| Phase | `notebook-plan` (drafting the NB-3 cell-by-cell plan in plan mode) |
+| Phase | `notebook-build` (NB-3 plan APPROVED by Rémy & persisted; building the notebook) |
 | Active branch | `notebook/06_RandomForest__03_out_of_bag` (off `chapter/06_RandomForest` @ `1789474`) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED); NB-3 plan being drafted (→ `docs/plans/06_RandomForest__03_out_of_bag.md` on approval) |
-| Next concrete action | **Draft & present the NB-3 cell-by-cell plan** (plan mode) — one concept, **out-of-bag estimation**: derive `(1−1/n)^n → 1/e` and measure the ~37 % left-out fraction; for each training point, the trees that did *not* see it form a held-out mini-forest → **build the OOB vote by hand**, get the OOB error, and match it to sklearn's `oob_score_` (parity); OOB ≈ sealed test (here ≈ 0.96 vs ≈ 0.94, mildly optimistic — stated); OOB unreliable with too few trees (sklearn warns); OOB-error vs `n_estimators` converging to test error. Re-measure anchors at plan time (pinned `random_state`). On approval: write `docs/plans/06_RandomForest__03_out_of_bag.md`, set phase `notebook-plan-approved`, build. No reviewer gate at the NB-plan stage. |
+| Active plan | **`docs/plans/06_RandomForest__03_out_of_bag.md`** (APPROVED — ~21 cells) |
+| Next concrete action | **Build NB 3, then gate it.** Build from the approved plan (OOB on breast_cancer: derive `(1−1/n)^n → 1/e` + measure 0.368; build the OOB vote **by hand** → 0.962, ~73 graders/point; parity sklearn `oob_score_` 0.955; OOB ≈ test 0.942, mildly optimistic; OOB-vs-`n_estimators` converges by ~25 trees, sklearn warns at few trees); execute end-to-end (nbconvert **from project cwd**); rebuild tracked file **output-free**; guards (banned JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (no BLOCK); fold; **Rémy visual** → commit `feat(06_random_forest): notebook 03 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
 
 ## Notes / blockers
 
@@ -33,7 +33,8 @@
   that did not see a point grade it → the forest scores itself for free; **build the OOB vote by hand**
   and match sklearn `oob_score_` (parity); OOB ≈ sealed test (≈0.96 vs ≈0.94, mildly optimistic); OOB
   unreliable with too few trees (sklearn warns); OOB-error vs `n_estimators` → test error. Anchors
-  re-measured at plan time, `random_state` pinned. Next: Rémy validates the NB-3 plan → build.
+  re-measured at plan time, `random_state` pinned. Plan **APPROVED** by Rémy & persisted
+  (`docs/plans/06_RandomForest__03_out_of_bag.md`); building now.
 - **NB 2 (the "random" in the forest: decorrelating the trees) BUILT & MERGED to
   `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (ρ vs
   `max_features` rising→saturating; ensemble-CV vs mean-individual-tree across `max_features`). One
