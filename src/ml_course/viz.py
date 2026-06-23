@@ -158,6 +158,158 @@ def plot_decision_boundary(
     return fig
 
 
+def plot_svm_decision(
+    model,
+    X,
+    y,
+    *,
+    resolution: int = 300,
+    ax: plt.Axes | None = None,
+) -> plt.Figure:
+    """Plot a binary SVM's decision regions, its margin "street", and its support vectors.
+
+    Like :func:`plot_decision_boundary`, but adds the two things that make a support vector machine
+    what it is: the **margin** — drawn as the ``decision_function`` contours at ``-1`` (dashed),
+    ``0`` (solid boundary) and ``+1`` (dashed), i.e. the empty "street" the SVM widens — and the
+    **support vectors**, the points pinning that street, ringed via ``model.support_vectors_``.
+
+    Parameters
+    ----------
+    model : object
+        A fitted **binary** classifier exposing ``predict(X) -> labels`` and a 1-D
+        ``decision_function(X) -> signed distance`` (e.g. a fitted ``sklearn.svm.SVC`` with two
+        classes), trained on two features. ``support_vectors_`` is ringed when present.
+    X : pandas.DataFrame or numpy.ndarray, shape (n_samples, 2)
+        The two features to plot, in the **same space the model was fit on** (e.g. standardized).
+        A DataFrame's column names become the axis labels.
+    y : array-like, shape (n_samples,)
+        Class labels. Region/point colours follow ``sorted(unique(y))``.
+    resolution : int, default 300
+        Grid points per axis for the regions and the contours. Higher is smoother and slower.
+    ax : matplotlib.axes.Axes, optional
+        Axis to draw on; a new figure is created when omitted.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure containing the plot.
+
+    Raises
+    ------
+    ValueError
+        If ``X`` is not 2-D with two columns, or the model's ``decision_function`` is not 1-D
+        (a multiclass SVM is not a single "street" — plot one-vs-one boundaries differently).
+
+    When to use
+    -----------
+    The signature picture of the SVM chapter: the margin and the support vectors, visible. For a
+    classifier without a margin (KNN, trees), use :func:`plot_decision_boundary` instead.
+
+    References
+    ----------
+    Cortes C, Vapnik V (1995). Support-vector networks. Machine Learning 20:273-297.
+    https://doi.org/10.1007/BF00994018
+
+    Examples
+    --------
+    >>> from sklearn.svm import SVC
+    >>> import numpy as np
+    >>> X = np.array([[-2.0, -2.0], [-1.8, -2.1], [2.0, 2.0], [1.9, 1.7]])
+    >>> y = np.array([0, 0, 1, 1])
+    >>> clf = SVC(kernel="linear").fit(X, y)
+    >>> _ = plot_svm_decision(clf, X, y)
+    """
+    if hasattr(X, "columns"):  # a DataFrame: take axis labels from the columns
+        feature_names = [str(c) for c in X.columns[:2]]
+        X_arr = X.to_numpy(dtype=float)
+    else:
+        X_arr = np.asarray(X, dtype=float)
+        feature_names = ["x1", "x2"]
+    if X_arr.ndim != 2 or X_arr.shape[1] != 2:
+        raise ValueError(f"X must have shape (n_samples, 2); got {X_arr.shape}.")
+
+    y_arr = np.asarray(y)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(6.5, 5.5))
+    else:
+        fig = ax.figure
+
+    pad = 0.5
+    x_min, x_max = X_arr[:, 0].min() - pad, X_arr[:, 0].max() + pad
+    y_min, y_max = X_arr[:, 1].min() - pad, X_arr[:, 1].max() + pad
+    xx, yy = np.meshgrid(
+        np.linspace(x_min, x_max, resolution),
+        np.linspace(y_min, y_max, resolution),
+    )
+    grid = np.c_[xx.ravel(), yy.ravel()]
+
+    # Decision regions (filled), exactly as in plot_decision_boundary.
+    preds = np.asarray(model.predict(grid))
+    classes = sorted(set(y_arr.tolist()) | set(preds.tolist()))
+    code = {label: i for i, label in enumerate(classes)}
+    n_classes = len(classes)
+    class_colors = [CLASS_CYCLE[i % len(CLASS_CYCLE)] for i in range(n_classes)]
+    region_cmap = ListedColormap(class_colors)
+    zz = np.array([code[p] for p in preds.tolist()]).reshape(xx.shape)
+    ax.contourf(xx, yy, zz, alpha=0.20, levels=np.arange(n_classes + 1) - 0.5, cmap=region_cmap)
+
+    # The margin "street": signed-distance contours at -1 / 0 / +1.
+    scores = np.asarray(model.decision_function(grid))
+    if scores.ndim != 1:
+        raise ValueError(
+            "plot_svm_decision expects a binary classifier with a 1-D decision_function; "
+            f"got shape {scores.shape}. A multiclass SVM has no single margin to draw."
+        )
+    zz_score = scores.reshape(xx.shape)
+    ax.contour(xx, yy, zz_score, levels=[0.0], colors=[COLORS["text"]], linewidths=1.6)
+    ax.contour(
+        xx,
+        yy,
+        zz_score,
+        levels=[-1.0, 1.0],
+        colors=[COLORS["muted"]],
+        linewidths=1.0,
+        linestyles="dashed",
+    )
+
+    # The training points.
+    for label in classes:
+        mask = y_arr == label
+        if not mask.any():
+            continue
+        ax.scatter(
+            X_arr[mask, 0],
+            X_arr[mask, 1],
+            color=class_colors[code[label]],
+            edgecolor=COLORS["text"],
+            linewidth=0.6,
+            s=45,
+            label=str(label),
+        )
+
+    # Ring the support vectors: the few points that pin the street.
+    if hasattr(model, "support_vectors_"):
+        sv = np.asarray(model.support_vectors_, dtype=float)
+        if sv.size:
+            ax.scatter(
+                sv[:, 0],
+                sv[:, 1],
+                s=160,
+                facecolors="none",
+                edgecolors=COLORS["highlight"],
+                linewidths=1.8,
+                label="support vectors",
+            )
+
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(y_min, y_max)
+    ax.set_xlabel(feature_names[0])
+    ax.set_ylabel(feature_names[1])
+    ax.legend(loc="best")
+    return fig
+
+
 def plot_confusion_matrix(
     cm: np.ndarray,
     class_names: list[str] | None = None,

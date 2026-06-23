@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **04_DecisionTree** — all **5 notebooks built & merged to `chapter/04_DecisionTree`**; closing via PR into `main`. Chapter 03 complete (merged to `main`, PR #3 `8cdcc73`). |
-| Current notebook | — (NB 1–5 all shipped; chapter 04 complete on the chapter branch). |
-| Phase | `chapter-merge` (all 5 NBs merged; opening the chapter-04 → `main` PR) |
-| Active branch | `chapter/04_DecisionTree` (NB 1–5 merged; PR base = `main` @ `8cdcc73`) |
-| Active plan | `docs/plans/chapter_04_DecisionTree.md` (**all 5 NBs done**) |
-| Next concrete action | **Close CHAPTER 04 via PR into `main`** (remote `main` is PR-only). `git push -u origin chapter/04_DecisionTree`; `gh pr create --base main --head chapter/04_DecisionTree` (title `feat(04_decision_tree): complete chapter — decision trees`); merge the PR `--merge` (merge commit, per-notebook history preserved); `git switch main && git pull` to sync; verify `pytest` green on `main`. Then set STATE phase `idle`, next action = open chapter **05_SVM** (the pending `idle` edit folds into the chapter-05 opening, `main` being PR-only). |
+| Current chapter | **05_SVM — Support Vector Machines** — all 5 notebooks built & validated; **closing via PR into `main`**. |
+| Current notebook | — (NB 5 done; chapter 05 complete). |
+| Phase | `chapter-merge` (NB 5 merged; opening the chapter-05 PR into `main`) |
+| Active branch | `chapter/05_SVM` (NB 1–5 merged in) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED, all 5 NBs done); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` (done) |
+| Next concrete action | **Close chapter 05 via PR into `main`.** Push `chapter/05_SVM`; `gh pr create --base main --head chapter/05_SVM` (title `feat(05_svm): complete chapter — support vector machines`); `gh pr merge --merge` (`--no-ff`, per-notebook history preserved); `git switch main && git pull --ff-only`; verify `pytest` green. Then set STATE `idle` (the pending edit, folds into the chapter-06 opening — `main` is PR-only). **Next chapter: `06_RandomForest`.** |
 
 ## Notes / blockers
 
@@ -27,8 +27,108 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case: breast cancer) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
+  visually. CHAPTER 05 COMPLETE (5/5); closing via PR into `main`.** The chapter **capstone**,
+  visualization-first: 26 cells,
+  6 figures (class balance; raw-vs-std scaling bar; `C × gamma` heatmap; cross-method spine bar;
+  confusion; fit-time-vs-`n` curve). Scaling raw CV 0.9095 → std 0.9648; GridSearch `{C100,γ0.001,rbf}`
+  CV 0.982 / sealed test 0.9649 / 42 SVs; spine KNN 0.9415 / tree 0.9064 / LogReg 0.9532 / **SVM
+  0.9649**; confusion `[[104,3],[3,61]]` recall 0.953; **honest threshold surprise** (the 3 misses sit
+  at calibrated proba 0.06/0.13/0.19 — confidently wrong; lowering the cut only adds false alarms);
+  measured fit-time ≈n^1.67 (worst case O(n³)), 2.68 s vs LinearSVC 0.018 s at n=32 000. Reviewers:
+  **both PASS**; ml-expert 3 MINOR folded (the ch-03 contrast made precise — the lever reaches
+  *borderline* misses, not confident ones, in either model; "lowering only adds positives" stated;
+  exponent flagged this-run), pedagogy 2 MINOR (course_map §05 → mark complete at chapter close;
+  Going-further optional, omitted). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 49. No
+  `src/` change (pytest 19). **Last NB of chapter 05.** Next: Rémy visual → commit + merge → PR to `main`.
+- **NB 4 (the estimator `SVC` & its parameters) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
+  visually.** 21 cells (≤24 ceiling), 4 figures (the `C × gamma` CV heatmap;
+  the gamma boundary grid under→good→over with SV counts 167/88/163; the OvO 3-class regions;
+  calibration reliability). Parity `SVC(linear,C=1e6)` == NB-1 (‖w‖ 1.1612, SVs [23,26]); OvO
+  penguins_full 3 pairwise / CV 0.956 / decision_function `(5,3)`; GridSearch best `{C=10,γ=1}` CV 0.919
+  / sealed test 0.944. Reviewers: **pedagogy PASS** (cell budget exemplary; 2 MINOR); **ml-expert
+  REVISE → folded** (MAJOR — calibration prose said "held-out" but `FrozenEstimator` fit the sigmoid
+  in-sample → switched to **`CalibratedClassifierCV(SVC(), method="sigmoid", ensemble=False)`**, now
+  leak-free and matching the printed deprecation idiom, Brier 0.106→0.072; MINOR — decision_function
+  shape `(5,3)` to disambiguate). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 48. No
+  `src/` change (pytest 19). Next: Rémy visual → commit + merge.
+- **NB 3 (the kernel trick) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 21 cells,
+  4 figures (2-D→3-D `r²` lift with a separating plane; the RBF circular
+  boundary; poly degree-2 vs degree-3; RBF on moons). By hand on `make_circles`: linear CV 0.557 → `r²`
+  lift separates (inner [0.05,1.48] vs outer [1.96,5.26], threshold acc 1.000) → RBF **0.997** (38 SVs)
+  without forming `r²`; poly **deg-2 1.000 / deg-3 0.613** (degree must match the geometry); moons
+  0.840→0.970. Reviewers: **both PASS**; 3 MINOR polish folded (named the poly default `coef0=0` as the
+  reason odd degrees miss the radial form; noted RBF default `gamma='scale'`; flagged `make_circles` as
+  new vocabulary). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 47. No `src/` change
+  (pytest 19). Next: Rémy visual → commit + merge.
+- **NB 2 (the soft margin & the cost `C`) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
+  visually.** 22 cells, 3 figures (hinge-vs-log-loss; small-`C` vs large-`C`
+  street; margin & #SV vs `C`). By hand on penguins: hard margin infeasible (1 error, idx 128) → slack;
+  hinge `max(0,1−m)` at C=1 = 0 / 0.40 / 1.31; `C`-sweep margin 2.28→0.35, SVs 124→6, accuracy ~flat
+  (`C` sets the geometry). Reviewers: **pedagogy PASS** (2 MINOR folded — Fig-B right y-label, "all of
+  them" wording); **ml-expert REVISE → folded** (MAJOR — "support vector = pays slack" was wrong: SVs
+  are points with m≤1, the on-edge ones pay zero slack → at C=1, **17 SVs vs 15 slack-payers**; cells
+  6/8/14 corrected + reconnected to NB 1; MINOR — singular "point(s)"). Guards: 0 banned, ruff/hex
+  clean, output-free, `llms.txt` 46. No `src/` change (pytest 19). Next: Rémy visual → commit + merge.
+- **NB 2 (the soft margin & the cost `C`) OPENED.** Branch `notebook/05_SVM__02_soft_margin_C` off
+  `chapter/05_SVM` (@ `0383cd3`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode —
+  one concept, **slack & the cost `C`**, by hand on penguins (real, near-separable: a hard margin is
+  infeasible → slack). Sweep `C` (margin 2.28→0.35, support vectors 124→6, accuracy ~flat = `C` sets the
+  geometry); the **hinge loss** `max(0,1−y·f(x))` in `y∈{−1,+1}`, tied to ch-03 log-loss. Anchors in the
+  chapter plan §NB 2; re-measured at build. Next: Rémy validates the NB-2 plan → build.
+- **NB 1 (the maximum margin) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 22 cells,
+  4 figures (candidate lines + margins; the max-margin street via the new
+  `viz.plot_svm_decision`; support-vector invariance delete/move; LogReg contrast). By-hand → `SVC(linear,
+  C=1e6)` parity **exact**: street 1.7224 = 2/‖w‖, ‖w‖ 1.1612, SVs [23,26], cos 1.0, functional margins
+  ±1; LogReg nearest-point 0.774 < SVM 0.861. **`src/` add:** `viz.plot_svm_decision` (street ±1 contours
+  + ringed SVs) + 2 tests → **pytest 19**. Reviewers: **pedagogy PASS** (3 MINOR folded — ±1-scaling
+  sentence, exercise-3 panel ref, exercise-1 figure anchor); **ml-expert REVISE → folded** (MAJOR — the
+  closest-pair/perpendicular-bisector recipe is a *special case* → added the **convex-hull scope caveat**
+  in cells 7/9/20/21; MINORs — Figure-A tilted-band note, `C=1e6 ≈ hard margin` flagged in prose).
+  Guards: 0 banned, ruff clean, hex clean, output-free, `llms.txt` 45. Next: Rémy visual → commit + merge.
+- **NB 1 (the maximum margin) OPENED.** Branch `notebook/05_SVM__01_maximum_margin` off
+  `chapter/05_SVM` (@ `8f1f982`). Phase `notebook-plan`: drafting the cell-by-cell plan in plan mode —
+  one concept, **the widest margin & support vectors**, by hand on a separable blob set (measure
+  several separating lines' margins → the widest; the 2 support vectors; `margin = 2/‖w‖`) →
+  `SVC(kernel="linear", C=1e6)` parity (‖w‖≈1.16 / margin≈1.72 / 2 SVs). Introduces the
+  `viz.plot_svm_decision` helper (street ±1 contours + ringed SVs) with a smoke test (pytest 17→18).
+  Anchors in the chapter plan §NB 1; re-measured at build. Next: Rémy validates the NB-1 plan → build.
+- **Chapter 05 (Support Vector Machines) plan APPROVED & persisted** (`docs/plans/chapter_05_SVM.md`,
+  this commit). **FIVE notebooks** (standard arc): NB 1 the maximum margin & support vectors (by hand
+  on separable blobs → `SVC(linear)` parity, ‖w‖≈1.16 / margin≈1.72 / 2 SVs) → NB 2 the soft margin &
+  cost `C` (penguins; margin 2.28→0.35, SVs 124→6; hinge loss tied to ch-03 log-loss) → NB 3 the kernel
+  trick (`make_circles`: linear CV 0.557 → `r²` lift → RBF 0.997; poly degree must match the geometry —
+  deg-2 1.000 / deg-3 0.613) → NB 4 the estimator `SVC` & its parameters (the `C×gamma` bias-variance
+  map; `kernel`; OvO; `decision_function`→calibration, `probability=True` deprecation pinned) → NB 5
+  demanding case **breast_cancer** (scaling headline raw 0.910→std 0.965; GridSearch test 0.965; spine
+  KNN 0.942 / tree 0.906 / LogReg 0.953 / **SVM 0.965**; measured fit-time ~n^1.6 = the large-data
+  limit). First **margin-based** method; the **kernel trick**. Reviewer-gated: **pedagogy PASS** (3
+  build-MINORs folded); **ml-expert REVISE → all folded** (MAJOR: default poly degree-3 fails on circles
+  CV 0.613 → pin degree-2 + the *degree-must-match-geometry* beat; MINORs: calibration provenance, hinge
+  `{−1,+1}`, n^1.6 framing). **21/22 anchors reproduced** on sklearn 1.9.0; API facts (`probability=True`
+  deprecation, `gamma='scale'`, OvO) **verified on the live install**. **`src/` addition planned:**
+  `viz.plot_svm_decision` (NB 1, reused NB 1–4) + test → pytest 17→18. `course_map.md` §05 annotated.
+  Next: open NB 1.
+- **Chapter 05 (Support Vector Machines) opened.** Branch `chapter/05_SVM` created off `main` (synced
+  @ `5f61e56` after PR #4). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §05 and the per-method arc (the widest-margin idea by hand on separable 2-D → soft
+  margin / cost `C` → the kernel trick → parameters `C`/`kernel`/`gamma` and the bias/variance picture
+  they control → demanding case: scaling matters, CV model selection, honest limits on large data). The
+  fifth method — the first built on the **maximum-margin** principle, the bridge from linear boundaries
+  (ch 03) to kernels. The pending `idle` STATE edit was folded into this transition (committed on the
+  chapter branch, not on protected `main`).
+- **CHAPTER 04 (Decision Trees) COMPLETE — merged to `main` via PR #4** (merge commit `5f61e56`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Five notebooks: impurity & the best split · growing & reading a tree · overfitting & pruning · the
+  estimator & its parameters · breast_cancer (interpretability vs accuracy). The first **non-linear**,
+  rule-based method and the **base learner** for the ensemble half of the course. **No `src/` change**
+  (pytest stays 17; `load_breast_cancer` reused from ch 03). The two-reviewer gate + Rémy's visual
+  validation held on every notebook; sklearn-1.9 anchors re-measured throughout; Rémy's spot-checks
+  caught real issues that were fixed (NB 3 thin-band rendering → verified real tree regions; NB 4
+  leaf-count read; NB 5 threshold conflation). `main` synced locally to `5f61e56`, green (pytest 17).
+  STATE set to `idle` (pending edit, folds into the chapter-05 opening). Next: chapter `05_SVM`.
 - **NB 5 (demanding case: breast cancer) BUILT & MERGED to `chapter/04_DecisionTree` — Rémy validated
-  visually. CHAPTER 04 COMPLETE (5/5), closing via PR into `main`.** The chapter
+  visually. CHAPTER 04 COMPLETE (5/5).** The chapter
   **capstone**, visualization-first: 26 cells, 6 figures (class balance; depth-3 tree rules via
   `plot_tree`; cross-method accuracy bar KNN 0.942 / LogReg 0.953 / single tree 0.906 / bagged-25
   0.930; root-feature flips; Gini-vs-permutation importance; confusion matrix). Full honest workflow on
