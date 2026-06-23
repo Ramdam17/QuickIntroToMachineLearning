@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **05_SVM — Support Vector Machines** (NB 4 of 5, planning; 3 done). Arc per `course_map.md` §05. |
 | Current notebook | **04_estimator_and_parameters** — the estimator `SVC` & its parameters (NB 4 of 5). |
-| Phase | `notebook-plan` (drafting the NB-4 cell-by-cell plan in plan mode) |
+| Phase | `notebook-plan-approved` (NB-4 plan validated by Rémy; building) |
 | Active branch | `notebook/05_SVM__04_estimator_and_parameters` (off `chapter/05_SVM` @ `be20cbd`) |
 | Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-4 `docs/plans/05_SVM__04_estimator_and_parameters.md` to be written on Rémy's approval |
-| Next concrete action | **Draft the NB-4 plan in plan mode**, then present for Rémy's validation. Integrative notebook (**~24-cell ceiling, four-shown/two-named**): parity `SVC(linear)` == NB-1 by-hand; the **`C × gamma` CV heatmap** on make_moons + a boundary grid (under→good→over); `kernel`; **OvO** on `load_penguins_full` (3-class CV 0.956); `decision_function`→**calibration** (`probability=True` deprecated → `CalibratedClassifierCV`, the ch-03 NB-6 pattern); **named:** `LinearSVC`/`SGD` (large-`n`, →NB 5), `class_weight`. On approval: write the NB-4 plan, phase `notebook-plan-approved`, build. |
+| Next concrete action | **Build NB 4** (`notebooks/05_SVM/04_estimator_and_parameters.ipynb`, ~22 cells, 4 figures) per `docs/plans/05_SVM__04_estimator_and_parameters.md` (APPROVED): parity vs NB-1; the `C × gamma` heatmap + gamma boundary grid; OvO on penguins_full (CV 0.956); calibration (`probability=True` deprecation pinned → `CalibratedClassifierCV`); GridSearch best {C10,γ1} test 0.944; `LinearSVC`/`class_weight` named. Reuse `plot_svm_decision`/`plot_decision_boundary`/`plot_calibration_curve`; no `src/` change (pytest 19). Then both reviewers (no BLOCK, watch the ~24-cell ceiling) + Rémy's visual validation → commit `feat(05_svm): notebook 04 — the estimator and its parameters` → merge notebook→chapter. |
 
 ## Notes / blockers
 
