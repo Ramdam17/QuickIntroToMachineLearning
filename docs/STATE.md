@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (NB 4 of 5, planning; 3 done). Arc per `course_map.md` §05. |
-| Current notebook | **04_estimator_and_parameters** — the estimator `SVC` & its parameters (NB 4 of 5). |
-| Phase | `notebook-plan-approved` (NB-4 plan validated by Rémy; building) |
-| Active branch | `notebook/05_SVM__04_estimator_and_parameters` (off `chapter/05_SVM` @ `be20cbd`) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-4 `docs/plans/05_SVM__04_estimator_and_parameters.md` to be written on Rémy's approval |
-| Next concrete action | **Build NB 4** (`notebooks/05_SVM/04_estimator_and_parameters.ipynb`, ~22 cells, 4 figures) per `docs/plans/05_SVM__04_estimator_and_parameters.md` (APPROVED): parity vs NB-1; the `C × gamma` heatmap + gamma boundary grid; OvO on penguins_full (CV 0.956); calibration (`probability=True` deprecation pinned → `CalibratedClassifierCV`); GridSearch best {C10,γ1} test 0.944; `LinearSVC`/`class_weight` named. Reuse `plot_svm_decision`/`plot_decision_boundary`/`plot_calibration_curve`; no `src/` change (pytest 19). Then both reviewers (no BLOCK, watch the ~24-cell ceiling) + Rémy's visual validation → commit `feat(05_svm): notebook 04 — the estimator and its parameters` → merge notebook→chapter. |
+| Current chapter | **05_SVM — Support Vector Machines** (4 of 5 notebooks done; NB 5 next — the capstone). Arc per `course_map.md` §05. |
+| Current notebook | — (NB 4 done & merged to `chapter/05_SVM`; NB 5 next). |
+| Phase | `notebook-commit` → NB 4 merged; ready to open NB 5 (the capstone) |
+| Active branch | `chapter/05_SVM` (NB 1–4 merged in; NB 5 branches off here) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-4 `docs/plans/05_SVM__04_estimator_and_parameters.md` (done) |
+| Next concrete action | **Open notebook 5 — the demanding case: breast cancer** (the chapter capstone, visualization-first). `git switch -c notebook/05_SVM__05_breast_cancer_scaling_limits` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-5 plan per `docs/plans/chapter_05_SVM.md` §NB 5: **scaling headline** raw CV 0.910 → std 0.965; GridSearch test 0.965; cross-method spine KNN 0.942 / tree 0.906 / LogReg 0.953 / **SVM 0.965**; confusion `[[104,3],[3,61]]` recall 0.953; **measured fit-time ~n^1.6 = the large-`n` limit**; a calibrated-probability threshold (NB-4's pattern). Rémy validates the NB-5 plan before build. **Last NB of chapter 05 — after it ships, close the chapter via PR into `main`.** |
 
 ## Notes / blockers
 
@@ -27,15 +27,17 @@
 
 ## Progress log (most recent first)
 
-- **NB 4 (the estimator `SVC` & its parameters) OPENED.** Branch
-  `notebook/05_SVM__04_estimator_and_parameters` off `chapter/05_SVM` (@ `be20cbd`). Phase
-  `notebook-plan`: drafting the cell-by-cell plan in plan mode — the **integrative** notebook
-  (~24-cell ceiling, four shown / two named): parity `SVC(linear)` == NB-1 by-hand; the **`C × gamma`
-  CV heatmap** on make_moons (the bias–variance map) + a boundary grid; `kernel`; **OvO** on
-  `load_penguins_full` (3-class CV 0.956); `decision_function`→calibration (`probability=True`
-  deprecated in 1.9 → `CalibratedClassifierCV`, the ch-03 NB-6 pattern); `LinearSVC`/`class_weight`
-  named. Anchors in the chapter plan §NB 4; re-measured at build. Next: Rémy validates the NB-4 plan
-  → build.
+- **NB 4 (the estimator `SVC` & its parameters) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
+  visually.** 21 cells (≤24 ceiling), 4 figures (the `C × gamma` CV heatmap;
+  the gamma boundary grid under→good→over with SV counts 167/88/163; the OvO 3-class regions;
+  calibration reliability). Parity `SVC(linear,C=1e6)` == NB-1 (‖w‖ 1.1612, SVs [23,26]); OvO
+  penguins_full 3 pairwise / CV 0.956 / decision_function `(5,3)`; GridSearch best `{C=10,γ=1}` CV 0.919
+  / sealed test 0.944. Reviewers: **pedagogy PASS** (cell budget exemplary; 2 MINOR); **ml-expert
+  REVISE → folded** (MAJOR — calibration prose said "held-out" but `FrozenEstimator` fit the sigmoid
+  in-sample → switched to **`CalibratedClassifierCV(SVC(), method="sigmoid", ensemble=False)`**, now
+  leak-free and matching the printed deprecation idiom, Brier 0.106→0.072; MINOR — decision_function
+  shape `(5,3)` to disambiguate). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 48. No
+  `src/` change (pytest 19). Next: Rémy visual → commit + merge.
 - **NB 3 (the kernel trick) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 21 cells,
   4 figures (2-D→3-D `r²` lift with a separating plane; the RBF circular
   boundary; poly degree-2 vs degree-3; RBF on moons). By hand on `make_circles`: linear CV 0.557 → `r²`
