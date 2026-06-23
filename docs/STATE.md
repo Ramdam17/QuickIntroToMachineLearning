@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (3 of 5 notebooks done; NB 4 next). Arc per `course_map.md` §05. |
-| Current notebook | — (NB 3 done & merged to `chapter/05_SVM`; NB 4 next). |
-| Phase | `notebook-commit` → NB 3 merged; ready to open NB 4 |
-| Active branch | `chapter/05_SVM` (NB 1–3 merged in; NB 4 branches off here) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-3 `docs/plans/05_SVM__03_kernel_trick.md` (done) |
-| Next concrete action | **Open notebook 4 — the estimator `SVC` & its parameters.** `git switch -c notebook/05_SVM__04_estimator_and_parameters` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-4 plan per `docs/plans/chapter_05_SVM.md` §NB 4: parity vs NB-1's by-hand line; the **`C × gamma` CV heatmap** on make_moons (the bias–variance map) + a boundary grid; `kernel`; **OvO** on `load_penguins_full` (3-class CV 0.956); `decision_function`→calibration with the **`probability=True` deprecation pinned → `CalibratedClassifierCV`**; `LinearSVC`/`class_weight` named. **~24-cell ceiling, four-shown/two-named discipline.** Rémy validates the NB-4 plan before build. |
+| Current chapter | **05_SVM — Support Vector Machines** (NB 4 of 5, planning; 3 done). Arc per `course_map.md` §05. |
+| Current notebook | **04_estimator_and_parameters** — the estimator `SVC` & its parameters (NB 4 of 5). |
+| Phase | `notebook-plan` (drafting the NB-4 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/05_SVM__04_estimator_and_parameters` (off `chapter/05_SVM` @ `be20cbd`) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-4 `docs/plans/05_SVM__04_estimator_and_parameters.md` to be written on Rémy's approval |
+| Next concrete action | **Draft the NB-4 plan in plan mode**, then present for Rémy's validation. Integrative notebook (**~24-cell ceiling, four-shown/two-named**): parity `SVC(linear)` == NB-1 by-hand; the **`C × gamma` CV heatmap** on make_moons + a boundary grid (under→good→over); `kernel`; **OvO** on `load_penguins_full` (3-class CV 0.956); `decision_function`→**calibration** (`probability=True` deprecated → `CalibratedClassifierCV`, the ch-03 NB-6 pattern); **named:** `LinearSVC`/`SGD` (large-`n`, →NB 5), `class_weight`. On approval: write the NB-4 plan, phase `notebook-plan-approved`, build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,15 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `SVC` & its parameters) OPENED.** Branch
+  `notebook/05_SVM__04_estimator_and_parameters` off `chapter/05_SVM` (@ `be20cbd`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan in plan mode — the **integrative** notebook
+  (~24-cell ceiling, four shown / two named): parity `SVC(linear)` == NB-1 by-hand; the **`C × gamma`
+  CV heatmap** on make_moons (the bias–variance map) + a boundary grid; `kernel`; **OvO** on
+  `load_penguins_full` (3-class CV 0.956); `decision_function`→calibration (`probability=True`
+  deprecated in 1.9 → `CalibratedClassifierCV`, the ch-03 NB-6 pattern); `LinearSVC`/`class_weight`
+  named. Anchors in the chapter plan §NB 4; re-measured at build. Next: Rémy validates the NB-4 plan
+  → build.
 - **NB 3 (the kernel trick) BUILT & MERGED to `chapter/05_SVM` — Rémy validated visually.** 21 cells,
   4 figures (2-D→3-D `r²` lift with a separating plane; the RBF circular
   boundary; poly degree-2 vs degree-3; RBF on moons). By hand on `make_circles`: linear CV 0.557 → `r²`
