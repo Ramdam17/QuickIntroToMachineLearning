@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (NB 5 of 5, planning; 4 done — the capstone). Arc per `course_map.md` §05. |
-| Current notebook | **05_breast_cancer_scaling_limits** — the demanding case (NB 5 of 5, capstone). |
-| Phase | `notebook-plan-approved` (NB-5 plan validated by Rémy; building the capstone) |
-| Active branch | `notebook/05_SVM__05_breast_cancer_scaling_limits` (off `chapter/05_SVM` @ `4126682`) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` to be written on Rémy's approval |
-| Next concrete action | **Build NB 5** (`notebooks/05_SVM/05_breast_cancer_scaling_limits.ipynb`, ~26 cells, 6 figures, visualization-first) per `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` (APPROVED): scaling headline (raw 0.910/std 0.965); GridSearch test 0.965; spine KNN 0.942/tree 0.906/LogReg 0.953/SVM 0.965; confusion `[[104,3],[3,61]]`; the **honest threshold surprise** (lowering it doesn't recover the 3 confident misses, only adds false alarms); measured fit-time ≈n^1.67 vs LinearSVC; chapter wrap → ensembles. Reuse `plot_class_balance`/`plot_confusion_matrix`; no `src/` change (pytest 19). Then both reviewers (no BLOCK) + Rémy's visual validation → commit `feat(05_svm): notebook 05 — a demanding case: breast cancer` → merge → **close chapter 05 via PR into `main`**. |
+| Current chapter | **05_SVM — Support Vector Machines** — all 5 notebooks built & validated; **closing via PR into `main`**. |
+| Current notebook | — (NB 5 done; chapter 05 complete). |
+| Phase | `chapter-merge` (NB 5 merged; opening the chapter-05 PR into `main`) |
+| Active branch | `chapter/05_SVM` (NB 1–5 merged in) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED, all 5 NBs done); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` (done) |
+| Next concrete action | **Close chapter 05 via PR into `main`.** Push `chapter/05_SVM`; `gh pr create --base main --head chapter/05_SVM` (title `feat(05_svm): complete chapter — support vector machines`); `gh pr merge --merge` (`--no-ff`, per-notebook history preserved); `git switch main && git pull --ff-only`; verify `pytest` green. Then set STATE `idle` (the pending edit, folds into the chapter-06 opening — `main` is PR-only). **Next chapter: `06_RandomForest`.** |
 
 ## Notes / blockers
 
@@ -27,16 +27,20 @@
 
 ## Progress log (most recent first)
 
-- **NB 5 (the demanding case: breast cancer) OPENED.** Branch
-  `notebook/05_SVM__05_breast_cancer_scaling_limits` off `chapter/05_SVM` (@ `4126682`). Phase
-  `notebook-plan`: drafting the cell-by-cell plan in plan mode — the chapter **capstone**,
-  **visualization-first**. Full honest workflow on breast_cancer: the **scaling headline** (raw CV
-  0.910 → std 0.965), `GridSearchCV` → sealed test 0.965, the cross-method spine (KNN 0.942 / tree
-  0.906 / LogReg 0.953 / **SVM 0.965**), confusion `[[104,3],[3,61]]` (recall 0.953), the **measured
-  large-`n` limit** (kernel `SVC` fit-time ~n^1.6 vs `LinearSVC`), a calibrated-probability threshold,
-  and the bridge to ensembles (ch 06+). Anchors in the chapter plan §NB 5; re-measured at build.
-  **This is the last notebook of chapter 05** — after it ships, the chapter closes via PR into `main`.
-  Next: Rémy validates the NB-5 plan → build.
+- **NB 5 (the demanding case: breast cancer) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
+  visually. CHAPTER 05 COMPLETE (5/5); closing via PR into `main`.** The chapter **capstone**,
+  visualization-first: 26 cells,
+  6 figures (class balance; raw-vs-std scaling bar; `C × gamma` heatmap; cross-method spine bar;
+  confusion; fit-time-vs-`n` curve). Scaling raw CV 0.9095 → std 0.9648; GridSearch `{C100,γ0.001,rbf}`
+  CV 0.982 / sealed test 0.9649 / 42 SVs; spine KNN 0.9415 / tree 0.9064 / LogReg 0.9532 / **SVM
+  0.9649**; confusion `[[104,3],[3,61]]` recall 0.953; **honest threshold surprise** (the 3 misses sit
+  at calibrated proba 0.06/0.13/0.19 — confidently wrong; lowering the cut only adds false alarms);
+  measured fit-time ≈n^1.67 (worst case O(n³)), 2.68 s vs LinearSVC 0.018 s at n=32 000. Reviewers:
+  **both PASS**; ml-expert 3 MINOR folded (the ch-03 contrast made precise — the lever reaches
+  *borderline* misses, not confident ones, in either model; "lowering only adds positives" stated;
+  exponent flagged this-run), pedagogy 2 MINOR (course_map §05 → mark complete at chapter close;
+  Going-further optional, omitted). Guards: 0 banned, ruff/hex clean, output-free, `llms.txt` 49. No
+  `src/` change (pytest 19). **Last NB of chapter 05.** Next: Rémy visual → commit + merge → PR to `main`.
 - **NB 4 (the estimator `SVC` & its parameters) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
   visually.** 21 cells (≤24 ceiling), 4 figures (the `C × gamma` CV heatmap;
   the gamma boundary grid under→good→over with SV counts 167/88/163; the OvO 3-class regions;

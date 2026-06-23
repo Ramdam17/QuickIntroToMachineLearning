@@ -46,3 +46,4 @@
 - [notebooks/05_SVM/02_soft_margin_C.ipynb](notebooks/05_SVM/02_soft_margin_C.ipynb) — 02 — The soft margin and the cost C — *Notebook 2 of 5 · Support Vector Machines*
 - [notebooks/05_SVM/03_kernel_trick.ipynb](notebooks/05_SVM/03_kernel_trick.ipynb) — 03 — The kernel trick — *Notebook 3 of 5 · Support Vector Machines*
 - [notebooks/05_SVM/04_estimator_and_parameters.ipynb](notebooks/05_SVM/04_estimator_and_parameters.ipynb) — 04 — The estimator SVC and its parameters — *Notebook 4 of 5 · Support Vector Machines*
+- [notebooks/05_SVM/05_breast_cancer_scaling_limits.ipynb](notebooks/05_SVM/05_breast_cancer_scaling_limits.ipynb) — 05 — A demanding case: breast cancer — *Notebook 5 of 5 · Support Vector Machines*
