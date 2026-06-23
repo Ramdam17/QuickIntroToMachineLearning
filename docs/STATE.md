@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** (4 of 5 notebooks done; NB 5 next — the capstone). Arc per `course_map.md` §05. |
-| Current notebook | — (NB 4 done & merged to `chapter/05_SVM`; NB 5 next). |
-| Phase | `notebook-commit` → NB 4 merged; ready to open NB 5 (the capstone) |
-| Active branch | `chapter/05_SVM` (NB 1–4 merged in; NB 5 branches off here) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-4 `docs/plans/05_SVM__04_estimator_and_parameters.md` (done) |
-| Next concrete action | **Open notebook 5 — the demanding case: breast cancer** (the chapter capstone, visualization-first). `git switch -c notebook/05_SVM__05_breast_cancer_scaling_limits` off `chapter/05_SVM`; set STATE phase `notebook-plan`; in plan mode draft the NB-5 plan per `docs/plans/chapter_05_SVM.md` §NB 5: **scaling headline** raw CV 0.910 → std 0.965; GridSearch test 0.965; cross-method spine KNN 0.942 / tree 0.906 / LogReg 0.953 / **SVM 0.965**; confusion `[[104,3],[3,61]]` recall 0.953; **measured fit-time ~n^1.6 = the large-`n` limit**; a calibrated-probability threshold (NB-4's pattern). Rémy validates the NB-5 plan before build. **Last NB of chapter 05 — after it ships, close the chapter via PR into `main`.** |
+| Current chapter | **05_SVM — Support Vector Machines** (NB 5 of 5, planning; 4 done — the capstone). Arc per `course_map.md` §05. |
+| Current notebook | **05_breast_cancer_scaling_limits** — the demanding case (NB 5 of 5, capstone). |
+| Phase | `notebook-plan` (drafting the NB-5 cell-by-cell plan in plan mode) |
+| Active branch | `notebook/05_SVM__05_breast_cancer_scaling_limits` (off `chapter/05_SVM` @ `4126682`) |
+| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` to be written on Rémy's approval |
+| Next concrete action | **Draft the NB-5 plan in plan mode**, then present for Rémy's validation. The **capstone, visualization-first** (~20 cells a floor) on breast_cancer: **scaling headline** raw CV 0.910 → std 0.965; `GridSearchCV` → sealed test 0.965; cross-method spine KNN 0.942 / tree 0.906 / LogReg 0.953 / **SVM 0.965**; confusion `[[104,3],[3,61]]` recall 0.953; **measured fit-time ~n^1.6 = the large-`n` limit** (kernel `SVC` vs `LinearSVC`); a calibrated-probability threshold; bridge to ensembles (ch 06+). On approval: write the NB-5 plan, phase `notebook-plan-approved`, build. **Last NB of chapter 05 — then close via PR into `main`.** |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case: breast cancer) OPENED.** Branch
+  `notebook/05_SVM__05_breast_cancer_scaling_limits` off `chapter/05_SVM` (@ `4126682`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan in plan mode — the chapter **capstone**,
+  **visualization-first**. Full honest workflow on breast_cancer: the **scaling headline** (raw CV
+  0.910 → std 0.965), `GridSearchCV` → sealed test 0.965, the cross-method spine (KNN 0.942 / tree
+  0.906 / LogReg 0.953 / **SVM 0.965**), confusion `[[104,3],[3,61]]` (recall 0.953), the **measured
+  large-`n` limit** (kernel `SVC` fit-time ~n^1.6 vs `LinearSVC`), a calibrated-probability threshold,
+  and the bridge to ensembles (ch 06+). Anchors in the chapter plan §NB 5; re-measured at build.
+  **This is the last notebook of chapter 05** — after it ships, the chapter closes via PR into `main`.
+  Next: Rémy validates the NB-5 plan → build.
 - **NB 4 (the estimator `SVC` & its parameters) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
   visually.** 21 cells (≤24 ceiling), 4 figures (the `C × gamma` CV heatmap;
   the gamma boundary grid under→good→over with SV counts 167/88/163; the OvO 3-class regions;
