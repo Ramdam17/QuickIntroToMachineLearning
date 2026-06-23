@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** — all 5 notebooks built & validated; **closing via PR into `main`**. |
-| Current notebook | — (NB 5 done; chapter 05 complete). |
-| Phase | `chapter-merge` (NB 5 merged; opening the chapter-05 PR into `main`) |
-| Active branch | `chapter/05_SVM` (NB 1–5 merged in) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED, all 5 NBs done); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` (done) |
-| Next concrete action | **Close chapter 05 via PR into `main`.** Push `chapter/05_SVM`; `gh pr create --base main --head chapter/05_SVM` (title `feat(05_svm): complete chapter — support vector machines`); `gh pr merge --merge` (`--no-ff`, per-notebook history preserved); `git switch main && git pull --ff-only`; verify `pytest` green. Then set STATE `idle` (the pending edit, folds into the chapter-06 opening — `main` is PR-only). **Next chapter: `06_RandomForest`.** |
+| Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
+| Current notebook | — (chapter-planning; no notebook opened yet). |
+| Phase | `chapter-plan` (drafting the chapter 06 plan in plan mode) |
+| Active branch | `chapter/06_RandomForest` (off `main` @ `b5c00f7`) |
+| Active plan | none yet — chapter 06 plan being drafted (→ `docs/plans/chapter_06_RandomForest.md` on approval) |
+| Next concrete action | **Draft the chapter 06 plan in plan mode**, per `course_map.md` §06 and the per-method arc: run the concept tour over Random Forests, then distribute the primordial concepts across **NB 1–3** (one concept each — why averaging many trees reduces variance / bagging, by hand → bootstrap samples + feature subsampling that decorrelate the trees → out-of-bag estimation & feature-importance caveats), settle **NB 4** (the estimator `RandomForestClassifier` & its parameters: `n_estimators`/`max_features`/depth, diminishing returns), and choose **NB 5** (the demanding case: a strong tabular baseline, reading importances honestly). Both reviewers gate the plan (no BLOCK); Rémy validates before any notebook is built. The first **ensemble** method — the direct answer to the single tree's variance seen in ch 04 (NB 5's hand-bagged 25-tree bar was a first taste). |
 
 ## Notes / blockers
 
@@ -27,8 +27,27 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 06 (Random Forests) opened.** Branch `chapter/06_RandomForest` created off `main` (synced
+  @ `b5c00f7` after PR #5). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §06 and the per-method arc (why averaging many trees reduces variance — bagging, by
+  hand → bootstrap samples + feature subsampling that decorrelate the trees → out-of-bag estimation &
+  feature-importance caveats → parameters `n_estimators`/`max_features`/depth, diminishing returns →
+  demanding case: a strong tabular baseline, reading importances honestly). The first **ensemble**
+  method and the direct answer to the single tree's variance (ch 04 NB 5's hand-bagged 25-tree bar was
+  a first taste). The pending `idle` STATE edit was folded into this transition (committed on the
+  chapter branch, not on protected `main`).
+- **CHAPTER 05 (Support Vector Machines) COMPLETE — merged to `main` via PR #5** (merge commit
+  `b5c00f7`, `gh pr merge --merge`; per-notebook history preserved; pushed to
+  Ramdam17/QuickIntroToMachineLearning). Five notebooks: the maximum margin · the soft margin & cost C ·
+  the kernel trick · the estimator `SVC` & its parameters · breast_cancer (scaling, limits). The first
+  **margin-based** method and the home of the **kernel trick**. **`src/` add:** `viz.plot_svm_decision`
+  + 2 tests (pytest 17 → 19). The two-reviewer gate + Rémy's visual validation held on every notebook;
+  every number re-measured on sklearn 1.9.0; honest findings surfaced (the threshold cannot rescue a
+  confident miss; the measured large-`n` ceiling). `main` synced locally to `b5c00f7`, green (pytest
+  19). STATE set to `idle` (pending edit, folds into the chapter-06 opening). Next: chapter
+  `06_RandomForest`.
 - **NB 5 (the demanding case: breast cancer) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
-  visually. CHAPTER 05 COMPLETE (5/5); closing via PR into `main`.** The chapter **capstone**,
+  visually. Part of CHAPTER 05, merged to `main` via PR #5.** The chapter **capstone**,
   visualization-first: 26 cells,
   6 figures (class balance; raw-vs-std scaling bar; `C × gamma` heatmap; cross-method spine bar;
   confusion; fit-time-vs-`n` curve). Scaling raw CV 0.9095 → std 0.9648; GridSearch `{C100,γ0.001,rbf}`
