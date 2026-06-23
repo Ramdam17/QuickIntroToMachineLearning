@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | **NB 3 — `03_out_of_bag`** (out-of-bag estimation: the bootstrap's free validation set). |
-| Phase | `notebook-build` (NB-3 plan APPROVED by Rémy & persisted; building the notebook) |
-| Active branch | `notebook/06_RandomForest__03_out_of_bag` (off `chapter/06_RandomForest` @ `1789474`) |
-| Active plan | **`docs/plans/06_RandomForest__03_out_of_bag.md`** (APPROVED — ~21 cells) |
-| Next concrete action | **Build NB 3, then gate it.** Build from the approved plan (OOB on breast_cancer: derive `(1−1/n)^n → 1/e` + measure 0.368; build the OOB vote **by hand** → 0.962, ~73 graders/point; parity sklearn `oob_score_` 0.955; OOB ≈ test 0.942, mildly optimistic; OOB-vs-`n_estimators` converges by ~25 trees, sklearn warns at few trees); execute end-to-end (nbconvert **from project cwd**); rebuild tracked file **output-free**; guards (banned JSON scan, hex, `gen_llms_txt`, `pytest` 19, `ruff`); dispatch **both reviewers** (no BLOCK); fold; **Rémy visual** → commit `feat(06_random_forest): notebook 03 …` → merge `notebook → chapter`. No `src/` change (pytest stays 19). |
+| Current notebook | — (NB 3 `03_out_of_bag` **built, reviewed, Rémy-validated, merged** to `chapter/06_RandomForest`; NB 4 next). |
+| Phase | `notebook-commit` done for NB 3 → between notebooks; ready to open NB 4 |
+| Active branch | `chapter/06_RandomForest` (NB 1–3 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; NB 1–3 done, NB 4 next) |
+| Next concrete action | **Open NB 4 and plan it (plan mode).** `git switch -c notebook/06_RandomForest__04_estimator_and_parameters` off `chapter/06_RandomForest`; set STATE phase `notebook-plan`; draft the cell-by-cell plan — the integrative **estimator & parameters** notebook (~22–24 cells, soft ceiling): parity hand-bag == `RF(max_features=None)`; **`n_estimators`** (OOB/test diminishing returns, never overfits); **`max_features`** the central dial (NB 2's ρ); **`max_depth`/`min_samples_leaf`** (RF grows deep, robust); `bootstrap`/`class_weight`/`n_jobs` named; **feature importance introduced** (MDI spreads vs single-tree's 0.74 spike — re-measure; bias caveat; permutation named → NB 5); `GridSearchCV` honest tuning → sealed test; possible `viz.plot_feature_importances` helper (+test, pytest 19→20). Anchors in `chapter_06_RandomForest.md` §NB 4; re-measure at plan time. Rémy validates the NB-4 plan → build. No reviewer gate at the NB-plan stage. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (out-of-bag estimation) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
+  visually.** 20 cells (6 code / 14 md), 2 figures (in-bag/OOB schematic; OOB-error vs test-error vs
+  `n_estimators`). One concept: OOB = the bootstrap's free validation set. Derived `(1−1/n)ⁿ → 1/e`
+  (0.367 at n=398) + measured (0.368); **built the OOB vote by hand** (0.962, ~73 graders/point, 398/398
+  covered); parity sklearn `oob_score_` **0.955** ≈ hand; OOB ≈ **sealed test 0.942**, mildly optimistic
+  (~1–2 pts, parallel not converging); OOB unreliable < ~25 trees (sklearn **warns**, let through;
+  P(never OOB)=0.63³≈0.25). Reviewers: **pedagogy PASS**; **ml-expert REVISE → folded** (MAJOR — the
+  hand-vs-sklearn gap was wrongly blamed on hard-vs-soft vote; re-measured soft==hard (saturated leaf
+  probs) → corrected to RNG (different bootstrap draws); MINORs — optimism quantified, n=10 0.349,
+  `np.add.at` glossed). Guards: 0 banned, ruff/hex clean, output-free, `pytest` 19 (no `src/` change),
+  `llms.txt` regenerated; `common_errors` gained an OOB row. Canonical nbconvert exec (exit 0); both
+  figures eyeballed. Next: open NB 4 (the estimator & its parameters).
 - **NB 3 (out-of-bag estimation) OPENED.** Branch `notebook/06_RandomForest__03_out_of_bag` off
   `chapter/06_RandomForest` (@ `1789474`). Phase `notebook-plan`: drafting the cell-by-cell plan (plan
   mode) — one concept, **OOB**: each bootstrap omits ~1/e ≈ 37 % of points (derive + measure); the trees
