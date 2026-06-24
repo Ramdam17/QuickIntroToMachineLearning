@@ -63,7 +63,8 @@ learning_rate=1.0, random_state=None)`. `base_estimator` is **gone** (now `estim
   and by-hand staged predictions == sklearn test acc — **the NB 1 build runs this parity end-to-end on
   the through-line set (moons-0.20)**; the exact triple [1.4547, 0.7254, 1.3773] == `estimator_weights_[:3]`
   was a second-witness probe on moons-0.30 (ε₁=0.189). Round-2 ε can exceed round-1 ε — reweighting
-  makes the next problem deliberately harder. Running-ensemble **train error falls monotonically**.
+  makes the next problem deliberately harder. Running-ensemble **train error falls overall** (not
+  monotone round-to-round — the *combined* vote improves, with small wiggles), 0.157 → 0.0143 @ T=50.
 - **NB 2 — train error → 0; α from exponential loss.** On moons-0.20, AdaBoost(stumps) drives **train
   error to 0 by ≈ round 114**; the boundary sharpens with rounds. α_t is the per-round minimizer of
   Σ wᵢ·exp(−α yᵢ hᵢ) (verified on a grid). SAMME multiclass adds **ln(K−1)** (binary: 0; K=3 by-hand
