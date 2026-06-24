@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 5 `05_covtype_strong_baseline` **built, reviewed, Rémy-validated, committed & ff-merged** to `chapter/06_RandomForest`). **CHAPTER 06 COMPLETE (5/5).** |
-| Phase | `chapter-merge` — all 5 NBs on `chapter/06_RandomForest`; **ready to PR into `main`** (confirm with Rémy before the outward-facing push/PR) |
-| Active branch | `chapter/06_RandomForest` (NB 1–5 ff-merged in) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; **all 5 NBs done**) |
-| Next concrete action | **Close CHAPTER 06 via PR into `main`** (`main` is PR-only — global pre-push hook). On Rémy's go (outward-facing — confirm first): `git push -u origin chapter/06_RandomForest`; `gh pr create --base main --head chapter/06_RandomForest --title "feat(06_random_forest): complete chapter — Random Forests"`; `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = open chapter `07_AdaBoost`. PR body ends with the Claude Code trailer. |
+| Current chapter | **`07_AdaBoost` — all 5 NBs BUILT & merged to the chapter branch; CHAPTER-MERGE pending (PR into `main`).** The first **boosting** method. Chapter 06 (Random Forests) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 5 — a demanding case: spam (spambase)** (5 of 5, the capstone) — **DONE & ff-merged** to `chapter/07_AdaBoost`. Chapter 07 built end to end (5/5). |
+| Phase | `chapter-merge`: NB 5 COMMITTED & ff-merged; all 5 NBs on `chapter/07_AdaBoost`. Both reviewers PASS + Rémy validated NB 5 visually. **Next: close CHAPTER 07 via PR into `main` (`--no-ff`) — awaiting Rémy's explicit go (outward-facing push/PR).** |
+| Active branch | `chapter/07_AdaBoost` (all 5 NBs merged; notebook branches kept). |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED); all 5 NB plans persisted under `docs/plans/07_AdaBoost__0{1..5}_*.md`. |
+| Next concrete action | **Close CHAPTER 07 via PR into `main`** (outward-facing — only on Rémy's explicit go): `git push -u origin chapter/07_AdaBoost`; `gh pr create --base main --head chapter/07_AdaBoost` (title `feat(07_adaboost): complete chapter — AdaBoost`); `gh pr merge --merge` (`--no-ff`); `git switch main && git pull`. Then mark `course_map.md` §07 complete (merged to `main`), set STATE → `idle`, next = **open chapter 08 (GradientBoosting)**. Until that go: nothing to push; `main` stays PR-only (global pre-push hook). |
 
 ## Notes / blockers
 
@@ -24,9 +24,239 @@
   05), polynomial-degree complexity dial (NB 09–10).
 - Confirmed: notebooks all-English; maths re-established not presupposed; git history = preserve
   per-notebook, mark chapters (`--no-ff` chapter → main).
+- **Build gotcha (editor kernel-drift):** opening a notebook in the VS Code Jupyter editor rewrites its
+  kernelspec `display_name` to `ml-course (3.12.12.final.0)` — cosmetic (the kernel resolves by
+  `name: "python3"`), but it drifted NB 3's committed metadata once (normalized in `c493293`). **Habit:
+  rebuild each notebook from its build script right before `git add`** (after Rémy's visual validation)
+  so the canonical `ml-course (3.12.12)` ships; or `git restore` the file if only the display_name drifted.
 
 ## Progress log (most recent first)
 
+- **NB 5 (a demanding case: spam / spambase — the chapter capstone) BUILT & MERGED to
+  `chapter/07_AdaBoost` — Rémy validated visually. CHAPTER 07 built end to end (5/5).** The
+  **visualization-first capstone**: 26 cells (8 code / 18 md), **7 figures** (class balance;
+  cross-method accuracy; staged resistance; confusion; MDI vs permutation; noise 2-panel [by-hand
+  weight-on-flipped + clean-vs-40% staged test]; AdaBoost-vs-RF degradation). On spambase (4601×57,
+  openml): **AdaBoost shines** — test **0.949** ≈ RF **0.959** ≫ stump 0.782 (competitive, not a win;
+  the tuned SVM led near-linear bc — no universal best); staged **resistance** (test bottoms 0.0485@279,
+  flat to 0.0507@400; **train floor 0.045, never 0** — "train→0" is moons-only, real data has
+  irreducible overlap); confusion [[810,27],[43,501]] (recall 0.921 / precision 0.949, false-alarm
+  asymmetry); importance **MDI vs permutation** = spam-markers (`!`,`$`,`remove`) + **HP-Labs corpus
+  artifacts** (`george`,`hp`), not causal; **noise from the inside** (by-hand SAMME: ~21% flipped points
+  hoard ~40% of the weight; 40%-noise test bottoms 0.142@39 → climbs 0.177@400 = resistance is not
+  immunity); and the **"RF beats AdaBoost under noise" folk claim REVERSES on spam** (AdaBoost more
+  robust from 20% up; 40%: 0.823 vs RF 0.704) — shown but **NOT shipped as a law** (dataset-dependent:
+  the weak-stump base can't memorize noise, deep RF trees can). Reviewers: **ml-expert PASS** (by-hand
+  SAMME == sklearn to 5 dp, all anchors reproduced, 8 DOIs resolved, HP-Labs/`george` provenance
+  verified; 1 MINOR + 1 NIT folded); **pedagogy MAJOR → fixed → re-confirmed PASS** — cell-8 "the
+  ensembles trailed on breast_cancer" was false (ch 05's spine had no ensembles; 0.965 was the *tuned*
+  SVM) → re-anchored to "the tuned SVM led the four methods compared there", with the noise counter-case
+  (cell-22) carrying the ensemble-inclusive bc point. Guards: 0 banned (JSON scan), ruff/hex clean,
+  output-free; nbconvert exit 0 (0 errors / 7 figures); `llms.txt` **61**; `common_errors` +3 AdaBoost
+  rows (shines≠best; noise-not-a-law / mechanism; train-floor / irreducible-error). No `src/` change
+  (pytest **20**). Rebuilt from `build_ch07_nb5.py` right before `git add`. **Last NB of chapter 07 —
+  next: close the chapter via PR into `main` on Rémy's explicit go.**
+- **NB 5 (a demanding case: spambase — the chapter capstone) OPENED.** Branch
+  `notebook/07_AdaBoost__05_spambase` off `chapter/07_AdaBoost` (@ `802116b`). Phase `notebook-plan`:
+  drafting the cell-by-cell plan (plan mode) — the **visualization-first capstone** (~24–26 cells a
+  *floor*, ~7 figures): spambase (UCI, 4601×57, binary), **AdaBoost shines** (test acc ≈0.949 ≈ RF
+  0.956, ≫ single stump 0.782; staged test curve resists — bottoms ≈round 280, plateaus, no overfit;
+  spam *train* error never reaches 0, floor ≈0.045 — "train→0" is moons-only), and the **label-noise
+  weakness framed honestly/internally** — exp-loss non-robustness: by-hand, mislabeled points hoard a
+  disproportionate share of weight (~20% of points → ~45%), AdaBoost's **test error rises with rounds**
+  on noisy train; the RF comparison is shown but **NOT generalised into a law** (dataset-dependent: RF
+  wins on noisy breast_cancer but AdaBoost wins on noisy spam at 40% flip — the reversal). References
+  the breast_cancer cross-method spine for continuity. **Anchors being re-measured on sklearn 1.9.0 at
+  plan time.** No `src/` change expected (reuse `viz` helpers; pytest 20). Decision B (spambase, ESL ch
+  10). **Plan APPROVED by Rémy (via ExitPlanMode) & persisted** (`docs/plans/07_AdaBoost__05_spambase.md`,
+  ~27 cells / 7 figures); anchors re-measured (AdaBoost 0.949 ≈ RF 0.959 ≫ stump 0.782; staged clean
+  bottoms 0.0485@279, train floor 0.045 never 0; weight-on-flipped 0.21→~0.40; noisy-40% bottoms
+  0.142@39→0.177@400; degradation reversal AdaBoost > RF from 20% up); **building now.** **Last NB of
+  chapter 07 — after it ships, close the chapter via PR into `main`.**
+- **NB 4 (the estimator `AdaBoostClassifier` & its parameters) BUILT & MERGED to `chapter/07_AdaBoost`
+  — Rémy validated visually.** 22 cells (9 code / 13 md), 3 figures (boundary stump-base vs depth-3
+  base; the `n_estimators × learning_rate` CV heatmap; CV-vs-sealed-test bars, default vs tuned). The
+  **integrative** notebook, de-overloaded: parity recap (sklearn `AdaBoost(50)` test **0.9417**,
+  `estimator_weights_[:3]` = [1.6796, 1.1338, 1.3854] == by-hand NB 1/2); the **base-learner-strength**
+  headline — every base depth memorises (train **1.000**) but TEST falls as the base deepens (stump
+  **0.9417** → depth-5 **0.9167**), the **mirror image of a random forest** (boosting wants *weak*
+  learners); `n_estimators × learning_rate` 5-fold CV (pandas-pivot grid, rows=lr / cols=n: bottom-left
+  n50/lr0.1 **0.911** underfit → broad **0.95–0.96 plateau**, best lr0.5/n400 **0.9607**); **honest
+  tuning** default (n50, lr1.0) CV **0.9536** / tuned CV 0.9607 / **both sealed-test 0.9417** (the +0.007
+  CV gain did NOT transfer); current-API facts (**`algorithm` REMOVED** — SAMME only; `estimator` not
+  `base_estimator`; default base = stump); multiclass SAMME `+ln(K−1)` named; `feature_importances_`
+  ~[0.61, 0.39] (MDI, ch 06 caveat restated, honest reading deferred to NB 5). Reviewers: **pedagogy
+  PASS** (1 MINOR / 2 NIT, optional); **ml-expert BLOCK → fixed → re-confirmed PASS** — the `n_est×lr` CV
+  grid was **transposed** (GridSearchCV orders results by alphabetically-sorted keys; a naive `reshape`
+  scrambled 10/12 cells and the heatmap contradicted `best_params_`), fixed via a **pandas pivot** keyed
+  on the real param values (heatmap `origin="lower"`), with the consequential default-CV correction
+  0.9429 → **0.9536** (`cross_val_score`-confirmed). Guards: 0 banned (JSON scan), ruff/black clean, hex
+  clean, output-free; nbconvert exit 0 (0 errors / 3 figures / 8 streams); `llms.txt` **60**;
+  `common_errors` gained 2 AdaBoost rows (base-must-stay-weak; the GridSearchCV alphabetical-key
+  **transpose trap**). No `src/` change (pytest **20**). Rebuilt from `build_ch07_nb4.py` right before
+  `git add` (kernel-drift habit; the display_name was already canonical). Next: open NB 5 (the spambase
+  capstone) — the last of ch 07, then close the chapter via PR into `main`.
+- **NB 4 BUILT; reviewer gate run; an ml-expert BLOCK found & fixed (awaiting re-confirm + Rémy
+  visual).** Built `04_estimator_and_parameters.ipynb` (22 cells, 9 code / 13 md, 3 figs: boundary
+  stump-vs-depth3; n_est×lr CV heatmap; CV-vs-test bars). pedagogy **PASS** (1 MINOR/2 NIT, optional).
+  ml-expert **BLOCK**: the `n_estimators × learning_rate` CV grid was **transposed** — GridSearchCV
+  orders results by *alphabetically-sorted* keys (`learning_rate` outer, `n_estimators` inner), so a
+  naive `reshape(n, lr)` scrambled 10/12 cells and the heatmap contradicted the printed `best_params_`.
+  (The bug was in the measurement script too — it slipped through.) **Fixed:** grid now built via a
+  **pandas pivot** keyed on the real param values (order-independent); heatmap rows=`learning_rate`,
+  cols=`n_estimators`, `origin="lower"` (bottom-left n=50/lr=0.1 = 0.911 underfit); the 0.961 best cell
+  now sits at (lr=0.5, n=400) = `best_params_`. Consequential correction: **default (n50,lr1.0) CV =
+  0.9536** (not 0.9429; `cross_val_score`-confirmed), tuned 0.9607, **both sealed-test 0.9417** — the
+  "+0.007 CV gain didn't transfer" lesson, cleaner. Plan doc table + numbers corrected to match (+ a
+  note on the transpose trap). Other anchors unchanged & verified (SAMME-only API, parity 0.9417,
+  base-strength 0.9417→0.9167, importances ~[0.61,0.39]). Guards green; output-free; nbconvert exit 0.
+  ml-expert re-confirming the fix in background (agent `a80d8427987ca88ce`). No `src/` change (pytest
+  20). Next: reviewer PASS → Rémy visual → commit + ff-merge → NB 5 (spambase capstone).
+- **NB 4 (the estimator `AdaBoostClassifier` & its parameters) OPENED.** Branch
+  `notebook/07_AdaBoost__04_estimator_and_parameters` off `chapter/07_AdaBoost` (@ `c493293`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — the **integrative** notebook (de-overloaded): parity
+  recap (sklearn == by-hand, NB 1/2); the dials — **`estimator`** (the base-learner-strength knob:
+  stump vs deeper → overfits faster), **`n_estimators` × `learning_rate`** interplay (CV heatmap); the
+  current-API fact **`algorithm` is REMOVED** (SAMME only); multiclass SAMME named; `feature_importances_`
+  (MDI, ch 06 caveat, honest reading deferred to NB 5); honest **`GridSearchCV`** on train → one sealed
+  test. Anchors re-measured (moons-0.20): base-strength n=200 all train 1.000, test 0.9417(d1) →
+  0.9167(d5); n_est×lr CV best lr0.5/n400 0.9607 vs default 0.9429; **tuned == default on sealed test
+  0.9417** (CV gain didn't transfer — honest, echoes ch 06). 3 figures. No `src/` change planned (pytest
+  20). **Plan APPROVED by Rémy & persisted** (`docs/plans/07_AdaBoost__04_estimator_and_parameters.md`);
+  building now.
+- **NB 3 (learning rate, rounds & overfitting behaviour) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
+  validated visually.** 20 cells (5 code / 15 md), 3 figures (clean staged train/test; lr sweep
+  {1.0,0.5,0.1}; a 2-panel noise figure — clean-vs-noisy test error on one clean test set + the
+  contorted boundary with flipped points ringed). The **richer-scope** NB (Decision A), one declared
+  concept: rounds × `learning_rate` & overfitting behaviour. Anchors: `learning_rate` scales α
+  (estimator_weights_ = lr·ln((1−ε)/ε) → 1.68/0.84/0.168, **by-hand SAMME matched to 5 dp incl.
+  estimator_errors_** — proving the *reweighting* uses ν·α); clean **resistance** train→0 @114, test
+  holds 0.04–0.06 (+0.017 drift, margins/Schapire 1998); lr=1 plateaus ~10 rounds vs lr=0.1 ~400; noise
+  **overfit** 25% flip test 0.067 @18 → 0.150 @400 (+0.083). **Mid-build correctness fix (measure-first):**
+  AdaBoost does NOT memorize the noisy moons (train-vs-noisy floors ~0.21), and train-vs-noisy vs
+  test-vs-clean aren't comparable → rebuilt fig C as clean-vs-noisy **test** (comparable), excised the
+  false "train→0/memorize". Reviewers **both PASS (no BLOCK/MAJOR)** — ml-expert verified the fix
+  complete + the ν-scales-reweighting subtlety + all anchors; folded their convergent MINORs (Fig B
+  credits ν=0.5's lowest mid-band; clean +0.017 vs noisy +0.083 quantified; margin = hardest points;
+  "stays there" blip noted; exercise-3 in error units; cell-13 ties noise to NB1's exp(α)). Guards: 0
+  banned (JSON scan, caught 3 incl. a code comment, fixed), ruff/black clean, hex clean, output-free,
+  `llms.txt` **59**; `common_errors` +2 AdaBoost rows ("never overfits" misconception; lr/rounds
+  coupling). Canonical nbconvert exec (exit 0); 3 figures eyeballed. No `src/` change (pytest **20**).
+  Next: open NB 4 (the estimator & its parameters).
+- **NB 3 (learning rate, rounds & overfitting behaviour) OPENED.** Branch
+  `notebook/07_AdaBoost__03_learning_rate_overfitting` off `chapter/07_AdaBoost` (@ `b1ae47b`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — the **richer-scope** NB (Decision A), one declared
+  concept: *how boosting controls its own complexity — the rounds × learning_rate trade-off and what it
+  does to generalization*. Establish `learning_rate` ν by hand (it scales every α: estimator_weights_ =
+  lr·ln((1−ε)/ε), measured 1.68/0.84/0.168), then BOTH faces on the **moons-0.20 through-line**:
+  clean-data **resistance** (train→0 @ T=114, test bottoms 0.042 @ 35 then holds 0.04–0.06, no runaway —
+  margins, Schapire 1998) AND the **noise overfit** (25% train-label flip: test bottoms 0.067 @ 18 →
+  climbs 0.150 @ 400 while train still →0 — exp-loss non-robustness, Dietterich 2000); lr sweep
+  {1.0,0.5,0.1} (lr=1 plateaus ~10 rounds, lr=0.1 needs ~400). **NB 3 stays all-moons** (2D boundary
+  contortion visible; bc gives the same rise +0.088 but no picture; real-data noise deferred to NB 5).
+  ~3 figures. No `src/` change planned (pytest 20). **Plan APPROVED by Rémy & persisted**
+  (`docs/plans/07_AdaBoost__03_learning_rate_overfitting.md`); building now.
+- **NB 2 (weak learners & the additive model) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy validated
+  visually.** 21 cells (6 code / 15 md), 3 figures (boundary sharpening triptych T=1/10/50 → an
+  axis-aligned **staircase**; exponential loss vs margin, the smooth surrogate; the **L(α) bowl** with
+  the minimiser dot at **0.84** and SAMME's dashed line at **1.68**). Built the **additive model**
+  `F=sign(Σαₜhₜ)` (the same α plays reweighting *and* vote weight); **derived** α as the exp-loss
+  minimiser **½ln((1−ε)/ε)=0.8398** (grid 0.8400, closed-form to 1e-15) by forward stagewise additive
+  modelling; multiclass SAMME **+ln(K−1)** verified == sklearn (1.0788, 2e-16); boundary T=1 0.867 →
+  T=50 0.942. Reviewers: **pedagogy PASS** (1 MINOR folded — "curve"→"staircase" exercise; hardest-maths
+  judged accompanied); **ml-expert REVISE → fixed → re-confirmed PASS** — caught a real **MAJOR**: my
+  SAMME-vs-classic reconciliation reached the right conclusion via a *wrong reason* ("a factor on α
+  cancels in renorm" — false, α is in the exponent). **Verified** the correct margin-form story
+  experimentally (classic reweight exp(−βyh)=exp(−β)·exp(2β·𝟙[miss]); common exp(−β) cancels → SAMME's
+  update → identical 50-stump sequence & predictions; the indicator-β hybrid diverges 0.9333). Rewrote
+  cell-15 to the margin-form derivation (turning the trap into an explicit learner warning), fixed the
+  exercise-3 hint + the plan doc. Guards: 0 banned (JSON scan), ruff/black clean, hex clean,
+  output-free, `llms.txt` **58**; `common_errors` gained 2 AdaBoost rows (SAMME/margin-form; α is
+  derived/surrogate). Canonical nbconvert exec (exit 0); 3 figures eyeballed. No `src/` change (pytest
+  **20**). Next: open NB 3 (learning rate, rounds & overfitting behaviour).
+- **NB 2 (weak learners & the additive model) OPENED.** Branch `notebook/07_AdaBoost__02_additive_model`
+  off `chapter/07_AdaBoost` (@ `e03be0b`). Phase `notebook-plan`: drafting the cell-by-cell plan — one
+  concept, the **additive model** `F(x)=sign(Σ αₜ hₜ(x))` and **where α comes from**: the reveal that
+  NB 1's reweighting α is the vote weight; weak learner = better than chance; the statistical view
+  taught from scratch (re-lay ch 03 log-loss → **exponential loss** as a picture → forward-stagewise in
+  words → grid-verify the minimiser). Anchors re-measured (moons-0.20, sklearn 1.9.0): boundary sharpens
+  T=1 0.8667 / T=10 0.9417 / T=50 0.9417 (train 0.986); train err → **0 @ T=114**; exp-loss minimised at
+  **α\*=½ln((1−ε)/ε)=0.8398** (grid argmin 0.8400, closed-form to 1e-15), SAMME α=1.6796=**2α\*** (same
+  classifier — scale-invariance); multiclass K=3 by-hand `ln((1−ε)/ε)+ln(K−1)=1.0788` == sklearn (diff
+  2e-16). 3 figures. No `src/` change planned (pytest 20). **Plan APPROVED by Rémy & persisted**
+  (`docs/plans/07_AdaBoost__02_additive_model.md`); building now.
+- **NB 1 (boosting intuition: reweighting by hand) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
+  validated visually.** 24 cells (9 code / 15 md), 4 figures (training scatter; the weak stump's single
+  cut, test **0.8667**; the 3-panel reweighting story — point size ∝ weight, the cut migrating round to
+  round; the running-ensemble train-error curve 0.157 → **0.0143** @ 50). Built by hand: uniform
+  weights → stump on weighted data → ε₁ **0.157** → **α = ln((1−ε)/ε) = 1.680** → reweight
+  wᵢ·exp(α·𝟙[miss]) (the 44 misses' weight **0.157 → 0.500**, the SAMME "misclassified mass → ½"
+  identity) → repeat; round-2 ε **0.244** > round-1 (the reshaped problem is deliberately harder).
+  **Parity exact:** by-hand α == sklearn `estimator_weights_` (max diff **1.1e-15**), test acc
+  **0.9417** both, predictions 120/120 identical. Reviewers **both PASS (no BLOCK)** — ml-expert
+  verified parity + the ½-mass identity + every anchor; pedagogy confirmed one-concept + charter +
+  figures-match-reads + answerable tiers. Folded 4 MINORs (train error "falls overall, non-monotone"
+  not "round by round"; "about 1.4%" not "past 1%"; "~84%" ceiling framing; cell-4 "separate *without
+  error*"; a comment flagging the running α-vote is NB 2's concept) + corrected the chapter-plan
+  monotonicity anchor. Guards: 0 banned (JSON scan), ruff/black clean, hex clean, output-free,
+  `llms.txt` **57**; `common_errors` gained 3 AdaBoost rows (bagging≠boosting; ε can rise by design;
+  non-monotone train curve). Canonical nbconvert exec (exit 0); 4 figures eyeballed. No `src/` change
+  (pytest **20**). Next: open NB 2 (weak learners & the additive model).
+- **NB 1 (boosting intuition: reweighting by hand) OPENED.** Branch
+  `notebook/07_AdaBoost__01_reweighting_by_hand` off `chapter/07_AdaBoost` (@ `08b5162`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, the AdaBoost **reweighting loop by
+  hand** on moons-0.20 (n_train 280): a single stump is weak (test **0.8667**, one cut); uniform
+  weights → fit stump on weighted data → weighted error ε → learner weight **α=ln((1−ε)/ε)** →
+  up-weight misclassified (wᵢ←wᵢ·exp(α·𝟙[miss]), renormalise) → repeat; the running weighted vote
+  drives **train error 0.157→0.014 (T=50)**; **by-hand α == sklearn `estimator_weights_`** (max diff
+  **1e-15**) and staged test acc **0.9417** both. Anchors re-measured at plan time, seed pinned
+  (ε₁ 0.157 / α₁ 1.680; round-2 ε 0.244 > round-1 = the next problem is deliberately harder; weight on
+  round-1's 44 misses jumps 0.157 → **0.500** after one reweight). Contrast ch 06 bagging
+  (parallel/independent/equal vote) vs boosting (sequential/adaptive). **Plan APPROVED by Rémy &
+  persisted** (`docs/plans/07_AdaBoost__01_reweighting_by_hand.md`); building now.
+- **Chapter 07 (AdaBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_07_AdaBoost.md`,
+  this commit). **FIVE notebooks** (standard arc), the first **boosting** method: NB 1 reweighting by
+  hand (SAMME α=ln((1−ε)/ε); by-hand == sklearn `estimator_weights_` to 4 dp on moons-0.20) → NB 2 the
+  additive model `F=sign(Σαₜhₜ)` + the exponential-loss / forward-stagewise view taught from scratch →
+  NB 3 (**richer scope**, Decision A) rounds × learning-rate & overfitting behaviour (clean-data
+  resistance AND the noise overfit) → NB 4 the estimator `AdaBoostClassifier` (`algorithm` REMOVED —
+  SAMME only; the base must stay weak) → NB 5 demanding case **spambase** (Decision B; ESL ch 10):
+  shines (≈0.949 ≈ RF 0.956), and where noise hurts framed **honestly/internally** (exp-loss
+  non-robustness: mislabeled points hoard ~45 % of weight → test error rises with rounds — NOT the
+  dataset-dependent "RF beats AdaBoost", which reverses on spam). API + all anchors re-measured on
+  sklearn 1.9.0 (`estimator` not `base_estimator`; `algorithm` removed; default base = stump).
+  Reviewer-gated, both **REVISE → all folded** (no BLOCK): **ml-expert** (MAJOR — "spam still improving
+  at 400 rounds" overstated → it plateaus after ≈ round 280; MINORs — NB 1 moons-0.20/0.30 anchors
+  disentangled, the α factor-2 rescale guard, spambase UCI DOI) — verdict the honesty framing "could
+  not be broken", every reconciliation verified to 4 dp on the live install (incl. multiclass
+  `+ln(K−1)`); **pedagogy** (MAJORs — NB 2's exp-loss derivation budgeted as taught-from-scratch with a
+  ch 03 log-loss re-lay; NB 3 richer-scope declared as ONE concept with ν taught by hand before the lr
+  sweep; NB 5 "Your turn" tiers sketched; MINORs — cross-method-spine continuity note, NB 1 ½-remark
+  trimmed & scale-invariance deferred to NB 2). **No `src/` change** (reuse `viz.plot_decision_boundary`
+  / `plot_train_test_curve` / `plot_confusion_matrix` / `plot_class_balance` / `plot_feature_importances`;
+  pytest stays 20). `course_map.md` §07 annotated. Next: open NB 1.
+- **Chapter 07 (AdaBoost) opened.** Branch `chapter/07_AdaBoost` created off `main` (synced @ `9f18507`
+  after PR #6). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §07 and
+  the per-method arc — boosting = **focus on the mistakes** (reweight misclassified points, by hand) →
+  weak learners (decision stumps) & the **additive model** (SAMME for multiclass) → **learning rate vs
+  number of rounds** and overfitting behaviour → the estimator `AdaBoostClassifier` & its parameters
+  (`n_estimators`, `learning_rate`, `estimator`) → a demanding case (where AdaBoost shines, and where
+  **label noise** hurts it). The first **boosting** method — *sequential* error-correction, the direct
+  contrast with ch 06's *parallel* bagging; built on ch 04's decision stumps as weak learners. The
+  pending `idle` STATE edit was folded into this transition (committed on the chapter branch, not on
+  protected `main`).
+- **CHAPTER 06 (Random Forests) COMPLETE — merged to `main` via PR #6** (merge commit `9f18507`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Five notebooks: averaging cuts variance (bagging) · the "random" — decorrelating the trees · out-of-bag
+  estimation · the estimator & its parameters · a demanding case (covtype). The course's **first
+  ensemble** method and the base learner for the boosting family (ch 07–10). **`src/` add:**
+  `viz.plot_feature_importances` + smoke test (pytest 19 → 20). The two-reviewer gate + Rémy's visual
+  validation held on every notebook; every number re-measured on sklearn 1.9.0 with each RF
+  `random_state`-pinned; honest findings surfaced throughout (the ρσ² floor; OOB mildly optimistic;
+  `max_features` forgiving; the covtype forest wins where breast_cancer's SVM did, the reversal stated;
+  the cell-18 fabricated cross-reference caught by both reviewers and corrected). `main` synced locally
+  to `9f18507`, green (pytest 20). STATE set to `idle` (pending edit, folds into the chapter-07
+  opening). Next: chapter `07_AdaBoost`.
 - **NB 5 (the demanding case — covtype) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
   visually. CHAPTER 06 COMPLETE (5/5).** The **visualization-first capstone**: 25 cells (8 code / 17 md),
   7 figures (class balance; cross-method accuracy; aggregate metrics; per-class recall; 7×7 confusion;

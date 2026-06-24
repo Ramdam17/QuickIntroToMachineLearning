@@ -78,12 +78,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `RandomForestClassifier` & its parameters (n_estimators, max_features, depth); diminishing returns; feature importance introduced.
 5. Demanding case: a strong tabular baseline on forest cover type (covtype); honest evaluation under imbalance; reading importances honestly.
 
-## 07_AdaBoost
-1. Boosting intuition: focus on the mistakes; reweighting, by hand.
-2. Weak learners and the additive model.
-3. Learning rate vs number of rounds; overfitting behaviour.
-4. Parameters (n_estimators, learning_rate, base estimator).
-5. Demanding case: where AdaBoost shines and where noise hurts it.
+## 07_AdaBoost  *(plan approved — five notebooks; the first boosting method)*
+1. Boosting intuition: focus on the mistakes; reweighting, by hand (SAMME α; by-hand == sklearn).
+2. Weak learners and the additive model; the exponential-loss / forward-stagewise view, from scratch.
+3. Learning rate vs number of rounds; overfitting behaviour — resistant on clean data, not immune under noise.
+4. The estimator `AdaBoostClassifier` & its parameters (`estimator`, `n_estimators`, `learning_rate`; `algorithm` removed — SAMME only; the base learner must stay weak).
+5. Demanding case — spambase (ESL ch 10): AdaBoost shines; where noise hurts it, framed honestly (exponential-loss non-robustness, not an RF horse-race).
 
 ## 08_GradientBoosting
 1. Boosting as fitting residuals: gradient descent in function space, by hand.
