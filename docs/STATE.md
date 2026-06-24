@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 2 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 2 merged to chapter; NB 3 to be opened). |
-| Phase | NB 2 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS — ml-expert after a verified MAJOR fix) — ready to open **NB 3** (`notebook-plan`). |
-| Active branch | `chapter/07_AdaBoost` (NB 1–2 ff-merged in; notebook branches kept) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 3 plan written when opened. |
-| Next concrete action | **Open NB 3 — learning rate, number of rounds & overfitting behaviour** (on Rémy's go): `git switch -c notebook/07_AdaBoost__03_learning_rate_overfitting` off `chapter/07_AdaBoost`; phase `notebook-plan`. **Richer scope (Decision A):** establish `learning_rate` ν by hand first, then BOTH faces — clean-data **resistance** (moons-0.20 train→0 @ T=114, test flat ≈0.04–0.06; spam test bottoms ≈round 280 then plateaus) AND the **noise overfit** (bc 20% train-label flip: test 0.082 @ T=17 → 0.170 @ T=400); lr sweep {1.0, 0.5, 0.1}. Re-measure anchors at plan time. ~3 figures (staged train/test clean; lr sweep; noisy test rising). Validate plan → build. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 3 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 3 — learning rate, rounds & overfitting behaviour** (3 of 5; richer scope, Decision A). |
+| Phase | `notebook-plan` — drafting the NB 3 cell-by-cell plan; Rémy validates before build. |
+| Active branch | `notebook/07_AdaBoost__03_learning_rate_overfitting` (off `chapter/07_AdaBoost` @ `b1ae47b`) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 3 plan being drafted; persisted to `docs/plans/07_AdaBoost__03_learning_rate_overfitting.md` on approval. |
+| Next concrete action | **Draft the NB 3 cell-by-cell plan** (one declared concept: how boosting controls its complexity — rounds × learning_rate & overfitting behaviour). Anchors (moons-0.20, sklearn 1.9.0): `learning_rate` scales α (lr·ln((1−ε)/ε): 1.68/0.84/0.168); **clean** lr=1.0 train→0 @ T=114, test bottoms 0.042 @ 35 → holds 0.04–0.06 (mild +0.017 drift, no runaway); **lr sweep** lr=1.0 plateaus ~10 rounds, lr=0.1 needs ~400; **noisy** 25% flip test bottoms 0.067 @ 18 → climbs 0.150 @ 400 (+0.083, train still→0). Decision: NB 3 stays **all-moons** (2D boundary-contortion viz; bc/spam confirm at scale, deferred to NB5). ~3 figures (clean staged; lr sweep; noisy staged + contorted boundary). Present plan → Rémy validates → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (learning rate, rounds & overfitting behaviour) OPENED.** Branch
+  `notebook/07_AdaBoost__03_learning_rate_overfitting` off `chapter/07_AdaBoost` (@ `b1ae47b`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — the **richer-scope** NB (Decision A), one declared
+  concept: *how boosting controls its own complexity — the rounds × learning_rate trade-off and what it
+  does to generalization*. Establish `learning_rate` ν by hand (it scales every α: estimator_weights_ =
+  lr·ln((1−ε)/ε), measured 1.68/0.84/0.168), then BOTH faces on the **moons-0.20 through-line**:
+  clean-data **resistance** (train→0 @ T=114, test bottoms 0.042 @ 35 then holds 0.04–0.06, no runaway —
+  margins, Schapire 1998) AND the **noise overfit** (25% train-label flip: test bottoms 0.067 @ 18 →
+  climbs 0.150 @ 400 while train still →0 — exp-loss non-robustness, Dietterich 2000); lr sweep
+  {1.0,0.5,0.1} (lr=1 plateaus ~10 rounds, lr=0.1 needs ~400). **NB 3 stays all-moons** (2D boundary
+  contortion visible; bc gives the same rise +0.088 but no picture; real-data noise deferred to NB 5).
+  ~3 figures. No `src/` change planned (pytest 20). Next: Rémy validates the NB-3 plan → build.
 - **NB 2 (weak learners & the additive model) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy validated
   visually.** 21 cells (6 code / 15 md), 3 figures (boundary sharpening triptych T=1/10/50 → an
   axis-aligned **staircase**; exponential loss vs margin, the smooth surrogate; the **L(α) bowl** with
