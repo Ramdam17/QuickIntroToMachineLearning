@@ -52,3 +52,4 @@
 - [notebooks/06_RandomForest/02_decorrelating_trees.ipynb](notebooks/06_RandomForest/02_decorrelating_trees.ipynb) — 02 — The "random" in the forest: decorrelating the trees — *Chapter 06 — Random Forests · Notebook 2 of 5*
 - [notebooks/06_RandomForest/03_out_of_bag.ipynb](notebooks/06_RandomForest/03_out_of_bag.ipynb) — 03 — Out-of-bag estimation — *Chapter 06 — Random Forests · Notebook 3 of 5*
 - [notebooks/06_RandomForest/04_estimator_and_parameters.ipynb](notebooks/06_RandomForest/04_estimator_and_parameters.ipynb) — 04 — The estimator RandomForestClassifier and its parameters — *Chapter 06 — Random Forests · Notebook 4 of 5*
+- [notebooks/06_RandomForest/05_covtype_strong_baseline.ipynb](notebooks/06_RandomForest/05_covtype_strong_baseline.ipynb) — 05 — A demanding case: forest cover type — *Chapter 06 — Random Forests · Notebook 5 of 5*

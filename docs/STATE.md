@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | **`05_covtype_strong_baseline`** (NB 5 of 5 — **OPENED**; drafting the cell-by-cell plan, the visualization-first capstone). |
-| Phase | `notebook-plan-approved` (NB 5) — plan persisted & committed; **building next** |
-| Active branch | `notebook/06_RandomForest__05_covtype_strong_baseline` (off `chapter/06_RandomForest` @ `93857e1`) |
-| Active plan | **`docs/plans/06_RandomForest__05_covtype_strong_baseline.md`** (NB 5, APPROVED) — under the chapter plan `docs/plans/chapter_06_RandomForest.md` (NB 1–4 done, NB 5 building) |
-| Next concrete action | **Draft the NB-5 plan (plan mode), then Rémy validates → persist + commit → build → CLOSE CHAPTER.** The **demanding case & capstone**, **visualization-first** (~24–26 cells a **floor**, figures may exceed six): forest cover type (`fetch_covtype`, 30 000-row stratified subsample, 7 classes, 54 features, 70/30 split seed 0); **the forest wins** RF ≈ 0.846 ≫ single tree ≈ 0.775 ≫ LogReg ≈ 0.728 (reverse of breast_cancer, referenced); **honest eval under imbalance** (re-lay macro vs weighted; accuracy 0.846 vs macro-F1 ≈ 0.733; per-class recall incl. Aspen ≈ 0.28; 7×7 confusion); **reading importance honestly** — Elevation dominates (MDI ≈ 0.231 ≈ permutation ≈ 0.286, they *agree* when one feature truly dominates) while 40 one-hot Soil_* combine to ≈ 0.140 (dilution caveat; **permutation put to work**, NB 4's promise); OOB ≈ test at scale; **RF fit-time ≈ linear in n** (≈ n^1.0–1.2) — counterpoint to ch 05's SVM ≈ n^1.6 wall; honest close (strong low-effort baseline, no longer one readable tree, boosting often edges it → ch 07–10). One-time covtype fetch (visible INFO logging, the `load_newsgroups` pattern); decide at plan time whether to add `datasets.load_covtype` wrapper. Reuse `viz.plot_feature_importances` (NB 4), `plot_confusion_matrix`, `plot_class_balance`. **Re-measure all anchors at plan time**, every RF `random_state`-pinned. **NB 5 is the last of chapter 06 — after it ships, close the chapter via PR into `main` (`--no-ff`).** No reviewer gate at the NB-plan stage. |
+| Current notebook | — (NB 5 `05_covtype_strong_baseline` **built, reviewed, Rémy-validated, committed & ff-merged** to `chapter/06_RandomForest`). **CHAPTER 06 COMPLETE (5/5).** |
+| Phase | `chapter-merge` — all 5 NBs on `chapter/06_RandomForest`; **ready to PR into `main`** (confirm with Rémy before the outward-facing push/PR) |
+| Active branch | `chapter/06_RandomForest` (NB 1–5 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; **all 5 NBs done**) |
+| Next concrete action | **Close CHAPTER 06 via PR into `main`** (`main` is PR-only — global pre-push hook). On Rémy's go (outward-facing — confirm first): `git push -u origin chapter/06_RandomForest`; `gh pr create --base main --head chapter/06_RandomForest --title "feat(06_random_forest): complete chapter — Random Forests"`; `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = open chapter `07_AdaBoost`. PR body ends with the Claude Code trailer. |
 
 ## Notes / blockers
 
@@ -27,6 +27,24 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — covtype) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
+  visually. CHAPTER 06 COMPLETE (5/5).** The **visualization-first capstone**: 25 cells (8 code / 17 md),
+  7 figures (class balance; cross-method accuracy; aggregate metrics; per-class recall; 7×7 confusion;
+  MDI vs permutation importance; fit-time vs n). On covtype (30k stratified subsample, 7 classes, 54
+  features): **the forest wins** RF **0.844** / OOB **0.846** ≫ tree 0.770 ≫ LogReg 0.729 (+11 pts —
+  the **reverse of breast_cancer**, where RF < SVM); **honest eval under imbalance** (accuracy 0.844 /
+  weighted-F1 0.840 hide it, **macro-F1 0.737** reveals it; per-class recall **Aspen 0.279**; confusion
+  shows Aspen→Lodgepole); **importance honestly** (Elevation MDI **0.233** ≈ perm **0.270** agree on
+  rank; 40 one-hot Soil_* diluted, **combined 0.141/0.112** = 2nd-largest signal; permutation **put to
+  work**); **fit-time ≈ n^0.99** (vs ch 05's SVM n^1.6 reference). Reviewers: **both REVISE → folded**
+  (shared **MAJOR** — cell-18 wrongly claimed NB 4 *measured* an MDI-vs-permutation disagreement; NB 4
+  only *named* permutation → reframed to NB 4's true MDI single-tree-spike→forest-spread story; MINORs
+  — Soil group is 2nd not 3rd largest, "no soil col high" qualified for the perm panel, MDI/perm
+  different scales → agree on *ranking*; added a "Going further" section). **No `src/` change**
+  (`fetch_covtype` direct, names already descriptive, INFO logging shown; pytest **20**). Guards: 0
+  banned (JSON scan), ruff/black clean, hex clean, output-free, `llms.txt` 55; `common_errors` gained 3
+  rows (imbalance accuracy trap; one-hot dilution; no-universal-best). Canonical nbconvert exec (exit
+  0); all 7 figures eyeballed. **Last NB of the chapter — next: close CHAPTER 06 via PR into `main`.**
 - **NB 5 (the demanding case — covtype, the chapter capstone) OPENED.** Branch
   `notebook/06_RandomForest__05_covtype_strong_baseline` off `chapter/06_RandomForest` (@ `93857e1`).
   Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — the **visualization-first
