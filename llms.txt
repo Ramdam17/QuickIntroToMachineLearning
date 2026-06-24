@@ -58,3 +58,4 @@
 - [notebooks/07_AdaBoost/02_additive_model.ipynb](notebooks/07_AdaBoost/02_additive_model.ipynb) — 02 — Weak learners and the additive model — *Chapter 07 — AdaBoost · Notebook 2 of 5*
 - [notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb](notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb) — 03 — Learning rate, rounds, and overfitting behaviour — *Chapter 07 — AdaBoost · Notebook 3 of 5*
 - [notebooks/07_AdaBoost/04_estimator_and_parameters.ipynb](notebooks/07_AdaBoost/04_estimator_and_parameters.ipynb) — 04 — The estimator AdaBoostClassifier and its parameters — *Chapter 07 — AdaBoost · Notebook 4 of 5*
+- [notebooks/07_AdaBoost/05_spambase.ipynb](notebooks/07_AdaBoost/05_spambase.ipynb) — 05 — A demanding case: spam (where AdaBoost shines, and where label noise bites) — *Chapter 07 · Notebook 5 of 5*

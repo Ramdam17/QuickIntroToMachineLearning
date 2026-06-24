@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 5 of 5; NB 1–4 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 5 — a demanding case: spambase** (5 of 5, the capstone) — **plan APPROVED; building.** The last notebook of ch 07. |
-| Phase | `notebook-plan-approved` → `notebook-build` (NB 5): plan persisted & committed; **building the notebook now**. |
-| Active branch | `notebook/07_AdaBoost__05_spambase` (off `chapter/07_AdaBoost` @ `802116b`). |
-| Active plan | `docs/plans/07_AdaBoost__05_spambase.md` (**APPROVED & persisted**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED, §NB 5). |
-| Next concrete action | **Build NB 5** from `<scratchpad>/build_ch07_nb5.py` (~27 cells, 7 figures: A class balance · B cross-method acc · C staged resistance clean · D confusion · E MDI vs permutation · F noise 2-panel [by-hand weight-on-flipped + clean-vs-40% staged test] · G AdaBoost-vs-RF degradation). Anchors re-measured (sklearn 1.9.0, seed 0): AdaBoost(400) test **0.949** ≈ RF(300) **0.959** ≫ stump 0.782; staged clean bottoms 0.0485@279, flat to 0.0507@400, train floor **0.045 (never 0)**; confusion [[810,27],[43,501]] (recall 0.921 / precision 0.949); MDI/perm top = spam-markers (`!`,`$`,`remove`) + **HP-corpus artifacts** (`george`,`hp`); by-hand weight-on-flipped **0.21→~0.40**; staged noisy 40% bottoms 0.142@39 → **0.177@400**; degradation **reversal** (AdaBoost > RF from 20% noise up). Guards (nbconvert from cwd on a copy, banned-JSON=0, hex, ruff/black, output-free, `gen_llms_txt`, **pytest 20**), two-reviewer gate (no BLOCK), Rémy visual, **rebuild-before-`git add`**, commit `feat(07_adaboost): notebook 05 — a demanding case: spam (shines, and the honest noise signature)`, ff-merge → **close CHAPTER 07 via PR into `main` (`--no-ff`)** on Rémy's go. |
+| Current chapter | **`07_AdaBoost` — all 5 NBs BUILT & merged to the chapter branch; CHAPTER-MERGE pending (PR into `main`).** The first **boosting** method. Chapter 06 (Random Forests) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 5 — a demanding case: spam (spambase)** (5 of 5, the capstone) — **DONE & ff-merged** to `chapter/07_AdaBoost`. Chapter 07 built end to end (5/5). |
+| Phase | `chapter-merge`: NB 5 COMMITTED & ff-merged; all 5 NBs on `chapter/07_AdaBoost`. Both reviewers PASS + Rémy validated NB 5 visually. **Next: close CHAPTER 07 via PR into `main` (`--no-ff`) — awaiting Rémy's explicit go (outward-facing push/PR).** |
+| Active branch | `chapter/07_AdaBoost` (all 5 NBs merged; notebook branches kept). |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED); all 5 NB plans persisted under `docs/plans/07_AdaBoost__0{1..5}_*.md`. |
+| Next concrete action | **Close CHAPTER 07 via PR into `main`** (outward-facing — only on Rémy's explicit go): `git push -u origin chapter/07_AdaBoost`; `gh pr create --base main --head chapter/07_AdaBoost` (title `feat(07_adaboost): complete chapter — AdaBoost`); `gh pr merge --merge` (`--no-ff`); `git switch main && git pull`. Then mark `course_map.md` §07 complete (merged to `main`), set STATE → `idle`, next = **open chapter 08 (GradientBoosting)**. Until that go: nothing to push; `main` stays PR-only (global pre-push hook). |
 
 ## Notes / blockers
 
@@ -32,6 +32,30 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (a demanding case: spam / spambase — the chapter capstone) BUILT & MERGED to
+  `chapter/07_AdaBoost` — Rémy validated visually. CHAPTER 07 built end to end (5/5).** The
+  **visualization-first capstone**: 26 cells (8 code / 18 md), **7 figures** (class balance;
+  cross-method accuracy; staged resistance; confusion; MDI vs permutation; noise 2-panel [by-hand
+  weight-on-flipped + clean-vs-40% staged test]; AdaBoost-vs-RF degradation). On spambase (4601×57,
+  openml): **AdaBoost shines** — test **0.949** ≈ RF **0.959** ≫ stump 0.782 (competitive, not a win;
+  the tuned SVM led near-linear bc — no universal best); staged **resistance** (test bottoms 0.0485@279,
+  flat to 0.0507@400; **train floor 0.045, never 0** — "train→0" is moons-only, real data has
+  irreducible overlap); confusion [[810,27],[43,501]] (recall 0.921 / precision 0.949, false-alarm
+  asymmetry); importance **MDI vs permutation** = spam-markers (`!`,`$`,`remove`) + **HP-Labs corpus
+  artifacts** (`george`,`hp`), not causal; **noise from the inside** (by-hand SAMME: ~21% flipped points
+  hoard ~40% of the weight; 40%-noise test bottoms 0.142@39 → climbs 0.177@400 = resistance is not
+  immunity); and the **"RF beats AdaBoost under noise" folk claim REVERSES on spam** (AdaBoost more
+  robust from 20% up; 40%: 0.823 vs RF 0.704) — shown but **NOT shipped as a law** (dataset-dependent:
+  the weak-stump base can't memorize noise, deep RF trees can). Reviewers: **ml-expert PASS** (by-hand
+  SAMME == sklearn to 5 dp, all anchors reproduced, 8 DOIs resolved, HP-Labs/`george` provenance
+  verified; 1 MINOR + 1 NIT folded); **pedagogy MAJOR → fixed → re-confirmed PASS** — cell-8 "the
+  ensembles trailed on breast_cancer" was false (ch 05's spine had no ensembles; 0.965 was the *tuned*
+  SVM) → re-anchored to "the tuned SVM led the four methods compared there", with the noise counter-case
+  (cell-22) carrying the ensemble-inclusive bc point. Guards: 0 banned (JSON scan), ruff/hex clean,
+  output-free; nbconvert exit 0 (0 errors / 7 figures); `llms.txt` **61**; `common_errors` +3 AdaBoost
+  rows (shines≠best; noise-not-a-law / mechanism; train-floor / irreducible-error). No `src/` change
+  (pytest **20**). Rebuilt from `build_ch07_nb5.py` right before `git add`. **Last NB of chapter 07 —
+  next: close the chapter via PR into `main` on Rémy's explicit go.**
 - **NB 5 (a demanding case: spambase — the chapter capstone) OPENED.** Branch
   `notebook/07_AdaBoost__05_spambase` off `chapter/07_AdaBoost` (@ `802116b`). Phase `notebook-plan`:
   drafting the cell-by-cell plan (plan mode) — the **visualization-first capstone** (~24–26 cells a
