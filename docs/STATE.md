@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — OPEN (`chapter-plan`).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | — (none; chapter planning in progress). |
-| Phase | `chapter-plan` — drafting the chapter plan in plan mode (reviewer-gated; Rémy validates before any notebook is built) |
+| Current chapter | **`07_AdaBoost` — OPEN (`chapter-plan-approved`).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | — (none; NB 1 to be opened next). |
+| Phase | `chapter-plan-approved` — chapter plan reviewer-gated (ml-expert + pedagogy, no BLOCK) & approved by Rémy; persisted. |
 | Active branch | `chapter/07_AdaBoost` (off `main` @ `9f18507`) |
-| Active plan | — (chapter plan being drafted; persisted to `docs/plans/chapter_07_AdaBoost.md` on approval) |
-| Next concrete action | **Draft the chapter plan in plan mode** per `docs/course_map.md` §07 and the per-method arc: boosting = focus on the mistakes (reweight misclassified points, by hand) → weak learners (stumps) & the **additive model** / SAMME → **learning rate vs number of rounds**, overfitting behaviour → the estimator `AdaBoostClassifier` & its parameters (`n_estimators`, `learning_rate`, `estimator`) → a demanding case (where AdaBoost shines and where label noise hurts it). Then reviewer-gate the plan (`@domain-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); on Rémy's approval persist `docs/plans/chapter_07_AdaBoost.md`, update `course_map.md` §07 + STATE (`chapter-plan-approved`), commit; then open NB 1. |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (**APPROVED**). Decisions: NB 3 = richer scope; NB 5 = spambase. |
+| Next concrete action | **Open NB 1 — boosting intuition: reweighting by hand** (on Rémy's go): `git switch -c notebook/07_AdaBoost__01_reweighting_by_hand` off `chapter/07_AdaBoost`; set STATE phase `notebook-plan`; draft the cell-by-cell plan (one concept: sequential reweighting by hand on `make_moons(400, noise=0.20, seed=0)`; the SAMME weight α = ln((1−ε)/ε); reweight wᵢ←wᵢ·exp(α·𝟙[miss]); by-hand == sklearn `estimator_weights_` + staged preds), validate with Rémy, then build. Per-NB anchors re-measured at build on sklearn 1.9.0. |
 
 ## Notes / blockers
 
@@ -27,6 +27,27 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 07 (AdaBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_07_AdaBoost.md`,
+  this commit). **FIVE notebooks** (standard arc), the first **boosting** method: NB 1 reweighting by
+  hand (SAMME α=ln((1−ε)/ε); by-hand == sklearn `estimator_weights_` to 4 dp on moons-0.20) → NB 2 the
+  additive model `F=sign(Σαₜhₜ)` + the exponential-loss / forward-stagewise view taught from scratch →
+  NB 3 (**richer scope**, Decision A) rounds × learning-rate & overfitting behaviour (clean-data
+  resistance AND the noise overfit) → NB 4 the estimator `AdaBoostClassifier` (`algorithm` REMOVED —
+  SAMME only; the base must stay weak) → NB 5 demanding case **spambase** (Decision B; ESL ch 10):
+  shines (≈0.949 ≈ RF 0.956), and where noise hurts framed **honestly/internally** (exp-loss
+  non-robustness: mislabeled points hoard ~45 % of weight → test error rises with rounds — NOT the
+  dataset-dependent "RF beats AdaBoost", which reverses on spam). API + all anchors re-measured on
+  sklearn 1.9.0 (`estimator` not `base_estimator`; `algorithm` removed; default base = stump).
+  Reviewer-gated, both **REVISE → all folded** (no BLOCK): **ml-expert** (MAJOR — "spam still improving
+  at 400 rounds" overstated → it plateaus after ≈ round 280; MINORs — NB 1 moons-0.20/0.30 anchors
+  disentangled, the α factor-2 rescale guard, spambase UCI DOI) — verdict the honesty framing "could
+  not be broken", every reconciliation verified to 4 dp on the live install (incl. multiclass
+  `+ln(K−1)`); **pedagogy** (MAJORs — NB 2's exp-loss derivation budgeted as taught-from-scratch with a
+  ch 03 log-loss re-lay; NB 3 richer-scope declared as ONE concept with ν taught by hand before the lr
+  sweep; NB 5 "Your turn" tiers sketched; MINORs — cross-method-spine continuity note, NB 1 ½-remark
+  trimmed & scale-invariance deferred to NB 2). **No `src/` change** (reuse `viz.plot_decision_boundary`
+  / `plot_train_test_curve` / `plot_confusion_matrix` / `plot_class_balance` / `plot_feature_importances`;
+  pytest stays 20). `course_map.md` §07 annotated. Next: open NB 1.
 - **Chapter 07 (AdaBoost) opened.** Branch `chapter/07_AdaBoost` created off `main` (synced @ `9f18507`
   after PR #6). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §07 and
   the per-method arc — boosting = **focus on the mistakes** (reweight misclassified points, by hand) →
