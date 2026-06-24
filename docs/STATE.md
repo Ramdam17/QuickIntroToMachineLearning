@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 3 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 3 merged to chapter; NB 4 to be opened). |
-| Phase | NB 3 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS) — ready to open **NB 4** (`notebook-plan`). |
-| Active branch | `chapter/07_AdaBoost` (NB 1–3 ff-merged in; notebook branches kept) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 4 plan written when opened. |
-| Next concrete action | **Open NB 4 — the estimator `AdaBoostClassifier` & its parameters** (on Rémy's go): `git switch -c notebook/07_AdaBoost__04_estimator_and_parameters` off `chapter/07_AdaBoost`; phase `notebook-plan`; draft per chapter plan §NB 4 — parity (`estimator_weights_`/staged == by-hand); the dials **`estimator`** (base-learner strength: stump vs depth-2/3 → overfits faster, measured depth-1 test 0.892 / depth-3 0.875), **`n_estimators`** & **`learning_rate`** interplay; the **`algorithm` param is REMOVED** (SAMME only); multiclass SAMME; `feature_importances_` (MDI, ch 06 bias caveat); honest `GridSearchCV` on train → one sealed test. Re-measure anchors at plan time. Validate plan → build. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 4 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 4 — the estimator `AdaBoostClassifier` & its parameters** (4 of 5). |
+| Phase | `notebook-plan` — drafting the NB 4 cell-by-cell plan; Rémy validates before build. |
+| Active branch | `notebook/07_AdaBoost__04_estimator_and_parameters` (off `chapter/07_AdaBoost` @ `c493293`) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 4 plan being drafted; persisted to `docs/plans/07_AdaBoost__04_estimator_and_parameters.md` on approval. |
+| Next concrete action | **Draft the NB 4 cell-by-cell plan** (the estimator & its parameters, de-overloaded). Anchors (moons-0.20, sklearn 1.9.0): API `estimator`=stump default, **`algorithm` REMOVED** (SAMME only); parity AdaBoost(50) test 0.9417; **base-strength** (n=200) all train 1.000, test 0.9417(d1)/0.9333(d2,d3)/0.9167(d5) — deeper base overfits faster; **n_est×lr 5-fold CV** grid (best lr0.5/n400 CV 0.9607; default n50/lr1.0 CV 0.9429); **tuned == default on sealed test 0.9417** (CV gain didn't transfer); `feature_importances_` ~[0.61,0.39] MDI. 3 figures (boundary stump-vs-deep; n_est×lr CV heatmap; CV-vs-test bars default/tuned). Present plan → Rémy validates → build. |
 
 ## Notes / blockers
 
@@ -24,9 +24,25 @@
   05), polynomial-degree complexity dial (NB 09–10).
 - Confirmed: notebooks all-English; maths re-established not presupposed; git history = preserve
   per-notebook, mark chapters (`--no-ff` chapter → main).
+- **Build gotcha (editor kernel-drift):** opening a notebook in the VS Code Jupyter editor rewrites its
+  kernelspec `display_name` to `ml-course (3.12.12.final.0)` — cosmetic (the kernel resolves by
+  `name: "python3"`), but it drifted NB 3's committed metadata once (normalized in `c493293`). **Habit:
+  rebuild each notebook from its build script right before `git add`** (after Rémy's visual validation)
+  so the canonical `ml-course (3.12.12)` ships; or `git restore` the file if only the display_name drifted.
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `AdaBoostClassifier` & its parameters) OPENED.** Branch
+  `notebook/07_AdaBoost__04_estimator_and_parameters` off `chapter/07_AdaBoost` (@ `c493293`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — the **integrative** notebook (de-overloaded): parity
+  recap (sklearn == by-hand, NB 1/2); the dials — **`estimator`** (the base-learner-strength knob:
+  stump vs deeper → overfits faster), **`n_estimators` × `learning_rate`** interplay (CV heatmap); the
+  current-API fact **`algorithm` is REMOVED** (SAMME only); multiclass SAMME named; `feature_importances_`
+  (MDI, ch 06 caveat, honest reading deferred to NB 5); honest **`GridSearchCV`** on train → one sealed
+  test. Anchors re-measured (moons-0.20): base-strength n=200 all train 1.000, test 0.9417(d1) →
+  0.9167(d5); n_est×lr CV best lr0.5/n400 0.9607 vs default 0.9429; **tuned == default on sealed test
+  0.9417** (CV gain didn't transfer — honest, echoes ch 06). 3 figures. No `src/` change planned (pytest
+  20). Next: Rémy validates the NB-4 plan → build.
 - **NB 3 (learning rate, rounds & overfitting behaviour) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
   validated visually.** 20 cells (5 code / 15 md), 3 figures (clean staged train/test; lr sweep
   {1.0,0.5,0.1}; a 2-panel noise figure — clean-vs-noisy test error on one clean test set + the
