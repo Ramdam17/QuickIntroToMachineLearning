@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`07_AdaBoost` — in progress (NB 3 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
 | Current notebook | **NB 3 — learning rate, rounds & overfitting behaviour** (3 of 5; richer scope, Decision A). |
-| Phase | `notebook-plan` — drafting the NB 3 cell-by-cell plan; Rémy validates before build. |
+| Phase | `notebook-build` — NB 3 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
 | Active branch | `notebook/07_AdaBoost__03_learning_rate_overfitting` (off `chapter/07_AdaBoost` @ `b1ae47b`) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 3 plan being drafted; persisted to `docs/plans/07_AdaBoost__03_learning_rate_overfitting.md` on approval. |
-| Next concrete action | **Draft the NB 3 cell-by-cell plan** (one declared concept: how boosting controls its complexity — rounds × learning_rate & overfitting behaviour). Anchors (moons-0.20, sklearn 1.9.0): `learning_rate` scales α (lr·ln((1−ε)/ε): 1.68/0.84/0.168); **clean** lr=1.0 train→0 @ T=114, test bottoms 0.042 @ 35 → holds 0.04–0.06 (mild +0.017 drift, no runaway); **lr sweep** lr=1.0 plateaus ~10 rounds, lr=0.1 needs ~400; **noisy** 25% flip test bottoms 0.067 @ 18 → climbs 0.150 @ 400 (+0.083, train still→0). Decision: NB 3 stays **all-moons** (2D boundary-contortion viz; bc/spam confirm at scale, deferred to NB5). ~3 figures (clean staged; lr sweep; noisy staged + contorted boundary). Present plan → Rémy validates → build. |
+| Active plan | `docs/plans/07_AdaBoost__03_learning_rate_overfitting.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
+| Next concrete action | **Build NB 3** per the plan (~20 cells, 5 code/15 md, 3 figures, all moons-0.20). Re-measure anchors (lr scales α 1.68/0.84/0.168; clean train→0 @114 / test holds 0.04–0.06; lr=1 plateaus ~10 vs lr=0.1 ~400; 25% flip test 0.067@18→0.150@400). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy. Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 03 — learning rate, rounds & overfitting behaviour`, ff-merge to `chapter/07_AdaBoost`. |
 
 ## Notes / blockers
 
@@ -38,7 +38,8 @@
   climbs 0.150 @ 400 while train still →0 — exp-loss non-robustness, Dietterich 2000); lr sweep
   {1.0,0.5,0.1} (lr=1 plateaus ~10 rounds, lr=0.1 needs ~400). **NB 3 stays all-moons** (2D boundary
   contortion visible; bc gives the same rise +0.088 but no picture; real-data noise deferred to NB 5).
-  ~3 figures. No `src/` change planned (pytest 20). Next: Rémy validates the NB-3 plan → build.
+  ~3 figures. No `src/` change planned (pytest 20). **Plan APPROVED by Rémy & persisted**
+  (`docs/plans/07_AdaBoost__03_learning_rate_overfitting.md`); building now.
 - **NB 2 (weak learners & the additive model) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy validated
   visually.** 21 cells (6 code / 15 md), 3 figures (boundary sharpening triptych T=1/10/50 → an
   axis-aligned **staircase**; exponential loss vs margin, the smooth surrogate; the **L(α) bowl** with
