@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 1).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 1 — boosting intuition: reweighting by hand** (1 of 5). |
-| Phase | `notebook-build` — NB 1 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
-| Active branch | `notebook/07_AdaBoost__01_reweighting_by_hand` (off `chapter/07_AdaBoost` @ `08b5162`) |
-| Active plan | `docs/plans/07_AdaBoost__01_reweighting_by_hand.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
-| Next concrete action | **Build NB 1** per the plan (~24 cells, 9 code/15 md, 2 figures; by hand, parity at the end). Re-measure anchors at build (stump test 0.8667; ε₁0.157/α₁1.680; round-2 ε0.244; weight on round-1 misses 0.157→0.500; train err 0.157→0.014@50; by-hand α == `estimator_weights_` diff 1e-15, test 0.9417). Guards: banned-word JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a scratchpad copy. Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 01 — boosting intuition: reweighting by hand`, ff-merge to `chapter/07_AdaBoost`. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 1 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 1 merged to chapter; NB 2 to be opened). |
+| Phase | NB 1 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS) — ready to open **NB 2** (`notebook-plan`). |
+| Active branch | `chapter/07_AdaBoost` (NB 1 ff-merged in; notebook branch kept) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 2 plan written when opened. |
+| Next concrete action | **Open NB 2 — weak learners & the additive model** (on Rémy's go): `git switch -c notebook/07_AdaBoost__02_additive_model` off `chapter/07_AdaBoost`; phase `notebook-plan`; draft per chapter plan §NB 2 — the weighted additive vote `F=sign(Σαₜhₜ)`, the reveal that the *same* α is the vote weight, and the **exponential-loss / forward-stagewise** derivation taught from scratch (re-lay ch 03 log-loss → exp-loss as a picture → forward-stagewise in words → grid-verify → heaviest algebra in "Going further"); reconcile SAMME `ln((1−ε)/ε)` vs classic `½·ln`. Validate plan → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (boosting intuition: reweighting by hand) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
+  validated visually.** 24 cells (9 code / 15 md), 4 figures (training scatter; the weak stump's single
+  cut, test **0.8667**; the 3-panel reweighting story — point size ∝ weight, the cut migrating round to
+  round; the running-ensemble train-error curve 0.157 → **0.0143** @ 50). Built by hand: uniform
+  weights → stump on weighted data → ε₁ **0.157** → **α = ln((1−ε)/ε) = 1.680** → reweight
+  wᵢ·exp(α·𝟙[miss]) (the 44 misses' weight **0.157 → 0.500**, the SAMME "misclassified mass → ½"
+  identity) → repeat; round-2 ε **0.244** > round-1 (the reshaped problem is deliberately harder).
+  **Parity exact:** by-hand α == sklearn `estimator_weights_` (max diff **1.1e-15**), test acc
+  **0.9417** both, predictions 120/120 identical. Reviewers **both PASS (no BLOCK)** — ml-expert
+  verified parity + the ½-mass identity + every anchor; pedagogy confirmed one-concept + charter +
+  figures-match-reads + answerable tiers. Folded 4 MINORs (train error "falls overall, non-monotone"
+  not "round by round"; "about 1.4%" not "past 1%"; "~84%" ceiling framing; cell-4 "separate *without
+  error*"; a comment flagging the running α-vote is NB 2's concept) + corrected the chapter-plan
+  monotonicity anchor. Guards: 0 banned (JSON scan), ruff/black clean, hex clean, output-free,
+  `llms.txt` **57**; `common_errors` gained 3 AdaBoost rows (bagging≠boosting; ε can rise by design;
+  non-monotone train curve). Canonical nbconvert exec (exit 0); 4 figures eyeballed. No `src/` change
+  (pytest **20**). Next: open NB 2 (weak learners & the additive model).
 - **NB 1 (boosting intuition: reweighting by hand) OPENED.** Branch
   `notebook/07_AdaBoost__01_reweighting_by_hand` off `chapter/07_AdaBoost` (@ `08b5162`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — one concept, the AdaBoost **reweighting loop by
