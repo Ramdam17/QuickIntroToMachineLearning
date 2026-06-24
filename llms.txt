@@ -56,3 +56,4 @@
 ## 07_AdaBoost
 - [notebooks/07_AdaBoost/01_reweighting_by_hand.ipynb](notebooks/07_AdaBoost/01_reweighting_by_hand.ipynb) — 01 — Boosting intuition: focus on the mistakes — *Chapter 07 — AdaBoost · Notebook 1 of 5*
 - [notebooks/07_AdaBoost/02_additive_model.ipynb](notebooks/07_AdaBoost/02_additive_model.ipynb) — 02 — Weak learners and the additive model — *Chapter 07 — AdaBoost · Notebook 2 of 5*
+- [notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb](notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb) — 03 — Learning rate, rounds, and overfitting behaviour — *Chapter 07 — AdaBoost · Notebook 3 of 5*

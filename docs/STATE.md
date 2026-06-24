@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 3 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 3 — learning rate, rounds & overfitting behaviour** (3 of 5; richer scope, Decision A). |
-| Phase | `notebook-build` — NB 3 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
-| Active branch | `notebook/07_AdaBoost__03_learning_rate_overfitting` (off `chapter/07_AdaBoost` @ `b1ae47b`) |
-| Active plan | `docs/plans/07_AdaBoost__03_learning_rate_overfitting.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
-| Next concrete action | **Build NB 3** per the plan (~20 cells, 5 code/15 md, 3 figures, all moons-0.20). Re-measure anchors (lr scales α 1.68/0.84/0.168; clean train→0 @114 / test holds 0.04–0.06; lr=1 plateaus ~10 vs lr=0.1 ~400; 25% flip test 0.067@18→0.150@400). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy. Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 03 — learning rate, rounds & overfitting behaviour`, ff-merge to `chapter/07_AdaBoost`. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 3 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 3 merged to chapter; NB 4 to be opened). |
+| Phase | NB 3 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS) — ready to open **NB 4** (`notebook-plan`). |
+| Active branch | `chapter/07_AdaBoost` (NB 1–3 ff-merged in; notebook branches kept) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 4 plan written when opened. |
+| Next concrete action | **Open NB 4 — the estimator `AdaBoostClassifier` & its parameters** (on Rémy's go): `git switch -c notebook/07_AdaBoost__04_estimator_and_parameters` off `chapter/07_AdaBoost`; phase `notebook-plan`; draft per chapter plan §NB 4 — parity (`estimator_weights_`/staged == by-hand); the dials **`estimator`** (base-learner strength: stump vs depth-2/3 → overfits faster, measured depth-1 test 0.892 / depth-3 0.875), **`n_estimators`** & **`learning_rate`** interplay; the **`algorithm` param is REMOVED** (SAMME only); multiclass SAMME; `feature_importances_` (MDI, ch 06 bias caveat); honest `GridSearchCV` on train → one sealed test. Re-measure anchors at plan time. Validate plan → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,25 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (learning rate, rounds & overfitting behaviour) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
+  validated visually.** 20 cells (5 code / 15 md), 3 figures (clean staged train/test; lr sweep
+  {1.0,0.5,0.1}; a 2-panel noise figure — clean-vs-noisy test error on one clean test set + the
+  contorted boundary with flipped points ringed). The **richer-scope** NB (Decision A), one declared
+  concept: rounds × `learning_rate` & overfitting behaviour. Anchors: `learning_rate` scales α
+  (estimator_weights_ = lr·ln((1−ε)/ε) → 1.68/0.84/0.168, **by-hand SAMME matched to 5 dp incl.
+  estimator_errors_** — proving the *reweighting* uses ν·α); clean **resistance** train→0 @114, test
+  holds 0.04–0.06 (+0.017 drift, margins/Schapire 1998); lr=1 plateaus ~10 rounds vs lr=0.1 ~400; noise
+  **overfit** 25% flip test 0.067 @18 → 0.150 @400 (+0.083). **Mid-build correctness fix (measure-first):**
+  AdaBoost does NOT memorize the noisy moons (train-vs-noisy floors ~0.21), and train-vs-noisy vs
+  test-vs-clean aren't comparable → rebuilt fig C as clean-vs-noisy **test** (comparable), excised the
+  false "train→0/memorize". Reviewers **both PASS (no BLOCK/MAJOR)** — ml-expert verified the fix
+  complete + the ν-scales-reweighting subtlety + all anchors; folded their convergent MINORs (Fig B
+  credits ν=0.5's lowest mid-band; clean +0.017 vs noisy +0.083 quantified; margin = hardest points;
+  "stays there" blip noted; exercise-3 in error units; cell-13 ties noise to NB1's exp(α)). Guards: 0
+  banned (JSON scan, caught 3 incl. a code comment, fixed), ruff/black clean, hex clean, output-free,
+  `llms.txt` **59**; `common_errors` +2 AdaBoost rows ("never overfits" misconception; lr/rounds
+  coupling). Canonical nbconvert exec (exit 0); 3 figures eyeballed. No `src/` change (pytest **20**).
+  Next: open NB 4 (the estimator & its parameters).
 - **NB 3 (learning rate, rounds & overfitting behaviour) OPENED.** Branch
   `notebook/07_AdaBoost__03_learning_rate_overfitting` off `chapter/07_AdaBoost` (@ `b1ae47b`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — the **richer-scope** NB (Decision A), one declared
