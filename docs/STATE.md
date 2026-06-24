@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`07_AdaBoost` — in progress (NB 2 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
 | Current notebook | **NB 2 — weak learners & the additive model** (2 of 5). |
-| Phase | `notebook-plan` — drafting the NB 2 cell-by-cell plan; Rémy validates before build. |
+| Phase | `notebook-build` — NB 2 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
 | Active branch | `notebook/07_AdaBoost__02_additive_model` (off `chapter/07_AdaBoost` @ `e03be0b`) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 2 plan being drafted; persisted to `docs/plans/07_AdaBoost__02_additive_model.md` on approval. |
-| Next concrete action | **Draft the NB 2 cell-by-cell plan** (one concept: the additive model `F=sign(Σαₜhₜ)` & where α comes from). Anchors (sklearn 1.9.0, moons-0.20): boundary sharpens T=1 0.8667 / T=10 0.9417 / T=50 0.9417 (train 0.986); train err → **0 @ T=114**; exp-loss `L(α)=(1−ε)e⁻ᵃ+εeᵃ` minimised at **α\*=½ln((1−ε)/ε)=0.8398** (grid argmin 0.8400), SAMME α=1.6796=2α\*; multiclass K=3 by-hand `ln((1−ε)/ε)+ln(K−1)=1.0788` == sklearn (diff 2e-16). 3 figures (boundary triptych; exp-loss vs margin; exp-loss vs α with the minimiser). Present plan → Rémy validates → build. |
+| Active plan | `docs/plans/07_AdaBoost__02_additive_model.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
+| Next concrete action | **Build NB 2** per the plan (~21 cells, 6 code/15 md, 3 figures; the chapter's hardest maths, intuition-first). Re-measure anchors (boundary T=1 0.8667/T=10 0.9417/T=50 0.9417; train→0 @ T=114; exp-loss min α\*=½ln=0.8398, grid 0.8400; SAMME=2α\*; multiclass K=3 1.0788 == sklearn). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy. Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 02 — weak learners & the additive model`, ff-merge to `chapter/07_AdaBoost`. |
 
 ## Notes / blockers
 
@@ -36,7 +36,8 @@
   T=1 0.8667 / T=10 0.9417 / T=50 0.9417 (train 0.986); train err → **0 @ T=114**; exp-loss minimised at
   **α\*=½ln((1−ε)/ε)=0.8398** (grid argmin 0.8400, closed-form to 1e-15), SAMME α=1.6796=**2α\*** (same
   classifier — scale-invariance); multiclass K=3 by-hand `ln((1−ε)/ε)+ln(K−1)=1.0788` == sklearn (diff
-  2e-16). 3 figures. No `src/` change planned (pytest 20). Next: Rémy validates the NB-2 plan → build.
+  2e-16). 3 figures. No `src/` change planned (pytest 20). **Plan APPROVED by Rémy & persisted**
+  (`docs/plans/07_AdaBoost__02_additive_model.md`); building now.
 - **NB 1 (boosting intuition: reweighting by hand) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
   validated visually.** 24 cells (9 code / 15 md), 4 figures (training scatter; the weak stump's single
   cut, test **0.8667**; the 3-panel reweighting story — point size ∝ weight, the cut migrating round to
