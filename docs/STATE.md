@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 2 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 2 — weak learners & the additive model** (2 of 5). |
-| Phase | `notebook-build` — NB 2 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
-| Active branch | `notebook/07_AdaBoost__02_additive_model` (off `chapter/07_AdaBoost` @ `e03be0b`) |
-| Active plan | `docs/plans/07_AdaBoost__02_additive_model.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
-| Next concrete action | **Build NB 2** per the plan (~21 cells, 6 code/15 md, 3 figures; the chapter's hardest maths, intuition-first). Re-measure anchors (boundary T=1 0.8667/T=10 0.9417/T=50 0.9417; train→0 @ T=114; exp-loss min α\*=½ln=0.8398, grid 0.8400; SAMME=2α\*; multiclass K=3 1.0788 == sklearn). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy. Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 02 — weak learners & the additive model`, ff-merge to `chapter/07_AdaBoost`. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 2 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 2 merged to chapter; NB 3 to be opened). |
+| Phase | NB 2 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS — ml-expert after a verified MAJOR fix) — ready to open **NB 3** (`notebook-plan`). |
+| Active branch | `chapter/07_AdaBoost` (NB 1–2 ff-merged in; notebook branches kept) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 3 plan written when opened. |
+| Next concrete action | **Open NB 3 — learning rate, number of rounds & overfitting behaviour** (on Rémy's go): `git switch -c notebook/07_AdaBoost__03_learning_rate_overfitting` off `chapter/07_AdaBoost`; phase `notebook-plan`. **Richer scope (Decision A):** establish `learning_rate` ν by hand first, then BOTH faces — clean-data **resistance** (moons-0.20 train→0 @ T=114, test flat ≈0.04–0.06; spam test bottoms ≈round 280 then plateaus) AND the **noise overfit** (bc 20% train-label flip: test 0.082 @ T=17 → 0.170 @ T=400); lr sweep {1.0, 0.5, 0.1}. Re-measure anchors at plan time. ~3 figures (staged train/test clean; lr sweep; noisy test rising). Validate plan → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,24 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (weak learners & the additive model) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy validated
+  visually.** 21 cells (6 code / 15 md), 3 figures (boundary sharpening triptych T=1/10/50 → an
+  axis-aligned **staircase**; exponential loss vs margin, the smooth surrogate; the **L(α) bowl** with
+  the minimiser dot at **0.84** and SAMME's dashed line at **1.68**). Built the **additive model**
+  `F=sign(Σαₜhₜ)` (the same α plays reweighting *and* vote weight); **derived** α as the exp-loss
+  minimiser **½ln((1−ε)/ε)=0.8398** (grid 0.8400, closed-form to 1e-15) by forward stagewise additive
+  modelling; multiclass SAMME **+ln(K−1)** verified == sklearn (1.0788, 2e-16); boundary T=1 0.867 →
+  T=50 0.942. Reviewers: **pedagogy PASS** (1 MINOR folded — "curve"→"staircase" exercise; hardest-maths
+  judged accompanied); **ml-expert REVISE → fixed → re-confirmed PASS** — caught a real **MAJOR**: my
+  SAMME-vs-classic reconciliation reached the right conclusion via a *wrong reason* ("a factor on α
+  cancels in renorm" — false, α is in the exponent). **Verified** the correct margin-form story
+  experimentally (classic reweight exp(−βyh)=exp(−β)·exp(2β·𝟙[miss]); common exp(−β) cancels → SAMME's
+  update → identical 50-stump sequence & predictions; the indicator-β hybrid diverges 0.9333). Rewrote
+  cell-15 to the margin-form derivation (turning the trap into an explicit learner warning), fixed the
+  exercise-3 hint + the plan doc. Guards: 0 banned (JSON scan), ruff/black clean, hex clean,
+  output-free, `llms.txt` **58**; `common_errors` gained 2 AdaBoost rows (SAMME/margin-form; α is
+  derived/surrogate). Canonical nbconvert exec (exit 0); 3 figures eyeballed. No `src/` change (pytest
+  **20**). Next: open NB 3 (learning rate, rounds & overfitting behaviour).
 - **NB 2 (weak learners & the additive model) OPENED.** Branch `notebook/07_AdaBoost__02_additive_model`
   off `chapter/07_AdaBoost` (@ `e03be0b`). Phase `notebook-plan`: drafting the cell-by-cell plan — one
   concept, the **additive model** `F(x)=sign(Σ αₜ hₜ(x))` and **where α comes from**: the reveal that

@@ -23,10 +23,13 @@ md), 3 figures.
   `L(α) = Σ wᵢ e^(−α yᵢ hᵢ) = (1−ε)e^(−α) + ε e^(α)` is minimised at **α\* = ½ ln((1−ε)/ε) = 0.8398**
   (grid argmin over [−0.5, 2.5] = **0.8400**; closed-form vs sum-form agree to **1.3e-15**). `L(0)=1.000`,
   `L(α\*)=0.728` (the bottom).
-- **SAMME vs classic**: SAMME's α = ln((1−ε)/ε) = **1.6796 = 2α\***. It is *not* the per-round
-  exp-loss minimiser, yet gives the **same classifier**: the reweighting uses only the renormalised
-  *ratio* and the vote uses only the *sign* — both invariant to a global positive scale on α. (Neat
-  check, optional: `L(2α\*) = L(0) = 1`.)
+- **SAMME vs classic**: SAMME's α = ln((1−ε)/ε) = **1.6796 = 2α\*** (the vote weight). Same classifier,
+  for the *right* reason (verified): the classic exp-loss reweight is the **margin form**
+  exp(−β yᵢ hᵢ) = exp(−β)·exp(2β·𝟙[miss]); the common exp(−β) cancels in renormalisation, leaving
+  exp(2β·𝟙[miss]) = SAMME's update. So both **reweight identically → same stumps**, and the votes
+  differ by a global factor 2 the sign erases. (NOT "a factor on α cancels in renorm" — α is in the
+  exponent; the naive indicator-β reweight exp(β·𝟙[miss]) *diverges* from round 2, measured 0.9333 vs
+  0.9417.) Neat optional check: `L(2β) = L(0) = 1`.
 - **Multiclass SAMME** (K=3, `make_classification`): by-hand round-1 α = ln((1−ε)/ε) + **ln(K−1)** =
   **1.0788** == sklearn `estimator_weights_[0]` (|diff| **2e-16**). For K=2, ln(K−1)=0 → binary AdaBoost.
 
@@ -80,9 +83,11 @@ md), 3 figures.
     *this* is where α comes from, the loss-minimising step, not a guess. It has NB 1's behaviour built
     in: ε→0 ⇒ α→∞ (trust a great learner), ε=½ ⇒ α=0 (a coin flip earns no vote).
 15. (md) **SAMME vs the classic ½.** sklearn's SAMME uses α = ln((1−ε)/ε) = **2α\*** (what NB 1 used).
-    Why is doubling fine? The reweighting depends only on the **renormalised ratio**, and the final
-    prediction only on the **sign** of F — both unchanged by a global positive factor. So the classic
-    (½ ln) and SAMME (ln) build the **same stumps** and the **same classifier**; the 2 is bookkeeping.
+    Why is doubling fine? (a) The vote sign(Σ α h) is invariant to a global positive scale. (b) The
+    classic reweight is the **margin form** exp(−β yᵢ hᵢ) = exp(−β)·exp(2β·𝟙[miss]); the common
+    exp(−β) cancels in renormalisation, leaving exactly SAMME's exp(2β·𝟙[miss]) — so both **reweight
+    identically and build the same stumps**. Votes differ by a factor 2 the sign erases → **same
+    classifier** (verified). Explicit "careful" note: this is the margin form, not "a factor cancels".
 16. (code) **Multiclass SAMME (K=3).** On a 3-class set, by-hand round-1 α = ln((1−ε)/ε) + **ln(K−1)**;
     print it (1.0788) against sklearn `estimator_weights_[0]` (match to 2e-16).
 17. (md) **Read the result.** SAMME generalises to K classes by adding **ln(K−1)**; for K=2 that term
