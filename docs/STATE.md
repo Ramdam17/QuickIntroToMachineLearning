@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`07_AdaBoost` — in progress (NB 4 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 — the estimator `AdaBoostClassifier` & its parameters** (4 of 5). |
-| Phase | `notebook-plan` — drafting the NB 4 cell-by-cell plan; Rémy validates before build. |
+| Phase | `notebook-build` — NB 4 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
 | Active branch | `notebook/07_AdaBoost__04_estimator_and_parameters` (off `chapter/07_AdaBoost` @ `c493293`) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 4 plan being drafted; persisted to `docs/plans/07_AdaBoost__04_estimator_and_parameters.md` on approval. |
-| Next concrete action | **Draft the NB 4 cell-by-cell plan** (the estimator & its parameters, de-overloaded). Anchors (moons-0.20, sklearn 1.9.0): API `estimator`=stump default, **`algorithm` REMOVED** (SAMME only); parity AdaBoost(50) test 0.9417; **base-strength** (n=200) all train 1.000, test 0.9417(d1)/0.9333(d2,d3)/0.9167(d5) — deeper base overfits faster; **n_est×lr 5-fold CV** grid (best lr0.5/n400 CV 0.9607; default n50/lr1.0 CV 0.9429); **tuned == default on sealed test 0.9417** (CV gain didn't transfer); `feature_importances_` ~[0.61,0.39] MDI. 3 figures (boundary stump-vs-deep; n_est×lr CV heatmap; CV-vs-test bars default/tuned). Present plan → Rémy validates → build. |
+| Active plan | `docs/plans/07_AdaBoost__04_estimator_and_parameters.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
+| Next concrete action | **Build NB 4** per the plan (~22 cells, 9 code/13 md, 3 figures, moons-0.20). Re-measure anchors (API algorithm-removed; base-strength test 0.9417→0.9167; n_est×lr CV best 0.9607/default 0.9429; tuned==default test 0.9417; importances ~[0.61,0.39]). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy; **rebuild from script right before `git add`** (editor kernel-drift habit). Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 04 — the estimator AdaBoostClassifier & its parameters`, ff-merge to `chapter/07_AdaBoost`. |
 
 ## Notes / blockers
 
@@ -42,7 +42,8 @@
   test. Anchors re-measured (moons-0.20): base-strength n=200 all train 1.000, test 0.9417(d1) →
   0.9167(d5); n_est×lr CV best lr0.5/n400 0.9607 vs default 0.9429; **tuned == default on sealed test
   0.9417** (CV gain didn't transfer — honest, echoes ch 06). 3 figures. No `src/` change planned (pytest
-  20). Next: Rémy validates the NB-4 plan → build.
+  20). **Plan APPROVED by Rémy & persisted** (`docs/plans/07_AdaBoost__04_estimator_and_parameters.md`);
+  building now.
 - **NB 3 (learning rate, rounds & overfitting behaviour) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
   validated visually.** 20 cells (5 code / 15 md), 3 figures (clean staged train/test; lr sweep
   {1.0,0.5,0.1}; a 2-panel noise figure — clean-vs-noisy test error on one clean test set + the
