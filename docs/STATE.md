@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`07_AdaBoost` — in progress (NB 5 of 5; NB 1–4 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 5 — a demanding case: spambase** (5 of 5, the capstone) — **OPENED, planning.** The last notebook of ch 07. |
-| Phase | `notebook-plan` (NB 5) → drafting the cell-by-cell plan in plan mode (measuring spambase anchors on sklearn 1.9.0 first). No reviewer gate at NB-plan stage — Rémy alone validates the plan; reviewers return on the built notebook. |
+| Current notebook | **NB 5 — a demanding case: spambase** (5 of 5, the capstone) — **plan APPROVED; building.** The last notebook of ch 07. |
+| Phase | `notebook-plan-approved` → `notebook-build` (NB 5): plan persisted & committed; **building the notebook now**. |
 | Active branch | `notebook/07_AdaBoost__05_spambase` (off `chapter/07_AdaBoost` @ `802116b`). |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED, §NB 5 = spambase capstone). NB 5 cell-by-cell plan being drafted in plan mode — not yet persisted to `docs/plans/07_AdaBoost__05_spambase.md`. |
-| Next concrete action | **Draft NB 5's cell-by-cell plan** (visualization-first capstone, ~24–26 cells a *floor*, ~7 figures). (1) **Measure every anchor on sklearn 1.9.0** (seed-pinned): class balance; cross-method test acc on spam (stump / tree / KNN / LogReg / SVM / RF / AdaBoost — distance/linear/margin methods scaled); AdaBoost staged clean test+train error (bottom round ≈280, err ≈0.049→0.051 @400, train floor ≈0.045, never 0); confusion; MDI + permutation top features; **noise (internal):** by-hand weight-on-flipped (20% → ~45%), AdaBoost staged test error rising with rounds on noisy train, AdaBoost-vs-RF degradation vs noise {0..0.4} (the spam reversal at 0.4 = why "RF beats AdaBoost" is NOT a law). (2) Draft cells. (3) ExitPlanMode → Rémy approves → persist plan doc + STATE `notebook-plan-approved` + commit `docs(plan): NB 5 — spambase capstone (approved)` → build. **Honest framing throughout: "competitive with", never triumphal; the noise weakness framed internally, the RF comparison not generalised.** After NB 5 ships: **close CHAPTER 07 via PR into `main` (`--no-ff`)** on Rémy's explicit go. |
+| Active plan | `docs/plans/07_AdaBoost__05_spambase.md` (**APPROVED & persisted**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED, §NB 5). |
+| Next concrete action | **Build NB 5** from `<scratchpad>/build_ch07_nb5.py` (~27 cells, 7 figures: A class balance · B cross-method acc · C staged resistance clean · D confusion · E MDI vs permutation · F noise 2-panel [by-hand weight-on-flipped + clean-vs-40% staged test] · G AdaBoost-vs-RF degradation). Anchors re-measured (sklearn 1.9.0, seed 0): AdaBoost(400) test **0.949** ≈ RF(300) **0.959** ≫ stump 0.782; staged clean bottoms 0.0485@279, flat to 0.0507@400, train floor **0.045 (never 0)**; confusion [[810,27],[43,501]] (recall 0.921 / precision 0.949); MDI/perm top = spam-markers (`!`,`$`,`remove`) + **HP-corpus artifacts** (`george`,`hp`); by-hand weight-on-flipped **0.21→~0.40**; staged noisy 40% bottoms 0.142@39 → **0.177@400**; degradation **reversal** (AdaBoost > RF from 20% noise up). Guards (nbconvert from cwd on a copy, banned-JSON=0, hex, ruff/black, output-free, `gen_llms_txt`, **pytest 20**), two-reviewer gate (no BLOCK), Rémy visual, **rebuild-before-`git add`**, commit `feat(07_adaboost): notebook 05 — a demanding case: spam (shines, and the honest noise signature)`, ff-merge → **close CHAPTER 07 via PR into `main` (`--no-ff`)** on Rémy's go. |
 
 ## Notes / blockers
 
@@ -44,7 +44,11 @@
   wins on noisy breast_cancer but AdaBoost wins on noisy spam at 40% flip — the reversal). References
   the breast_cancer cross-method spine for continuity. **Anchors being re-measured on sklearn 1.9.0 at
   plan time.** No `src/` change expected (reuse `viz` helpers; pytest 20). Decision B (spambase, ESL ch
-  10). **Last NB of chapter 07 — after it ships, close the chapter via PR into `main`.**
+  10). **Plan APPROVED by Rémy (via ExitPlanMode) & persisted** (`docs/plans/07_AdaBoost__05_spambase.md`,
+  ~27 cells / 7 figures); anchors re-measured (AdaBoost 0.949 ≈ RF 0.959 ≫ stump 0.782; staged clean
+  bottoms 0.0485@279, train floor 0.045 never 0; weight-on-flipped 0.21→~0.40; noisy-40% bottoms
+  0.142@39→0.177@400; degradation reversal AdaBoost > RF from 20% up); **building now.** **Last NB of
+  chapter 07 — after it ships, close the chapter via PR into `main`.**
 - **NB 4 (the estimator `AdaBoostClassifier` & its parameters) BUILT & MERGED to `chapter/07_AdaBoost`
   — Rémy validated visually.** 22 cells (9 code / 13 md), 3 figures (boundary stump-base vs depth-3
   base; the `n_estimators × learning_rate` CV heatmap; CV-vs-sealed-test bars, default vs tuned). The
