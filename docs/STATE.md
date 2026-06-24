@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 1 of 5 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 1 merged to chapter; NB 2 to be opened). |
-| Phase | NB 1 merged to `chapter/07_AdaBoost` (Rémy validated; both reviewers PASS) — ready to open **NB 2** (`notebook-plan`). |
-| Active branch | `chapter/07_AdaBoost` (NB 1 ff-merged in; notebook branch kept) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 2 plan written when opened. |
-| Next concrete action | **Open NB 2 — weak learners & the additive model** (on Rémy's go): `git switch -c notebook/07_AdaBoost__02_additive_model` off `chapter/07_AdaBoost`; phase `notebook-plan`; draft per chapter plan §NB 2 — the weighted additive vote `F=sign(Σαₜhₜ)`, the reveal that the *same* α is the vote weight, and the **exponential-loss / forward-stagewise** derivation taught from scratch (re-lay ch 03 log-loss → exp-loss as a picture → forward-stagewise in words → grid-verify → heaviest algebra in "Going further"); reconcile SAMME `ln((1−ε)/ε)` vs classic `½·ln`. Validate plan → build. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 2 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 2 — weak learners & the additive model** (2 of 5). |
+| Phase | `notebook-plan` — drafting the NB 2 cell-by-cell plan; Rémy validates before build. |
+| Active branch | `notebook/07_AdaBoost__02_additive_model` (off `chapter/07_AdaBoost` @ `e03be0b`) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 2 plan being drafted; persisted to `docs/plans/07_AdaBoost__02_additive_model.md` on approval. |
+| Next concrete action | **Draft the NB 2 cell-by-cell plan** (one concept: the additive model `F=sign(Σαₜhₜ)` & where α comes from). Anchors (sklearn 1.9.0, moons-0.20): boundary sharpens T=1 0.8667 / T=10 0.9417 / T=50 0.9417 (train 0.986); train err → **0 @ T=114**; exp-loss `L(α)=(1−ε)e⁻ᵃ+εeᵃ` minimised at **α\*=½ln((1−ε)/ε)=0.8398** (grid argmin 0.8400), SAMME α=1.6796=2α\*; multiclass K=3 by-hand `ln((1−ε)/ε)+ln(K−1)=1.0788` == sklearn (diff 2e-16). 3 figures (boundary triptych; exp-loss vs margin; exp-loss vs α with the minimiser). Present plan → Rémy validates → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (weak learners & the additive model) OPENED.** Branch `notebook/07_AdaBoost__02_additive_model`
+  off `chapter/07_AdaBoost` (@ `e03be0b`). Phase `notebook-plan`: drafting the cell-by-cell plan — one
+  concept, the **additive model** `F(x)=sign(Σ αₜ hₜ(x))` and **where α comes from**: the reveal that
+  NB 1's reweighting α is the vote weight; weak learner = better than chance; the statistical view
+  taught from scratch (re-lay ch 03 log-loss → **exponential loss** as a picture → forward-stagewise in
+  words → grid-verify the minimiser). Anchors re-measured (moons-0.20, sklearn 1.9.0): boundary sharpens
+  T=1 0.8667 / T=10 0.9417 / T=50 0.9417 (train 0.986); train err → **0 @ T=114**; exp-loss minimised at
+  **α\*=½ln((1−ε)/ε)=0.8398** (grid argmin 0.8400, closed-form to 1e-15), SAMME α=1.6796=**2α\*** (same
+  classifier — scale-invariance); multiclass K=3 by-hand `ln((1−ε)/ε)+ln(K−1)=1.0788` == sklearn (diff
+  2e-16). 3 figures. No `src/` change planned (pytest 20). Next: Rémy validates the NB-2 plan → build.
 - **NB 1 (boosting intuition: reweighting by hand) BUILT & MERGED to `chapter/07_AdaBoost` — Rémy
   validated visually.** 24 cells (9 code / 15 md), 4 figures (training scatter; the weak stump's single
   cut, test **0.8667**; the 3-panel reweighting story — point size ∝ weight, the cut migrating round to
