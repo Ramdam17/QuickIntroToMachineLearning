@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 5 `05_covtype_strong_baseline` **built, reviewed, Rémy-validated, committed & ff-merged** to `chapter/06_RandomForest`). **CHAPTER 06 COMPLETE (5/5).** |
-| Phase | `chapter-merge` — all 5 NBs on `chapter/06_RandomForest`; **ready to PR into `main`** (confirm with Rémy before the outward-facing push/PR) |
-| Active branch | `chapter/06_RandomForest` (NB 1–5 ff-merged in) |
-| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; **all 5 NBs done**) |
-| Next concrete action | **Close CHAPTER 06 via PR into `main`** (`main` is PR-only — global pre-push hook). On Rémy's go (outward-facing — confirm first): `git push -u origin chapter/06_RandomForest`; `gh pr create --base main --head chapter/06_RandomForest --title "feat(06_random_forest): complete chapter — Random Forests"`; `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = open chapter `07_AdaBoost`. PR body ends with the Claude Code trailer. |
+| Current chapter | **`07_AdaBoost` — OPEN (`chapter-plan`).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | — (none; chapter planning in progress). |
+| Phase | `chapter-plan` — drafting the chapter plan in plan mode (reviewer-gated; Rémy validates before any notebook is built) |
+| Active branch | `chapter/07_AdaBoost` (off `main` @ `9f18507`) |
+| Active plan | — (chapter plan being drafted; persisted to `docs/plans/chapter_07_AdaBoost.md` on approval) |
+| Next concrete action | **Draft the chapter plan in plan mode** per `docs/course_map.md` §07 and the per-method arc: boosting = focus on the mistakes (reweight misclassified points, by hand) → weak learners (stumps) & the **additive model** / SAMME → **learning rate vs number of rounds**, overfitting behaviour → the estimator `AdaBoostClassifier` & its parameters (`n_estimators`, `learning_rate`, `estimator`) → a demanding case (where AdaBoost shines and where label noise hurts it). Then reviewer-gate the plan (`@domain-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); on Rémy's approval persist `docs/plans/chapter_07_AdaBoost.md`, update `course_map.md` §07 + STATE (`chapter-plan-approved`), commit; then open NB 1. |
 
 ## Notes / blockers
 
@@ -27,6 +27,28 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 07 (AdaBoost) opened.** Branch `chapter/07_AdaBoost` created off `main` (synced @ `9f18507`
+  after PR #6). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §07 and
+  the per-method arc — boosting = **focus on the mistakes** (reweight misclassified points, by hand) →
+  weak learners (decision stumps) & the **additive model** (SAMME for multiclass) → **learning rate vs
+  number of rounds** and overfitting behaviour → the estimator `AdaBoostClassifier` & its parameters
+  (`n_estimators`, `learning_rate`, `estimator`) → a demanding case (where AdaBoost shines, and where
+  **label noise** hurts it). The first **boosting** method — *sequential* error-correction, the direct
+  contrast with ch 06's *parallel* bagging; built on ch 04's decision stumps as weak learners. The
+  pending `idle` STATE edit was folded into this transition (committed on the chapter branch, not on
+  protected `main`).
+- **CHAPTER 06 (Random Forests) COMPLETE — merged to `main` via PR #6** (merge commit `9f18507`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  Five notebooks: averaging cuts variance (bagging) · the "random" — decorrelating the trees · out-of-bag
+  estimation · the estimator & its parameters · a demanding case (covtype). The course's **first
+  ensemble** method and the base learner for the boosting family (ch 07–10). **`src/` add:**
+  `viz.plot_feature_importances` + smoke test (pytest 19 → 20). The two-reviewer gate + Rémy's visual
+  validation held on every notebook; every number re-measured on sklearn 1.9.0 with each RF
+  `random_state`-pinned; honest findings surfaced throughout (the ρσ² floor; OOB mildly optimistic;
+  `max_features` forgiving; the covtype forest wins where breast_cancer's SVM did, the reversal stated;
+  the cell-18 fabricated cross-reference caught by both reviewers and corrected). `main` synced locally
+  to `9f18507`, green (pytest 20). STATE set to `idle` (pending edit, folds into the chapter-07
+  opening). Next: chapter `07_AdaBoost`.
 - **NB 5 (the demanding case — covtype) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
   visually. CHAPTER 06 COMPLETE (5/5).** The **visualization-first capstone**: 25 cells (8 code / 17 md),
   7 figures (class balance; cross-method accuracy; aggregate metrics; per-class recall; 7×7 confusion;
