@@ -102,6 +102,22 @@ def test_plot_calibration_curve_returns_figure() -> None:
     assert fig is not None
 
 
+def test_plot_feature_importances_returns_figure_and_ranks_top() -> None:
+    names = ["a", "b", "c", "d", "e"]
+    importances = np.array([0.05, 0.40, 0.10, 0.30, 0.15])
+    fig = viz.plot_feature_importances(names, importances, top=3)
+    assert fig is not None
+    ax = fig.axes[0]
+    # Top-3 only (b=0.40, d=0.30, e=0.15), largest at the top: ticks bottom->top = ["e", "d", "b"].
+    tick_labels = [t.get_text() for t in ax.get_yticklabels()]
+    assert tick_labels == ["e", "d", "b"]
+    # An std vector draws without error (error bars).
+    fig_std = viz.plot_feature_importances(
+        names, importances, std=np.full(5, 0.01), top=5, label="MDI"
+    )
+    assert fig_std is not None
+
+
 def test_plot_svm_decision_returns_figure_and_rings_support_vectors() -> None:
     X = np.array([[-2.0, -2.0], [-1.8, -2.1], [-2.1, -1.7], [2.0, 2.0], [1.9, 1.7], [2.1, 2.2]])
     y = np.array([0, 0, 0, 1, 1, 1])

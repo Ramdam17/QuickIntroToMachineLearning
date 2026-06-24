@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **05_SVM — Support Vector Machines** — all 5 notebooks built & validated; **closing via PR into `main`**. |
-| Current notebook | — (NB 5 done; chapter 05 complete). |
-| Phase | `chapter-merge` (NB 5 merged; opening the chapter-05 PR into `main`) |
-| Active branch | `chapter/05_SVM` (NB 1–5 merged in) |
-| Active plan | chapter `docs/plans/chapter_05_SVM.md` (APPROVED, all 5 NBs done); NB-5 `docs/plans/05_SVM__05_breast_cancer_scaling_limits.md` (done) |
-| Next concrete action | **Close chapter 05 via PR into `main`.** Push `chapter/05_SVM`; `gh pr create --base main --head chapter/05_SVM` (title `feat(05_svm): complete chapter — support vector machines`); `gh pr merge --merge` (`--no-ff`, per-notebook history preserved); `git switch main && git pull --ff-only`; verify `pytest` green. Then set STATE `idle` (the pending edit, folds into the chapter-06 opening — `main` is PR-only). **Next chapter: `06_RandomForest`.** |
+| Current chapter | **`06_RandomForest`** (Random Forests). Chapter 05 (Support Vector Machines, 5 NBs) complete — merged to `main` via PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 5 `05_covtype_strong_baseline` **built, reviewed, Rémy-validated, committed & ff-merged** to `chapter/06_RandomForest`). **CHAPTER 06 COMPLETE (5/5).** |
+| Phase | `chapter-merge` — all 5 NBs on `chapter/06_RandomForest`; **ready to PR into `main`** (confirm with Rémy before the outward-facing push/PR) |
+| Active branch | `chapter/06_RandomForest` (NB 1–5 ff-merged in) |
+| Active plan | **`docs/plans/chapter_06_RandomForest.md`** (chapter, APPROVED; **all 5 NBs done**) |
+| Next concrete action | **Close CHAPTER 06 via PR into `main`** (`main` is PR-only — global pre-push hook). On Rémy's go (outward-facing — confirm first): `git push -u origin chapter/06_RandomForest`; `gh pr create --base main --head chapter/06_RandomForest --title "feat(06_random_forest): complete chapter — Random Forests"`; `gh pr merge --merge` (`--no-ff`, preserve per-notebook history); `git switch main && git pull`. Then set STATE `idle`, next = open chapter `07_AdaBoost`. PR body ends with the Claude Code trailer. |
 
 ## Notes / blockers
 
@@ -27,8 +27,193 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — covtype) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
+  visually. CHAPTER 06 COMPLETE (5/5).** The **visualization-first capstone**: 25 cells (8 code / 17 md),
+  7 figures (class balance; cross-method accuracy; aggregate metrics; per-class recall; 7×7 confusion;
+  MDI vs permutation importance; fit-time vs n). On covtype (30k stratified subsample, 7 classes, 54
+  features): **the forest wins** RF **0.844** / OOB **0.846** ≫ tree 0.770 ≫ LogReg 0.729 (+11 pts —
+  the **reverse of breast_cancer**, where RF < SVM); **honest eval under imbalance** (accuracy 0.844 /
+  weighted-F1 0.840 hide it, **macro-F1 0.737** reveals it; per-class recall **Aspen 0.279**; confusion
+  shows Aspen→Lodgepole); **importance honestly** (Elevation MDI **0.233** ≈ perm **0.270** agree on
+  rank; 40 one-hot Soil_* diluted, **combined 0.141/0.112** = 2nd-largest signal; permutation **put to
+  work**); **fit-time ≈ n^0.99** (vs ch 05's SVM n^1.6 reference). Reviewers: **both REVISE → folded**
+  (shared **MAJOR** — cell-18 wrongly claimed NB 4 *measured* an MDI-vs-permutation disagreement; NB 4
+  only *named* permutation → reframed to NB 4's true MDI single-tree-spike→forest-spread story; MINORs
+  — Soil group is 2nd not 3rd largest, "no soil col high" qualified for the perm panel, MDI/perm
+  different scales → agree on *ranking*; added a "Going further" section). **No `src/` change**
+  (`fetch_covtype` direct, names already descriptive, INFO logging shown; pytest **20**). Guards: 0
+  banned (JSON scan), ruff/black clean, hex clean, output-free, `llms.txt` 55; `common_errors` gained 3
+  rows (imbalance accuracy trap; one-hot dilution; no-universal-best). Canonical nbconvert exec (exit
+  0); all 7 figures eyeballed. **Last NB of the chapter — next: close CHAPTER 06 via PR into `main`.**
+- **NB 5 (the demanding case — covtype, the chapter capstone) OPENED.** Branch
+  `notebook/06_RandomForest__05_covtype_strong_baseline` off `chapter/06_RandomForest` (@ `93857e1`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — the **visualization-first
+  capstone** (~24–26 cells a *floor*, figures may exceed six): forest cover type (`fetch_covtype`,
+  30 000-row stratified subsample, 7 classes, 54 features); **the forest wins** (RF ≈ 0.846 ≫ tree ≈
+  0.775 ≫ LogReg ≈ 0.728 — the reverse of breast_cancer); **honest eval under imbalance** (macro vs
+  weighted re-laid; accuracy vs macro-F1 ≈ 0.733; per-class recall incl. Aspen ≈ 0.28; 7×7 confusion);
+  **importance honestly** (Elevation dominates, MDI ≈ perm; 40 one-hot Soil_* diluted to ≈ 0.140;
+  **permutation put to work**, NB 4's promise); OOB ≈ test at scale; **RF fit-time ≈ linear in n** (the
+  counterpoint to ch 05's SVM n^1.6 wall); boosting bridge (ch 07–10). One-time ≈14 MB covtype fetch
+  (visible INFO logging). Anchors **re-measured at plan time** on sklearn 1.9.0, every RF
+  `random_state`-pinned (RF 0.844/OOB 0.846 ≫ tree 0.770 ≫ LogReg 0.729; macro-F1 0.737 vs accuracy
+  0.844; Aspen recall 0.279; Elevation MDI 0.233 ≈ perm 0.270, 40 Soil one-hot 0.141/0.112; fit-time
+  n^0.99). Build decisions: `fetch_covtype` direct (no loader/test, pytest stays 20); cross-method on
+  fixed defaults + OOB (no test-set tuning). Plan **APPROVED** by Rémy & persisted
+  (`docs/plans/06_RandomForest__05_covtype_strong_baseline.md`); building now.
+  **Last NB of chapter 06 — after it ships, close the chapter via PR into `main`.**
+- **NB 4 (the estimator `RandomForestClassifier` & its parameters) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 24 cells (7 code / 17 md), 3 figures (OOB &
+  test error vs `n_estimators`; single-tree vs forest test vs `max_depth`; single-tree MDI spike vs
+  forest MDI spread). The integrative notebook: **honest parity** hand-bag **0.9357** ==
+  `RF(max_features=None)` 0.9357 (accuracy match at B=200, tie-break-sensitive — rs=0 fixed gives
+  0.9357, rs=b gives 0.9415; framed as "not a tree-for-tree clone"), `RF(sqrt)` **0.9415**;
+  **`n_estimators`** OOB-err 0.271→0.040, **never overfits** (sklearn warns ≤10, surfaced not
+  silenced); **`max_features`** OOB/CV **flat** 0.947–0.962 → forest is *forgiving*, `'sqrt'` robust,
+  mechanism = NB 2's ρ (no test-acc ranking); **`max_depth`** single-tree test wobble 0.86–0.918 vs
+  forest 0.918→0.942 plateau (both train **1.000**), run-to-run std **0.0163 vs 0.0043** (≈4×);
+  knobs `bootstrap`/`class_weight`/`n_jobs` named; **feature importance** single-tree spike **0.740**
+  vs forest peak **0.146** (spread over the correlated group; Strobl bias + dilution caveat;
+  **permutation named** → NB 5); **`GridSearchCV`** `{None,'log2',1}` CV 0.957 → test **0.947** vs
+  default 0.955/0.942 (**tuning barely beats the default**). Reviewers: **both PASS** (no BLOCK/MAJOR);
+  ml-expert re-verified parity across 3 splits/2 B-values (diverges at B=50, converges at B=200) and
+  endorsed deferring permutation to NB 5; folded 3 MINOR/nit (Fig C shared-x-scale note; cell-13
+  train=1.000 print added; "variance" not "spread" for σ²/B). **`src/` add:**
+  `viz.plot_feature_importances` + smoke test → **pytest 20**. Guards: 0 banned (JSON scan), ruff/black
+  clean, hex clean, output-free, `llms.txt` 54. `common_errors` gained 3 RF rows (deep-on-purpose;
+  forgiving/tuning; importance spread). Canonical nbconvert exec (exit 0); all 3 figures eyeballed.
+  Next: open NB 5 (demanding case — covtype), the chapter capstone.
+- **NB 4 (the estimator `RandomForestClassifier` & its parameters) OPENED.** Branch
+  `notebook/06_RandomForest__04_estimator_and_parameters` off `chapter/06_RandomForest` (@ `4bb235a`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — the **integrative** notebook
+  (~22–24 cells, soft ceiling, ch 04's de-overload lesson): **honest parity first** (hand-bag (NB 1)
+  == `RF(max_features=None)`; RF = that **plus** per-split subsampling, NB 2); then the knobs —
+  **`n_estimators`** (OOB/test diminishing returns, never systematically overfits), **`max_features`**
+  the central dial (NB 2's ρ trend as the hyperparameter, `'sqrt'` default), **`max_depth`/
+  `min_samples_leaf`** (RF grows deep and tolerates it), **`bootstrap`/`class_weight`/`n_jobs`** named
+  lightly; **feature importance introduced** (MDI over the forest **spreads** vs the single tree's
+  ≈0.8 spike — leader read at build; bias caveat restated; **permutation named** → honest reading in
+  NB 5); **`GridSearchCV` honest tuning** on TRAIN → one sealed test. `src/` add
+  `viz.plot_feature_importances` (+ smoke test → pytest 19→20) **approved** (the recommended option).
+  Anchors **re-measured at plan time** on sklearn 1.9.0, every RF `random_state`-pinned (parity
+  hand-bag 0.9357 == RF(mf=None) 0.9357 / RF(sqrt) 0.9415; n_estimators OOB-err 0.271→0.040 no
+  overfit, warns ≤10; max_features OOB/CV **flat** 0.947–0.962 = forgiving; max_depth single-tree
+  wobble vs forest 0.918→0.942 plateau, run-to-run std 0.0163 vs 0.0043; MDI peak 0.146 vs single-tree
+  0.740; GridSearch {'log2',1,None} CV 0.957 → test 0.947 vs default 0.955/0.942; raw==std 1.000). Plan
+  **APPROVED** by Rémy & persisted (`docs/plans/06_RandomForest__04_estimator_and_parameters.md`);
+  building now.
+- **NB 3 (out-of-bag estimation) BUILT & MERGED to `chapter/06_RandomForest` — Rémy validated
+  visually.** 20 cells (6 code / 14 md), 2 figures (in-bag/OOB schematic; OOB-error vs test-error vs
+  `n_estimators`). One concept: OOB = the bootstrap's free validation set. Derived `(1−1/n)ⁿ → 1/e`
+  (0.367 at n=398) + measured (0.368); **built the OOB vote by hand** (0.962, ~73 graders/point, 398/398
+  covered); parity sklearn `oob_score_` **0.955** ≈ hand; OOB ≈ **sealed test 0.942**, mildly optimistic
+  (~1–2 pts, parallel not converging); OOB unreliable < ~25 trees (sklearn **warns**, let through;
+  P(never OOB)=0.63³≈0.25). Reviewers: **pedagogy PASS**; **ml-expert REVISE → folded** (MAJOR — the
+  hand-vs-sklearn gap was wrongly blamed on hard-vs-soft vote; re-measured soft==hard (saturated leaf
+  probs) → corrected to RNG (different bootstrap draws); MINORs — optimism quantified, n=10 0.349,
+  `np.add.at` glossed). Guards: 0 banned, ruff/hex clean, output-free, `pytest` 19 (no `src/` change),
+  `llms.txt` regenerated; `common_errors` gained an OOB row. Canonical nbconvert exec (exit 0); both
+  figures eyeballed. Next: open NB 4 (the estimator & its parameters).
+- **NB 3 (out-of-bag estimation) OPENED.** Branch `notebook/06_RandomForest__03_out_of_bag` off
+  `chapter/06_RandomForest` (@ `1789474`). Phase `notebook-plan`: drafting the cell-by-cell plan (plan
+  mode) — one concept, **OOB**: each bootstrap omits ~1/e ≈ 37 % of points (derive + measure); the trees
+  that did not see a point grade it → the forest scores itself for free; **build the OOB vote by hand**
+  and match sklearn `oob_score_` (parity); OOB ≈ sealed test (≈0.96 vs ≈0.94, mildly optimistic); OOB
+  unreliable with too few trees (sklearn warns); OOB-error vs `n_estimators` → test error. Anchors
+  re-measured at plan time, `random_state` pinned. Plan **APPROVED** by Rémy & persisted
+  (`docs/plans/06_RandomForest__03_out_of_bag.md`); building now.
+- **NB 2 (the "random" in the forest: decorrelating the trees) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (ρ vs
+  `max_features` rising→saturating; ensemble-CV vs mean-individual-tree across `max_features`). One
+  concept: feature subsampling decorrelates the trees. On breast_cancer, ρ **0.822 → 0.797** (robust on
+  every seed) at **equal individual-tree accuracy** (0.910 ≈ 0.909); the **Var = ρσ² + (1−ρ)σ²/B** law
+  **derived from scratch** + Monte-Carlo-verified (the ρσ² floor); `max_features` the decorrelation dial
+  (ρ 0.70→0.82, saturating); moons puzzle resolved (RF sqrt 0.900 < bag 0.933 on 2 features). Reviewers:
+  **pedagogy PASS**; **ml-expert REVISE → folded** (MAJOR — the gem's CV gain 0.947→0.957 is seed-fragile
+  (flips on 2/6 seeds) → re-anchored on the robust ρ-drop + individual-tree equality, *by elimination*,
+  CV framed within the ±0.01 seed band; MINORs — ρ "saturates" not "monotone", ρ = proxy for
+  error-correlation, cell-12↔16 fence, moons reframed, exercise-2 enriched). Guards: 0 banned, ruff
+  clean, hex clean, output-free, `pytest` 19 (no `src/` change), `llms.txt` regenerated; `common_errors`
+  gained two rows (the ρσ² floor; subsampling needs many features). Canonical nbconvert exec (exit 0);
+  both figures eyeballed. Next: open NB 3 (out-of-bag estimation).
+- **NB 2 (the "random" in the forest: decorrelating the trees) OPENED.** Branch
+  `notebook/06_RandomForest__02_decorrelating_trees` off `chapter/06_RandomForest` (@ `065c84f`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — one concept, **feature
+  subsampling decorrelates the trees**: on breast_cancer, ρ (pairwise tree correlation) drops 0.82→0.80,
+  the ensemble rises (CV 0.945→0.955) while individual trees stay equal (the gain is decorrelation);
+  the **Var = ρσ² + (1−ρ)σ²/B** law derived from scratch (the ρσ² floor bagging cannot pass); `max_features`
+  the decorrelation dial (ρ monotone 0.70→0.82); resolves NB 1's moons puzzle. Anchors re-measured at
+  plan time, `random_state` pinned. Plan **APPROVED** by Rémy & persisted
+  (`docs/plans/06_RandomForest__02_decorrelating_trees.md`); building now.
+- **NB 1 (the wisdom of trees: averaging cuts variance / bagging) BUILT & MERGED to
+  `chapter/06_RandomForest` — Rémy validated visually.** 22 cells (7 code / 15 md), 2 figures (five
+  jagged single bootstrap-tree boundaries vs the smooth bagged-100 boundary; test-accuracy & run-to-run
+  std vs number of trees). Built entirely by hand: a single deep tree is high-variance (test **0.878**,
+  bootstrap std **0.031**) → bootstrap (the ~37 % left-out fraction, n=10 → 0.349 vs the n→∞ limit
+  1/e ≈ 0.368) → majority vote (`HandBag` estimator) → **0.933**, run-to-run std **0.0465→0.0053
+  (÷8.8)**; honest parity hand-bag(200) == `RandomForestClassifier(max_features=None)` = **0.9333**,
+  `RF(default sqrt)` **0.900** a deliberate hook for NB 2. Reviewers: **pedagogy PASS** ("cleanest
+  concept-boundary I've reviewed in this course"); **ml-expert REVISE → folded** (MAJOR — the honest
+  anchor "averaging cancels variance, not bias" was missing → added cell 16; MINORs — empirical-vs-
+  formula n=10 wording, std-non-monotone clause, even-B tie comment, ch 04 back-refs corrected to
+  NB 4/5). Guards: 0 banned (JSON scan), ruff clean, hex clean, output-free, `pytest` 19 (no `src/`
+  change), `llms.txt` regenerated; `common_errors` gained a "more trees ≠ better / variance-not-bias"
+  row. Canonical nbconvert exec end-to-end (exit 0); both figures eyeballed. Next: open NB 2
+  (decorrelating the trees).
+- **NB 1 (the wisdom of trees: averaging cuts variance / bagging) OPENED.** Branch
+  `notebook/06_RandomForest__01_averaging_cuts_variance` off `chapter/06_RandomForest` (@ `413cc4a`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan (plan mode) — one concept, **bagging by hand
+  on `make_moons`**: a single deep tree is high-variance (test 0.878, bootstrap std 0.031) → bootstrap
+  resampling + majority vote → 0.933, run-to-run std ÷9 (0.0465→0.0053); the σ²/B variance-reduction
+  intuition; honest parity **hand-bag == `RF(max_features=None)`** (0.9333), with `RF(default sqrt)`
+  0.900 a deliberate hook for NB 2. ~22 cells, 2 figures (single jagged trees vs the smooth averaged
+  boundary; test-acc & run-to-run std vs B). No `src/` change (pytest stays 19). Plan **APPROVED** by
+  Rémy & persisted (`docs/plans/06_RandomForest__01_averaging_cuts_variance.md`); building now.
+- **Chapter 06 (Random Forests) plan APPROVED & persisted** (`docs/plans/chapter_06_RandomForest.md`,
+  this commit). **FIVE notebooks** (standard arc): NB 1 averaging cuts variance / bagging (by hand on
+  `make_moons`: single tree 0.878 → vote 0.933, run-to-run std ÷9; hand-bag == `RF(max_features=None)`)
+  → NB 2 decorrelating the trees (feature subsampling on breast_cancer: ρ 0.82→0.80, ensemble
+  0.924→0.95 while individual trees stay equal; the **Var = ρσ² + (1−ρ)σ²/B** law derived from scratch)
+  → NB 3 out-of-bag estimation (the ~1/e left out per tree = free validation; OOB ≈ test) → NB 4 the
+  estimator `RandomForestClassifier` & its parameters (`n_estimators` diminishing returns, `max_features`
+  the decorrelation dial, depth; feature importance introduced) → NB 5 demanding case **covtype** (forest
+  cover type — the forest **wins** on non-linear: RF 0.846 ≫ LogReg 0.728; honest eval under imbalance
+  macro-F1 0.733; reading importances honestly: Elevation 0.231 vs 40 one-hot Soil cols combined 0.140;
+  RF scales ~linearly vs ch 05's SVM n^1.6). First **ensemble** method; base learner of ch 07–10.
+  **Refinement of `course_map.md` §06:** NB 3 = OOB only, feature importance → NB 4 (intro) + NB 5
+  (honest reading), mirroring ch 04's importance arc; §06 aligned. Reviewer-gated, both **REVISE → all
+  folded** (every number re-measured on sklearn 1.9.0): **ml-expert** (MAJORs — SVM foil `n^1.67`→`n^1.6`
+  matching shipped ch 05; RF scaling `n^1.18`→"roughly linear ≈ n^1.0–1.2"; `max_features` decorrelation
+  headline now the **monotone ρ trend**, not the seed-fragile per-mf test ranking; MINORs — MDI leader
+  read at build not hard-coded, RF `random_state` pinned, Aspen n, covtype cache ≈ 14 MB) — praised the
+  ρ-law (Monte-Carlo verified), the decorrelation gem, the exact OOB fraction, the covtype section
+  reproducing to three decimals, the honest reversal. **pedagogy** (MAJORs — the ch 04→NB 1 bridge
+  conflated two datasets, now states the breast_cancer-hand-bag/moons-variance split plainly; the
+  variance law is now **derived** before the NB 2 exercise leans on it; MINORs — NB 5 cell count a
+  *floor*, "clearly wins" softened, macro-vs-weighted re-laid in NB 5) — praised the first-contact
+  fencing, NB 1 vs NB 2 distinctness, the sound NB 3 refinement. **Rémy chose covtype for NB 5.** **No
+  `src/` change forced** (`viz.plot_feature_importances` possible at NB 4, → pytest 19→20). Next: open NB 1.
+- **Chapter 06 (Random Forests) opened.** Branch `chapter/06_RandomForest` created off `main` (synced
+  @ `b5c00f7` after PR #5). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §06 and the per-method arc (why averaging many trees reduces variance — bagging, by
+  hand → bootstrap samples + feature subsampling that decorrelate the trees → out-of-bag estimation &
+  feature-importance caveats → parameters `n_estimators`/`max_features`/depth, diminishing returns →
+  demanding case: a strong tabular baseline, reading importances honestly). The first **ensemble**
+  method and the direct answer to the single tree's variance (ch 04 NB 5's hand-bagged 25-tree bar was
+  a first taste). The pending `idle` STATE edit was folded into this transition (committed on the
+  chapter branch, not on protected `main`).
+- **CHAPTER 05 (Support Vector Machines) COMPLETE — merged to `main` via PR #5** (merge commit
+  `b5c00f7`, `gh pr merge --merge`; per-notebook history preserved; pushed to
+  Ramdam17/QuickIntroToMachineLearning). Five notebooks: the maximum margin · the soft margin & cost C ·
+  the kernel trick · the estimator `SVC` & its parameters · breast_cancer (scaling, limits). The first
+  **margin-based** method and the home of the **kernel trick**. **`src/` add:** `viz.plot_svm_decision`
+  + 2 tests (pytest 17 → 19). The two-reviewer gate + Rémy's visual validation held on every notebook;
+  every number re-measured on sklearn 1.9.0; honest findings surfaced (the threshold cannot rescue a
+  confident miss; the measured large-`n` ceiling). `main` synced locally to `b5c00f7`, green (pytest
+  19). STATE set to `idle` (pending edit, folds into the chapter-06 opening). Next: chapter
+  `06_RandomForest`.
 - **NB 5 (the demanding case: breast cancer) BUILT & MERGED to `chapter/05_SVM` — Rémy validated
-  visually. CHAPTER 05 COMPLETE (5/5); closing via PR into `main`.** The chapter **capstone**,
+  visually. Part of CHAPTER 05, merged to `main` via PR #5.** The chapter **capstone**,
   visualization-first: 26 cells,
   6 figures (class balance; raw-vs-std scaling bar; `C × gamma` heatmap; cross-method spine bar;
   confusion; fit-time-vs-`n` curve). Scaling raw CV 0.9095 → std 0.9648; GridSearch `{C100,γ0.001,rbf}`
