@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — in progress (NB 4 of 5).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 4 — the estimator `AdaBoostClassifier` & its parameters** (4 of 5). |
-| Phase | `notebook-build` — NB 4 plan APPROVED & persisted; building the notebook, then guards + two-reviewer gate (no BLOCK) + Rémy visual. |
-| Active branch | `notebook/07_AdaBoost__04_estimator_and_parameters` (off `chapter/07_AdaBoost` @ `c493293`) |
-| Active plan | `docs/plans/07_AdaBoost__04_estimator_and_parameters.md` (**APPROVED**); under `docs/plans/chapter_07_AdaBoost.md` (APPROVED). |
-| Next concrete action | **Build NB 4** per the plan (~22 cells, 9 code/13 md, 3 figures, moons-0.20). Re-measure anchors (API algorithm-removed; base-strength test 0.9417→0.9167; n_est×lr CV best 0.9607/default 0.9429; tuned==default test 0.9417; importances ~[0.61,0.39]). Guards: banned JSON scan=0, ruff/black, hex, output-free, nbconvert from project cwd on a copy; **rebuild from script right before `git add`** (editor kernel-drift habit). Then `@ml-expert-reviewer`+`@pedagogy-reviewer` (no BLOCK) → Rémy visual → `gen_llms_txt`, pytest 20, commit `feat(07_adaboost): notebook 04 — the estimator AdaBoostClassifier & its parameters`, ff-merge to `chapter/07_AdaBoost`. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 5 of 5; NB 1–4 merged).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 5 — a demanding case: spambase** (5 of 5, the capstone) — **not yet opened**. NB 4 (the estimator & its parameters) DONE & merged. |
+| Phase | `notebook-commit` (NB 4) → **NB 4 COMMITTED & ff-merged to `chapter/07_AdaBoost`.** Both reviewers PASS + Rémy validated visually; guards green; nbconvert exit 0 (0 errors / 3 figures / 8 streams). Ready to **open NB 5** — the spambase capstone, the last of ch 07. |
+| Active branch | `chapter/07_AdaBoost` (NB 1–4 merged; NB 5 branch not yet created). |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 5 plan not yet drafted (spambase capstone — Decision B, ESL ch 10). NB 4 plan `docs/plans/07_AdaBoost__04_estimator_and_parameters.md` committed with the NB 4 feat commit. |
+| Next concrete action | **Open NB 5 — the spambase capstone** (last of ch 07; visualization-first, ~24–26 cells a *floor*). `git switch chapter/07_AdaBoost && git switch -c notebook/07_AdaBoost__05_<title>`; set STATE phase `notebook-plan`; draft the cell-by-cell plan in plan mode. Headline: AdaBoost **shines** on spam (≈0.949 ≈ RF), and the **label-noise** weakness framed **honestly/internally** — exp-loss non-robustness: mislabeled points hoard ~45 % of the weight, so test error **rises with rounds** (early stopping / smaller `learning_rate` / robust loss the levers) — **NOT** a dataset-dependent "RF beats AdaBoost" horse race (that reverses on spam). Reference the cross-method spine (KNN/tree/LogReg/SVM/RF) for continuity. **Re-measure every anchor on sklearn 1.9.0 at plan time.** Then: Rémy validates the plan → build → two-reviewer gate (no BLOCK) → Rémy visual → commit + ff-merge → **close CHAPTER 07 via PR into `main` (`--no-ff`)** on Rémy's explicit go. |
 
 ## Notes / blockers
 
@@ -32,6 +32,45 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `AdaBoostClassifier` & its parameters) BUILT & MERGED to `chapter/07_AdaBoost`
+  — Rémy validated visually.** 22 cells (9 code / 13 md), 3 figures (boundary stump-base vs depth-3
+  base; the `n_estimators × learning_rate` CV heatmap; CV-vs-sealed-test bars, default vs tuned). The
+  **integrative** notebook, de-overloaded: parity recap (sklearn `AdaBoost(50)` test **0.9417**,
+  `estimator_weights_[:3]` = [1.6796, 1.1338, 1.3854] == by-hand NB 1/2); the **base-learner-strength**
+  headline — every base depth memorises (train **1.000**) but TEST falls as the base deepens (stump
+  **0.9417** → depth-5 **0.9167**), the **mirror image of a random forest** (boosting wants *weak*
+  learners); `n_estimators × learning_rate` 5-fold CV (pandas-pivot grid, rows=lr / cols=n: bottom-left
+  n50/lr0.1 **0.911** underfit → broad **0.95–0.96 plateau**, best lr0.5/n400 **0.9607**); **honest
+  tuning** default (n50, lr1.0) CV **0.9536** / tuned CV 0.9607 / **both sealed-test 0.9417** (the +0.007
+  CV gain did NOT transfer); current-API facts (**`algorithm` REMOVED** — SAMME only; `estimator` not
+  `base_estimator`; default base = stump); multiclass SAMME `+ln(K−1)` named; `feature_importances_`
+  ~[0.61, 0.39] (MDI, ch 06 caveat restated, honest reading deferred to NB 5). Reviewers: **pedagogy
+  PASS** (1 MINOR / 2 NIT, optional); **ml-expert BLOCK → fixed → re-confirmed PASS** — the `n_est×lr` CV
+  grid was **transposed** (GridSearchCV orders results by alphabetically-sorted keys; a naive `reshape`
+  scrambled 10/12 cells and the heatmap contradicted `best_params_`), fixed via a **pandas pivot** keyed
+  on the real param values (heatmap `origin="lower"`), with the consequential default-CV correction
+  0.9429 → **0.9536** (`cross_val_score`-confirmed). Guards: 0 banned (JSON scan), ruff/black clean, hex
+  clean, output-free; nbconvert exit 0 (0 errors / 3 figures / 8 streams); `llms.txt` **60**;
+  `common_errors` gained 2 AdaBoost rows (base-must-stay-weak; the GridSearchCV alphabetical-key
+  **transpose trap**). No `src/` change (pytest **20**). Rebuilt from `build_ch07_nb4.py` right before
+  `git add` (kernel-drift habit; the display_name was already canonical). Next: open NB 5 (the spambase
+  capstone) — the last of ch 07, then close the chapter via PR into `main`.
+- **NB 4 BUILT; reviewer gate run; an ml-expert BLOCK found & fixed (awaiting re-confirm + Rémy
+  visual).** Built `04_estimator_and_parameters.ipynb` (22 cells, 9 code / 13 md, 3 figs: boundary
+  stump-vs-depth3; n_est×lr CV heatmap; CV-vs-test bars). pedagogy **PASS** (1 MINOR/2 NIT, optional).
+  ml-expert **BLOCK**: the `n_estimators × learning_rate` CV grid was **transposed** — GridSearchCV
+  orders results by *alphabetically-sorted* keys (`learning_rate` outer, `n_estimators` inner), so a
+  naive `reshape(n, lr)` scrambled 10/12 cells and the heatmap contradicted the printed `best_params_`.
+  (The bug was in the measurement script too — it slipped through.) **Fixed:** grid now built via a
+  **pandas pivot** keyed on the real param values (order-independent); heatmap rows=`learning_rate`,
+  cols=`n_estimators`, `origin="lower"` (bottom-left n=50/lr=0.1 = 0.911 underfit); the 0.961 best cell
+  now sits at (lr=0.5, n=400) = `best_params_`. Consequential correction: **default (n50,lr1.0) CV =
+  0.9536** (not 0.9429; `cross_val_score`-confirmed), tuned 0.9607, **both sealed-test 0.9417** — the
+  "+0.007 CV gain didn't transfer" lesson, cleaner. Plan doc table + numbers corrected to match (+ a
+  note on the transpose trap). Other anchors unchanged & verified (SAMME-only API, parity 0.9417,
+  base-strength 0.9417→0.9167, importances ~[0.61,0.39]). Guards green; output-free; nbconvert exit 0.
+  ml-expert re-confirming the fix in background (agent `a80d8427987ca88ce`). No `src/` change (pytest
+  20). Next: reviewer PASS → Rémy visual → commit + ff-merge → NB 5 (spambase capstone).
 - **NB 4 (the estimator `AdaBoostClassifier` & its parameters) OPENED.** Branch
   `notebook/07_AdaBoost__04_estimator_and_parameters` off `chapter/07_AdaBoost` (@ `c493293`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — the **integrative** notebook (de-overloaded): parity

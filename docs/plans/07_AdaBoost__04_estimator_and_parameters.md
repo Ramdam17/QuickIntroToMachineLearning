@@ -22,17 +22,19 @@ the opposite of a random forest). Then `n_estimators × learning_rate` (CV heatm
   (train **1.0000**), but TEST drops as the base deepens — depth-1 **0.9417**, depth-2 **0.9333**,
   depth-3 **0.9333**, depth-5 **0.9167**. A stronger base overfits faster; the stump default is right.
   (Contrast ch 06: a random forest wants *deep* trees — boosting wants *weak* ones.)
-- **n_estimators × learning_rate, 5-fold CV on train** (mean accuracy):
-  | n \ lr | 0.1 | 0.5 | 1.0 |
-  |---|---|---|---|
-  | 50  | 0.911 | 0.911 | 0.943 |
-  | 100 | 0.954 | 0.946 | 0.957 |
-  | 200 | 0.957 | 0.961 | 0.954 |
-  | 400 | 0.957 | 0.957 | 0.957 |
-  Bottom-left (few rounds, small steps) underfits; rises to a ~0.95–0.96 **plateau**; small lr needs
-  many rounds (n=50/lr=0.1 → 0.911 vs n=400/lr=0.1 → 0.957). Best CV: **lr=0.5, n=400 (0.9607)**.
-- **Honest tuning:** default (n=50, lr=1.0) CV **0.9429**, sealed test **0.9417**; tuned (lr=0.5, n=400)
-  CV **0.9607**, sealed test **0.9417** — **identical on the test set**. The CV gain (+0.018) did NOT
+- **n_estimators × learning_rate, 5-fold CV on train** (mean accuracy; rows = learning_rate, cols =
+  n_estimators — built via a pandas pivot so the orientation can't drift; GridSearchCV expands params
+  by *alphabetically-sorted* keys, so a naive `reshape` transposes the grid):
+  | lr \ n | 50 | 100 | 200 | 400 |
+  |---|---|---|---|---|
+  | 0.1 | 0.911 | 0.911 | 0.943 | 0.954 |
+  | 0.5 | 0.946 | 0.957 | 0.957 | 0.961 |
+  | 1.0 | 0.954 | 0.957 | 0.957 | 0.957 |
+  Bottom-left (few rounds, small steps: n=50/lr=0.1) underfits ~0.911; rises to a broad ~0.95–0.96
+  **plateau**; small lr needs many rounds (lr=0.1 reaches 0.954 only at n=400; lr=1.0 is 0.957 by
+  n=100). Best CV: **lr=0.5, n=400 (0.9607)**.
+- **Honest tuning:** default (n=50, lr=1.0) CV **0.9536**, sealed test **0.9417**; tuned (lr=0.5, n=400)
+  CV **0.9607**, sealed test **0.9417** — **identical on the test set**. The CV gain (+0.007) did NOT
   transfer; a fraction-of-a-point CV improvement on a small problem is within noise. (Echoes ch 06's
   "tuning barely beats the default.")
 - **`feature_importances_`** (AdaBoost(200) on moons): ~**[0.61, 0.39]** (x1, x2; MDI, sums to 1).
