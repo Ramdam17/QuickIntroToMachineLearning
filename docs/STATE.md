@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — OPEN (`chapter-plan-approved`).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | — (none; NB 1 to be opened next). |
-| Phase | `chapter-plan-approved` — chapter plan reviewer-gated (ml-expert + pedagogy, no BLOCK) & approved by Rémy; persisted. |
-| Active branch | `chapter/07_AdaBoost` (off `main` @ `9f18507`) |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (**APPROVED**). Decisions: NB 3 = richer scope; NB 5 = spambase. |
-| Next concrete action | **Open NB 1 — boosting intuition: reweighting by hand** (on Rémy's go): `git switch -c notebook/07_AdaBoost__01_reweighting_by_hand` off `chapter/07_AdaBoost`; set STATE phase `notebook-plan`; draft the cell-by-cell plan (one concept: sequential reweighting by hand on `make_moons(400, noise=0.20, seed=0)`; the SAMME weight α = ln((1−ε)/ε); reweight wᵢ←wᵢ·exp(α·𝟙[miss]); by-hand == sklearn `estimator_weights_` + staged preds), validate with Rémy, then build. Per-NB anchors re-measured at build on sklearn 1.9.0. |
+| Current chapter | **`07_AdaBoost` — in progress (NB 1).** The first **boosting** method. Chapter 06 (Random Forests, 5 NBs) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
+| Current notebook | **NB 1 — boosting intuition: reweighting by hand** (1 of 5). |
+| Phase | `notebook-plan` — drafting the NB 1 cell-by-cell plan; Rémy validates before build (no reviewer gate at plan stage). |
+| Active branch | `notebook/07_AdaBoost__01_reweighting_by_hand` (off `chapter/07_AdaBoost` @ `08b5162`) |
+| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED). NB 1 plan being drafted; persisted to `docs/plans/07_AdaBoost__01_reweighting_by_hand.md` on approval. |
+| Next concrete action | **Draft the NB 1 cell-by-cell plan** (one concept: the AdaBoost reweighting loop by hand on `make_moons(400, 0.20, 0)`, n_train 280): stump weak (test 0.8667); uniform w → fit stump → ε → α=ln((1−ε)/ε) → up-weight misclassified (wᵢ←wᵢ·exp(α·𝟙[miss])) → repeat; running vote drives train err 0.157→0.014@50; by-hand α == sklearn `estimator_weights_` (max diff 1e-15), test 0.9417 both. Anchors (ε₁0.157/α₁1.680; round-2 ε 0.244>round-1; weight on round-1 misses 0.157→0.500). Present plan → Rémy validates → build. |
 
 ## Notes / blockers
 
@@ -27,6 +27,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (boosting intuition: reweighting by hand) OPENED.** Branch
+  `notebook/07_AdaBoost__01_reweighting_by_hand` off `chapter/07_AdaBoost` (@ `08b5162`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, the AdaBoost **reweighting loop by
+  hand** on moons-0.20 (n_train 280): a single stump is weak (test **0.8667**, one cut); uniform
+  weights → fit stump on weighted data → weighted error ε → learner weight **α=ln((1−ε)/ε)** →
+  up-weight misclassified (wᵢ←wᵢ·exp(α·𝟙[miss]), renormalise) → repeat; the running weighted vote
+  drives **train error 0.157→0.014 (T=50)**; **by-hand α == sklearn `estimator_weights_`** (max diff
+  **1e-15**) and staged test acc **0.9417** both. Anchors re-measured at plan time, seed pinned
+  (ε₁ 0.157 / α₁ 1.680; round-2 ε 0.244 > round-1 = the next problem is deliberately harder; weight on
+  round-1's 44 misses jumps 0.157 → **0.500** after one reweight). Contrast ch 06 bagging
+  (parallel/independent/equal vote) vs boosting (sequential/adaptive). Next: Rémy validates the NB-1
+  plan → build.
 - **Chapter 07 (AdaBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_07_AdaBoost.md`,
   this commit). **FIVE notebooks** (standard arc), the first **boosting** method: NB 1 reweighting by
   hand (SAMME α=ln((1−ε)/ε); by-hand == sklearn `estimator_weights_` to 4 dp on moons-0.20) → NB 2 the
