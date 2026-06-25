@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting` — OPEN (phase `chapter-plan`).** Branch `chapter/08_GradientBoosting` off `main` (@ `b256580`). The **general form** of the boosting family, after ch 07's AdaBoost (its exponential-loss special case). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (chapter planning; no notebook open yet). |
-| Phase | `chapter-plan` — drafting the chapter plan in plan mode. |
+| Current chapter | **`08_GradientBoosting` — plan APPROVED (phase `chapter-plan-approved`).** Branch `chapter/08_GradientBoosting` off `main` (@ `b256580`). **SIX notebooks** (regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (none yet; NB 1 not opened). |
+| Phase | `chapter-plan-approved` — chapter plan validated by Rémy; ready to plan NB 1. |
 | Active branch | `chapter/08_GradientBoosting` (off `main` @ `b256580`; green, pytest 20). |
-| Active plan | — (drafting; persists to `docs/plans/chapter_08_GradientBoosting.md` on approval). |
-| Next concrete action | **Draft the chapter 08 plan in plan mode** per `docs/course_map.md` §08 and the per-method arc: boosting as **fitting the residuals / gradient descent in function space** (by hand) → the **loss** & the role of **shrinkage** (learning rate) → **trees as the base learner** (depth × learning_rate × n_estimators interplay) → **parameters & early stopping** (the bias/variance trade-off) → a **demanding case** tuning a competitive tabular model honestly. Run the two-reviewer gate on the draft (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then ExitPlanMode for Rémy's approval; on approval persist `docs/plans/chapter_08_GradientBoosting.md`, set phase `chapter-plan-approved`, next action = "plan notebook 01". |
+| Active plan | `docs/plans/chapter_08_GradientBoosting.md` (**APPROVED 2026-06-24**; reviewer-gated — pedagogy PASS, ml-expert REVISE→folded, no BLOCK). |
+| Next concrete action | **Open & plan NB 1 — Boosting as fitting residuals (by hand, regression)** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__01_fitting_residuals` off the chapter branch; set STATE phase `notebook-plan`; draft the cell-by-cell plan in plan mode (1-D synthetic regression through-line; F₀=mean → regression tree on residuals → shrunken step → exact `GradientBoostingRegressor` parity 1e-16; **re-lay regression + the regression-tree-leaf=mean rule** as the hinge to NB 3's Newton leaf; "gradient" not named yet); Rémy validates the NB plan; then build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California-housing capstone. |
 
 ## Notes / blockers
 
@@ -32,6 +32,31 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 08 (Gradient Boosting) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_08_GradientBoosting.md`,
+  this commit). **SIX notebooks** (regression-first + an added classification notebook — Rémy's call;
+  the 03_LogisticRegression six-NB precedent): NB 1 residuals by hand (regression; exact by-hand ==
+  `GradientBoostingRegressor` to 1e-16) → NB 2 the residual *was* the gradient (gradient descent in
+  function space) → NB 3 classification (log-loss, pseudo-residual y−p, the honest Newton leaf-step;
+  `loss='exponential'` = AdaBoost's objective — the unifying reveal) → NB 4 ν × depth × n_estimators and
+  the overfit-at-large-ν headline (the RF contrast) → NB 5 the estimator
+  `GradientBoosting{Regressor,Classifier}` & its parameters (subsample/OOB, early stopping, importances;
+  `HistGradientBoosting*` named) → NB 6 demanding case **California housing** (regression capstone,
+  visualization-first). The **general form** of boosting (AdaBoost = the exponential-loss special case);
+  the bridge ch 07 promised. Reviewer-gated on the live install (sklearn 1.9.0): **pedagogy PASS** (six
+  NBs earned; regression-first honest, a coherent journey not whiplash — spine = "the loss is the dial";
+  4 MINOR + 1 NIT noted for the NB-plan gates); **ml-expert REVISE → folded** — MAJOR: "reproduces
+  AdaBoost" softened to **objective-level only** (GB `loss='exponential'` shares AdaBoost's loss but
+  ~95% prediction agreement, identical test acc 0.9417, **not** bit-identical); MAJOR: NB 3 anchors
+  re-pinned (moons-0.20 is balanced → round-1 residuals **±0.5000** not ±0.507; the Newton-vs-mean
+  log-loss gap is **config-dependent** → ship the *direction* + the machine-precision Newton match, pin
+  the config & re-measure at build); MINORs: overfit qualified to **large ν** with the mechanistic RF
+  contrast, the **regression-tree-leaf=mean** rule re-laid in NB 1 as the hinge to NB 3's Newton leaf.
+  **First regression in the course** (pays off ch 00's promise; by-hand parity exact only in
+  regression). API verified: `loss='log_loss'` (`'deviance'` removed), **no `staged_score`** (use
+  `staged_predict`), `subsample<1`→`oob_improvement_`, early stopping OFF by default. Capstone
+  California housing (GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; seed band). No `src/`
+  change expected (one conditional `viz.plot_regression_diagnostics` at NB-plan time → pytest 20→21).
+  `course_map.md` §08 refined 5→6. Next: open & plan NB 1.
 - **Chapter 08 (Gradient Boosting) opened.** Branch `chapter/08_GradientBoosting` created off `main`
   (synced @ `b256580` after PR #7). Phase `chapter-plan`: drafting the chapter plan in plan mode per
   `course_map.md` §08 and the per-method arc — boosting as **fitting the residuals** / gradient descent
