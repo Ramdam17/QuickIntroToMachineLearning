@@ -78,7 +78,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `RandomForestClassifier` & its parameters (n_estimators, max_features, depth); diminishing returns; feature importance introduced.
 5. Demanding case: a strong tabular baseline on forest cover type (covtype); honest evaluation under imbalance; reading importances honestly.
 
-## 07_AdaBoost  *(plan approved — five notebooks; the first boosting method)*
+## 07_AdaBoost  *(complete — five notebooks, merged to `main`)*
 1. Boosting intuition: focus on the mistakes; reweighting, by hand (SAMME α; by-hand == sklearn).
 2. Weak learners and the additive model; the exponential-loss / forward-stagewise view, from scratch.
 3. Learning rate vs number of rounds; overfitting behaviour — resistant on clean data, not immune under noise.

@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — all 5 NBs BUILT & merged to the chapter branch; CHAPTER-MERGE pending (PR into `main`).** The first **boosting** method. Chapter 06 (Random Forests) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 5 — a demanding case: spam (spambase)** (5 of 5, the capstone) — **DONE & ff-merged** to `chapter/07_AdaBoost`. Chapter 07 built end to end (5/5). |
-| Phase | `chapter-merge`: NB 5 COMMITTED & ff-merged; all 5 NBs on `chapter/07_AdaBoost`. Both reviewers PASS + Rémy validated NB 5 visually. **Next: close CHAPTER 07 via PR into `main` (`--no-ff`) — awaiting Rémy's explicit go (outward-facing push/PR).** |
-| Active branch | `chapter/07_AdaBoost` (all 5 NBs merged; notebook branches kept). |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED); all 5 NB plans persisted under `docs/plans/07_AdaBoost__0{1..5}_*.md`. |
-| Next concrete action | **Close CHAPTER 07 via PR into `main`** (outward-facing — only on Rémy's explicit go): `git push -u origin chapter/07_AdaBoost`; `gh pr create --base main --head chapter/07_AdaBoost` (title `feat(07_adaboost): complete chapter — AdaBoost`); `gh pr merge --merge` (`--no-ff`); `git switch main && git pull`. Then mark `course_map.md` §07 complete (merged to `main`), set STATE → `idle`, next = **open chapter 08 (GradientBoosting)**. Until that go: nothing to push; `main` stays PR-only (global pre-push hook). |
+| Current chapter | **`08_GradientBoosting` — OPEN (phase `chapter-plan`).** Branch `chapter/08_GradientBoosting` off `main` (@ `b256580`). The **general form** of the boosting family, after ch 07's AdaBoost (its exponential-loss special case). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (chapter planning; no notebook open yet). |
+| Phase | `chapter-plan` — drafting the chapter plan in plan mode. |
+| Active branch | `chapter/08_GradientBoosting` (off `main` @ `b256580`; green, pytest 20). |
+| Active plan | — (drafting; persists to `docs/plans/chapter_08_GradientBoosting.md` on approval). |
+| Next concrete action | **Draft the chapter 08 plan in plan mode** per `docs/course_map.md` §08 and the per-method arc: boosting as **fitting the residuals / gradient descent in function space** (by hand) → the **loss** & the role of **shrinkage** (learning rate) → **trees as the base learner** (depth × learning_rate × n_estimators interplay) → **parameters & early stopping** (the bias/variance trade-off) → a **demanding case** tuning a competitive tabular model honestly. Run the two-reviewer gate on the draft (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then ExitPlanMode for Rémy's approval; on approval persist `docs/plans/chapter_08_GradientBoosting.md`, set phase `chapter-plan-approved`, next action = "plan notebook 01". |
 
 ## Notes / blockers
 
@@ -32,6 +32,32 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 08 (Gradient Boosting) opened.** Branch `chapter/08_GradientBoosting` created off `main`
+  (synced @ `b256580` after PR #7). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §08 and the per-method arc — boosting as **fitting the residuals** / gradient descent
+  in **function space** (by hand) → the **loss** and the role of **shrinkage** (learning rate) → **trees
+  as the base learner** (depth × learning_rate × n_estimators interplay) → **parameters & early
+  stopping** (the bias/variance trade-off) → a **demanding case** tuning a competitive tabular model
+  honestly. The **general form** of the boosting family: ch 07's AdaBoost is the exponential-loss
+  special case; gradient boosting generalises to **any differentiable loss** via gradient descent in
+  function space — the bridge stated at the close of ch 07. Built on ch 04's trees (the base learner)
+  and ch 07's sequential error-correction; the launchpad for ch 09 XGBoost / ch 10 LightGBM. The pending
+  `idle` STATE edit + `course_map.md` §07 → complete were folded into this opening commit (committed on
+  the chapter branch, not on protected `main`).
+- **CHAPTER 07 (AdaBoost) COMPLETE — merged to `main` via PR #7** (merge commit `b256580`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to
+  Ramdam17/QuickIntroToMachineLearning). Five notebooks: reweighting by hand · the additive model &
+  exponential loss · learning rate / rounds & overfitting behaviour · the estimator & its parameters · a
+  demanding case (spam). The course's first **boosting** method — sequential error-correction, the
+  contrast with ch 06's parallel bagging; the base learner of the boosting family (ch 08–10). **No
+  `src/` change** across the chapter (reused the `viz` helpers; pytest stays **20**). The two-reviewer
+  gate + Rémy's visual validation held on every notebook; every number re-measured on sklearn 1.9.0;
+  honest findings surfaced throughout (the SAMME-α/margin-form reconciliation; resistance ≠ immunity;
+  the spam noise reversal kept **internal**, not shipped as an RF-vs-AdaBoost law; importance not causal
+  / corpus artifacts). Three gate catches fixed: NB 2's reconciliation *reason*, NB 4's transposed
+  CV grid (BLOCK), NB 5's breast_cancer cross-reference (MAJOR). `main` synced locally to `b256580`,
+  green (pytest 20). STATE set to `idle` (pending edit — folds into the chapter-08 opening). Next:
+  chapter `08_GradientBoosting`.
 - **NB 5 (a demanding case: spam / spambase — the chapter capstone) BUILT & MERGED to
   `chapter/07_AdaBoost` — Rémy validated visually. CHAPTER 07 built end to end (5/5).** The
   **visualization-first capstone**: 26 cells (8 code / 18 md), **7 figures** (class balance;
