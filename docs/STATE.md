@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1 of 6 SHIPPED** (merged to chapter). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 1 merged to `chapter/08_GradientBoosting`; NB 2 not yet opened). |
-| Phase | `notebook-shipped` — NB 1 built, reviewed (both PASS), Rémy-validated, merged to chapter; ready to open & plan NB 2. |
-| Active branch | `chapter/08_GradientBoosting` (NB 1 merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1 plan `docs/plans/08_GradientBoosting__01_fitting_residuals.md` (done). |
-| Next concrete action | **Open & plan NB 2 — "The residual was the gradient: gradient descent in function space"** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__02_residual_is_gradient` off the chapter branch; set STATE `notebook-plan`. One concept: reveal `y − F = −∂(½(y−F)²)/∂F` per point → the ensemble is a point in **function space** and each tree is a **gradient-descent step**, ν the step size; re-lay ch 03 NB 4 gradient descent (parameter → function space); stays squared-error **regression** on NB 1's 1-D sine; recompute NB 1's update as "fit the negative gradient", verify identical sequence; close with "a different loss → a different gradient → a different residual" (sets up NB 3). Measure anchors; plan in plan mode; Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). NB 1 shipped; **NB 2 of 6 in progress**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`02_residual_is_gradient`** — The residual was the gradient: gradient descent in function space. NB 2 of 6. |
+| Phase | `notebook-plan` — drafting the NB 2 cell-by-cell plan in plan mode. |
+| Active branch | `notebook/08_GradientBoosting__02_residual_is_gradient` (off `chapter/08_GradientBoosting`). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 2 plan drafting → persists to `docs/plans/08_GradientBoosting__02_residual_is_gradient.md` on approval. |
+| Next concrete action | **Draft the NB 2 cell-by-cell plan in plan mode**, then ExitPlanMode for Rémy's approval (no reviewer gate at NB-plan stage). One concept: the residual we fit **is the negative gradient** of the squared-error loss — `y − F = −∂(½(y−F)²)/∂F` per point (finite-diff verified) → the ensemble F is a point in **function space**, each tree a **gradient-descent step** (constrained to a tree), ν the step size. Re-lay ch 03 NB 4 gradient descent (parameter → function space); recompute NB 1's update as "fit the negative gradient" (identical sequence, parity 2.22e-16); close with "a different loss → a different gradient → a different residual" (absolute error → sign; sets up NB 3). Stays squared-error **regression** on NB 1's 1-D sine. Anchors measured at plan time; build after approval. |
 
 ## Notes / blockers
 
@@ -32,6 +32,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (the residual was the gradient — gradient descent in function space) OPENED.** Branch
+  `notebook/08_GradientBoosting__02_residual_is_gradient` off `chapter/08_GradientBoosting` (@ `11319dc`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **the residual we fit is the
+  negative gradient** of the squared-error loss, so NB 1's loop is **gradient descent in function
+  space** (the ensemble F is a point in ℝⁿ, each tree an approximate downhill step, ν the step size).
+  Re-lay ch 03 NB 4 gradient descent (parameter → function space); recompute NB 1's update as "fit the
+  negative gradient" (identical sequence); name the generalisation "a different loss → a different
+  gradient → a different residual" (absolute error → sign; sets up NB 3). Stays squared-error
+  **regression** on NB 1's 1-D sine. Anchors being measured at plan time (sklearn 1.9.0, seed 0). No
+  `src/` change expected (notebook-local matplotlib; pytest 20). Next: draft the plan → ExitPlanMode for
+  Rémy → on approval persist + build.
 - **NB 1 (boosting as fitting residuals — by hand, regression) BUILT & MERGED to
   `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (7 code / 14 md), 3 figures
   (data + the flat F₀=mean; round-1 mechanics [residuals + the depth-2 step | the updated F₁]; the fit
