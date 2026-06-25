@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). NB 1 of 6 in progress. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **`01_fitting_residuals`** — Boosting as fitting residuals (by hand, regression). NB 1 of 6. |
-| Phase | `notebook-plan` — drafting the NB 1 cell-by-cell plan in plan mode. |
+| Phase | `notebook-plan-approved` — NB 1 plan validated by Rémy; ready to build. |
 | Active branch | `notebook/08_GradientBoosting__01_fitting_residuals` (off `chapter/08_GradientBoosting`). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB-1 plan drafting → persists to `docs/plans/08_GradientBoosting__01_fitting_residuals.md` on approval. |
-| Next concrete action | **Draft the NB 1 cell-by-cell plan in plan mode**, then ExitPlanMode for Rémy's approval (no reviewer gate at NB-plan stage). **Anchors measured (sklearn 1.9.0, seed 0):** 1-D synthetic `y = sin(x) + N(0,0.25²)`, n=120, x∈[0,2π]; by-hand GB (F₀=mean → regression tree on residuals → F += ν·tree) **== `GradientBoostingRegressor` to 2.22e-16** (final & staged), F₀=−0.1199=`init_.constant_`; config **max_depth=2, ν=0.3**; train MSE 0.502(F₀)→0.299@1→0.191@2→0.135@3→0.081@5→0.039@20→0.0073@100; single depth-2 tree 0.105 (ensemble passes it ≈round 5). API: `staged_predict` yes, **`staged_score` NO**, `init_`=DummyRegressor, default loss `squared_error`. Re-lay regression + the **regression-tree-leaf=mean** rule (hinge to NB 3's Newton leaf); "gradient" NOT named yet (NB 2). On approval: persist plan, set phase `notebook-plan-approved`, commit, then build. |
+| Active plan | `docs/plans/08_GradientBoosting__01_fitting_residuals.md` (**APPROVED 2026-06-25**) + chapter `docs/plans/chapter_08_GradientBoosting.md`. |
+| Next concrete action | **Build NB 1** from `build_ch08_nb1.py` (~21 cells, 3 figures; by-hand GB on the 1-D sine `y=sin(x)+N(0,0.25²)` n=120 seed 0, **ν=0.3 depth=2**, exact parity `GradientBoostingRegressor` 2.22e-16; **"gradient" NOT named** (NB 2); re-lay regression + **regression-tree-leaf=mean**; `staged_predict` not `staged_score`). Then nbconvert from project cwd on a scratchpad copy; guards (banned-word JSON scan, hex, ruff/black); `gen_llms_txt`; pytest 20; **both reviewers** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK); Rémy visual; rebuild from script right before `git add`; commit `feat(08_gradient_boosting): notebook 01 — boosting as fitting residuals (by hand)`; ff-merge → chapter. |
 
 ## Notes / blockers
 
