@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–3 of 6 SHIPPED** (merged to chapter); NB 4 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 3 merged to `chapter/08_GradientBoosting`; NB 4 not yet opened). |
-| Phase | `notebook-shipped` — NB 3 built, reviewed (both PASS), Rémy-validated, merged to chapter; ready to open & plan NB 4. |
-| Active branch | `chapter/08_GradientBoosting` (NB 1–3 merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–3 plans done. |
-| Next concrete action | **Open & plan NB 4 — "Shrinkage and the trees: ν, depth, n_estimators; why GB overfits with too many trees (at large ν)"** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__04_shrinkage_and_trees` off the chapter branch; set STATE `notebook-plan`. One **declared** concept (richer-scope, ch 07-NB 3 precedent): how GB controls its complexity — the **ν × n_estimators** trade-off (small ν needs more trees), **depth = interaction order** (shallow trees, the mirror of RF's deep ones), and the headline **GB overfits with too many trees at large ν** (the staged test curve bottoms then rises; the *mechanistic* RF contrast — each RF tree is an independent variance-reduction draw that cannot raise complexity, each GB tree adds capacity). Back to **regression**. Anchors to re-measure (ν=1.0 best R²≈0.80@~130→0.748@1000; ν=0.1 doesn't turn up within 1000→0.837@1000; a noisy-set overfit illustration). Measure; plan in plan mode; Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–3 of 6 SHIPPED** (merged to chapter); **NB 4 in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`04_shrinkage_and_trees`** — NB 4 of 6 (fundamentals; the complexity-control concept). Branch opened; drafting the cell-by-cell plan. |
+| Phase | `notebook-plan` — drafting NB 4's cell-by-cell plan (one **declared** concept: how GB controls its complexity — ν × n_estimators, depth = interaction order, the overfit-with-too-many-trees-at-large-ν headline, the mechanistic RF contrast). Anchors re-measured at plan time (see progress log + next action). Next: ExitPlanMode → Rémy validates → persist + build. |
+| Active branch | `notebook/08_GradientBoosting__04_shrinkage_and_trees` (off `chapter/08_GradientBoosting` @ `61a2b4d`). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–3 plans done; **NB 4 plan being drafted** (→ `docs/plans/08_GradientBoosting__04_shrinkage_and_trees.md` on approval). |
+| Next concrete action | **Draft NB 4's cell-by-cell plan** (plan mode, ~21 cells / 3 figures), present via ExitPlanMode; on Rémy's approval write `docs/plans/08_GradientBoosting__04_shrinkage_and_trees.md`, commit, set phase `notebook-plan-approved`, then build. One declared concept: how GB controls its complexity. **Dataset** `make_friedman1(n=2000, noise=1.0, seed 0)` (train 1400 / test 600; genuine `sin(π·x₀·x₁)` interaction + 5 noise features). **Measured anchors (sklearn 1.9.0, depth=3):** ν=1.0 best test R² 0.864@18 → 0.813@1000 (test MSE 3.39→4.65, train→0 — overfit headline); ν=0.1 best 0.930@308, flat to 0.928@1000 (lower floor, no turn-up in budget); ν=0.01 still climbing 0.921@1000. depth=interaction order: depth1 0.873 (no x₀·x₁) → depth2 0.931 → depth5 train 0.998 / test 0.923. RF contrast flat 0.858/0.862/0.862 (B=50/200/1000). By-hand ν: F0=14.13; one tree ν=1.0→9.63 vs ν=0.1→22.31; trees to train MSE≤2 = 13/48/496 (ν=1.0/0.1/0.01). 3 figs (ν×trees test R²; ν=1.0 train-vs-test MSE + RF ref; depth sweep). No `src/` change (pytest 20). Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
 
 ## Notes / blockers
 
@@ -32,6 +32,24 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) OPENED.**
+  Branch `notebook/08_GradientBoosting__04_shrinkage_and_trees` off `chapter/08_GradientBoosting`
+  (@ `61a2b4d`). Phase `notebook-plan`: drafting the cell-by-cell plan — one **declared** concept
+  (richer-scope, ch 07-NB 3 precedent): how GB controls its complexity. **Back to regression** on
+  `make_friedman1(n=2000, noise=1.0, seed 0)` (train 1400 / test 600; a genuine `sin(π·x₀·x₁)`
+  interaction + 5 noise features — the canvas that motivates depth). **Anchors re-measured at plan time
+  (sklearn 1.9.0, seed 0):** ν=1.0 best test R² **0.864@18** → **0.813@1000** (test MSE 3.39→4.65 while
+  train→0 — the overfit headline; peaks far earlier than the chapter-plan's ~130 estimate); ν=0.1 best
+  **0.930@308**, flat to 0.928@1000 (lower floor, **no turn-up within budget**); ν=0.01 **still climbing
+  0.921@1000** (underfit in budget). **depth = interaction order:** depth1 R² **0.873** (stumps can't
+  represent x₀·x₁) → depth2 **0.931** (the pairwise jump) → depth3 0.929 → depth5 train 0.998 / test
+  0.923 (memorizing). **RF contrast** flat R² 0.858/0.862/0.862 (B=50/200/1000) — more trees never hurts
+  (each an independent variance-reduction draw). **By-hand ν** (NB1 recap): F0=14.13; one depth-3 tree
+  drops train MSE 25.28 → **9.63 at ν=1.0** vs → **22.31 at ν=0.1** (a tenth of the way); trees to train
+  MSE≤2 = **13/48/496** for ν=1.0/0.1/0.01 (the trade-off in single numbers). 3 figures (ν×trees test R²;
+  ν=1.0 train-vs-test MSE overfit + RF reference; depth sweep). The overfit is **ν-dependent**, the RF
+  contrast **mechanistic** — and *the* motivation for NB 5's early stopping. No `src/` change expected
+  (notebook-local matplotlib; pytest 20). Next: draft → ExitPlanMode for Rémy → on approval persist + build.
 - **NB 3 (gradient boosting for classification — the added notebook) BUILT & MERGED to
   `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (7 code / 14 md), 3 figures
   (boundary sharpening n∈{1,10,50}; train log-loss by-hand-Newton == sklearn vs naive mean-leaf lagging;
