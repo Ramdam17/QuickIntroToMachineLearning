@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). NB 1–2 shipped; **NB 3 of 6 in progress** (the added classification NB). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`03_classification`** — Gradient boosting for classification: a different loss, a different residual. NB 3 of 6. |
-| Phase | `notebook-plan-approved` — NB 3 plan validated by Rémy; ready to build. |
-| Active branch | `notebook/08_GradientBoosting__03_classification` (off `chapter/08_GradientBoosting`). |
-| Active plan | `docs/plans/08_GradientBoosting__03_classification.md` (**APPROVED 2026-06-25**) + chapter `docs/plans/chapter_08_GradientBoosting.md`. |
-| Next concrete action | **Build NB 3** from `build_ch08_nb3.py` (~21 cells, 3 figures; the chapter's pivotal NB). Anchors (sklearn 1.9.0, seed 0, ch 07 make_moons-0.20 → train 280/test 120): F₀=log-odds(0.5)=0, round-1 residuals ±0.5; by-hand **Newton leaf** `Σr/Σp(1−p)` (depth=2, ν=0.3, M=50) **== `GradientBoostingClassifier` decision_function to 3.6e-15**, test acc 0.9417; **mean-leaf** = different model (train log-loss Newton 0.035 vs mean 0.219 — config-dependent, re-measure, don't hard-code); `loss='exponential'` (depth=1, lr=1.0, M=50) vs AdaBoost: acc both 0.9417, ~98% agreement, **not** bit-identical. Fig E boundary sharpening n∈{1,10,50}; Fig F train log-loss Newton(==sklearn) vs mean; Fig G exp-GB vs AdaBoost boundaries. Then nbconvert from project cwd on a scratchpad copy; guards (banned-word JSON scan, hex); `gen_llms_txt`; pytest 20; **both reviewers** (no BLOCK); Rémy visual; rebuild from script right before `git add`; commit `feat(08_gradient_boosting): notebook 03 — gradient boosting for classification`; ff-merge → chapter. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–3 of 6 SHIPPED** (merged to chapter); NB 4 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 3 merged to `chapter/08_GradientBoosting`; NB 4 not yet opened). |
+| Phase | `notebook-shipped` — NB 3 built, reviewed (both PASS), Rémy-validated, merged to chapter; ready to open & plan NB 4. |
+| Active branch | `chapter/08_GradientBoosting` (NB 1–3 merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–3 plans done. |
+| Next concrete action | **Open & plan NB 4 — "Shrinkage and the trees: ν, depth, n_estimators; why GB overfits with too many trees (at large ν)"** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__04_shrinkage_and_trees` off the chapter branch; set STATE `notebook-plan`. One **declared** concept (richer-scope, ch 07-NB 3 precedent): how GB controls its complexity — the **ν × n_estimators** trade-off (small ν needs more trees), **depth = interaction order** (shallow trees, the mirror of RF's deep ones), and the headline **GB overfits with too many trees at large ν** (the staged test curve bottoms then rises; the *mechanistic* RF contrast — each RF tree is an independent variance-reduction draw that cannot raise complexity, each GB tree adds capacity). Back to **regression**. Anchors to re-measure (ν=1.0 best R²≈0.80@~130→0.748@1000; ν=0.1 doesn't turn up within 1000→0.837@1000; a noisy-set overfit illustration). Measure; plan in plan mode; Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
 
 ## Notes / blockers
 
@@ -32,6 +32,27 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (gradient boosting for classification — the added notebook) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (7 code / 14 md), 3 figures
+  (boundary sharpening n∈{1,10,50}; train log-loss by-hand-Newton == sklearn vs naive mean-leaf lagging;
+  exp-GB vs AdaBoost boundaries). The chapter's **pivotal** NB: swap the loss → classification on ch 07's
+  make_moons-0.20. **log-loss → pseudo-residual y − p**, fit a regression tree in log-odds space, with the
+  **honest Newton leaf-step** `γ = Σ(y−p)/Σ p(1−p)`. F₀=log-odds(0.5)=0, round-1 residuals ±0.5; by-hand
+  Newton **== `GradientBoostingClassifier` decision_function to 3.55e-15** (the chapter's correctness trap
+  cleared), test acc **0.9417** (= ch 07 AdaBoost on this split); naive **mean-leaf = a different model**
+  (train log-loss 0.035 vs 0.219 — config-dependent, shipped as direction + the machine-precision match).
+  **Unifying reveal:** `loss='exponential'` = AdaBoost's *objective* (acc both 0.9417, agreement train
+  0.982 / test 0.983, **not** bit-identical — different optimizers) → AdaBoost is the exponential-loss
+  member of the GB family (the ch 07 bridge, crossed). Reviewers: **both PASS, no BLOCK** — ml-expert
+  read sklearn's `_gb.py` and confirmed the by-hand Newton override mirrors it line-for-line (parity is
+  honest machine precision), the gradient/curvature/Newton formula and the exercise-3 inequality all
+  verified; pedagogy confirmed "density handled not crammed", the gentle intro + deferred derivation, and
+  numpy-as-interface justified. Folded 2 MINOR (text): `p(1−p)` = variance of a **Bernoulli(p)** (not "of
+  the prediction"); exercise-3 nudge `p(1−p)≤¼` **and** `¼<1`. Guards: **0 banned** (JSON scan), hex
+  clean, output-free; nbconvert exit 0 (0 errors / 3 figures); `llms.txt` **65**; `common_errors` +2 GB
+  rows (Newton-leaf-not-mean; exp-GB ≠ AdaBoost predictor). No `src/` change (pytest **20**). Rebuilt from
+  `build_ch08_nb3.py` right before `git add` (no editor drift). Next: open & plan NB 4 (shrinkage & the
+  trees).
 - **NB 3 (gradient boosting for classification — the added notebook) OPENED.** Branch
   `notebook/08_GradientBoosting__03_classification` off `chapter/08_GradientBoosting` (@ `37d0ce8`).
   Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **swap the loss → classification**
