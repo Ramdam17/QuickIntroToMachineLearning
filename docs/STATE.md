@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–2 of 6 SHIPPED** (merged to chapter); NB 3 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 2 merged to `chapter/08_GradientBoosting`; NB 3 not yet opened). |
-| Phase | `notebook-shipped` — NB 2 built, reviewed (both PASS), Rémy-validated, merged to chapter; ready to open & plan NB 3. |
-| Active branch | `chapter/08_GradientBoosting` (NB 1–2 merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1, NB 2 plans done. |
-| Next concrete action | **Open & plan NB 3 — "Gradient boosting for classification: a different loss, a different residual"** (the added classification notebook; on Rémy's go): `git switch -c notebook/08_GradientBoosting__03_classification` off the chapter branch; set STATE `notebook-plan`. One concept: swap the loss → classification. Recap ch 03 sigmoid/log-odds; **log-loss → pseudo-residual `y − p`**; fit a *regression* tree to it (in log-odds space); the **honest Newton leaf-step** — regression leaves = mean (exact, NB 1), classification leaves need `Σr/Σp(1−p)` that sklearn applies for you (naive mean-leaf gives a *different* model — the chapter's **correctness trap**, ship the *direction* + machine-precision Newton match, pin config & re-measure at build); and the **unifying reveal** `loss='exponential'` = AdaBoost's *objective* (ch 07's make_moons-0.20: identical test acc 0.9417 & ~95% pred agreement, **not** bit-identical). Build mechanism by hand first; full Newton derivation in "Going further". Measure anchors; plan in plan mode; Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). NB 1–2 shipped; **NB 3 of 6 in progress** (the added classification NB). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`03_classification`** — Gradient boosting for classification: a different loss, a different residual. NB 3 of 6. |
+| Phase | `notebook-plan` — drafting the NB 3 cell-by-cell plan in plan mode. |
+| Active branch | `notebook/08_GradientBoosting__03_classification` (off `chapter/08_GradientBoosting`). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 3 plan drafting → persists to `docs/plans/08_GradientBoosting__03_classification.md` on approval. |
+| Next concrete action | **Draft the NB 3 cell-by-cell plan in plan mode**, then ExitPlanMode for Rémy's approval (no reviewer gate at NB-plan stage). One concept: swap the loss → classification, on ch 07's make_moons-0.20. Recap ch 03 sigmoid/log-odds; **log-loss → pseudo-residual `y − p`**; fit a *regression* tree to it (in log-odds space); the **honest Newton leaf-step** `Σr/Σp(1−p)` that sklearn applies for you — by-hand Newton **== `GradientBoostingClassifier` to machine precision**, naive mean-leaf gives a *different* model (the chapter's **correctness trap**: ship the *direction* + the machine-precision match, the specific log-loss gap is config-dependent so pin config & re-measure at build); and the **unifying reveal** `loss='exponential'` = AdaBoost's *objective* (identical test acc & ~95% pred agreement, **not** bit-identical). Build the mechanism by hand first; full Newton derivation in "Going further". Anchors measured at plan time; build after approval. |
 
 ## Notes / blockers
 
@@ -32,6 +32,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (gradient boosting for classification — the added notebook) OPENED.** Branch
+  `notebook/08_GradientBoosting__03_classification` off `chapter/08_GradientBoosting` (@ `37d0ce8`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **swap the loss → classification**
+  on ch 07's make_moons-0.20 (continuity + a head-to-head with AdaBoost). Recap ch 03 sigmoid/log-odds;
+  **log-loss → pseudo-residual `y − p`**; fit a *regression* tree to it in log-odds space; the **honest
+  Newton leaf-step** `Σr/Σp(1−p)` (the chapter's **correctness trap**, D4: by-hand Newton ==
+  `GradientBoostingClassifier` to machine precision, naive mean-leaf gives a *different* model — ship the
+  direction + the match, pin config & re-measure since the log-loss gap is config-dependent); and the
+  **unifying reveal** `loss='exponential'` = AdaBoost's *objective* (identical test acc & ~95% pred
+  agreement, **not** bit-identical — different optimizer). Build the mechanism by hand first; full Newton
+  derivation in "Going further". Anchors being measured at plan time (sklearn 1.9.0, seed 0). No `src/`
+  change expected (notebook-local matplotlib + `plot_decision_boundary`; pytest 20). Next: draft the plan
+  → ExitPlanMode for Rémy → on approval persist + build.
 - **NB 2 (the residual was the gradient — gradient descent in function space) BUILT & MERGED to
   `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (6 code / 15 md), 2 figures (the
   step picture: negative gradient at round 10 + the tree's piecewise-constant approximation; gradient
