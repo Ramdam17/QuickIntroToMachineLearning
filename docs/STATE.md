@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). NB 1 shipped; **NB 2 of 6 in progress**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`02_residual_is_gradient`** — The residual was the gradient: gradient descent in function space. NB 2 of 6. |
-| Phase | `notebook-plan-approved` — NB 2 plan validated by Rémy; ready to build. |
-| Active branch | `notebook/08_GradientBoosting__02_residual_is_gradient` (off `chapter/08_GradientBoosting`). |
-| Active plan | `docs/plans/08_GradientBoosting__02_residual_is_gradient.md` (**APPROVED 2026-06-25**) + chapter `docs/plans/chapter_08_GradientBoosting.md`. |
-| Next concrete action | **Build NB 2** from `build_ch08_nb2.py` (~21 cells, 2 figures). Anchors (sklearn 1.9.0, seed 0; same data/loop as NB 1): `−∂L/∂F = y − F` finite-diff check **8.7e-11**; loss `L=½Σ(y−F)²` **30.12→17.96@1→3.02@10→0.44@100** ( = (n/2)·MSE); 2-point slice (peak x≈π/2 y=0.908, trough x≈3π/2 y=−1.152) trajectory (−0.12,−0.12)→(0.91,−1.16) into min (y_i,y_j); abs-error gradient = sign(y−F) ∈ {−1,+1}; parity 2.22e-16. Fig C = negative-gradient + tree-step at round 10; Fig D = 2-point loss bowl + trajectory | loss vs trees. Then nbconvert from project cwd on a scratchpad copy; guards (banned-word JSON scan, hex); `gen_llms_txt`; pytest 20; **both reviewers** (no BLOCK); Rémy visual; rebuild from script right before `git add`; commit `feat(08_gradient_boosting): notebook 02 — the residual was the gradient`; ff-merge → chapter. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–2 of 6 SHIPPED** (merged to chapter); NB 3 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 2 merged to `chapter/08_GradientBoosting`; NB 3 not yet opened). |
+| Phase | `notebook-shipped` — NB 2 built, reviewed (both PASS), Rémy-validated, merged to chapter; ready to open & plan NB 3. |
+| Active branch | `chapter/08_GradientBoosting` (NB 1–2 merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1, NB 2 plans done. |
+| Next concrete action | **Open & plan NB 3 — "Gradient boosting for classification: a different loss, a different residual"** (the added classification notebook; on Rémy's go): `git switch -c notebook/08_GradientBoosting__03_classification` off the chapter branch; set STATE `notebook-plan`. One concept: swap the loss → classification. Recap ch 03 sigmoid/log-odds; **log-loss → pseudo-residual `y − p`**; fit a *regression* tree to it (in log-odds space); the **honest Newton leaf-step** — regression leaves = mean (exact, NB 1), classification leaves need `Σr/Σp(1−p)` that sklearn applies for you (naive mean-leaf gives a *different* model — the chapter's **correctness trap**, ship the *direction* + machine-precision Newton match, pin config & re-measure at build); and the **unifying reveal** `loss='exponential'` = AdaBoost's *objective* (ch 07's make_moons-0.20: identical test acc 0.9417 & ~95% pred agreement, **not** bit-identical). Build mechanism by hand first; full Newton derivation in "Going further". Measure anchors; plan in plan mode; Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
 
 ## Notes / blockers
 
@@ -32,6 +32,26 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (the residual was the gradient — gradient descent in function space) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (6 code / 15 md), 2 figures (the
+  step picture: negative gradient at round 10 + the tree's piecewise-constant approximation; gradient
+  descent in function space: the 2-point loss bowl + the boosting trajectory into the minimum | the
+  total loss vs trees). One concept: the residual we fit (NB 1) **is the negative gradient** of the
+  squared-error loss, so boosting is **gradient descent in function space** (the n predictions are the
+  variables; each tree an approximate tree-constrained step, ν the length). Re-illuminates NB 1's loop
+  (no new data/estimator); ends with "a different loss → a different gradient → a different residual"
+  (abs error → sign; log-loss → y−p forward to NB 3). Anchors: `−∂L/∂F = y−F` finite-diff **8.7e-11**
+  (exact identity, quadratic loss → zero truncation); loss `L=½Σ(y−F)²` **30.12→0.44** (= (n/2)·MSE,
+  strictly monotone); abs-error gradient = sign(y−F) ∈ {−1,+1}; the "fit the negative gradient" reframe
+  == `GradientBoostingRegressor` **2.22e-16** (interpretive, same arithmetic). Reviewers: **both PASS, no
+  BLOCK** — ml-expert verified the exact identity / monotone descent / slice legitimacy / parity;
+  pedagogy confirmed "ré-illumination, not a rehash" and the gentle parameter→function-space lift.
+  Folded 2 MINOR (text only): "about"→"under 1e-10"; an honest half-sentence on the slice trajectory's
+  slight overshoot (the tree couples all points). Guards: **0 banned** (JSON scan), hex clean,
+  output-free; nbconvert exit 0 (0 errors / 2 figures); `llms.txt` **64**; `common_errors` +2 GB rows
+  (where-is-the-gradient; approximate-not-exact gradient descent). No `src/` change (pytest **20**).
+  Rebuilt from `build_ch08_nb2.py` right before `git add` (no editor drift this time). Next: open & plan
+  NB 3 (gradient boosting for classification — the added notebook).
 - **NB 2 (the residual was the gradient — gradient descent in function space) OPENED.** Branch
   `notebook/08_GradientBoosting__02_residual_is_gradient` off `chapter/08_GradientBoosting` (@ `11319dc`).
   Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **the residual we fit is the

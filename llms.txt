@@ -61,3 +61,4 @@
 - [notebooks/07_AdaBoost/05_spambase.ipynb](notebooks/07_AdaBoost/05_spambase.ipynb) — 05 — A demanding case: spam (where AdaBoost shines, and where label noise bites) — *Chapter 07 · Notebook 5 of 5*
 ## 08_GradientBoosting
 - [notebooks/08_GradientBoosting/01_fitting_residuals.ipynb](notebooks/08_GradientBoosting/01_fitting_residuals.ipynb) — 01 — Boosting as fitting residuals (by hand) — *Chapter 08 · Gradient Boosting · Notebook 1 of 6*
+- [notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb](notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb) — 02 — The residual was the gradient — *Chapter 08 · Gradient Boosting · Notebook 2 of 6*
