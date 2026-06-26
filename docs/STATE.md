@@ -6,15 +6,21 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–3 of 6 SHIPPED** (merged to chapter); **NB 4 in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`04_shrinkage_and_trees`** — NB 4 of 6 (fundamentals; the complexity-control concept). Branch opened; drafting the cell-by-cell plan. |
-| Phase | `notebook-plan-approved` — NB 4 plan approved by Rémy (2026-06-26) & persisted (`docs/plans/08_GradientBoosting__04_shrinkage_and_trees.md`). One **declared** concept: how GB controls its complexity (ν × n_estimators, depth = interaction order, the overfit-at-large-ν headline, the mechanistic RF contrast). Building next. |
-| Active branch | `notebook/08_GradientBoosting__04_shrinkage_and_trees` (off `chapter/08_GradientBoosting` @ `61a2b4d`). |
-| Active plan | `docs/plans/08_GradientBoosting__04_shrinkage_and_trees.md` (**approved & persisted**); chapter plan + NB 1–3 plans done. |
-| Next concrete action | **Build NB 4** from a `<scratchpad>/build_ch08_nb4.py` script (nbformat v4, ~20 cells, output-free), re-measuring every anchor at build; then the reviewer gate (both `@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK) → Rémy visual → guards (banned-word JSON scan, hex, nbconvert exit 0, gen_llms_txt) → commit + ff-merge into chapter. One declared concept: how GB controls its complexity. **Dataset** `make_friedman1(n=2000, noise=1.0, seed 0)` (train 1400 / test 600; genuine `sin(π·x₀·x₁)` interaction + 5 noise features). **Measured anchors (sklearn 1.9.0, depth=3):** ν=1.0 best test R² 0.864@18 → 0.813@1000 (test MSE 3.39→4.65, train→0 — overfit headline); ν=0.1 best 0.930@308, flat to 0.928@1000 (lower floor, no turn-up in budget); ν=0.01 still climbing 0.921@1000. depth=interaction order: depth1 0.873 (no x₀·x₁) → depth2 0.931 → depth5 train 0.998 / test 0.923. RF contrast flat 0.858/0.862/0.862 (B=50/200/1000). By-hand ν: F0=14.13; one tree ν=1.0→9.63 vs ν=0.1→22.31; trees to train MSE≤2 = 13/48/496 (ν=1.0/0.1/0.01). 3 figs (ν×trees test R²; ν=1.0 train-vs-test MSE + RF ref; depth sweep). No `src/` change (pytest 20). Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–4 of 6 SHIPPED** (merged to chapter); NB 5 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 4 merged to `chapter/08_GradientBoosting`; NB 5 not yet opened). |
+| Phase | `notebook-shipped` — NB 4 built (20 cells, 3 figures), reviewed (**both PASS, no BLOCK**), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. Ready to open & plan NB 5. |
+| Active branch | `chapter/08_GradientBoosting` (NB 1–4 merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–4 plans done. |
+| Next concrete action | **Open & plan NB 5 — the estimator `GradientBoosting{Regressor,Classifier}` & its parameters** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__05_estimator_and_parameters` off the chapter branch; STATE `notebook-plan`. Integrative — anchor on the **early-stopping** story (the principled cure for NB 4's overfit). Recap parity; `loss` (current names; `'deviance'`/`'ls'`/`'lad'` removed; `'exponential'` = AdaBoost's objective); `subsample` (stochastic GB + `oob_improvement_`, Friedman 2002); **early stopping** (`n_iter_no_change`/`validation_fraction`; stops a 2000-tree request ≈365–390, seed-dependent); `feature_importances_` (MDI + permutation cross-check); treat `max_depth`/`max_features` as one-line cross-refs back to NB 4; **API trap: no `staged_score`**; honest `GridSearchCV` on train → one sealed test; **name `HistGradientBoosting*`** as the fast modern default + the ch 09–10 bridge. ~3–4 figures. Measure at plan time; ExitPlanMode → Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
 
 ## Notes / blockers
 
+- **Flagged (NB-4 cycle): pre-existing ruff debt in ch 08 NB 1–3.** `ruff check .` reports **8 errors, all
+  in already-shipped notebooks** (NB 1 ×1 `B007` unused loop var; NB 2 ×1 `E501`; NB 3 ×6 = `E501` ×4 +
+  `B905` zip-without-strict ×2) — **NB 4 itself is ruff-clean**. Fixes are mechanical and behaviour-preserving
+  (rename `m`→`_m`, wrap long print lines, add `strict=False`). **Not touched without Rémy's go** (shipped /
+  validated code); precedent: Rémy chose "option B — fix the notebooks" for lint debt (commit `f84eec6`).
+  Decide before the chapter→main PR: fix in a small separate commit on the chapter branch, or leave.
 - **Resolved (lint debt):** Rémy chose option B — fix the notebooks. NB 01–09 made ruff-clean
   (explicit `zip(strict=False)`, unused `pandas` imports removed, long lines wrapped; all seven
   re-executed end-to-end), committed as `f84eec6`. `ruff check .` is now fully green across the repo.
@@ -32,6 +38,28 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) BUILT &
+  MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 20 cells (5 code / 15 md), 3 figures
+  (ν×n_estimators test R² vs trees, log-x — ν=1 peaks@18 then sags, ν=0.1 higher+flat, ν=0.01 still
+  climbing; the overfit — ν=1 train MSE→0 / test MSE bottoms@18 then rises, + a flat RF reference; depth
+  sweep test/train R²). Regression on `make_friedman1(2000, noise=1.0, seed 0)` (train 1400 / test 600; a
+  real x₀·x₁ interaction + 5 noise features). One **declared** concept: how GB controls its complexity.
+  **Anchors (sklearn 1.9.0, reproduced exactly by the notebook): ν=1.0 best test R² 0.8637@18 → 0.8130@1000
+  (train→0 = overfit); ν=0.1 0.9300@308, flat to 0.9282@1000; ν=0.01 0.9213@1000 (climbing). depth1
+  0.873/0.905 (no x₀·x₁) → depth2 0.931/0.966 → depth5 0.923/0.998 (memorizing). RF flat 0.858/0.862/0.862.
+  By-hand ν: F0=14.13; one tree ν=1→9.63 vs ν=0.1→22.31; trees to train MSE≤2 = 13/12/48/496
+  (ν=1/0.5/0.1/0.01).** Reviewers **both PASS, no BLOCK** — ml-expert: "mechanistically correct, reproducible
+  to the digit, ν-dependence honest, cited" (verified ν=1 ΔR²=0.051 vs ν=0.1 0.0017; RF tree depth ≈19–21;
+  the depth-1 additive ceiling holds to 5000 trees); pedagogy: "the three dials read as one story", every
+  figure read exact, prerequisites re-laid. Folded small MINOR/NIT: ν-scope the headline + the
+  What-you-built bullet; "depth-3 budget"; mark the 18-tree peak as a test-R² milestone; illustrative
+  x₀·x₁ split; a Breiman-1996 note on make_friedman1. Guards: **0 banned** (JSON scan), hex clean,
+  output-free; nbconvert exit 0 (3 figures / 0 errors); `llms.txt` **66**; `common_errors` +3 GB rows
+  (more-trees-overfit-at-large-ν + the RF contrast; the ν×n_estimators trade-off; depth=interaction-order).
+  **No `src/` change** (reused `viz.plot_train_test_curve`; Fig G/H notebook-local; pytest **20**). Rebuilt
+  from `build_ch08_nb4.py` right before `git add` (kernel-drift guard, after Rémy's `code .`). **Flagged:**
+  `ruff check .` surfaces 8 pre-existing errors in NB 1–3 (NB 4 itself ruff-clean) — see Notes/blockers;
+  awaiting Rémy's decision before the chapter PR. Next: open & plan NB 5 (the estimator & its parameters).
 - **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) OPENED.**
   Branch `notebook/08_GradientBoosting__04_shrinkage_and_trees` off `chapter/08_GradientBoosting`
   (@ `61a2b4d`). Phase `notebook-plan`: drafting the cell-by-cell plan — one **declared** concept
