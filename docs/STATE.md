@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–4 of 6 SHIPPED** (merged to chapter); NB 5 next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 4 merged to `chapter/08_GradientBoosting`; NB 5 not yet opened). |
-| Phase | `notebook-shipped` — NB 4 built (20 cells, 3 figures), reviewed (**both PASS, no BLOCK**), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. Ready to open & plan NB 5. |
-| Active branch | `chapter/08_GradientBoosting` (NB 1–4 merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–4 plans done. |
-| Next concrete action | **Open & plan NB 5 — the estimator `GradientBoosting{Regressor,Classifier}` & its parameters** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__05_estimator_and_parameters` off the chapter branch; STATE `notebook-plan`. Integrative — anchor on the **early-stopping** story (the principled cure for NB 4's overfit). Recap parity; `loss` (current names; `'deviance'`/`'ls'`/`'lad'` removed; `'exponential'` = AdaBoost's objective); `subsample` (stochastic GB + `oob_improvement_`, Friedman 2002); **early stopping** (`n_iter_no_change`/`validation_fraction`; stops a 2000-tree request ≈365–390, seed-dependent); `feature_importances_` (MDI + permutation cross-check); treat `max_depth`/`max_features` as one-line cross-refs back to NB 4; **API trap: no `staged_score`**; honest `GridSearchCV` on train → one sealed test; **name `HistGradientBoosting*`** as the fast modern default + the ch 09–10 bridge. ~3–4 figures. Measure at plan time; ExitPlanMode → Rémy validates; build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–4 of 6 SHIPPED** (merged to chapter); **NB 5 in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`05_estimator_and_parameters`** — NB 5 of 6 (the estimator & its parameters; integrative, anchored on early stopping). Branch opened; drafting the cell-by-cell plan. |
+| Phase | `notebook-plan` — drafting NB 5's cell-by-cell plan (integrative: the estimator's real dials, anchored on **early stopping** — the principled cure for NB 4's overfit). Anchors being measured at plan time (early stopping `n_estimators_`, `subsample`/`oob_improvement_`, importances MDI vs permutation, GridSearchCV). Next: ExitPlanMode → Rémy validates → persist + build. |
+| Active branch | `notebook/08_GradientBoosting__05_estimator_and_parameters` (off `chapter/08_GradientBoosting` @ `8556116`). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–4 plans done; **NB 5 plan being drafted** (→ `docs/plans/08_GradientBoosting__05_estimator_and_parameters.md` on approval). |
+| Next concrete action | **Draft NB 5's cell-by-cell plan** (plan mode; integrative, ~22–24 cells / 3–4 figures), present via ExitPlanMode; on approval persist `docs/plans/08_GradientBoosting__05_estimator_and_parameters.md`, commit, build. Spine: **early stopping** (the cure for NB 4's overfit). Cover: parity recap (regression exact / classification Newton); `loss` names (`'deviance'`/`'ls'`/`'lad'` removed; `'exponential'` = AdaBoost's objective); `subsample` + `oob_improvement_` (Friedman 2002); early stopping (`n_iter_no_change`/`validation_fraction`); `feature_importances_` MDI vs permutation (friedman1's known x₀–x₄ vs 5 noise); `max_depth`/`max_features` as 1-line cross-refs to NB 4; **API trap no `staged_score`**; honest `GridSearchCV` → one sealed test; **name `HistGradientBoosting*`** + ch 09–10 bridge. Likely `make_friedman1` again (continuity; known importances; NB 4's overfit to early-stop). Measure → plan → Rémy validates → build. Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
 
 ## Notes / blockers
 
@@ -38,6 +38,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters) OPENED.** Branch
+  `notebook/08_GradientBoosting__05_estimator_and_parameters` off `chapter/08_GradientBoosting`
+  (@ `8556116`). Phase `notebook-plan`: drafting the cell-by-cell plan — **integrative**, anchored on the
+  **early-stopping** story (the principled cure for NB 4's overfit). Covers parity recap (regression exact /
+  classification Newton); `loss` names; `subsample` + `oob_improvement_`; early stopping
+  (`n_iter_no_change`/`validation_fraction`); `feature_importances_` MDI vs permutation; `max_depth`/
+  `max_features` as cross-refs to NB 4; the **no-`staged_score` API trap**; honest `GridSearchCV` → one
+  sealed test; `HistGradientBoosting*` named as the fast modern default + the ch 09–10 bridge. Anchors being
+  measured at plan time (sklearn 1.9.0, seed 0). Likely on `make_friedman1` again (continuity; known feature
+  importances; NB 4's overfit to early-stop). No `src/` change expected (pytest 20). Next: draft →
+  ExitPlanMode for Rémy → on approval persist + build.
 - **ch 08 NB 1–3 made ruff-clean (lint debt cleared).** `ruff check .` had flagged 8 pre-existing errors in
   the already-shipped NB 1–3 (`B007` / `E501` ×5 / `B905` ×2; NB 4 was already clean). Fixed in the build
   scripts (behaviour-preserving: `for m`→`for _`, line wraps, `zip(strict=False)`), notebooks rebuilt; ruff
