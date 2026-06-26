@@ -15,12 +15,12 @@
 
 ## Notes / blockers
 
-- **Flagged (NB-4 cycle): pre-existing ruff debt in ch 08 NB 1–3.** `ruff check .` reports **8 errors, all
-  in already-shipped notebooks** (NB 1 ×1 `B007` unused loop var; NB 2 ×1 `E501`; NB 3 ×6 = `E501` ×4 +
-  `B905` zip-without-strict ×2) — **NB 4 itself is ruff-clean**. Fixes are mechanical and behaviour-preserving
-  (rename `m`→`_m`, wrap long print lines, add `strict=False`). **Not touched without Rémy's go** (shipped /
-  validated code); precedent: Rémy chose "option B — fix the notebooks" for lint debt (commit `f84eec6`).
-  Decide before the chapter→main PR: fix in a small separate commit on the chapter branch, or leave.
+- **Resolved (NB-4 cycle): ruff debt in ch 08 NB 1–3 fixed** (Rémy: "oui on s'occupe des erreurs"). The 8
+  pre-existing errors (`B007` unused loop var; `E501` long lines; `B905` zip-without-strict) are cleared via
+  behaviour-preserving edits **in the build scripts** (`for m`→`for _`; wrapped print / `np.array` / `ax.plot`
+  / `AdaBoostClassifier(...)` lines; `zip(..., strict=False)`), notebooks rebuilt. `ruff check .` → **All
+  checks passed!** (green across the repo); all three re-execute (nbconvert exit 0); the diff is the 8 lines
+  only. Committed on `chapter/08_GradientBoosting`.
 - **Resolved (lint debt):** Rémy chose option B — fix the notebooks. NB 01–09 made ruff-clean
   (explicit `zip(strict=False)`, unused `pandas` imports removed, long lines wrapped; all seven
   re-executed end-to-end), committed as `f84eec6`. `ruff check .` is now fully green across the repo.
@@ -38,6 +38,11 @@
 
 ## Progress log (most recent first)
 
+- **ch 08 NB 1–3 made ruff-clean (lint debt cleared).** `ruff check .` had flagged 8 pre-existing errors in
+  the already-shipped NB 1–3 (`B007` / `E501` ×5 / `B905` ×2; NB 4 was already clean). Fixed in the build
+  scripts (behaviour-preserving: `for m`→`for _`, line wraps, `zip(strict=False)`), notebooks rebuilt; ruff
+  **All checks passed!**, all three nbconvert exit 0, diff = the 8 lines only. Committed on
+  `chapter/08_GradientBoosting`. Repo-wide `ruff check .` now green.
 - **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) BUILT &
   MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 20 cells (5 code / 15 md), 3 figures
   (ν×n_estimators test R² vs trees, log-x — ν=1 peaks@18 then sags, ν=0.1 higher+flat, ν=0.01 still
