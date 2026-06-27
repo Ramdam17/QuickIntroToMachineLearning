@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–5 of 6 SHIPPED** (merged to chapter); NB 6 (capstone) next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 5 merged to `chapter/08_GradientBoosting`; NB 6 not yet opened). |
-| Phase | `notebook-shipped` — NB 5 built (21 cells, 3 figures), reviewed (**both PASS, no BLOCK**), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. Ready to open & plan NB 6 (the capstone). |
-| Active branch | `chapter/08_GradientBoosting` (NB 1–5 merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–5 plans done. |
-| Next concrete action | **Open & plan NB 6 — the demanding case (visualization-first capstone): California housing (regression)** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__06_california_housing` off the chapter branch; STATE `notebook-plan`. Per the **capstone-visual-first** standard (~24–26 cells a *floor*, **≥6 figures**). Full honest workflow on `fetch_california_housing(as_frame=True)` (20640×8, named cols): look at the data → baseline (linear / shallow tree) → tuned GB **with early stopping** → held-out **R² and MAE in dollars** → **error analysis** (residual plots; where it errs) → cross-method foil (RF-regressor, linear) → a **`HistGradientBoostingRegressor` speed/score teaser** → the bridge to **ch 09 XGBoost / ch 10 LightGBM**. Anchors to measure (chapter-plan D2 estimates, re-measure at build): GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF foil ≈0.79; MAE ≈0.37 = $37k; no universal best. Candidate `viz.plot_regression_diagnostics` only if 3× reuse emerges (→ pytest 20→21). **This is the LAST NB — after it ships, close the chapter via PR into `main` (`--no-ff`).** Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–5 of 6 SHIPPED** (merged to chapter); **NB 6 (capstone) in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`06_california_housing`** — NB 6 of 6 (the demanding case; visualization-first capstone). Branch opened; drafting the cell-by-cell plan. |
+| Phase | `notebook-plan` — drafting NB 6's plan (the **visualization-first capstone**: California-housing regression, full honest workflow, ≥6 figures). Anchors being measured at plan time (linear/tree baselines; GBR default / early-stopped / HistGBR R² + MAE in dollars; RF foil; fit-times; residual analysis; importances). Next: ExitPlanMode → Rémy validates → persist + build. |
+| Active branch | `notebook/08_GradientBoosting__06_california_housing` (off `chapter/08_GradientBoosting` @ `f583d62`). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–5 plans done; **NB 6 plan being drafted** (→ `docs/plans/08_GradientBoosting__06_california_housing.md` on approval). |
+| Next concrete action | **Draft NB 6's cell-by-cell plan** (plan mode; visualization-first capstone, ~24–26 cells a floor, **≥6 figures**), present via ExitPlanMode; on approval persist `docs/plans/08_GradientBoosting__06_california_housing.md`, commit, build. Then **close chapter 08 via PR `chapter → main` (`--no-ff`)** — the last gate. Dataset `fetch_california_housing(as_frame=True)` (20640×8, named cols; one-time ~14 MB fetch, visible logging). Honest workflow: look at the data (incl. the $500k cap artifact) → linear/tree baselines → tuned GB **with early stopping** → held-out **R² + MAE in dollars** → residual error analysis → RF/linear foil → **HistGBR speed/score teaser** → ch 09–10 bridge. Anchors being measured (D2 estimates: GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; MAE ≈$37k; no universal best). `viz.plot_regression_diagnostics` only if 3× reuse emerges (else notebook-local; pytest 20). **LAST NB of the chapter.** |
 
 ## Notes / blockers
 
@@ -38,6 +38,19 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (the demanding case — California housing, the visualization-first capstone) OPENED.** Branch
+  `notebook/08_GradientBoosting__06_california_housing` off `chapter/08_GradientBoosting` (@ `f583d62`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — the chapter's **capstone** (≥6 figures, ~24–26
+  cells a floor): a full honest regression workflow on `fetch_california_housing(as_frame=True)`
+  (20640×8, named columns). Look at the data (incl. the $500k target cap) → linear / shallow-tree baselines
+  → a tuned GB **with early stopping** → held-out **R² and MAE in dollars** → **residual error analysis**
+  (where it errs — high-value / coastal homes?) → cross-method foil (RF-regressor, linear) → a
+  **`HistGradientBoostingRegressor` speed/score teaser** → the bridge to **ch 09 XGBoost / ch 10 LightGBM**.
+  Anchors being measured at plan time (one-time ~14 MB fetch, visible logging; D2 estimates GBR ≈0.78 →
+  early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; MAE ≈$37k). Regression-diagnostics helper added to `src/`
+  **only** if 3× reuse emerges (→ pytest 20→21), else notebook-local matplotlib. **Last NB — after it
+  ships, close chapter 08 via PR `chapter → main` (`--no-ff`).** Next: draft → ExitPlanMode for Rémy → on
+  approval persist + build.
 - **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters — integrative, spine =
   early stopping) BUILT & MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells
   (5 code / 16 md), 3 figures (early stopping: staged test R² vs trees, log-x, stop@142 of 2000 requested;
