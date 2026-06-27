@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **ALL 6 of 6 SHIPPED** (merged to chapter); chapter complete on the branch — **ready to close via PR → `main`**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 6 merged to `chapter/08_GradientBoosting`; chapter complete on the branch). |
-| Phase | `chapter-merge` — NB 6 built (28 cells, 7 figures), reviewed (**both PASS** after a revise round), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. **All 6 notebooks shipped; chapter ready to close via PR `chapter → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only). |
-| Active branch | `chapter/08_GradientBoosting` (all 6 NBs merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); all 6 NB plans done. |
-| Next concrete action | **Close chapter 08 via PR `chapter → main` (`--no-ff`)** — needs Rémy's **explicit go** (outward-facing; `main` is PR-only via the global pre-push hook). Steps: `git push -u origin chapter/08_GradientBoosting`; `gh pr create --base main --head chapter/08_GradientBoosting --title "feat(08_gradient_boosting): complete chapter — Gradient Boosting"`; merge the PR `--no-ff`; `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 09 (XGBoost)**. (All 6 NBs merged at the chapter tip; ruff repo-green; pytest 20.) |
+| Current chapter | **`09_XGBoost`** — opening; **chapter plan in progress** (phase `chapter-plan`). Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (none; chapter-planning stage). |
+| Phase | `chapter-plan` — drafting the chapter-09 (XGBoost) plan in plan mode. The ch-08 closure edit (`course_map` §08 heading → complete) folds into this chapter-09 opening commit on the `chapter/09_XGBoost` branch (`main` is PR-only — never committed directly). |
+| Active branch | `chapter/09_XGBoost` (off `main` @ `4775fe2`). |
+| Active plan | — (none yet; drafting `docs/plans/chapter_09_XGBoost.md` in plan mode — persisted on Rémy's approval). |
+| Next concrete action | **Draft the chapter-09 (XGBoost) plan in plan mode** per `course_map.md` §09 + the per-method arc: the primordial concepts → **notebooks 1–3** (one concept each), **notebook 4** (the estimator & its parameters), **notebook 5** (the demanding case). Then **reviewer-gate the chapter plan** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), present via ExitPlanMode; on Rémy's validation → write `docs/plans/chapter_09_XGBoost.md` + commit (phase `chapter-plan-approved`), then plan NB 1. **Open decision for the plan:** the dependency surface — `xgboost` is in the `boosting` extra; confirm install/version live before pinning anchors. |
 
 ## Notes / blockers
 
@@ -38,6 +38,31 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 09 (XGBoost) opened.** Branch `chapter/09_XGBoost` created off `main` (synced @ `4775fe2`
+  after PR #8). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §09 and
+  the per-method arc — what XGBoost **adds** to gradient boosting (the regularized objective + the
+  second-order / Newton view) → missing-value & sparsity handling + the histogram split → the key knobs
+  (`eta`, `max_depth`, `subsample`, `colsample_*`, `lambda`/`alpha`) → early stopping & overfitting
+  control → a demanding case tuning honestly vs the simpler boosters. Builds directly on ch 08's gradient
+  boosting (XGBoost = a regularized, second-order, engineered refinement of the same engine); ch 10
+  LightGBM is the sibling. `xgboost` lives in the `boosting` extra — confirm the live install/version
+  before pinning any anchors. The pending `idle` STATE edit + `course_map.md` §08 → complete were folded
+  into this opening commit (committed on the chapter branch, not on protected `main`).
+- **CHAPTER 08 (Gradient Boosting) COMPLETE — merged to `main` via PR #8** (merge commit `4775fe2`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  **Six notebooks:** residuals by hand (regression) · the residual *was* the gradient · classification
+  (Newton leaf; exp-loss = AdaBoost) · shrinkage & the trees (overfit-at-large-ν; RF contrast) · the
+  estimator & early stopping · the California-housing capstone — plus a `style` commit making NB 1–3
+  ruff-clean. The **general form** of boosting (AdaBoost = the exp-loss special case); the course's **first
+  regression**; the launchpad for ch 09–10. **No `src/` change** across the chapter (reused
+  `viz.plot_train_test_curve` / `plot_feature_importances`; `make_friedman1` / `fetch_california_housing`
+  direct; pytest stays **20**). Two-reviewer gate + Rémy visual held on every NB; every number re-measured
+  on sklearn 1.9.0, seed-pinned; honest findings throughout (the Newton-leaf trap; exp-GB ≠ AdaBoost
+  predictor; overfit ν-dependent; OOB noisier than held-out; the dramatic MDI-vs-permutation location
+  divergence + the censored $500k cap). NB 6's capstone took a **revise round** (ml-expert BLOCK on the cap
+  mechanism + 2 MAJOR → folded → re-reviewed PASS). `main` synced @ `4775fe2`, ruff green, pytest 20.
+  STATE → `idle` (this edit + `course_map` §08 heading pending, fold into the ch 09 opening). Next: open
+  chapter 09 (XGBoost).
 - **NB 6 (the demanding case — California housing, the visualization-first capstone) BUILT & MERGED to
   `chapter/08_GradientBoosting` — Rémy validated visually. CHAPTER 08 COMPLETE on the branch (6/6).**
   28 cells (9 code / 19 md), 7 figures (target histogram with the $500k cap; geographic price map; GB

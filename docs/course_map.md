@@ -85,7 +85,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `AdaBoostClassifier` & its parameters (`estimator`, `n_estimators`, `learning_rate`; `algorithm` removed — SAMME only; the base learner must stay weak).
 5. Demanding case — spambase (ESL ch 10): AdaBoost shines; where noise hurts it, framed honestly (exponential-loss non-robustness, not an RF horse-race).
 
-## 08_GradientBoosting  *(plan approved — six notebooks; regression-first + a classification notebook, like 03's six)*
+## 08_GradientBoosting  *(COMPLETE — merged to `main` via PR #8; six notebooks, regression-first + a classification notebook)*
 1. Boosting as fitting residuals, by hand (regression): F₀ = mean → fit a regression tree to the residuals → add a shrunken slice → repeat; exact by-hand == `GradientBoostingRegressor` (1e-16). *Does not yet name "gradient".*
 2. The residual was the gradient: gradient descent in function space (regression); the ensemble is a point in function space, each tree a downhill step, ν the step size.
 3. Gradient boosting for classification (the added notebook): a different loss (log-loss) → a different residual (y − p); the honest Newton leaf-step (regression leaves = mean, exact; classification leaves need a Newton correction); `loss='exponential'` = AdaBoost's objective (the unifying reveal).
