@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–4 of 6 SHIPPED** (merged to chapter); **NB 5 in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`05_estimator_and_parameters`** — NB 5 of 6 (the estimator & its parameters; integrative, anchored on early stopping). Branch opened; drafting the cell-by-cell plan. |
-| Phase | `notebook-plan-approved` — NB 5 plan approved by Rémy (2026-06-26) & persisted (`docs/plans/08_GradientBoosting__05_estimator_and_parameters.md`). Integrative (the estimator's dials, spine = early stopping). Building next. |
-| Active branch | `notebook/08_GradientBoosting__05_estimator_and_parameters` (off `chapter/08_GradientBoosting` @ `8556116`). |
-| Active plan | `docs/plans/08_GradientBoosting__05_estimator_and_parameters.md` (**approved & persisted**); chapter plan + NB 1–4 plans done. |
-| Next concrete action | **Build NB 5** from a `<scratchpad>/build_ch08_nb5.py` script (~21 cells, output-free, integrative), re-measuring every anchor at build; then the reviewer gate (both, no BLOCK) → Rémy visual → guards → commit + ff-merge into chapter. Spine: **early stopping** (request 2000 → stops at **142**, test R² 0.930 ≥ full-2000 0.927). `subsample` 0.5–0.75 > full (0.936 vs 0.929); importances MDI sum x₀–x₄ **0.988** vs noise **0.012** (permutation agrees); `GridSearchCV` best = the **default** (tuning ≈ 0 on the sealed test); **no `staged_score`**; `HistGradientBoosting*` named. friedman1 (the NB-4 set). 3 figs (early stopping; subsample sweep; MDI vs permutation). No `src/` change (pytest 20). Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 California capstone. |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–5 of 6 SHIPPED** (merged to chapter); NB 6 (capstone) next. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 5 merged to `chapter/08_GradientBoosting`; NB 6 not yet opened). |
+| Phase | `notebook-shipped` — NB 5 built (21 cells, 3 figures), reviewed (**both PASS, no BLOCK**), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. Ready to open & plan NB 6 (the capstone). |
+| Active branch | `chapter/08_GradientBoosting` (NB 1–5 merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–5 plans done. |
+| Next concrete action | **Open & plan NB 6 — the demanding case (visualization-first capstone): California housing (regression)** (on Rémy's go): `git switch -c notebook/08_GradientBoosting__06_california_housing` off the chapter branch; STATE `notebook-plan`. Per the **capstone-visual-first** standard (~24–26 cells a *floor*, **≥6 figures**). Full honest workflow on `fetch_california_housing(as_frame=True)` (20640×8, named cols): look at the data → baseline (linear / shallow tree) → tuned GB **with early stopping** → held-out **R² and MAE in dollars** → **error analysis** (residual plots; where it errs) → cross-method foil (RF-regressor, linear) → a **`HistGradientBoostingRegressor` speed/score teaser** → the bridge to **ch 09 XGBoost / ch 10 LightGBM**. Anchors to measure (chapter-plan D2 estimates, re-measure at build): GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF foil ≈0.79; MAE ≈0.37 = $37k; no universal best. Candidate `viz.plot_regression_diagnostics` only if 3× reuse emerges (→ pytest 20→21). **This is the LAST NB — after it ships, close the chapter via PR into `main` (`--no-ff`).** Arc: NB 1–4 fundamentals → NB 5 estimator → NB 6 capstone. |
 
 ## Notes / blockers
 
@@ -38,6 +38,26 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters — integrative, spine =
+  early stopping) BUILT & MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells
+  (5 code / 16 md), 3 figures (early stopping: staged test R² vs trees, log-x, stop@142 of 2000 requested;
+  subsample sweep train/test R²; MDI vs permutation importances). Regression on the NB-4
+  `make_friedman1(2000, noise=1.0, seed 0)`. **Anchors (sklearn 1.9.0, reproduced exactly): early stopping
+  2000→142, test R² 0.9299 ≥ full-2000 0.9271 (the full model gently overfits at ν=0.1); subsample 0.5–0.75
+  (0.9363 / 0.9359) > full 0.9292; MDI sum x₀–x₄ 0.988 / noise 0.012, MDI & permutation agree on the
+  informative ranking; GridSearchCV best = the default {lr0.1,depth3}, tuned sealed-test 0.9292 = default
+  (tuning bought nothing); no `staged_score`; HistGB named (max_bins=255, max_leaf_nodes=31,
+  early_stopping='auto').** Reviewers **both PASS, no BLOCK** — ml-expert verified the early-stopping
+  mechanism in sklearn source + every number live + the ν=1 OOB-vs-test failure; pedagogy confirmed the
+  early-stopping spine coheres and every figure read matches the pixels. Folded 3 MINOR/NIT (softened the
+  **env-sensitive** seed-drift band — my env 142/163/133, the reviewer's 142/147/132, 133–199 over 6 seeds;
+  literature-grounded the OOB caveat, dropping an off-page ν=1 claim; tightened the x₃/ranking wording).
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  `llms.txt` **67**; `common_errors` +3 GB rows (early stopping; subsample-as-regularizer;
+  MDI-vs-permutation on known structure). **No `src/` change** (reused `viz.plot_train_test_curve` +
+  `viz.plot_feature_importances`; Fig J notebook-local; pytest **20**). Rebuilt from `build_ch08_nb5.py`
+  right before `git add` (kernel-drift guard, after Rémy's `code .`). Next: open & plan NB 6 — the
+  California-housing capstone (the last NB; then close the chapter via PR into `main`).
 - **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters) OPENED.** Branch
   `notebook/08_GradientBoosting__05_estimator_and_parameters` off `chapter/08_GradientBoosting`
   (@ `8556116`). Phase `notebook-plan`: drafting the cell-by-cell plan — **integrative**, anchored on the

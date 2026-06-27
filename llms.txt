@@ -64,3 +64,4 @@
 - [notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb](notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb) — 02 — The residual was the gradient — *Chapter 08 · Gradient Boosting · Notebook 2 of 6*
 - [notebooks/08_GradientBoosting/03_classification.ipynb](notebooks/08_GradientBoosting/03_classification.ipynb) — 03 — Gradient boosting for classification — *Chapter 08 · Gradient Boosting · Notebook 3 of 6*
 - [notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb](notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb) — 04 — Shrinkage and the trees: ν, depth, and the number of trees — *Chapter 08 · Gradient Boosting · Notebook 4 of 6*
+- [notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb](notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb) — 05 — The estimator and its parameters — *Chapter 08 · Gradient Boosting · Notebook 5 of 6*
