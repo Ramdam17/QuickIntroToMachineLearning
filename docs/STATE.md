@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–5 of 6 SHIPPED** (merged to chapter); **NB 6 (capstone) in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **`06_california_housing`** — NB 6 of 6 (the demanding case; visualization-first capstone). Branch opened; drafting the cell-by-cell plan. |
-| Phase | `notebook-plan` — drafting NB 6's plan (the **visualization-first capstone**: California-housing regression, full honest workflow, ≥6 figures). Anchors being measured at plan time (linear/tree baselines; GBR default / early-stopped / HistGBR R² + MAE in dollars; RF foil; fit-times; residual analysis; importances). Next: ExitPlanMode → Rémy validates → persist + build. |
+| Phase | `notebook-plan-approved` — NB 6 plan approved by Rémy (2026-06-27) & persisted (`docs/plans/08_GradientBoosting__06_california_housing.md`). The visualization-first capstone (California housing, ~26 cells, 7 figures). Building next. |
 | Active branch | `notebook/08_GradientBoosting__06_california_housing` (off `chapter/08_GradientBoosting` @ `f583d62`). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); NB 1–5 plans done; **NB 6 plan being drafted** (→ `docs/plans/08_GradientBoosting__06_california_housing.md` on approval). |
-| Next concrete action | **Draft NB 6's cell-by-cell plan** (plan mode; visualization-first capstone, ~24–26 cells a floor, **≥6 figures**), present via ExitPlanMode; on approval persist `docs/plans/08_GradientBoosting__06_california_housing.md`, commit, build. Then **close chapter 08 via PR `chapter → main` (`--no-ff`)** — the last gate. Dataset `fetch_california_housing(as_frame=True)` (20640×8, named cols; one-time ~14 MB fetch, visible logging). Honest workflow: look at the data (incl. the $500k cap artifact) → linear/tree baselines → tuned GB **with early stopping** → held-out **R² + MAE in dollars** → residual error analysis → RF/linear foil → **HistGBR speed/score teaser** → ch 09–10 bridge. Anchors being measured (D2 estimates: GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; MAE ≈$37k; no universal best). `viz.plot_regression_diagnostics` only if 3× reuse emerges (else notebook-local; pytest 20). **LAST NB of the chapter.** |
+| Active plan | `docs/plans/08_GradientBoosting__06_california_housing.md` (**approved & persisted**); chapter plan + NB 1–5 plans done. |
+| Next concrete action | **Build NB 6** from `<scratchpad>/build_ch08_nb6.py` (~26 cells, **7 figures**, output-free), re-measuring every anchor; reviewer gate (both, no BLOCK) → Rémy visual → guards → commit + ff-merge. **Then CLOSE chapter 08 via PR `chapter → main` (`--no-ff`)** — push the chapter branch, `gh pr create --base main`, merge `--no-ff`, sync `main` (needs Rémy's explicit go; `main` is PR-only). **Anchors (sklearn 1.9.0, seed 0):** linear 0.594 / tree 0.499; GBR default 0.777 → early-stop (453) **0.821** → HistGBR **0.837**; RF 0.798; MAE in dollars ($37k→$33k→$31k); MDI-vs-perm **location divergence** (perm lat/lon 3.2–3.4 vs MDI ~0.10); residual MAE $25k→$74k by price bucket; $500k cap 4.8%. No `src/` change (`fetch_california_housing` direct; pytest 20). **LAST NB of the chapter.** |
 
 ## Notes / blockers
 
@@ -49,8 +49,10 @@
   Anchors being measured at plan time (one-time ~14 MB fetch, visible logging; D2 estimates GBR ≈0.78 →
   early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; MAE ≈$37k). Regression-diagnostics helper added to `src/`
   **only** if 3× reuse emerges (→ pytest 20→21), else notebook-local matplotlib. **Last NB — after it
-  ships, close chapter 08 via PR `chapter → main` (`--no-ff`).** Next: draft → ExitPlanMode for Rémy → on
-  approval persist + build.
+  ships, close chapter 08 via PR `chapter → main` (`--no-ff`).** **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-27) & persisted** (`docs/plans/08_GradientBoosting__06_california_housing.md`) — after a detour
+  through Ultraplan (twice; the refined plans were not teleported back, so the approved plan is the local
+  draft). Building now from a `build_ch08_nb6.py` scratchpad script (anchors above; ~26 cells, 7 figures).
 - **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters — integrative, spine =
   early stopping) BUILT & MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells
   (5 code / 16 md), 3 figures (early stopping: staged test R² vs trees, log-x, stop@142 of 2000 requested;
