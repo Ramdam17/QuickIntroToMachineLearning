@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **NB 1–5 of 6 SHIPPED** (merged to chapter); **NB 6 (capstone) in progress** (notebook-plan). Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`06_california_housing`** — NB 6 of 6 (the demanding case; visualization-first capstone). Branch opened; drafting the cell-by-cell plan. |
-| Phase | `notebook-plan-approved` — NB 6 plan approved by Rémy (2026-06-27) & persisted (`docs/plans/08_GradientBoosting__06_california_housing.md`). The visualization-first capstone (California housing, ~26 cells, 7 figures). Building next. |
-| Active branch | `notebook/08_GradientBoosting__06_california_housing` (off `chapter/08_GradientBoosting` @ `f583d62`). |
-| Active plan | `docs/plans/08_GradientBoosting__06_california_housing.md` (**approved & persisted**); chapter plan + NB 1–5 plans done. |
-| Next concrete action | **Build NB 6** from `<scratchpad>/build_ch08_nb6.py` (~26 cells, **7 figures**, output-free), re-measuring every anchor; reviewer gate (both, no BLOCK) → Rémy visual → guards → commit + ff-merge. **Then CLOSE chapter 08 via PR `chapter → main` (`--no-ff`)** — push the chapter branch, `gh pr create --base main`, merge `--no-ff`, sync `main` (needs Rémy's explicit go; `main` is PR-only). **Anchors (sklearn 1.9.0, seed 0):** linear 0.594 / tree 0.499; GBR default 0.777 → early-stop (453) **0.821** → HistGBR **0.837**; RF 0.798; MAE in dollars ($37k→$33k→$31k); MDI-vs-perm **location divergence** (perm lat/lon 3.2–3.4 vs MDI ~0.10); residual MAE $25k→$74k by price bucket; $500k cap 4.8%. No `src/` change (`fetch_california_housing` direct; pytest 20). **LAST NB of the chapter.** |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **ALL 6 of 6 SHIPPED** (merged to chapter); chapter complete on the branch — **ready to close via PR → `main`**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 6 merged to `chapter/08_GradientBoosting`; chapter complete on the branch). |
+| Phase | `chapter-merge` — NB 6 built (28 cells, 7 figures), reviewed (**both PASS** after a revise round), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. **All 6 notebooks shipped; chapter ready to close via PR `chapter → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only). |
+| Active branch | `chapter/08_GradientBoosting` (all 6 NBs merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); all 6 NB plans done. |
+| Next concrete action | **Close chapter 08 via PR `chapter → main` (`--no-ff`)** — needs Rémy's **explicit go** (outward-facing; `main` is PR-only via the global pre-push hook). Steps: `git push -u origin chapter/08_GradientBoosting`; `gh pr create --base main --head chapter/08_GradientBoosting --title "feat(08_gradient_boosting): complete chapter — Gradient Boosting"`; merge the PR `--no-ff`; `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 09 (XGBoost)**. (All 6 NBs merged at the chapter tip; ruff repo-green; pytest 20.) |
 
 ## Notes / blockers
 
@@ -38,6 +38,27 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (the demanding case — California housing, the visualization-first capstone) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually. CHAPTER 08 COMPLETE on the branch (6/6).**
+  28 cells (9 code / 19 md), 7 figures (target histogram with the $500k cap; geographic price map; GB
+  early-stopping learning curve; cross-method R²+MAE bars; predicted-vs-actual with the cap wall;
+  MAE-by-price-bucket; MDI vs permutation). Real data `fetch_california_housing(as_frame=True)` (20640×8,
+  target $100k, $500k cap 4.8%; split 16512/4128, seed 0; fetched direct, no `src/` change). **Anchors
+  (sklearn 1.9.0, reproduced exactly): linear 0.594 ($53.5k) / tree(d3) 0.499; GB default 0.777 ($37.4k) →
+  early-stop (453) 0.821 ($32.7k); RF 0.798 ($33.6k); HistGBR 0.837 ($31.0k); residual MAE by price
+  $24.8k/$35.5k/$54.0k/$74.2k; importances MDI MedInc 0.576 / Lat 0.104 / Lon 0.113 vs permutation Lat
+  3.382 / Lon 3.182 / MedInc 0.490 — the dramatic divergence.** Reviewers: **both PASS after a revise
+  round** — ml-expert raised a **BLOCK** (the "$500k ceiling" mechanism: a tree-sum is NOT bounded by the
+  training max — corrected to **censored labels**; Fig-5 axis widened to show the overshoots) + 2 MAJOR
+  (early-stop figure honesty — validation-gain-<-tol, test creeps to ≈0.83, two-fit disclosure; the
+  MDI-vs-perm **interaction** reconciliation with NB 5) → all folded → **re-reviewed PASS, no BLOCK**;
+  pedagogy confirmed the reconciliation + correlated-pair caveat + the "deep blue" map wording. Guards:
+  **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (7 figures / 0 errors); `llms.txt`
+  **68**; `common_errors` +3 GB rows (censored cap; MDI-vs-perm dramatic divergence; one-metric-hides-
+  segments). **No `src/` change** (`fetch_california_housing` direct; reused `viz.plot_feature_importances`;
+  pytest **20**). Rebuilt from `build_ch08_nb6.py` right before `git add` (kernel-drift guard, after Rémy's
+  `code .`). **Last NB — chapter 08 complete on the branch; next: close via PR `chapter → main` (`--no-ff`)
+  on Rémy's explicit go.**
 - **NB 6 (the demanding case — California housing, the visualization-first capstone) OPENED.** Branch
   `notebook/08_GradientBoosting__06_california_housing` off `chapter/08_GradientBoosting` (@ `f583d62`).
   Phase `notebook-plan`: drafting the cell-by-cell plan — the chapter's **capstone** (≥6 figures, ~24–26
