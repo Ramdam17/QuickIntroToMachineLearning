@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — opening; **chapter plan in progress** (phase `chapter-plan`). Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (none; chapter-planning stage). |
-| Phase | `chapter-plan-approved` — chapter-09 (XGBoost) plan **reviewed (both reviewers NO BLOCK) + approved by Rémy (2026-06-27)**, persisted to `docs/plans/chapter_09_XGBoost.md`; `course_map.md` §09 refined to the approved 5-NB decomposition. Env live: xgboost 3.2.0 / lightgbm 4.6.0 (`boosting` extra) + `brew install libomp` (OpenMP runtime, keg-only). |
-| Active branch | `chapter/09_XGBoost` (off `main` @ `4775fe2`). |
-| Active plan | `docs/plans/chapter_09_XGBoost.md` (**APPROVED** — 5 NBs: 2nd-order view · regularized objective+gain · sparsity-aware missing · the estimator+histogram · capstone). |
-| Next concrete action | **Open & plan NB 1 — the second-order view (gradients + curvature, by hand).** `git switch -c notebook/09_XGBoost__01_second_order_view` off `chapter/09_XGBoost`; set STATE `notebook-plan`; draft the cell-by-cell plan: re-lay the 2nd-order Taylor move by hand (`L(F+w)≈L(F)+g·w+½h·w²` → `w*=−g/h` → leaf `−G/H`); pin `g=∂L/∂F` conventions; recover ch 08's SE leaf=mean (h=1) **and** log-loss Newton leaf (h=p(1−p)) with **equal billing** (classification the climax); NB-1's **own λ=0 XGBoost parity** `w*=−G/H`. Measure NB-1 anchors live at plan time. ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__01_second_order_view.md` + build. |
+| Current chapter | **`09_XGBoost`** — **chapter plan APPROVED**; building **NB 1 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **`01_second_order_view`** (NB 1 of 5) — the second-order view: gradients + curvature, by hand. |
+| Phase | `notebook-plan` — drafting the NB-1 cell-by-cell plan in plan mode (anchors measured live). No reviewer gate at this stage — Rémy validates the plan alone via ExitPlanMode; reviewers return on the built notebook. |
+| Active branch | `notebook/09_XGBoost__01_second_order_view` (off `chapter/09_XGBoost` @ `9ebb1e1`). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1: drafting → `docs/plans/09_XGBoost__01_second_order_view.md` (persisted on Rémy's approval). |
+| Next concrete action | **Draft & validate the NB-1 plan** (the second-order view). Measure anchors live (the by-hand `w*=−G/H`; the **λ=0 XGBoost leaf parity**; the SE→mean and log-loss→Newton recoveries checked against ch 08's printed numbers). Draft ~20 cells per `docs/notebook_template.md` (header → recap of ch 08 NB 2/3 → the scalar 2nd-order Taylor move → `−G/H` over a leaf → the two-losses-one-rule reveal with **equal billing** → the λ=0 XGBoost parity → Your turn → What you built → References). ExitPlanMode for Rémy. On approval: persist `docs/plans/09_XGBoost__01_second_order_view.md` + commit (phase `notebook-plan-approved`), then build via a `build_ch09_nb1.py` scratchpad script. |
 
 ## Notes / blockers
 
@@ -38,6 +38,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the second-order view — gradients + curvature, by hand) OPENED.** Branch
+  `notebook/09_XGBoost__01_second_order_view` off `chapter/09_XGBoost` (@ `9ebb1e1`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, **approximate any loss to second order
+  and read off the optimal leaf**: `L(F+w) ≈ L(F) + g·w + ½h·w²` (a parabola) → minimum `w*=−g/h` → over
+  a leaf `w*=−G/H`. Pin the convention once (`g=∂L/∂F`, `h=∂²L/∂F²`, leaf `−G/H`), then recover **both**
+  ch 08 leaf rules: SE (`g=F−y, h=1`) → mean residual (ch 08 NB 1), log-loss (`g=p−y, h=p(1−p)`) →
+  `Σ(y−p)/Σp(1−p)` (ch 08 NB 3's Newton leaf) — equal billing, classification the climax. NB-1's **own
+  λ=0 XGBoost parity** (`reg_lambda=0, gamma=0, eta=1, base_score` pinned, 1 tree / depth 1 → leaf ==
+  by-hand `−G/H`). Anchors measured at plan time (xgboost 3.2.0). No `src/` change expected
+  (notebook-local matplotlib; reuse `viz`; pytest 20). Next: draft the plan → ExitPlanMode for Rémy → on
+  approval persist + build.
 - **Chapter 09 (XGBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_09_XGBoost.md`, this
   commit). **FIVE notebooks** on the arc — NB 1 the **second-order view** (gradients + curvature by hand;
   `w*=−G/H` unifies ch 08's SE leaf=mean and log-loss Newton leaf; its own λ=0 XGBoost parity) → NB 2 the
