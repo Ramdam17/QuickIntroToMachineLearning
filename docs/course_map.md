@@ -78,19 +78,20 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `RandomForestClassifier` & its parameters (n_estimators, max_features, depth); diminishing returns; feature importance introduced.
 5. Demanding case: a strong tabular baseline on forest cover type (covtype); honest evaluation under imbalance; reading importances honestly.
 
-## 07_AdaBoost  *(plan approved — five notebooks; the first boosting method)*
+## 07_AdaBoost  *(complete — five notebooks, merged to `main`)*
 1. Boosting intuition: focus on the mistakes; reweighting, by hand (SAMME α; by-hand == sklearn).
 2. Weak learners and the additive model; the exponential-loss / forward-stagewise view, from scratch.
 3. Learning rate vs number of rounds; overfitting behaviour — resistant on clean data, not immune under noise.
 4. The estimator `AdaBoostClassifier` & its parameters (`estimator`, `n_estimators`, `learning_rate`; `algorithm` removed — SAMME only; the base learner must stay weak).
 5. Demanding case — spambase (ESL ch 10): AdaBoost shines; where noise hurts it, framed honestly (exponential-loss non-robustness, not an RF horse-race).
 
-## 08_GradientBoosting
-1. Boosting as fitting residuals: gradient descent in function space, by hand.
-2. The loss and the role of shrinkage.
-3. Trees as the base learner; depth, learning rate, n_estimators interplay.
-4. Parameters & early stopping; the bias/variance trade-off.
-5. Demanding case: tuning a competitive tabular model honestly.
+## 08_GradientBoosting  *(plan approved — six notebooks; regression-first + a classification notebook, like 03's six)*
+1. Boosting as fitting residuals, by hand (regression): F₀ = mean → fit a regression tree to the residuals → add a shrunken slice → repeat; exact by-hand == `GradientBoostingRegressor` (1e-16). *Does not yet name "gradient".*
+2. The residual was the gradient: gradient descent in function space (regression); the ensemble is a point in function space, each tree a downhill step, ν the step size.
+3. Gradient boosting for classification (the added notebook): a different loss (log-loss) → a different residual (y − p); the honest Newton leaf-step (regression leaves = mean, exact; classification leaves need a Newton correction); `loss='exponential'` = AdaBoost's objective (the unifying reveal).
+4. Shrinkage and the trees: ν × n_estimators, depth as interaction order, and why GB overfits with too many trees at large ν (the structural contrast with RF, which does not).
+5. The estimator `GradientBoostingRegressor`/`Classifier` & its parameters: `loss` (`'deviance'` removed), `subsample` (stochastic GB + OOB), early stopping, importances; `HistGradientBoosting*` named as the fast modern default + the ch 09–10 bridge.
+6. Demanding case (visualization-first capstone): tuning a competitive model honestly — California housing (regression); R²/MAE in dollars, residual error analysis, RF/linear foil, HistGB teaser.
 
 ## 09_XGBoost
 1. What XGBoost adds to gradient boosting: regularized objective, second-order view (intuition).

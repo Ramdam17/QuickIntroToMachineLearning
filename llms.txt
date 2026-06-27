@@ -59,3 +59,10 @@
 - [notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb](notebooks/07_AdaBoost/03_learning_rate_overfitting.ipynb) — 03 — Learning rate, rounds, and overfitting behaviour — *Chapter 07 — AdaBoost · Notebook 3 of 5*
 - [notebooks/07_AdaBoost/04_estimator_and_parameters.ipynb](notebooks/07_AdaBoost/04_estimator_and_parameters.ipynb) — 04 — The estimator AdaBoostClassifier and its parameters — *Chapter 07 — AdaBoost · Notebook 4 of 5*
 - [notebooks/07_AdaBoost/05_spambase.ipynb](notebooks/07_AdaBoost/05_spambase.ipynb) — 05 — A demanding case: spam (where AdaBoost shines, and where label noise bites) — *Chapter 07 · Notebook 5 of 5*
+## 08_GradientBoosting
+- [notebooks/08_GradientBoosting/01_fitting_residuals.ipynb](notebooks/08_GradientBoosting/01_fitting_residuals.ipynb) — 01 — Boosting as fitting residuals (by hand) — *Chapter 08 · Gradient Boosting · Notebook 1 of 6*
+- [notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb](notebooks/08_GradientBoosting/02_residual_is_gradient.ipynb) — 02 — The residual was the gradient — *Chapter 08 · Gradient Boosting · Notebook 2 of 6*
+- [notebooks/08_GradientBoosting/03_classification.ipynb](notebooks/08_GradientBoosting/03_classification.ipynb) — 03 — Gradient boosting for classification — *Chapter 08 · Gradient Boosting · Notebook 3 of 6*
+- [notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb](notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb) — 04 — Shrinkage and the trees: ν, depth, and the number of trees — *Chapter 08 · Gradient Boosting · Notebook 4 of 6*
+- [notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb](notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb) — 05 — The estimator and its parameters — *Chapter 08 · Gradient Boosting · Notebook 5 of 6*
+- [notebooks/08_GradientBoosting/06_california_housing.ipynb](notebooks/08_GradientBoosting/06_california_housing.ipynb) — 06 — A demanding case: California housing — *Chapter 08 · Gradient Boosting · Notebook 6 of 6*

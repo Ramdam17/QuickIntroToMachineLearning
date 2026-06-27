@@ -6,15 +6,21 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`07_AdaBoost` — all 5 NBs BUILT & merged to the chapter branch; CHAPTER-MERGE pending (PR into `main`).** The first **boosting** method. Chapter 06 (Random Forests) COMPLETE — PR #6 (`9f18507`); chapter 05 (SVM) PR #5 (`b5c00f7`). |
-| Current notebook | **NB 5 — a demanding case: spam (spambase)** (5 of 5, the capstone) — **DONE & ff-merged** to `chapter/07_AdaBoost`. Chapter 07 built end to end (5/5). |
-| Phase | `chapter-merge`: NB 5 COMMITTED & ff-merged; all 5 NBs on `chapter/07_AdaBoost`. Both reviewers PASS + Rémy validated NB 5 visually. **Next: close CHAPTER 07 via PR into `main` (`--no-ff`) — awaiting Rémy's explicit go (outward-facing push/PR).** |
-| Active branch | `chapter/07_AdaBoost` (all 5 NBs merged; notebook branches kept). |
-| Active plan | `docs/plans/chapter_07_AdaBoost.md` (APPROVED); all 5 NB plans persisted under `docs/plans/07_AdaBoost__0{1..5}_*.md`. |
-| Next concrete action | **Close CHAPTER 07 via PR into `main`** (outward-facing — only on Rémy's explicit go): `git push -u origin chapter/07_AdaBoost`; `gh pr create --base main --head chapter/07_AdaBoost` (title `feat(07_adaboost): complete chapter — AdaBoost`); `gh pr merge --merge` (`--no-ff`); `git switch main && git pull`. Then mark `course_map.md` §07 complete (merged to `main`), set STATE → `idle`, next = **open chapter 08 (GradientBoosting)**. Until that go: nothing to push; `main` stays PR-only (global pre-push hook). |
+| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **ALL 6 of 6 SHIPPED** (merged to chapter); chapter complete on the branch — **ready to close via PR → `main`**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 6 merged to `chapter/08_GradientBoosting`; chapter complete on the branch). |
+| Phase | `chapter-merge` — NB 6 built (28 cells, 7 figures), reviewed (**both PASS** after a revise round), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. **All 6 notebooks shipped; chapter ready to close via PR `chapter → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only). |
+| Active branch | `chapter/08_GradientBoosting` (all 6 NBs merged). |
+| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); all 6 NB plans done. |
+| Next concrete action | **Close chapter 08 via PR `chapter → main` (`--no-ff`)** — needs Rémy's **explicit go** (outward-facing; `main` is PR-only via the global pre-push hook). Steps: `git push -u origin chapter/08_GradientBoosting`; `gh pr create --base main --head chapter/08_GradientBoosting --title "feat(08_gradient_boosting): complete chapter — Gradient Boosting"`; merge the PR `--no-ff`; `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 09 (XGBoost)**. (All 6 NBs merged at the chapter tip; ruff repo-green; pytest 20.) |
 
 ## Notes / blockers
 
+- **Resolved (NB-4 cycle): ruff debt in ch 08 NB 1–3 fixed** (Rémy: "oui on s'occupe des erreurs"). The 8
+  pre-existing errors (`B007` unused loop var; `E501` long lines; `B905` zip-without-strict) are cleared via
+  behaviour-preserving edits **in the build scripts** (`for m`→`for _`; wrapped print / `np.array` / `ax.plot`
+  / `AdaBoostClassifier(...)` lines; `zip(..., strict=False)`), notebooks rebuilt. `ruff check .` → **All
+  checks passed!** (green across the repo); all three re-execute (nbconvert exit 0); the diff is the 8 lines
+  only. Committed on `chapter/08_GradientBoosting`.
 - **Resolved (lint debt):** Rémy chose option B — fix the notebooks. NB 01–09 made ruff-clean
   (explicit `zip(strict=False)`, unused `pandas` imports removed, long lines wrapped; all seven
   re-executed end-to-end), committed as `f84eec6`. `ruff check .` is now fully green across the repo.
@@ -32,6 +38,273 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (the demanding case — California housing, the visualization-first capstone) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually. CHAPTER 08 COMPLETE on the branch (6/6).**
+  28 cells (9 code / 19 md), 7 figures (target histogram with the $500k cap; geographic price map; GB
+  early-stopping learning curve; cross-method R²+MAE bars; predicted-vs-actual with the cap wall;
+  MAE-by-price-bucket; MDI vs permutation). Real data `fetch_california_housing(as_frame=True)` (20640×8,
+  target $100k, $500k cap 4.8%; split 16512/4128, seed 0; fetched direct, no `src/` change). **Anchors
+  (sklearn 1.9.0, reproduced exactly): linear 0.594 ($53.5k) / tree(d3) 0.499; GB default 0.777 ($37.4k) →
+  early-stop (453) 0.821 ($32.7k); RF 0.798 ($33.6k); HistGBR 0.837 ($31.0k); residual MAE by price
+  $24.8k/$35.5k/$54.0k/$74.2k; importances MDI MedInc 0.576 / Lat 0.104 / Lon 0.113 vs permutation Lat
+  3.382 / Lon 3.182 / MedInc 0.490 — the dramatic divergence.** Reviewers: **both PASS after a revise
+  round** — ml-expert raised a **BLOCK** (the "$500k ceiling" mechanism: a tree-sum is NOT bounded by the
+  training max — corrected to **censored labels**; Fig-5 axis widened to show the overshoots) + 2 MAJOR
+  (early-stop figure honesty — validation-gain-<-tol, test creeps to ≈0.83, two-fit disclosure; the
+  MDI-vs-perm **interaction** reconciliation with NB 5) → all folded → **re-reviewed PASS, no BLOCK**;
+  pedagogy confirmed the reconciliation + correlated-pair caveat + the "deep blue" map wording. Guards:
+  **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (7 figures / 0 errors); `llms.txt`
+  **68**; `common_errors` +3 GB rows (censored cap; MDI-vs-perm dramatic divergence; one-metric-hides-
+  segments). **No `src/` change** (`fetch_california_housing` direct; reused `viz.plot_feature_importances`;
+  pytest **20**). Rebuilt from `build_ch08_nb6.py` right before `git add` (kernel-drift guard, after Rémy's
+  `code .`). **Last NB — chapter 08 complete on the branch; next: close via PR `chapter → main` (`--no-ff`)
+  on Rémy's explicit go.**
+- **NB 6 (the demanding case — California housing, the visualization-first capstone) OPENED.** Branch
+  `notebook/08_GradientBoosting__06_california_housing` off `chapter/08_GradientBoosting` (@ `f583d62`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — the chapter's **capstone** (≥6 figures, ~24–26
+  cells a floor): a full honest regression workflow on `fetch_california_housing(as_frame=True)`
+  (20640×8, named columns). Look at the data (incl. the $500k target cap) → linear / shallow-tree baselines
+  → a tuned GB **with early stopping** → held-out **R² and MAE in dollars** → **residual error analysis**
+  (where it errs — high-value / coastal homes?) → cross-method foil (RF-regressor, linear) → a
+  **`HistGradientBoostingRegressor` speed/score teaser** → the bridge to **ch 09 XGBoost / ch 10 LightGBM**.
+  Anchors being measured at plan time (one-time ~14 MB fetch, visible logging; D2 estimates GBR ≈0.78 →
+  early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; MAE ≈$37k). Regression-diagnostics helper added to `src/`
+  **only** if 3× reuse emerges (→ pytest 20→21), else notebook-local matplotlib. **Last NB — after it
+  ships, close chapter 08 via PR `chapter → main` (`--no-ff`).** **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-27) & persisted** (`docs/plans/08_GradientBoosting__06_california_housing.md`) — after a detour
+  through Ultraplan (twice; the refined plans were not teleported back, so the approved plan is the local
+  draft). Building now from a `build_ch08_nb6.py` scratchpad script (anchors above; ~26 cells, 7 figures).
+- **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters — integrative, spine =
+  early stopping) BUILT & MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells
+  (5 code / 16 md), 3 figures (early stopping: staged test R² vs trees, log-x, stop@142 of 2000 requested;
+  subsample sweep train/test R²; MDI vs permutation importances). Regression on the NB-4
+  `make_friedman1(2000, noise=1.0, seed 0)`. **Anchors (sklearn 1.9.0, reproduced exactly): early stopping
+  2000→142, test R² 0.9299 ≥ full-2000 0.9271 (the full model gently overfits at ν=0.1); subsample 0.5–0.75
+  (0.9363 / 0.9359) > full 0.9292; MDI sum x₀–x₄ 0.988 / noise 0.012, MDI & permutation agree on the
+  informative ranking; GridSearchCV best = the default {lr0.1,depth3}, tuned sealed-test 0.9292 = default
+  (tuning bought nothing); no `staged_score`; HistGB named (max_bins=255, max_leaf_nodes=31,
+  early_stopping='auto').** Reviewers **both PASS, no BLOCK** — ml-expert verified the early-stopping
+  mechanism in sklearn source + every number live + the ν=1 OOB-vs-test failure; pedagogy confirmed the
+  early-stopping spine coheres and every figure read matches the pixels. Folded 3 MINOR/NIT (softened the
+  **env-sensitive** seed-drift band — my env 142/163/133, the reviewer's 142/147/132, 133–199 over 6 seeds;
+  literature-grounded the OOB caveat, dropping an off-page ν=1 claim; tightened the x₃/ranking wording).
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  `llms.txt` **67**; `common_errors` +3 GB rows (early stopping; subsample-as-regularizer;
+  MDI-vs-permutation on known structure). **No `src/` change** (reused `viz.plot_train_test_curve` +
+  `viz.plot_feature_importances`; Fig J notebook-local; pytest **20**). Rebuilt from `build_ch08_nb5.py`
+  right before `git add` (kernel-drift guard, after Rémy's `code .`). Next: open & plan NB 6 — the
+  California-housing capstone (the last NB; then close the chapter via PR into `main`).
+- **NB 5 (the estimator `GradientBoosting{Regressor,Classifier}` & its parameters) OPENED.** Branch
+  `notebook/08_GradientBoosting__05_estimator_and_parameters` off `chapter/08_GradientBoosting`
+  (@ `8556116`). Phase `notebook-plan`: drafting the cell-by-cell plan — **integrative**, anchored on the
+  **early-stopping** story (the principled cure for NB 4's overfit). Covers parity recap (regression exact /
+  classification Newton); `loss` names; `subsample` + `oob_improvement_`; early stopping
+  (`n_iter_no_change`/`validation_fraction`); `feature_importances_` MDI vs permutation; `max_depth`/
+  `max_features` as cross-refs to NB 4; the **no-`staged_score` API trap**; honest `GridSearchCV` → one
+  sealed test; `HistGradientBoosting*` named as the fast modern default + the ch 09–10 bridge. Anchors being
+  measured at plan time (sklearn 1.9.0, seed 0). On `make_friedman1` (the NB-4 set; continuity; known
+  feature importances). No `src/` change expected (pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-26) & persisted** (`docs/plans/08_GradientBoosting__05_estimator_and_parameters.md`); building now
+  from a `build_ch08_nb5.py` scratchpad script. Anchors: early stopping 2000→142 (R² 0.930 ≥ full 0.927);
+  subsample 0.5–0.75 > full; MDI sum x₀–x₄ 0.988 / noise 0.012; GridSearchCV best = default.
+- **ch 08 NB 1–3 made ruff-clean (lint debt cleared).** `ruff check .` had flagged 8 pre-existing errors in
+  the already-shipped NB 1–3 (`B007` / `E501` ×5 / `B905` ×2; NB 4 was already clean). Fixed in the build
+  scripts (behaviour-preserving: `for m`→`for _`, line wraps, `zip(strict=False)`), notebooks rebuilt; ruff
+  **All checks passed!**, all three nbconvert exit 0, diff = the 8 lines only. Committed on
+  `chapter/08_GradientBoosting`. Repo-wide `ruff check .` now green.
+- **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) BUILT &
+  MERGED to `chapter/08_GradientBoosting` — Rémy validated visually.** 20 cells (5 code / 15 md), 3 figures
+  (ν×n_estimators test R² vs trees, log-x — ν=1 peaks@18 then sags, ν=0.1 higher+flat, ν=0.01 still
+  climbing; the overfit — ν=1 train MSE→0 / test MSE bottoms@18 then rises, + a flat RF reference; depth
+  sweep test/train R²). Regression on `make_friedman1(2000, noise=1.0, seed 0)` (train 1400 / test 600; a
+  real x₀·x₁ interaction + 5 noise features). One **declared** concept: how GB controls its complexity.
+  **Anchors (sklearn 1.9.0, reproduced exactly by the notebook): ν=1.0 best test R² 0.8637@18 → 0.8130@1000
+  (train→0 = overfit); ν=0.1 0.9300@308, flat to 0.9282@1000; ν=0.01 0.9213@1000 (climbing). depth1
+  0.873/0.905 (no x₀·x₁) → depth2 0.931/0.966 → depth5 0.923/0.998 (memorizing). RF flat 0.858/0.862/0.862.
+  By-hand ν: F0=14.13; one tree ν=1→9.63 vs ν=0.1→22.31; trees to train MSE≤2 = 13/12/48/496
+  (ν=1/0.5/0.1/0.01).** Reviewers **both PASS, no BLOCK** — ml-expert: "mechanistically correct, reproducible
+  to the digit, ν-dependence honest, cited" (verified ν=1 ΔR²=0.051 vs ν=0.1 0.0017; RF tree depth ≈19–21;
+  the depth-1 additive ceiling holds to 5000 trees); pedagogy: "the three dials read as one story", every
+  figure read exact, prerequisites re-laid. Folded small MINOR/NIT: ν-scope the headline + the
+  What-you-built bullet; "depth-3 budget"; mark the 18-tree peak as a test-R² milestone; illustrative
+  x₀·x₁ split; a Breiman-1996 note on make_friedman1. Guards: **0 banned** (JSON scan), hex clean,
+  output-free; nbconvert exit 0 (3 figures / 0 errors); `llms.txt` **66**; `common_errors` +3 GB rows
+  (more-trees-overfit-at-large-ν + the RF contrast; the ν×n_estimators trade-off; depth=interaction-order).
+  **No `src/` change** (reused `viz.plot_train_test_curve`; Fig G/H notebook-local; pytest **20**). Rebuilt
+  from `build_ch08_nb4.py` right before `git add` (kernel-drift guard, after Rémy's `code .`). **Flagged:**
+  `ruff check .` surfaces 8 pre-existing errors in NB 1–3 (NB 4 itself ruff-clean) — see Notes/blockers;
+  awaiting Rémy's decision before the chapter PR. Next: open & plan NB 5 (the estimator & its parameters).
+- **NB 4 (shrinkage and the trees — ν, depth, n_estimators; the overfit-at-large-ν headline) OPENED.**
+  Branch `notebook/08_GradientBoosting__04_shrinkage_and_trees` off `chapter/08_GradientBoosting`
+  (@ `61a2b4d`). Phase `notebook-plan`: drafting the cell-by-cell plan — one **declared** concept
+  (richer-scope, ch 07-NB 3 precedent): how GB controls its complexity. **Back to regression** on
+  `make_friedman1(n=2000, noise=1.0, seed 0)` (train 1400 / test 600; a genuine `sin(π·x₀·x₁)`
+  interaction + 5 noise features — the canvas that motivates depth). **Anchors re-measured at plan time
+  (sklearn 1.9.0, seed 0):** ν=1.0 best test R² **0.864@18** → **0.813@1000** (test MSE 3.39→4.65 while
+  train→0 — the overfit headline; peaks far earlier than the chapter-plan's ~130 estimate); ν=0.1 best
+  **0.930@308**, flat to 0.928@1000 (lower floor, **no turn-up within budget**); ν=0.01 **still climbing
+  0.921@1000** (underfit in budget). **depth = interaction order:** depth1 R² **0.873** (stumps can't
+  represent x₀·x₁) → depth2 **0.931** (the pairwise jump) → depth3 0.929 → depth5 train 0.998 / test
+  0.923 (memorizing). **RF contrast** flat R² 0.858/0.862/0.862 (B=50/200/1000) — more trees never hurts
+  (each an independent variance-reduction draw). **By-hand ν** (NB1 recap): F0=14.13; one depth-3 tree
+  drops train MSE 25.28 → **9.63 at ν=1.0** vs → **22.31 at ν=0.1** (a tenth of the way); trees to train
+  MSE≤2 = **13/48/496** for ν=1.0/0.1/0.01 (the trade-off in single numbers). 3 figures (ν×trees test R²;
+  ν=1.0 train-vs-test MSE overfit + RF reference; depth sweep). The overfit is **ν-dependent**, the RF
+  contrast **mechanistic** — and *the* motivation for NB 5's early stopping. No `src/` change expected
+  (notebook-local matplotlib; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-26) & persisted**
+  (`docs/plans/08_GradientBoosting__04_shrinkage_and_trees.md`); building now from a `build_ch08_nb4.py` scratchpad script.
+- **NB 3 (gradient boosting for classification — the added notebook) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (7 code / 14 md), 3 figures
+  (boundary sharpening n∈{1,10,50}; train log-loss by-hand-Newton == sklearn vs naive mean-leaf lagging;
+  exp-GB vs AdaBoost boundaries). The chapter's **pivotal** NB: swap the loss → classification on ch 07's
+  make_moons-0.20. **log-loss → pseudo-residual y − p**, fit a regression tree in log-odds space, with the
+  **honest Newton leaf-step** `γ = Σ(y−p)/Σ p(1−p)`. F₀=log-odds(0.5)=0, round-1 residuals ±0.5; by-hand
+  Newton **== `GradientBoostingClassifier` decision_function to 3.55e-15** (the chapter's correctness trap
+  cleared), test acc **0.9417** (= ch 07 AdaBoost on this split); naive **mean-leaf = a different model**
+  (train log-loss 0.035 vs 0.219 — config-dependent, shipped as direction + the machine-precision match).
+  **Unifying reveal:** `loss='exponential'` = AdaBoost's *objective* (acc both 0.9417, agreement train
+  0.982 / test 0.983, **not** bit-identical — different optimizers) → AdaBoost is the exponential-loss
+  member of the GB family (the ch 07 bridge, crossed). Reviewers: **both PASS, no BLOCK** — ml-expert
+  read sklearn's `_gb.py` and confirmed the by-hand Newton override mirrors it line-for-line (parity is
+  honest machine precision), the gradient/curvature/Newton formula and the exercise-3 inequality all
+  verified; pedagogy confirmed "density handled not crammed", the gentle intro + deferred derivation, and
+  numpy-as-interface justified. Folded 2 MINOR (text): `p(1−p)` = variance of a **Bernoulli(p)** (not "of
+  the prediction"); exercise-3 nudge `p(1−p)≤¼` **and** `¼<1`. Guards: **0 banned** (JSON scan), hex
+  clean, output-free; nbconvert exit 0 (0 errors / 3 figures); `llms.txt` **65**; `common_errors` +2 GB
+  rows (Newton-leaf-not-mean; exp-GB ≠ AdaBoost predictor). No `src/` change (pytest **20**). Rebuilt from
+  `build_ch08_nb3.py` right before `git add` (no editor drift). Next: open & plan NB 4 (shrinkage & the
+  trees).
+- **NB 3 (gradient boosting for classification — the added notebook) OPENED.** Branch
+  `notebook/08_GradientBoosting__03_classification` off `chapter/08_GradientBoosting` (@ `37d0ce8`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **swap the loss → classification**
+  on ch 07's make_moons-0.20 (continuity + a head-to-head with AdaBoost). Recap ch 03 sigmoid/log-odds;
+  **log-loss → pseudo-residual `y − p`**; fit a *regression* tree to it in log-odds space; the **honest
+  Newton leaf-step** `Σr/Σp(1−p)` (the chapter's **correctness trap**, D4: by-hand Newton ==
+  `GradientBoostingClassifier` to machine precision, naive mean-leaf gives a *different* model — ship the
+  direction + the match, pin config & re-measure since the log-loss gap is config-dependent); and the
+  **unifying reveal** `loss='exponential'` = AdaBoost's *objective* (identical test acc & ~95% pred
+  agreement, **not** bit-identical — different optimizer). Build the mechanism by hand first; full Newton
+  derivation in "Going further". Anchors being measured at plan time (sklearn 1.9.0, seed 0). No `src/`
+  change expected (notebook-local matplotlib + `plot_decision_boundary`; pytest 20). Next: draft the plan
+  → ExitPlanMode for Rémy → on approval persist + build.
+- **NB 2 (the residual was the gradient — gradient descent in function space) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (6 code / 15 md), 2 figures (the
+  step picture: negative gradient at round 10 + the tree's piecewise-constant approximation; gradient
+  descent in function space: the 2-point loss bowl + the boosting trajectory into the minimum | the
+  total loss vs trees). One concept: the residual we fit (NB 1) **is the negative gradient** of the
+  squared-error loss, so boosting is **gradient descent in function space** (the n predictions are the
+  variables; each tree an approximate tree-constrained step, ν the length). Re-illuminates NB 1's loop
+  (no new data/estimator); ends with "a different loss → a different gradient → a different residual"
+  (abs error → sign; log-loss → y−p forward to NB 3). Anchors: `−∂L/∂F = y−F` finite-diff **8.7e-11**
+  (exact identity, quadratic loss → zero truncation); loss `L=½Σ(y−F)²` **30.12→0.44** (= (n/2)·MSE,
+  strictly monotone); abs-error gradient = sign(y−F) ∈ {−1,+1}; the "fit the negative gradient" reframe
+  == `GradientBoostingRegressor` **2.22e-16** (interpretive, same arithmetic). Reviewers: **both PASS, no
+  BLOCK** — ml-expert verified the exact identity / monotone descent / slice legitimacy / parity;
+  pedagogy confirmed "ré-illumination, not a rehash" and the gentle parameter→function-space lift.
+  Folded 2 MINOR (text only): "about"→"under 1e-10"; an honest half-sentence on the slice trajectory's
+  slight overshoot (the tree couples all points). Guards: **0 banned** (JSON scan), hex clean,
+  output-free; nbconvert exit 0 (0 errors / 2 figures); `llms.txt` **64**; `common_errors` +2 GB rows
+  (where-is-the-gradient; approximate-not-exact gradient descent). No `src/` change (pytest **20**).
+  Rebuilt from `build_ch08_nb2.py` right before `git add` (no editor drift this time). Next: open & plan
+  NB 3 (gradient boosting for classification — the added notebook).
+- **NB 2 (the residual was the gradient — gradient descent in function space) OPENED.** Branch
+  `notebook/08_GradientBoosting__02_residual_is_gradient` off `chapter/08_GradientBoosting` (@ `11319dc`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **the residual we fit is the
+  negative gradient** of the squared-error loss, so NB 1's loop is **gradient descent in function
+  space** (the ensemble F is a point in ℝⁿ, each tree an approximate downhill step, ν the step size).
+  Re-lay ch 03 NB 4 gradient descent (parameter → function space); recompute NB 1's update as "fit the
+  negative gradient" (identical sequence); name the generalisation "a different loss → a different
+  gradient → a different residual" (absolute error → sign; sets up NB 3). Stays squared-error
+  **regression** on NB 1's 1-D sine. Anchors being measured at plan time (sklearn 1.9.0, seed 0). No
+  `src/` change expected (notebook-local matplotlib; pytest 20). Next: draft the plan → ExitPlanMode for
+  Rémy → on approval persist + build.
+- **NB 1 (boosting as fitting residuals — by hand, regression) BUILT & MERGED to
+  `chapter/08_GradientBoosting` — Rémy validated visually.** 21 cells (7 code / 14 md), 3 figures
+  (data + the flat F₀=mean; round-1 mechanics [residuals + the depth-2 step | the updated F₁]; the fit
+  building up F₀→F₆₀ + the train-MSE-vs-trees curve with the single-tree reference). The chapter's
+  **first regression**, re-laid honestly (continuous target, residual, MSE, and the **regression-tree
+  leaf = mean** rule). Built **by hand**: F₀=mean → fit `DecisionTreeRegressor(max_depth=2)` to the
+  residual → `F += ν·tree` (ν=0.3) → repeat; train MSE 0.502→0.299@1→0.135@3→0.101@4→0.081@5→0.0073@100;
+  a single depth-2 tree (0.105) is passed at **round 4**. **Exact parity:** by-hand ==
+  `GradientBoostingRegressor(loss='squared_error', subsample=1.0, …)` to **2.22e-16** (final & every
+  staged round; verified by ml-expert across 24 configs), F₀=−0.1199=`init_.constant_` (DummyRegressor).
+  **"Gradient" is deliberately NOT named** (NB 2's reveal). Reviewers: **both PASS, no BLOCK** —
+  ml-expert verified parity + leaf=mean + citations; pedagogy praised the first-regression re-lay
+  ("exemplary") and the gradient deferral ("rare skill"). Folded the convergent MINORs: crossover stated
+  as **round 4** (round-4 MSE now printed); a one-line honest hook that the train MSE dipping below the
+  injected-noise floor is a *training* phenomenon → NB 4; a gloss on `init_`; exercise 3 tied to the
+  recap's leaf=mean. Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (0
+  errors / 3 figures); `llms.txt` **63**; `common_errors` +3 GB rows (residuals≠reweighting;
+  parity-exact-only-for-squared-error / leaf=mean; the `staged_score`-absent API trap). No `src/` change
+  (pytest **20**). Rebuilt from `build_ch08_nb1.py` right before `git add` (kernel-drift habit; also
+  `git restore`d a cosmetic editor drift on ch07/05's `language_info`). Next: open & plan NB 2 (the
+  residual *was* the gradient).
+- **NB 1 (boosting as fitting residuals — by hand, regression) OPENED.** Branch
+  `notebook/08_GradientBoosting__01_fitting_residuals` off `chapter/08_GradientBoosting` (@ `0e6059c`).
+  Phase `notebook-plan`: drafting the cell-by-cell plan — one concept, **fit a regression tree to the
+  residuals of the current model, add a shrunken slice, repeat** (contrasted with AdaBoost's
+  reweighting). **First regression in the course** (re-lay it, + the regression-tree-leaf=mean rule as
+  the hinge to NB 3's Newton leaf); **"gradient" NOT named yet** (NB 2's reveal). **Anchors measured at
+  plan time (sklearn 1.9.0, seed 0):** 1-D synthetic `y = sin(x) + N(0, 0.25²)`, n=120, x∈[0,2π];
+  by-hand GB (F₀=mean → fit `DecisionTreeRegressor` to residual → F += ν·tree) **== `GradientBoostingRegressor`
+  to 2.22e-16** (final & staged, all depth/ν configs), F₀ = −0.1199 = `init_.constant_`; chosen config
+  **max_depth=2, ν=0.3** (visible per-round shrinkage, no train→0 spoiler); train MSE
+  0.502→0.299@1→0.191@2→0.135@3→0.081@5→0.039@20→0.0073@100; single depth-2 tree 0.105 (the ensemble
+  passes it ≈round 5). API verified: `staged_predict` present, **`staged_score` ABSENT** (use
+  `staged_predict`), `init_`=DummyRegressor, default loss `squared_error`. 2 figures (residual-fitting
+  story; train-MSE vs trees). No `src/` change expected (notebook-local matplotlib; pytest 20). Next:
+  draft the plan → ExitPlanMode for Rémy → on approval persist + build.
+- **Chapter 08 (Gradient Boosting) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_08_GradientBoosting.md`,
+  this commit). **SIX notebooks** (regression-first + an added classification notebook — Rémy's call;
+  the 03_LogisticRegression six-NB precedent): NB 1 residuals by hand (regression; exact by-hand ==
+  `GradientBoostingRegressor` to 1e-16) → NB 2 the residual *was* the gradient (gradient descent in
+  function space) → NB 3 classification (log-loss, pseudo-residual y−p, the honest Newton leaf-step;
+  `loss='exponential'` = AdaBoost's objective — the unifying reveal) → NB 4 ν × depth × n_estimators and
+  the overfit-at-large-ν headline (the RF contrast) → NB 5 the estimator
+  `GradientBoosting{Regressor,Classifier}` & its parameters (subsample/OOB, early stopping, importances;
+  `HistGradientBoosting*` named) → NB 6 demanding case **California housing** (regression capstone,
+  visualization-first). The **general form** of boosting (AdaBoost = the exponential-loss special case);
+  the bridge ch 07 promised. Reviewer-gated on the live install (sklearn 1.9.0): **pedagogy PASS** (six
+  NBs earned; regression-first honest, a coherent journey not whiplash — spine = "the loss is the dial";
+  4 MINOR + 1 NIT noted for the NB-plan gates); **ml-expert REVISE → folded** — MAJOR: "reproduces
+  AdaBoost" softened to **objective-level only** (GB `loss='exponential'` shares AdaBoost's loss but
+  ~95% prediction agreement, identical test acc 0.9417, **not** bit-identical); MAJOR: NB 3 anchors
+  re-pinned (moons-0.20 is balanced → round-1 residuals **±0.5000** not ±0.507; the Newton-vs-mean
+  log-loss gap is **config-dependent** → ship the *direction* + the machine-precision Newton match, pin
+  the config & re-measure at build); MINORs: overfit qualified to **large ν** with the mechanistic RF
+  contrast, the **regression-tree-leaf=mean** rule re-laid in NB 1 as the hinge to NB 3's Newton leaf.
+  **First regression in the course** (pays off ch 00's promise; by-hand parity exact only in
+  regression). API verified: `loss='log_loss'` (`'deviance'` removed), **no `staged_score`** (use
+  `staged_predict`), `subsample<1`→`oob_improvement_`, early stopping OFF by default. Capstone
+  California housing (GBR ≈0.78 → early-stop ≈0.82 → HistGBR ≈0.84; RF ≈0.79; seed band). No `src/`
+  change expected (one conditional `viz.plot_regression_diagnostics` at NB-plan time → pytest 20→21).
+  `course_map.md` §08 refined 5→6. Next: open & plan NB 1.
+- **Chapter 08 (Gradient Boosting) opened.** Branch `chapter/08_GradientBoosting` created off `main`
+  (synced @ `b256580` after PR #7). Phase `chapter-plan`: drafting the chapter plan in plan mode per
+  `course_map.md` §08 and the per-method arc — boosting as **fitting the residuals** / gradient descent
+  in **function space** (by hand) → the **loss** and the role of **shrinkage** (learning rate) → **trees
+  as the base learner** (depth × learning_rate × n_estimators interplay) → **parameters & early
+  stopping** (the bias/variance trade-off) → a **demanding case** tuning a competitive tabular model
+  honestly. The **general form** of the boosting family: ch 07's AdaBoost is the exponential-loss
+  special case; gradient boosting generalises to **any differentiable loss** via gradient descent in
+  function space — the bridge stated at the close of ch 07. Built on ch 04's trees (the base learner)
+  and ch 07's sequential error-correction; the launchpad for ch 09 XGBoost / ch 10 LightGBM. The pending
+  `idle` STATE edit + `course_map.md` §07 → complete were folded into this opening commit (committed on
+  the chapter branch, not on protected `main`).
+- **CHAPTER 07 (AdaBoost) COMPLETE — merged to `main` via PR #7** (merge commit `b256580`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to
+  Ramdam17/QuickIntroToMachineLearning). Five notebooks: reweighting by hand · the additive model &
+  exponential loss · learning rate / rounds & overfitting behaviour · the estimator & its parameters · a
+  demanding case (spam). The course's first **boosting** method — sequential error-correction, the
+  contrast with ch 06's parallel bagging; the base learner of the boosting family (ch 08–10). **No
+  `src/` change** across the chapter (reused the `viz` helpers; pytest stays **20**). The two-reviewer
+  gate + Rémy's visual validation held on every notebook; every number re-measured on sklearn 1.9.0;
+  honest findings surfaced throughout (the SAMME-α/margin-form reconciliation; resistance ≠ immunity;
+  the spam noise reversal kept **internal**, not shipped as an RF-vs-AdaBoost law; importance not causal
+  / corpus artifacts). Three gate catches fixed: NB 2's reconciliation *reason*, NB 4's transposed
+  CV grid (BLOCK), NB 5's breast_cancer cross-reference (MAJOR). `main` synced locally to `b256580`,
+  green (pytest 20). STATE set to `idle` (pending edit — folds into the chapter-08 opening). Next:
+  chapter `08_GradientBoosting`.
 - **NB 5 (a demanding case: spam / spambase — the chapter capstone) BUILT & MERGED to
   `chapter/07_AdaBoost` — Rémy validated visually. CHAPTER 07 built end to end (5/5).** The
   **visualization-first capstone**: 26 cells (8 code / 18 md), **7 figures** (class balance;
