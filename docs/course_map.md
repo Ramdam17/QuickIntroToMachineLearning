@@ -93,12 +93,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 5. The estimator `GradientBoostingRegressor`/`Classifier` & its parameters: `loss` (`'deviance'` removed), `subsample` (stochastic GB + OOB), early stopping, importances; `HistGradientBoosting*` named as the fast modern default + the ch 09–10 bridge.
 6. Demanding case (visualization-first capstone): tuning a competitive model honestly — California housing (regression); R²/MAE in dollars, residual error analysis, RF/linear foil, HistGB teaser.
 
-## 09_XGBoost
-1. What XGBoost adds to gradient boosting: regularized objective, second-order view (intuition).
-2. Handling missing values and sparsity; the histogram split.
-3. Key knobs (eta, max_depth, subsample, colsample, lambda/alpha).
-4. Early stopping, evaluation sets, and overfitting control.
-5. Demanding case: a realistic dataset; tuning + honest comparison to the simpler boosters.
+## 09_XGBoost  *(plan approved — five notebooks; the regularized, second-order refinement of ch 08's engine)*
+1. The second-order view: gradients **and** curvature, by hand — `w* = −G/H` minimizes the 2nd-order loss; it unifies ch 08's two leaf rules (squared-error leaf=mean with h=1; log-loss Newton leaf with h=p(1−p)). Its own λ=0 XGBoost parity.
+2. The regularized objective: λ, γ, and the gain that decides splits, by hand — `Ω=γT+½λΣw²` → leaf `w*=−G/(H+λ)`, the structure-score gain (Chen & Guestrin eq. 6–7); the measured 2×/½ parity detail (`Cover`=ΣH).
+3. Sparsity-aware splits: a learned default direction for missing values, by hand (C&G §3.4) — try both directions, keep the higher gain; GB rejects NaN, HistGBR & XGBoost accept it.
+4. The estimator `XGBClassifier`/`XGBRegressor` & its parameters — owns the histogram method (`tree_method='hist'`, `max_bin`, speed measured); `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; honest tuning (the aggressive defaults overfit).
+5. Demanding case (visualization-first capstone): Adult/Census Income (informative missing + imbalance + native categoricals; Ames fallback) — early stopping, honest cross-method comparison naming native-NaN-vs-imputed as a deliberate axis, gain MDI vs permutation, the LightGBM teaser.
 
 ## 10_LightGBM
 1. Leaf-wise growth vs level-wise; why it is fast (intuition).

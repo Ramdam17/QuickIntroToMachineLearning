@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — opening; **chapter plan in progress** (phase `chapter-plan`). Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | — (none; chapter-planning stage). |
-| Phase | `chapter-plan` — drafting the chapter-09 (XGBoost) plan in plan mode. The ch-08 closure edit (`course_map` §08 heading → complete) folds into this chapter-09 opening commit on the `chapter/09_XGBoost` branch (`main` is PR-only — never committed directly). |
+| Phase | `chapter-plan-approved` — chapter-09 (XGBoost) plan **reviewed (both reviewers NO BLOCK) + approved by Rémy (2026-06-27)**, persisted to `docs/plans/chapter_09_XGBoost.md`; `course_map.md` §09 refined to the approved 5-NB decomposition. Env live: xgboost 3.2.0 / lightgbm 4.6.0 (`boosting` extra) + `brew install libomp` (OpenMP runtime, keg-only). |
 | Active branch | `chapter/09_XGBoost` (off `main` @ `4775fe2`). |
-| Active plan | — (none yet; drafting `docs/plans/chapter_09_XGBoost.md` in plan mode — persisted on Rémy's approval). |
-| Next concrete action | **Draft the chapter-09 (XGBoost) plan in plan mode** per `course_map.md` §09 + the per-method arc: the primordial concepts → **notebooks 1–3** (one concept each), **notebook 4** (the estimator & its parameters), **notebook 5** (the demanding case). Then **reviewer-gate the chapter plan** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), present via ExitPlanMode; on Rémy's validation → write `docs/plans/chapter_09_XGBoost.md` + commit (phase `chapter-plan-approved`), then plan NB 1. **Open decision for the plan:** the dependency surface — `xgboost` is in the `boosting` extra; confirm install/version live before pinning anchors. |
+| Active plan | `docs/plans/chapter_09_XGBoost.md` (**APPROVED** — 5 NBs: 2nd-order view · regularized objective+gain · sparsity-aware missing · the estimator+histogram · capstone). |
+| Next concrete action | **Open & plan NB 1 — the second-order view (gradients + curvature, by hand).** `git switch -c notebook/09_XGBoost__01_second_order_view` off `chapter/09_XGBoost`; set STATE `notebook-plan`; draft the cell-by-cell plan: re-lay the 2nd-order Taylor move by hand (`L(F+w)≈L(F)+g·w+½h·w²` → `w*=−g/h` → leaf `−G/H`); pin `g=∂L/∂F` conventions; recover ch 08's SE leaf=mean (h=1) **and** log-loss Newton leaf (h=p(1−p)) with **equal billing** (classification the climax); NB-1's **own λ=0 XGBoost parity** `w*=−G/H`. Measure NB-1 anchors live at plan time. ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__01_second_order_view.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,27 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 09 (XGBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_09_XGBoost.md`, this
+  commit). **FIVE notebooks** on the arc — NB 1 the **second-order view** (gradients + curvature by hand;
+  `w*=−G/H` unifies ch 08's SE leaf=mean and log-loss Newton leaf; its own λ=0 XGBoost parity) → NB 2 the
+  **regularized objective** (`Ω=γT+½λΣw²`; the structure-score gain C&G eq. 6–7; the **measured 2×/½**
+  parity detail + `Cover`=ΣH) → NB 3 **sparsity-aware splits** (a learned default direction for missing
+  values, by hand; GB rejects NaN / HistGBR & XGBoost accept) → NB 4 the **estimator & its parameters**
+  (owns the histogram method `tree_method='hist'`/`max_bin` measured; `reg_lambda`/`reg_alpha`/`gamma`,
+  `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; defaults
+  overfit) → NB 5 **demanding case** (Adult/Census visualization-first capstone; Ames fallback). The
+  **regularized, second-order refinement** of ch 08's engine; **XGBoost is not a new algorithm** and does
+  **not** reliably beat tuned GB/HistGBR on accuracy (edges = missing-handling/speed/regularization).
+  **Env fixed & measured live:** `uv sync --extra dev --extra boosting` (xgboost 3.2.0 / lightgbm 4.6.0)
+  + `brew install libomp` (macOS OpenMP runtime — xgboost could not load without it). Reviewer-gated on
+  the live install: **both reviewers NO BLOCK**, each independently re-running the by-hand parity (leaf
+  weights exact, gain 2× textbook, `Cover`=ΣH), the resolved defaults, NaN across GB/HistGBR/XGBoost,
+  native categoricals, the early-stopping API, and Adult's informative missingness. All MAJOR/MINOR folded
+  (NB 1 re-lays the Taylor move + own λ=0 parity + pinned signs + equal billing; NB 2 derives gain from
+  the structure score + kind ½ framing + honest `base_score`; NB 3 kept pure + pinned anchor; NB 4 owns
+  histogram-as-concept; NB 5 informative-missingness + native-vs-imputed axis + Adult/Ames verification).
+  `course_map.md` §09 refined to the 5-NB decomposition. **No `src/` change expected** (reuse `viz`;
+  trees via `trees_to_dataframe`; datasets via `fetch_openml`; pytest 20). Next: open & plan NB 1.
 - **Chapter 09 (XGBoost) opened.** Branch `chapter/09_XGBoost` created off `main` (synced @ `4775fe2`
   after PR #8). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §09 and
   the per-method arc — what XGBoost **adds** to gradient boosting (the regularized objective + the
