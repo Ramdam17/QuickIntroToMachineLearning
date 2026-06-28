@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `notebook-plan-approved` — NB 4 plan APPROVED by Rémy (2026-06-28) & persisted; building now. **Three fundamentals done (NB 1–3).** |
-| Active branch | `notebook/09_XGBoost__04_estimator_and_parameters` (off `chapter/09_XGBoost` @ `ad7c898`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: **APPROVED & persisted** (`docs/plans/09_XGBoost__04_estimator_and_parameters.md`). |
-| Next concrete action | **Build NB 4** from a `build_ch09_nb4.py` scratchpad script (~23 cells, 4 figures): the estimator `XGBClassifier` & its parameters. Re-measure every anchor at build (defaults overfit train→1.0/test 0.9444; max_depth peak@4; gamma/min_child_weight close the gap; eta×n_estimators staged; **hist vs exact ~5× no accuracy cost**; GridSearchCV→sealed test +0.003). nbconvert a scratchpad copy from project cwd (4 figures, exit 0) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark, pytest 20, STATE) → commit `feat(09_xgboost): notebook 04 — the estimator and its parameters` → `git merge --ff-only` into `chapter/09_XGBoost`. |
+| Phase | `notebook-commit` — NB 4 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers NO BLOCK; Rémy validated visually). **NB 1–4 done** (the three fundamentals + the estimator). Next: open & plan NB 5 (the capstone). |
+| Active branch | `chapter/09_XGBoost` (NB 1–4 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: to be drafted. |
+| Next concrete action | **Open & plan NB 5 — the demanding case (visualization-first capstone).** `git switch -c notebook/09_XGBoost__05_<title>` off `chapter/09_XGBoost`; STATE `notebook-plan`. Per the chapter plan: **Adult/Census Income** primary (`fetch_openml('adult', as_frame=True)`, ~48 842×14, informative missing in `occupation`/`workclass`/`native-country`, ~24% positive, native categoricals via `enable_categorical=True`) — **verify the missing-value lever actually moves PR-AUC vs imputation** at plan time; **Ames Housing fallback** if the numeric-missing lever is negligible. Arc: a measured missingness-vs-target panel → baselines (logistic/linear + shallow tree) → tuned XGBoost with **early stopping** (`eval_set`) → held-out acc/precision/recall/PR-AUC + threshold → error analysis → honest cross-method comparison (XGB vs GB/HistGBR/RF/linear, **native-NaN-vs-imputed as a named axis**, run XGB both ways) → gain-MDI vs permutation → LightGBM teaser. ~26 cells, ≥6 figures (capstone visualization-first). Measure all anchors live. After NB 5 ships: close the chapter via PR `chapter/09_XGBoost → main` (`--no-ff`). |
 
 ## Notes / blockers
 
@@ -38,6 +38,32 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `XGBClassifier` & its parameters — integrative; owns the histogram method)
+  BUILT & MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 25 cells (8 code / 17 md), 4 figures (the
+  depth dial — test peak@4, default@6 past it, leaves exploding; regularizers close the gap — gamma &
+  min_child_weight, leaves collapse + train/test converge; eta×n_estimators staged, log-x; the
+  histogram engine — binning idea + hist-vs-exact fit-time + test-acc bars). Each knob taught from the
+  concept that owns it (depth=interaction order; reg_lambda/gamma/min_child_weight=NB 2 + Cover=Σh;
+  subsample/colsample=stochasticity; eta×n_estimators=ch 08 NB 4). **Anchors reproduced exactly by
+  nbconvert:** defaults train **1.0000**/test 0.9444 (gap 0.0556, 2608 leaves); depth peak@4 (0.9467);
+  gamma leaves 2608→264 (gap→0.0165); reg_lambda **λ0 0.9456 / λ1 0.9444 / λ100 0.9433 / λ1000 0.9283**;
+  eta0.3 plateaus ~0.944 / eta0.03→0.9511@600 (no collapse); **histogram exact 4.2s/0.9646 vs hist
+  0.85s/0.9660 (~5×, no accuracy cost)**, max_bin64 0.70s; GridSearchCV→sealed **0.9472 vs default
+  0.9444 (+0.0028)**. Reviewers **both NO BLOCK** — pedagogy **PASS** (gap-free knob→concept spine; all
+  4 "Read the figure" match the pixels; +0.003 framed as the lesson; 5 MINOR/NIT optional); ml-expert
+  **REVISE→folded** one **MAJOR** (I had wrongly credited `lambda=1` for the respectable test accuracy
+  and the no-collapse — the counterfactual shows **λ=0 → 0.9456 > λ=1 → 0.9444**, so L2 at its default
+  doesn't lift accuracy; re-aimed: L2's job is to **shrink leaf weights** `−G/(H+λ)`, and the
+  non-collapse is because **accuracy is a coarse, bounded metric near the noise ceiling**, not L2) +
+  MINOR/NIT (added **λ=0 to the printed reg_lambda sweep** so the claim is self-evidently measured;
+  reach 3(a) reframed to the gap/magnitude question; histogram "+0.0014 = noise, bins mildly
+  regularize"; `auto→hist` gloss; Fig-3 names the amber middle eta + best-marker subtlety; Fig-4
+  tight_layout + shorter title). Guards: ruff clean, **0 banned** (JSON scan), output-free, hex clean,
+  nbconvert exit 0 (4 figures). **No `src/` change** (notebook-local matplotlib; `trees_to_dataframe`;
+  pytest 20). End-of-NB checklist done: rebuilt from `build_ch09_nb4.py` (kernel-drift guard), `llms.txt`
+  **73**, `course_map` §09 → NB 1–4 built, `common_errors` **+3 XGBoost rows** (defaults-overfit-but-near-
+  ceiling/depth-peak; L2-default-doesn't-lift-accuracy [the folded MAJOR]; hist-not-less-accurate).
+  **NB 1–4 done.** Next: open & plan NB 5 — the demanding case (visualization-first capstone).
 - **NB 4 (the estimator `XGBClassifier`/`XGBRegressor` & its parameters — the integrative NB; owns the
   histogram method) OPENED.** Branch `notebook/09_XGBoost__04_estimator_and_parameters` off
   `chapter/09_XGBoost` (@ `ad7c898`). Phase `notebook-plan`: drafting the cell-by-cell plan — recap the
