@@ -66,3 +66,5 @@
 - [notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb](notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb) — 04 — Shrinkage and the trees: ν, depth, and the number of trees — *Chapter 08 · Gradient Boosting · Notebook 4 of 6*
 - [notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb](notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb) — 05 — The estimator and its parameters — *Chapter 08 · Gradient Boosting · Notebook 5 of 6*
 - [notebooks/08_GradientBoosting/06_california_housing.ipynb](notebooks/08_GradientBoosting/06_california_housing.ipynb) — 06 — A demanding case: California housing — *Chapter 08 · Gradient Boosting · Notebook 6 of 6*
+## 09_XGBoost
+- [notebooks/09_XGBoost/01_second_order_view.ipynb](notebooks/09_XGBoost/01_second_order_view.ipynb) — 01 — The second-order view: gradients and curvature — *Chapter 09 · XGBoost · Notebook 1 of 5*

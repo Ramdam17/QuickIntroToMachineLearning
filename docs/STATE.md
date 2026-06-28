@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — **chapter plan APPROVED**; building **NB 1 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`01_second_order_view`** (NB 1 of 5) — the second-order view: gradients + curvature, by hand. |
-| Phase | `notebook-plan-approved` — NB-1 plan **approved by Rémy (2026-06-27)** & persisted (`docs/plans/09_XGBoost__01_second_order_view.md`). Anchors measured live; building next. |
-| Active branch | `notebook/09_XGBoost__01_second_order_view` (off `chapter/09_XGBoost` @ `9ebb1e1`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1: `docs/plans/09_XGBoost__01_second_order_view.md` (**APPROVED**). |
-| Next concrete action | **Build NB 1** via a `build_ch09_nb1.py` scratchpad script (~22 cells, 3 figs: the parabola; gradient-vs-2nd-order step; two-losses-one-rule). **Re-measure every anchor at build** (`w*=−G/H`; SE→mean `+0.29451/+0.75892/−0.68149/−0.22921`; log-loss→Newton `−2.0/+1.72881/−1.62590/+2.0`; λ=0 XGBoost parity `[−2.0,+2.0]`). Then nbconvert from project cwd (exit 0); two-reviewer gate (no BLOCK); Rémy visual; guards (banned-word JSON scan / hex / ruff / black / `gen_llms_txt`); commit `feat(09_xgboost): notebook 01 — the second-order view`; ff-merge `notebook → chapter`. |
+| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; **NB 1 of 5 shipped** (ff-merged to the chapter branch); building NB 2 next. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 1 `01_second_order_view` **merged to `chapter/09_XGBoost`**; NB 2 not yet opened). |
+| Phase | `notebook-commit` done — NB 1 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers PASS, Rémy validated visually). Next: open & plan NB 2. |
+| Active branch | `chapter/09_XGBoost` (NB 1 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1: `docs/plans/09_XGBoost__01_second_order_view.md` (**DONE**). NB 2: to be drafted. |
+| Next concrete action | **Open & plan NB 2 — the regularized objective** (λ, γ, and the gain that decides splits, by hand). `git switch -c notebook/09_XGBoost__02_regularized_objective` off `chapter/09_XGBoost`; STATE `notebook-plan`; measure anchors live (λ shrinks the leaf to `−G/(H+λ)`; the structure-score gain from C&G eq. 6–7; the **measured 2×/½** parity detail + `Cover=ΣH`; `base_score` honest). Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__02_regularized_objective.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the second-order view — gradients + curvature, by hand) BUILT & MERGED to
+  `chapter/09_XGBoost` — Rémy validated visually.** 22 cells (7 code / 15 md), 3 figures (the parabola +
+  its 2nd-order approximation; the curvature-blind vs Newton step; the two-losses-one-rule curvature
+  panel). One concept: approximate any loss to second order around F → optimal leaf `w*=−G/H`.
+  **Anchors (xgboost 3.2.0, reproduced exactly): the scalar step `w*=−g/h`; SE recovery on ch 08's sine
+  (F0=−0.1199; per leaf −G/H == mean residual == tree leaf, +0.29451/+0.75892/−0.68149/−0.22921);
+  log-loss recovery on ch 08's moons (F0=0; −G/H == Newton −2.0/+1.72881/−1.62590/+2.0); λ=0 XGBoost
+  parity [−2.0,+2.0].** The unification: ch 08's two leaf rules are **one** second-order rule (SE h=1 →
+  mean; log-loss h=p(1−p) → Newton); the loss only changes G,H. Reviewers **both PASS, no BLOCK** — each
+  re-derived the math and re-ran every anchor (incl. the `trees_to_dataframe` leaf-in-`Gain` quirk, the
+  ×4 rescale, all 3 rendered figures); folded their convergent MINOR polish (h>0 caveat + uniform
+  "twice-differentiable"; recap now says *why* the mean fell short; the `−g=y−p` ↔ "mean residual" tie).
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  ruff clean; `llms.txt` **70**; `common_errors` +2 XGBoost rows (two-leaf-rules-are-one-second-order-
+  rule; gradient=direction / curvature=step-length). **No `src/` change** (notebook-local matplotlib;
+  reused `viz`; XGBoost via `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb1.py` right
+  before `git add` (kernel-drift guard). Next: open & plan NB 2 (the regularized objective).
 - **NB 1 (the second-order view — gradients + curvature, by hand) OPENED.** Branch
   `notebook/09_XGBoost__01_second_order_view` off `chapter/09_XGBoost` (@ `9ebb1e1`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — one concept, **approximate any loss to second order
