@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter opened off `main` (@ `fe295aa` after PR #9); phase `chapter-plan` (drafting the chapter plan in plan mode). Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | — (chapter 10 planning; no notebook opened yet). |
-| Phase | `chapter-plan` — chapter 10 (LightGBM) opened; drafting the chapter plan in plan mode (measuring the live LightGBM 4.6.0 API/behaviour before pinning anchors). |
+| Phase | `chapter-plan-approved` — chapter 10 (LightGBM) plan **APPROVED by Rémy (2026-06-28) & persisted** (`docs/plans/chapter_10_LightGBM.md`); both gate reviewers **REVISE → no BLOCK** (folded). Ready to plan NB 1. |
 | Active branch | `chapter/10_LightGBM` (off `main` @ `fe295aa`). |
-| Active plan | drafting `docs/plans/chapter_10_LightGBM.md` (chapter-plan, plan mode). |
-| Next concrete action | **Draft the chapter-10 (LightGBM) plan in plan mode** per `course_map.md` §10 and the per-method arc: (1) primordial concepts across NBs 1–3 — **leaf-wise growth vs level-wise** (the XGBoost contrast, NB 4 of ch 09 named `grow_policy=lossguide`); histogram binning + **`num_leaves`** as the central dial; categorical handling & the overfitting traps; (2) NB 4 the estimator `LGBMClassifier`/`Regressor` & its parameters (`num_leaves`/`max_depth`/`min_child_samples`, `learning_rate`×`n_estimators`, `feature_fraction`/`bagging_fraction`, early stopping); (3) NB 5 demanding case on larger tabular data (speed/accuracy measured vs XGBoost). **Measure LightGBM live** (num_leaves default, leaf-wise behaviour, categorical & early-stopping API, a speed/accuracy point vs XGBoost). Cross-check/refine `course_map` §10. **Two-reviewer gate on the chapter plan** (no BLOCK) → ExitPlanMode for Rémy → on approval write `docs/plans/chapter_10_LightGBM.md` + commit (phase `chapter-plan-approved`), then open & plan NB 1. (`libomp` + `boosting` extra installed.) |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (**APPROVED**). NB 1–5: to be drafted one at a time. |
+| Next concrete action | **Open & plan NB 1 — leaf-wise (best-first) growth, by hand.** `git switch -c notebook/10_LightGBM__01_leaf_wise_growth` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: grow the max-loss-reduction leaf first (vs level-wise); the learner met it *named* twice (ch 08 NB 5 HistGBR `max_leaf_nodes`, ch 09 NB 4 `lossguide`) — here built by hand on a toy, matched to LightGBM's first tree; lower **training** loss per leaf, lopsided (qualitative; the depth-vs-num_leaves sweep is NB 2). Measure anchors live; draft ~20 cells / ~3 figures per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan); on approval persist `docs/plans/10_LightGBM__01_*.md` + build. |
 
 ## Notes / blockers
 
@@ -47,7 +47,15 @@
   `libomp`); confirm the live API/behaviour before pinning anchors. Chapter plan is reviewer-gated (both
   reviewers, no BLOCK) before Rémy approves. The pending ch-09-close edits (STATE → idle + `course_map`
   §09 → "merged via PR #9") are folded into this opening commit (committed on the chapter branch, not on
-  protected `main`). Next: draft the plan → reviewer gate → ExitPlanMode for Rémy.
+  protected `main`). **Plan APPROVED by Rémy (via ExitPlanMode + the two-reviewer gate, 2026-06-28) &
+  persisted** (`docs/plans/chapter_10_LightGBM.md`); both reviewers **REVISE → no BLOCK**, folded: the
+  speed thesis → **matched-capacity both directions** (the winner flips with the convention; not "XGBoost
+  faster"); GOSS → **statistical efficiency** (wall-clock regime-dependent, ~flat on dense data, measured);
+  the **HistGBR-is-already-leaf-wise gift** (it defaults `max_leaf_nodes=31` = LightGBM's `num_leaves=31`)
+  → used in the spine + as NB 5's matched sibling; NB 3 = "one built (GOSS) + one named (EFB)". Live
+  anchors measured (num_leaves 31 / max_depth −1; num_leaves 127 → depth 15; GOSS API; categorical;
+  early-stopping callbacks; speed/accuracy). `course_map` §10 refined to the 5-NB decomposition. Next:
+  open & plan NB 1 (leaf-wise growth, by hand).
 - **CHAPTER 09 (XGBoost) COMPLETE — merged to `main` via PR #9** (merge commit `fe295aa`,
   `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
   **Five notebooks:** the second-order view (`w*=−G/H` unifies ch 08's two leaf rules) · the regularized
