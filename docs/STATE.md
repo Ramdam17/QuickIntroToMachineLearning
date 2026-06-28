@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `chapter-merge` — NB 5 **committed & ff-merged**; **CHAPTER 09 COMPLETE on the branch (5/5)** (both reviewers NO BLOCK on every NB; Rémy validated each visually). Next: close via PR `chapter/09_XGBoost → main` (`--no-ff`). |
-| Active branch | `chapter/09_XGBoost` (NB 1–5 ff-merged in). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). **NB 1–5: DONE.** Chapter complete on the branch; PR to `main` pending. |
-| Next concrete action | **Close chapter 09 via PR.** `git push -u origin chapter/09_XGBoost`; `gh pr create --base main --head chapter/09_XGBoost` (title `feat(09_xgboost): complete chapter — XGBoost`); merge the PR `--no-ff` (preserve per-notebook history); `git switch main && git pull`; update `course_map` §09 → "merged to main via PR #N"; STATE → `idle`, next = **open chapter 10 (LightGBM)**. (Reminder: `main` is PR-only — global pre-push hook; remote Ramdam17/QuickIntroToMachineLearning.) |
+| Current chapter | **`10_LightGBM`** — chapter opened off `main` (@ `fe295aa` after PR #9); phase `chapter-plan` (drafting the chapter plan in plan mode). Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (chapter 10 planning; no notebook opened yet). |
+| Phase | `chapter-plan` — chapter 10 (LightGBM) opened; drafting the chapter plan in plan mode (measuring the live LightGBM 4.6.0 API/behaviour before pinning anchors). |
+| Active branch | `chapter/10_LightGBM` (off `main` @ `fe295aa`). |
+| Active plan | drafting `docs/plans/chapter_10_LightGBM.md` (chapter-plan, plan mode). |
+| Next concrete action | **Draft the chapter-10 (LightGBM) plan in plan mode** per `course_map.md` §10 and the per-method arc: (1) primordial concepts across NBs 1–3 — **leaf-wise growth vs level-wise** (the XGBoost contrast, NB 4 of ch 09 named `grow_policy=lossguide`); histogram binning + **`num_leaves`** as the central dial; categorical handling & the overfitting traps; (2) NB 4 the estimator `LGBMClassifier`/`Regressor` & its parameters (`num_leaves`/`max_depth`/`min_child_samples`, `learning_rate`×`n_estimators`, `feature_fraction`/`bagging_fraction`, early stopping); (3) NB 5 demanding case on larger tabular data (speed/accuracy measured vs XGBoost). **Measure LightGBM live** (num_leaves default, leaf-wise behaviour, categorical & early-stopping API, a speed/accuracy point vs XGBoost). Cross-check/refine `course_map` §10. **Two-reviewer gate on the chapter plan** (no BLOCK) → ExitPlanMode for Rémy → on approval write `docs/plans/chapter_10_LightGBM.md` + commit (phase `chapter-plan-approved`), then open & plan NB 1. (`libomp` + `boosting` extra installed.) |
 
 ## Notes / blockers
 
@@ -38,6 +38,34 @@
 
 ## Progress log (most recent first)
 
+- **Chapter 10 (LightGBM) opened.** Branch `chapter/10_LightGBM` created off `main` (synced @ `fe295aa`
+  after PR #9). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §10 and
+  the per-method arc — **leaf-wise vs level-wise growth** (the XGBoost contrast; ch 09 NB 4 named
+  `grow_policy=lossguide` as this bridge); histogram binning + **`num_leaves`** as the central dial;
+  categorical handling & the overfitting traps; tuning / early stopping vs XGBoost; a demanding case on
+  larger tabular data (speed/accuracy measured). LightGBM 4.6.0 lives in the `boosting` extra (+
+  `libomp`); confirm the live API/behaviour before pinning anchors. Chapter plan is reviewer-gated (both
+  reviewers, no BLOCK) before Rémy approves. The pending ch-09-close edits (STATE → idle + `course_map`
+  §09 → "merged via PR #9") are folded into this opening commit (committed on the chapter branch, not on
+  protected `main`). Next: draft the plan → reviewer gate → ExitPlanMode for Rémy.
+- **CHAPTER 09 (XGBoost) COMPLETE — merged to `main` via PR #9** (merge commit `fe295aa`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  **Five notebooks:** the second-order view (`w*=−G/H` unifies ch 08's two leaf rules) · the regularized
+  objective (λ/γ, the structure-score gain, `Cover=Σh`, the measured 2×/½ convention) · sparsity-aware
+  splits (a learned default direction for NaN) · the estimator & its parameters (each knob from its
+  concept; **owns the histogram method**, ~5× faster at no accuracy cost; defaults overfit → honest
+  tuning) · the Census-income capstone (8 figures: imbalance/PR-AUC, the **honest native-vs-imputed
+  null**, cross-method, early stopping, validation-chosen threshold, MDI-vs-permutation, ethics /
+  do-not-deploy). The **regularized, second-order, engineered refinement** of ch 08's engine — **not a
+  new algorithm**, and **no universal best** (edges = speed / native missing+categorical handling /
+  regularization, not accuracy). Two-reviewer gate (no BLOCK) + Rémy visual on every NB; every number
+  measured live (xgboost 3.2.0 / lightgbm 4.6.0), seed-pinned; honest findings throughout (the 2×/½ gain
+  convention; defaults memorize but L2-on is about calibration not accuracy; native-NaN ≈ imputed when
+  missingness is redundant; convenience ≠ power; MDI-vs-permutation divergence). **No `src/` change**
+  across the chapter (reused `viz`; `trees_to_dataframe`; `fetch_openml`; sklearn Pipelines) — pytest
+  stays **20**. `main` synced @ `fe295aa`, ruff green, pytest 20, `llms.txt` 74. Env: `boosting` extra +
+  `libomp`. STATE → `idle` (this edit + `course_map` §09 → "merged via PR #9" pending on `main`, fold
+  into the ch-10 opening). Next: open chapter 10 (LightGBM).
 - **NB 5 (the demanding case — Adult/Census Income capstone) BUILT & MERGED to `chapter/09_XGBoost` —
   Rémy validated visually. CHAPTER 09 COMPLETE on the branch (5/5).** 30 cells (9 code / 21 md), **8
   figures** (class balance; missingness-vs-target;
