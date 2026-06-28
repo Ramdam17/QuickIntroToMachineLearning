@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`02_regularized_objective`** (NB 2 of 5) — the regularized objective: λ, γ, and the gain that decides splits, by hand. |
-| Phase | `notebook-plan-approved` — NB-2 plan **approved by Rémy (2026-06-27)** & persisted (`docs/plans/09_XGBoost__02_regularized_objective.md`). Anchors measured live; building next. |
-| Active branch | `notebook/09_XGBoost__02_regularized_objective` (off `chapter/09_XGBoost` @ `113ebb3`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1: `docs/plans/09_XGBoost__01_second_order_view.md` (DONE). NB 2: drafting → `docs/plans/09_XGBoost__02_regularized_objective.md`. |
-| Next concrete action | **Build NB 2** via a `build_ch09_nb2.py` scratchpad script (~20 cells, 3 figs: the regularized parabola; the gain + γ threshold; by-hand vs XGBoost). **Re-measure every anchor at build** (λ-shrinkage ±2.0/±1.5/±0.46; ½-gain 9 vs XGBoost 18; γ prune at >18; `Cover=ΣH`; `base_score` learned). Then nbconvert from project cwd (exit 0); two-reviewer gate (no BLOCK); Rémy visual; guards (banned-word JSON scan / hex / ruff / `gen_llms_txt`); commit `feat(09_xgboost): notebook 02 — the regularized objective`; ff-merge `notebook → chapter`. |
+| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–2 of 5 shipped; **building NB 3 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 2 `02_regularized_objective` **merged to `chapter/09_XGBoost`**; NB 3 not yet opened). |
+| Phase | `notebook-commit` done — NB 2 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers PASS, Rémy validated visually). Next: open & plan NB 3. |
+| Active branch | `chapter/09_XGBoost` (NB 1–2 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–2: `docs/plans/09_XGBoost__0{1,2}_*.md` (DONE). NB 3: to be drafted. |
+| Next concrete action | **Open & plan NB 3 — sparsity-aware splits** (a learned default direction for missing values, by hand). `git switch -c notebook/09_XGBoost__03_sparsity_aware_splits` off `chapter/09_XGBoost`; STATE `notebook-plan`; measure anchors live (a small NaN-bearing toy → XGBoost's chosen default direction & split via `trees_to_dataframe`; confirm plain `GradientBoosting*` **rejects** NaN, `HistGradientBoosting*` & XGBoost **accept**). Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__03_sparsity_aware_splits.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,24 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (the regularized objective — λ, γ, and the gain that decides splits, by hand) BUILT & MERGED
+  to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (5 code / 14 md), 3 figures (the
+  regularized parabola λ∈{0,1,10}; the gain + γ threshold with a **measured** split/prune sweep; by-hand
+  vs XGBoost parity). One concept: complexity priced **inside** the objective `Ω = γT + ½λΣw²`.
+  **Anchors (xgboost 3.2.0, reproduced exactly): λ shrinks the leaf `w*=−G/(H+λ)` (+2.0/+1.5/+1.0/
+  +0.4615/+0.0583); the structure-score split gain (C&G eq. 6→7) by-hand ½-gain = 9; XGBoost reports
+  Gain = 18 (= 2×, the ½ dropped) and prunes at γ>18 — so γ is in no-½ units; leaf weights [−1.5,+1.5]
+  == by-hand; Cover = ΣH (3/leaf); base_score learned = mean(y) when unpinned.** Reviewers **both PASS,
+  no BLOCK** — ml-expert re-derived the gain sign and ran a fine γ-sweep (kept 18.00, pruned 18.01),
+  confirming the no-½-units claim across several toys; pedagogy caught a real **Fig-1 colour collision**
+  (`model`==`class_d` share a hex) and confirmed the one-concept build + the kind 2×/½ framing. Folded:
+  Fig-1 colours → blue/amber/coral; the ½'s origin shown by the back-substitution cancellation (cell 8);
+  γ pre-pruning softened + an NB-4 post-prune forward-note; "clearly"→"genuinely"; axis "2×9=18".
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  ruff clean; `llms.txt` **71**; `common_errors` +3 XGBoost rows (regularizer-prices-complexity-inside;
+  the gain sign-trap; the 2×/½-and-γ-units detail). **No `src/` change** (notebook-local matplotlib;
+  `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb2.py` right before `git add`
+  (kernel-drift guard). Next: open & plan NB 3 (sparsity-aware splits).
 - **NB 2 (the regularized objective — λ, γ, and the gain that decides splits, by hand) OPENED.** Branch
   `notebook/09_XGBoost__02_regularized_objective` off `chapter/09_XGBoost` (@ `113ebb3`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — one concept, put complexity **into the objective**
