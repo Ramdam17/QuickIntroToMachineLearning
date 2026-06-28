@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 3 `03_sparsity_aware_splits` **merged to `chapter/09_XGBoost`**; NB 4 not yet opened). |
-| Phase | `notebook-commit` done — NB 3 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers PASS, Rémy validated visually). **Three fundamentals done (NB 1–3).** Next: open & plan NB 4. |
-| Active branch | `chapter/09_XGBoost` (NB 1–3 ff-merged in). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: to be drafted. |
-| Next concrete action | **Open & plan NB 4 — the estimator `XGBClassifier`/`XGBRegressor` & its parameters** (the integrative NB; it **owns the histogram method**). `git switch -c notebook/09_XGBoost__04_estimator_and_parameters` off `chapter/09_XGBoost`; STATE `notebook-plan`; measure anchors live (histogram `tree_method='hist'` vs `'exact'` speed; `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; the aggressive defaults overfit → GridSearch on train → one sealed test). Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy; on approval persist `docs/plans/09_XGBoost__04_estimator_and_parameters.md` + build. |
+| Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
+| Phase | `notebook-plan` — NB 4 branch opened; drafting the cell-by-cell plan in plan mode (anchors being measured live). **Three fundamentals done (NB 1–3).** |
+| Active branch | `notebook/09_XGBoost__04_estimator_and_parameters` (off `chapter/09_XGBoost` @ `ad7c898`). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: **drafting** (cell-by-cell, plan mode). |
+| Next concrete action | **Draft NB 4's cell-by-cell plan** (the estimator `XGBClassifier`/`XGBRegressor` & its parameters — the integrative NB; it **owns the histogram method**). Measure anchors live (hist vs `exact` timing + accuracy; `reg_lambda`/`reg_alpha`/`gamma`; `max_depth`/`min_child_weight`/`grow_policy`; `subsample`/`colsample_*`; eta×n_estimators; the aggressive defaults overfit → `GridSearchCV` on train → one sealed test, tuned vs default). ~20 cells per `docs/notebook_template.md`, 3–4 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/09_XGBoost__04_estimator_and_parameters.md` (phase `notebook-plan-approved`) + commit, then build from `build_ch09_nb4.py`. |
 
 ## Notes / blockers
 
@@ -38,6 +38,22 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `XGBClassifier`/`XGBRegressor` & its parameters — the integrative NB; owns the
+  histogram method) OPENED.** Branch `notebook/09_XGBoost__04_estimator_and_parameters` off
+  `chapter/09_XGBoost` (@ `ad7c898`). Phase `notebook-plan`: drafting the cell-by-cell plan — recap the
+  NB-2 by-hand parity, then the **one genuinely new mechanism**, **histogram / approximate split
+  finding** (bin continuous features into ≤`max_bin` buckets → the threshold scan goes from every
+  distinct value to ≤256 bin edges; `tree_method='hist'` is the 3.x default; **measure** hist-vs-`exact`
+  speed + the negligible accuracy cost; the weighted-quantile sketch C&G §3.2–3.3 named & deferred to
+  ch 10). Then the knobs grouped by the concept that owns them — objective regularizers
+  `reg_lambda`/`reg_alpha`/`gamma` (NB 2), tree complexity `max_depth`(6)/`min_child_weight`(a Cover
+  floor, NB 1/2)/`grow_policy` (depthwise vs lossguide — the ch-10 bridge, named-not-used), stochasticity
+  `subsample` (Friedman 2002)/`colsample_*` (new vs sklearn GB), `eta`(0.3)×`n_estimators` (the ch 08
+  NB 4 trade-off re-felt). Honest spine: the **aggressive defaults overfit** (eta 0.3 + depth 6) → show
+  it → `GridSearchCV` on train → one sealed test (tuned vs default); `feature_importances_` gain-MDI
+  caveat (honest reading deferred to NB 5). Anchors being measured at plan time (xgboost 3.2.0). No
+  `src/` change expected (reuse `viz`; pytest 20). Next: draft the plan → ExitPlanMode for Rémy → on
+  approval persist + build.
 - **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) BUILT &
   MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (6 code / 13 md), 3 figures (the
   data + the missing rows in a side band; the gain-vs-threshold search, both directions; by-hand vs
