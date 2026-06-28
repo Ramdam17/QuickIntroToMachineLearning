@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–2 of 5 shipped** (on `chapter/10_LightGBM`); next NB 3 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | **`03_categorical_split`** — branch opened off `chapter/10_LightGBM` (@ `c08b6c0`); phase `notebook-plan` (measuring categorical-split parity anchors live, then drafting the cell-by-cell plan). |
-| Phase | `notebook-plan-approved` (NB 3 = the optimal categorical split, by hand — Fisher 1958) — **plan APPROVED by Rémy & persisted** (`docs/plans/10_LightGBM__03_categorical_split.md`); building now. Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 categorical split (building)** · NB 4 estimator · NB 5 capstone. |
-| Active branch | `notebook/10_LightGBM__03_categorical_split` (off `chapter/10_LightGBM` @ `c08b6c0`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. NB 2: DONE (`docs/plans/10_LightGBM__02_goss_efb.md`). **NB 3 (optimal categorical split): to be drafted.** |
-| Next concrete action | **Open & plan NB 3 — the optimal categorical split, by hand (Fisher 1958).** `git switch -c notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: partitioning K categories into two groups is `2^(K−1)−1` ways (exponential); Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only `K−1` candidates (linear). Build by hand on a binary toy and **match LightGBM exactly** (de-risked: LEFT {1,3,5} ≡ LightGBM {0,2,4}). **Build-time pins:** `min_data_per_group=1` (default 100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0` — OR ≥100 rows/category. Teaching note: with `h=1`, `G/H` = per-category target mean (give `G/H` as the general key). Keep toy binary. ~3 figures (categories by mean/gradient; sorted order + the `K−1` contiguous candidates; by-hand == LightGBM). Measure anchors live; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__03_categorical_split.md` + build. |
+| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–3 of 5 shipped** (on `chapter/10_LightGBM`); next NB 4 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (**NB 3 `03_categorical_split` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; NB 4 not yet opened). |
+| Phase | NB 3 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · NB 3 categorical split (shipped) · **NB 4 estimator & parameters (next)** · NB 5 capstone. Next: open & plan NB 4. |
+| Active branch | `chapter/10_LightGBM` (NB 1 + NB 2 + NB 3 ff-merged). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1–3: DONE. **NB 4 (estimator `LGBMClassifier`/`LGBMRegressor` & its parameters): to be drafted.** |
+| Next concrete action | **Open & plan NB 4 — the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters** (chapter plan §NB 4). `git switch -c notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM`; STATE `notebook-plan`. Integrative: **`num_leaves`/`min_child_samples` — the leaf-wise capacity dial + its floor (this is where `num_leaves` is *tuned*) — close NB 1's lopsided→overfit loop here** (measured: single tree test peaks ~64 leaves then falls, train→1.0, depth→21; `num_leaves` is a *cap*, built 107 of 127; ensemble robust, test plateaus ~0.92–0.927; `min_child_samples=1`→0.858 / 20→0.927 / 300→0.906; rule `num_leaves < 2^max_depth`). Also `learning_rate`×`n_estimators`; `feature_fraction`/`bagging_fraction`(+`bagging_freq`); `reg_lambda`/`reg_alpha` (off by default — the posture contrast with XGBoost); `data_sample_strategy='goss'` (NB 2); native categorical (NB 3); early stopping via `callbacks=[lgb.early_stopping]`; importances (`'split'` vs `'gain'`, MDI caveat). Honest tuning → one sealed test (`GridSearchCV` with `verbose` so folds show — never `verbose=-1`). ~3–4 figures (num_leaves × min_child_samples dial+floor; gbdt vs goss; default-vs-tuned). Re-measure num_leaves anchors live (old `measure_ch10_nb2.py` had them); ExitPlanMode for Rémy; persist `docs/plans/10_LightGBM__04_estimator_and_parameters.md` + build. |
 
 ## Notes / blockers
 
@@ -58,7 +58,27 @@
   sorted [1,3,5,0,2,4]; the `K−1=5` contiguous cuts (gains 448/718/**809**/721/450) → best LEFT={1,3,5};
   **brute-force all 31 (`2^(K−1)−1`) → global best {0,2,4}, same gain 808.78 = the identical partition**
   (contiguous == global, 6.2× fewer to check); **LightGBM single tree [[0,2,4],[1,3,5]] == by-hand**.
-  Building now from `build_ch10_nb3.py`. Next: build → guards → two-reviewer gate.
+  **BUILT (22 cells: 8 code / 14 md, 3 figures) & MERGED to `chapter/10_LightGBM` — Rémy validated
+  visually.** Figures: per-category `G/H` bars (scrambled index order); gain vs the `K−1` contiguous cuts
+  (single peak at cut-3, annotated `K−1=5` vs `2^(K−1)−1=31`); LightGBM's two leaf values coloured by the
+  by-hand side (== the partition). **Anchors reproduced by nbconvert (lightgbm 4.6.0, SEED=0):** F0 2.499;
+  `G/H` sorted [1,3,5,0,2,4]; contiguous gains 448.08/718.45/**808.78**/720.59/449.99 → best {1,3,5};
+  brute-force all 31 → global {0,2,4} gain 808.78 (**contiguous == global**); K=6/10/30 → 5/9/29 vs
+  31/511/536,870,911; LightGBM [[0,2,4],[1,3,5]] == by-hand (identical). **Reviewers both PASS, no BLOCK**
+  — ml-expert verified `G/H`≡Fisher between-groups (Δ 4.5e-13), contiguity on 400/400 configs (incl. λ>0),
+  the multiclass break by counterexample (~37% — the caveat is earned), parity method valid; pedagogy
+  verified the 3 Read-the-figure match the pixels, the brute-force honesty check lands, 0 banned, charter
+  clean, exercises tiered. **Folds applied (markdown):** convexity argument tightened (sum of convex
+  functions → max at a contiguous/extreme partition; + a pointer to the brute-force check) and **Fisher's
+  exact scope** stated (least-squares / sort-by-mean; the convex generalization = CART/LightGBM); cell-14
+  partition orientation aligned with the figure + "no loss of optimality" conditioned; a sign-chain
+  reminder (`g=F₀−y` → high mean = negative `G/H` → `−G/H` positive) in Fig-3 read; dropped "you have
+  seen". Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (3 figures); LightGBM
+  banner + the `min_data_in_leaf`/`min_sum_hessian_in_leaf` override warnings left visible. **No `src/`
+  change** (notebook-local numpy/`itertools` + `LGBMRegressor`; pytest **20**). End-of-NB checklist done:
+  rebuilt from `build_ch10_nb3.py` (kernel-drift guard), `llms.txt` **78**, `course_map` §10 → NB 1–3
+  built, `common_errors` **+3 categorical rows** (native-not-one-hot; `2^(K−1)−1`→`K−1` Fisher;
+  native-optimal-only-convex+1D / guards). Next: open & plan NB 4 (the estimator & its parameters).
 - **NB 2 (GOSS built + EFB named — how LightGBM gets light) OPENED.** Branch
   `notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM` (@ `fed6560`). Phase `notebook-plan`:
   measuring GOSS anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan §NB 2):** one
