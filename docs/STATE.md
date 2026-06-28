@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–2 of 5 shipped; **building NB 3 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **`03_sparsity_aware_splits`** (NB 3 of 5) — sparsity-aware splits: a learned default direction for missing values, by hand. |
-| Phase | `notebook-plan` — drafting the NB-3 cell-by-cell plan in plan mode (anchors measured live). No reviewer gate at this stage — Rémy validates the plan alone via ExitPlanMode; reviewers return on the built notebook. |
+| Phase | `notebook-plan-approved` — NB-3 plan **approved by Rémy (2026-06-27)** & persisted (`docs/plans/09_XGBoost__03_sparsity_aware_splits.md`). Anchors measured live; building next. |
 | Active branch | `notebook/09_XGBoost__03_sparsity_aware_splits` (off `chapter/09_XGBoost` @ `307983f`). |
 | Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–2: DONE. NB 3: drafting → `docs/plans/09_XGBoost__03_sparsity_aware_splits.md`. |
-| Next concrete action | **Draft & validate the NB-3 plan** (sparsity-aware splits). Measure anchors live: a NaN-bearing toy where missing rows carry signal → by-hand "try both default directions, keep the higher gain" **==** XGBoost's learned default direction (the `Missing` column of `trees_to_dataframe`); confirm plain `GradientBoosting*` **rejects** NaN while `HistGradientBoosting*` & XGBoost **accept** it. Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__03_sparsity_aware_splits.md` + build. |
+| Next concrete action | **Build NB 3** via a `build_ch09_nb3.py` scratchpad script (~19 cells, 3 figs: the data + the question; the gain-vs-threshold search; by-hand vs XGBoost). **Re-measure every anchor at build** (by-hand best `x<5, missing→right, 2.949`; XGBoost `Missing`→right, Gain `5.8985 = 2×`; GB rejects NaN, HistGBR & XGB accept). Then nbconvert from project cwd (exit 0); two-reviewer gate (no BLOCK); Rémy visual; guards (banned-word JSON scan / hex / ruff / `gen_llms_txt`); commit `feat(09_xgboost): notebook 03 — sparsity-aware splits`; ff-merge `notebook → chapter`. |
 
 ## Notes / blockers
 
@@ -48,7 +48,10 @@
   column in `trees_to_dataframe`. Contrast (measured): plain `GradientBoosting*` **rejects** NaN;
   `HistGradientBoosting*` (ch 08) & XGBoost **accept** it (XGBoost did it first, 2016). Anchors measured
   at plan time (xgboost 3.2.0). No `src/` change expected (notebook-local matplotlib; `trees_to_dataframe`;
-  pytest 20). Next: draft the plan → ExitPlanMode for Rémy → on approval persist + build.
+  pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-27) & persisted**
+  (`docs/plans/09_XGBoost__03_sparsity_aware_splits.md`); ~19 cells / 3 figures; anchors measured live
+  (by-hand best `x<5, missing→right, 2.949`; XGBoost `Missing`→right, Gain `5.8985 = 2×`; GB rejects NaN,
+  HistGBR & XGB accept). Building now from a `build_ch09_nb3.py` scratchpad script.
 - **NB 2 (the regularized objective — λ, γ, and the gain that decides splits, by hand) BUILT & MERGED
   to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (5 code / 14 md), 3 figures (the
   regularized parabola λ∈{0,1,10}; the gain + γ threshold with a **measured** split/prune sweep; by-hand
