@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 1 `01_leaf_wise_growth` merged + forward-refs repointed; **NB 2 = GOSS+EFB** not yet opened). |
-| Phase | `chapter-plan` done (RESTRUCTURED & re-gated, no BLOCK) — chapter 10 arc rebalanced: NB 1 leaf-wise (shipped, refs fixed) · **NB 2 GOSS+EFB** · **NB 3 the optimal categorical split (NEW, built)** · NB 4 estimator (num_leaves/min_child_samples tuned here) · NB 5 capstone. `num_leaves` standalone NB dropped. Next: open & plan NB 2. |
-| Active branch | `chapter/10_LightGBM` (NB 1 ff-merged + restructure commit). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + **RESTRUCTURED 2026-06-28**, re-gated no BLOCK). NB 1: DONE. NB 2 (GOSS+EFB): to be drafted. |
-| Next concrete action | **Open & plan NB 2 — GOSS (built) + EFB (named).** `git switch -c notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM`; STATE `notebook-plan`. One built concept (GOSS) + one named (EFB): rank rows by `|gradient|`, keep top `a`, sample `b` of the rest, **up-weight by `(1−a)/b`** so the row-sum gain (ch 09 NB 2) stays ~unbiased; show **GOSS ≈ full-data quality & beats a uniform subsample at matched fraction** (its real claim); wall-clock benefit regime-dependent (~flat on dense, measured), stated honestly. EFB named (approximately-exclusive features, conflict rate). Measure anchors live; draft ~20 cells / ~3 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_goss_efb.md` + build. |
+| Current notebook | **`02_goss_efb`** — branch opened off `chapter/10_LightGBM` (@ `fed6560`); phase `notebook-plan` (measuring GOSS anchors live, then drafting the cell-by-cell plan). |
+| Phase | `notebook-plan` (NB 2 = GOSS built + EFB named). Chapter 10 arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB (planning)** · NB 3 optimal categorical split (built) · NB 4 estimator · NB 5 capstone. |
+| Active branch | `notebook/10_LightGBM__02_goss_efb` (off `chapter/10_LightGBM` @ `fed6560`). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. **NB 2 (GOSS+EFB): being drafted** (measuring anchors live). |
+| Next concrete action | **Draft & validate the NB 2 plan, then build.** One built concept (GOSS) + one named (EFB): name the ch 09 NB 2 anchor (split-gain is a **row-sum** of `g,h`); rank rows by `|gradient|`, keep top `a`, sample `b` of the rest, **up-weight by `(1−a)/b`** so the row-sums `G,H` stay ~unbiased (Ke et al. 2017 §3.2). Show (a) by hand: GOSS gain-estimate **lower-variance** than uniform at matched fraction (large-`|g|` rows kept exactly → zero variance), both ~centred on the full-data gain; (b) LightGBM ensemble: GOSS ≈ full & **> uniform subsample at matched fraction** on held-out — its real claim. Wall-clock benefit **regime-dependent (~flat on dense moderate data, measured)**, stated honestly. EFB named (approximately-exclusive sparse features, tolerates a conflict rate — Ke §4). Measure anchors live (scratchpad `measure_ch10_nb2_goss.py`); draft ~20 cells / 3–4 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_goss_efb.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (GOSS built + EFB named — how LightGBM gets light) OPENED.** Branch
+  `notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM` (@ `fed6560`). Phase `notebook-plan`:
+  measuring GOSS anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan §NB 2):** one
+  built concept — **GOSS** (Gradient-based One-Side Sampling, Ke et al. 2017 §3.2) — + one named companion
+  — **EFB** (Exclusive Feature Bundling, §4). Name the ch 09 NB 2 anchor: the split-gain is a **sum over
+  rows** of `g,h`. GOSS: rank rows by `|gradient|`, keep the top `a`, sample `b` of the rest, **up-weight
+  the sampled rest by `(1−a)/b`** so `G,H` stay ~unbiased (`H` exactly: `a·n + (1−a)/b · b·n = n`). The
+  discriminating story: large-`|g|` rows are kept **exactly** (zero sampling variance) → the GOSS
+  gain-estimate is **lower-variance** than a uniform subsample at the same fraction `a+b`, both ~centred on
+  the full-data gain; this translates to **GOSS ≈ full-data held-out quality & beating a uniform subsample
+  at matched fraction** (LightGBM ensemble). **Honesty bar:** GOSS's wall-clock benefit is
+  **regime-dependent (~flat on dense moderate data — measured; bites on very large/wide data)**; the gain
+  is `G²/(H+λ)`, a *function* of the row-sums, so it is *approximately* (not exactly) unbiased — GOSS lowers
+  its **variance**, the honest claim (Ke Thm 3.2). EFB named (approximately-exclusive sparse features,
+  tolerates a small conflict rate — more than concatenating one-hot columns). No `src/` change expected
+  (reuse `viz`; `LGBMClassifier` `data_sample_strategy='goss'` / `bagging_fraction` for the uniform foil;
+  pytest 20). Next: measure live → draft ~20 cells / 3–4 figures → ExitPlanMode for Rémy.
 - **CHAPTER 10 RESTRUCTURED (Rémy-initiated) & re-gated — both reviewers no BLOCK.** Reaching NB 2,
   `num_leaves` proved **too light** for a standalone fundamental (a parameter sweep, no by-hand build,
   overlapping NB 4). Rémy chose to restructure. New arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB** ·
