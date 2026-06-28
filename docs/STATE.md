@@ -7,9 +7,9 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–3 of 5 shipped** (on `chapter/10_LightGBM`); next NB 4 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 3 `03_categorical_split` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; NB 4 not yet opened). |
-| Phase | NB 3 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · NB 3 categorical split (shipped) · **NB 4 estimator & parameters (next)** · NB 5 capstone. Next: open & plan NB 4. |
-| Active branch | `chapter/10_LightGBM` (NB 1 + NB 2 + NB 3 ff-merged). |
+| Current notebook | **`04_estimator_and_parameters`** — branch opened off `chapter/10_LightGBM` (@ `7df00ae`); phase `notebook-plan` (measuring num_leaves/min_child_samples + tuning anchors live, then drafting the cell-by-cell plan). |
+| Phase | `notebook-plan` (NB 4 = the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · NB 3 categorical split (shipped) · **NB 4 estimator (planning)** · NB 5 capstone. |
+| Active branch | `notebook/10_LightGBM__04_estimator_and_parameters` (off `chapter/10_LightGBM` @ `7df00ae`). |
 | Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1–3: DONE. **NB 4 (estimator `LGBMClassifier`/`LGBMRegressor` & its parameters): to be drafted.** |
 | Next concrete action | **Open & plan NB 4 — the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters** (chapter plan §NB 4). `git switch -c notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM`; STATE `notebook-plan`. Integrative: **`num_leaves`/`min_child_samples` — the leaf-wise capacity dial + its floor (this is where `num_leaves` is *tuned*) — close NB 1's lopsided→overfit loop here** (measured: single tree test peaks ~64 leaves then falls, train→1.0, depth→21; `num_leaves` is a *cap*, built 107 of 127; ensemble robust, test plateaus ~0.92–0.927; `min_child_samples=1`→0.858 / 20→0.927 / 300→0.906; rule `num_leaves < 2^max_depth`). Also `learning_rate`×`n_estimators`; `feature_fraction`/`bagging_fraction`(+`bagging_freq`); `reg_lambda`/`reg_alpha` (off by default — the posture contrast with XGBoost); `data_sample_strategy='goss'` (NB 2); native categorical (NB 3); early stopping via `callbacks=[lgb.early_stopping]`; importances (`'split'` vs `'gain'`, MDI caveat). Honest tuning → one sealed test (`GridSearchCV` with `verbose` so folds show — never `verbose=-1`). ~3–4 figures (num_leaves × min_child_samples dial+floor; gbdt vs goss; default-vs-tuned). Re-measure num_leaves anchors live (old `measure_ch10_nb2.py` had them); ExitPlanMode for Rémy; persist `docs/plans/10_LightGBM__04_estimator_and_parameters.md` + build. |
 
@@ -38,6 +38,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — integrative) OPENED.** Branch
+  `notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM` (@ `7df00ae`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan
+  §NB 4):** the genuinely-new spine is **`num_leaves`/`min_child_samples` — the leaf-wise capacity dial +
+  its floor, *tuned* here — which CLOSES NB 1's lopsided→overfit loop** (single tree test peaks ~64 leaves
+  then falls as train→1.0; `num_leaves` is a *cap*; ensemble robust but the floor `min_child_samples`
+  matters; rule `num_leaves < 2^max_depth`). Then knobs grouped by the concept that owns them:
+  `learning_rate`×`n_estimators` (ch 08 NB 4 trade-off re-felt); `feature_fraction`/`bagging_fraction`
+  (+`bagging_freq`) (stochasticity, ch 06/08); `reg_lambda`/`reg_alpha` **off by default** — the *posture*
+  contrast with XGBoost's λ=1 (measure whether L2 lifts accuracy — expect not, like ch 09 NB 4);
+  `data_sample_strategy='goss'` (NB 2); native categorical (NB 3); **early stopping via
+  `callbacks=[lgb.early_stopping(N)]`+`eval_set`** (the 4.x API detail); importances `'split'` vs `'gain'`
+  (MDI caveat, ch 06/08/09). Honest spine: the defaults vs a `GridSearchCV`-tuned model → **one sealed
+  test** (`verbose` on so folds show — never `verbose=-1`). No `src/` change expected (reuse `viz`;
+  `LGBMClassifier`; pytest 20). Next: measure live → draft ~22 cells / 3–4 figures → ExitPlanMode for Rémy.
 - **NB 3 (the optimal categorical split, by hand — Fisher 1958) OPENED.** Branch
   `notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM` (@ `c08b6c0`). Phase
   `notebook-plan`: measuring parity anchors live, then drafting the cell-by-cell plan. **One concept
