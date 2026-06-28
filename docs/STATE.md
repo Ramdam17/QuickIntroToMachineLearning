@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **`02_goss_efb`** — branch opened off `chapter/10_LightGBM` (@ `fed6560`); phase `notebook-plan` (measuring GOSS anchors live, then drafting the cell-by-cell plan). |
-| Phase | `notebook-plan` (NB 2 = GOSS built + EFB named). Chapter 10 arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB (planning)** · NB 3 optimal categorical split (built) · NB 4 estimator · NB 5 capstone. |
+| Phase | `notebook-plan-approved` (NB 2 = GOSS built + EFB named) — **plan APPROVED by Rémy & persisted**; building now. Chapter 10 arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB (building)** · NB 3 optimal categorical split (built) · NB 4 estimator · NB 5 capstone. |
 | Active branch | `notebook/10_LightGBM__02_goss_efb` (off `chapter/10_LightGBM` @ `fed6560`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. **NB 2 (GOSS+EFB): being drafted** (measuring anchors live). |
-| Next concrete action | **Draft & validate the NB 2 plan, then build.** One built concept (GOSS) + one named (EFB): name the ch 09 NB 2 anchor (split-gain is a **row-sum** of `g,h`); rank rows by `|gradient|`, keep top `a`, sample `b` of the rest, **up-weight by `(1−a)/b`** so the row-sums `G,H` stay ~unbiased (Ke et al. 2017 §3.2). Show (a) by hand: GOSS gain-estimate **lower-variance** than uniform at matched fraction (large-`|g|` rows kept exactly → zero variance), both ~centred on the full-data gain; (b) LightGBM ensemble: GOSS ≈ full & **> uniform subsample at matched fraction** on held-out — its real claim. Wall-clock benefit **regime-dependent (~flat on dense moderate data, measured)**, stated honestly. EFB named (approximately-exclusive sparse features, tolerates a conflict rate — Ke §4). Measure anchors live (scratchpad `measure_ch10_nb2_goss.py`); draft ~20 cells / 3–4 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_goss_efb.md` + build. |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. **NB 2: `docs/plans/10_LightGBM__02_goss_efb.md` APPROVED 2026-06-28** (reframed vs chapter wording — see below). |
+| Next concrete action | **Build NB 2 from a scratchpad `build_ch10_nb2.py`** (~22 cells, 4 figures), then nbconvert-execute a copy → guards (banned/hex/ruff/black/output-free) → two-reviewer gate (no BLOCK) → fold → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt.py`, `common_errors` +rows, `course_map` mark, pytest 20, STATE) → commit `feat(10_lightgbm): notebook 02 — GOSS and EFB` → `git merge --ff-only` into `chapter/10_LightGBM`. Anchors measured live (scripts `measure_ch10_nb2_goss.py` / `_skewed.py` / `_sweep.py`): GOSS unbiased (`H` exact, `G` unbiased); the **variance edge over uniform is gated by gradient concentration (crossover ≈ 0.5)** — dense tabular stays 0.21→0.47 (≤ crossover) so GOSS ≈ full quality on 30 % rows but ~ties uniform there; wall-clock ~flat (2.41 vs 2.45 s); EFB 15→3 bundles (conflict 0.000/0.035). |
 
 ## Notes / blockers
 
@@ -54,7 +54,18 @@
   its **variance**, the honest claim (Ke Thm 3.2). EFB named (approximately-exclusive sparse features,
   tolerates a small conflict rate — more than concatenating one-hot columns). No `src/` change expected
   (reuse `viz`; `LGBMClassifier` `data_sample_strategy='goss'` / `bagging_fraction` for the uniform foil;
-  pytest 20). Next: measure live → draft ~20 cells / 3–4 figures → ExitPlanMode for Rémy.
+  pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
+  (`docs/plans/10_LightGBM__02_goss_efb.md`); ~22 cells / 4 figures. **Measured-before-claim reframe (Rémy
+  signed off):** the chapter-plan wording "GOSS beats a uniform subsample at matched fraction" proved
+  **regime-dependent** — GOSS's variance edge over uniform is gated by **gradient concentration**
+  (crossover ≈ 0.5; synthetic sweep GOSS/uniform std ratio 1.64/1.24/0.99/0.64/0.27 at conc
+  0.20/0.36/0.49/0.67/0.86). On **moderate dense tabular data** concentration stays **0.21→0.47** even at
+  200 boosting rounds (≤ crossover) → GOSS **≈ full quality on 30 % rows** (ensemble 0.9345 vs full 0.9313)
+  but **~ties** uniform there; GOSS's real win is the large/wide/sparse concentrated regime (→ NB 5). Both
+  unbiased (`H` exact `a·n+(1−a)/b·b·n=n`; `G` unbiased); the lever is **variance, only when gradients are
+  imbalanced** (Ke et al. Thm 3.2). Wall-clock ~flat on dense (2.41 vs 2.45 s). NB teaches this honest
+  version (a strict upgrade, consistent with the chapter's "GOSS = statistical efficiency, wall-clock
+  regime-dependent" bar). Building now from `build_ch10_nb2.py`. Next: build → guards → two-reviewer gate.
 - **CHAPTER 10 RESTRUCTURED (Rémy-initiated) & re-gated — both reviewers no BLOCK.** Reaching NB 2,
   `num_leaves` proved **too light** for a standalone fundamental (a parameter sweep, no by-hand build,
   overlapping NB 4). Rémy chose to restructure. New arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB** ·
