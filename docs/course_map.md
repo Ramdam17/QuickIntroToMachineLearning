@@ -102,9 +102,9 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 
 ## 10_LightGBM  *(in progress — five notebooks; **NB 1 built**; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
 1. Leaf-wise (best-first) growth, by hand — grow the max-loss-reduction leaf first (ch 08 NB 5 / ch 09 NB 4 named it; here built); lower *training* loss per leaf, but lopsided.
-2. `num_leaves` as the central dial — leaf-wise capacity (not `max_depth`, unbounded by default); the overfit trap (num_leaves 127 → depth 15); histogram reused from ch 09 NB 4.
-3. GOSS (built) + EFB (named) — how it gets light: gradient-based one-side sampling with the unbiased `(1−a)/b` reweight (statistical efficiency; beats a uniform subsample); EFB bundles approximately-exclusive sparse features.
-4. The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — `num_leaves`/`min_child_samples`, learning_rate×n_estimators, feature/bagging fractions, `reg_lambda`/`reg_alpha` (off by default), GOSS, native categorical (the optimal split, named), early stopping; honest tuning.
+2. GOSS (built) + EFB (named) — how it gets light: gradient-based one-side sampling with the unbiased `(1−a)/b` reweight (statistical efficiency; beats a uniform subsample); EFB bundles approximately-exclusive sparse features.
+3. The optimal categorical split, by hand (Fisher 1958) — sort categories by their gradient statistic `G/H`, take the best *contiguous* partition (`K−1` candidates, not `2^(K−1)−1`); matched to LightGBM exactly. (`num_leaves`, the leaf-wise capacity dial, is introduced as the budget in NB 1 and tuned in NB 4 — not a standalone NB.)
+4. The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — `num_leaves`/`min_child_samples` (the capacity dial + its floor), learning_rate×n_estimators, feature/bagging fractions, `reg_lambda`/`reg_alpha` (off by default), GOSS, native categorical, early stopping; honest tuning.
 5. Demanding case (visualization-first capstone): larger tabular data (MiniBooNE / scaled synthetic) — the speed/accuracy trade-off measured at matched capacity vs XGBoost & HistGBR (the winner flips with the convention; no universal best).
 
 ## 11_MLP

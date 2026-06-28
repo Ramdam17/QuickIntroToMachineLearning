@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 1 `01_leaf_wise_growth` **merged to `chapter/10_LightGBM`**; NB 2 not yet opened). |
-| Phase | `notebook-commit` done — NB 1 **committed & ff-merged** to `chapter/10_LightGBM` (both reviewers NO BLOCK; Rémy validated visually). Next: open & plan NB 2. |
-| Active branch | `chapter/10_LightGBM` (NB 1 ff-merged in). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: DONE. NB 2: to be drafted. |
-| Next concrete action | **Open & plan NB 2 — `num_leaves`, the central dial.** `git switch -c notebook/10_LightGBM__02_num_leaves` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: leaf-wise capacity is set by **`num_leaves`**, not `max_depth` (`-1`, unbounded); sweep it (train/test) — test peaks then falls as the trees memorize (num_leaves 127 → realized **depth 15**); the rule `num_leaves < 2^max_depth`; `min_child_samples` (=20) the leaf-size floor; **reuse ch 09's histogram** (named, not rebuilt). Measure anchors live; draft ~20 cells / ~3 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_num_leaves.md` + build. |
+| Current notebook | — (NB 1 `01_leaf_wise_growth` merged + forward-refs repointed; **NB 2 = GOSS+EFB** not yet opened). |
+| Phase | `chapter-plan` done (RESTRUCTURED & re-gated, no BLOCK) — chapter 10 arc rebalanced: NB 1 leaf-wise (shipped, refs fixed) · **NB 2 GOSS+EFB** · **NB 3 the optimal categorical split (NEW, built)** · NB 4 estimator (num_leaves/min_child_samples tuned here) · NB 5 capstone. `num_leaves` standalone NB dropped. Next: open & plan NB 2. |
+| Active branch | `chapter/10_LightGBM` (NB 1 ff-merged + restructure commit). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + **RESTRUCTURED 2026-06-28**, re-gated no BLOCK). NB 1: DONE. NB 2 (GOSS+EFB): to be drafted. |
+| Next concrete action | **Open & plan NB 2 — GOSS (built) + EFB (named).** `git switch -c notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM`; STATE `notebook-plan`. One built concept (GOSS) + one named (EFB): rank rows by `|gradient|`, keep top `a`, sample `b` of the rest, **up-weight by `(1−a)/b`** so the row-sum gain (ch 09 NB 2) stays ~unbiased; show **GOSS ≈ full-data quality & beats a uniform subsample at matched fraction** (its real claim); wall-clock benefit regime-dependent (~flat on dense, measured), stated honestly. EFB named (approximately-exclusive features, conflict rate). Measure anchors live; draft ~20 cells / ~3 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_goss_efb.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,19 @@
 
 ## Progress log (most recent first)
 
+- **CHAPTER 10 RESTRUCTURED (Rémy-initiated) & re-gated — both reviewers no BLOCK.** Reaching NB 2,
+  `num_leaves` proved **too light** for a standalone fundamental (a parameter sweep, no by-hand build,
+  overlapping NB 4). Rémy chose to restructure. New arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB** ·
+  **NB 3 the optimal categorical split (NEW — built by hand, Fisher 1958: sort categories by `G/H`, best
+  contiguous partition, `K−1` candidates; de-risked == LightGBM exactly, LEFT {1,3,5} ≡ {0,2,4})** · NB 4
+  estimator (`num_leaves`/`min_child_samples` *tuned* here, closing NB 1's lopsided→overfit loop) · NB 5
+  capstone. `num_leaves` standalone NB dropped → budget in NB 1 + dial in NB 4. All three fundamentals now
+  **build a mechanism by hand** (leaf-wise · GOSS · categorical split). Re-gate folds: ml-expert (pin
+  `min_data_per_group=1` for NB-3 parity; `G/H`↔mean note; structure-score criterion; toy binary);
+  pedagogy (NB 1 had **5** forward-ref seams not 3 — repointed: overfit→NB 4, "Next"→NB 2 GOSS; NB 4 must
+  close the NB-1 loop). **NB 1 forward-refs repointed** (cells 1/8/14/16 → NB 4; "Next" → NB 2 GOSS+EFB),
+  rebuilt, guards green (0 residual seams, 0 banned, ruff clean, 3 figures, output-free). `chapter_10` plan
+  + `course_map` §10 updated. Next: open & plan NB 2 (GOSS + EFB).
 - **NB 1 (leaf-wise / best-first growth, by hand) OPENED.** Branch
   `notebook/10_LightGBM__01_leaf_wise_growth` off `chapter/10_LightGBM` (@ `b6cb63d`). Phase
   `notebook-plan`: measuring anchors live then drafting the cell-by-cell plan — one concept, **build

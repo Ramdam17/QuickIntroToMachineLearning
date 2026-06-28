@@ -5,6 +5,11 @@
 > regime-dependent; the "leaf-wise is already the modern default / HistGBR is a leaf-wise sibling" gift).
 > Per-method arc over **5 notebooks**; per-NB plans drafted and Rémy-validated one at a time before each
 > build. All API facts **measured live** (lightgbm 4.6.0 / xgboost 3.2.0 / sklearn 1.9.0).
+>
+> **RESTRUCTURED & re-gated (2026-06-28, both reviewers no BLOCK):** the standalone `num_leaves` NB was
+> light → dropped (it stays the budget in NB 1 + the tuning dial in NB 4). New arc: NB 1 leaf-wise · NB 2
+> GOSS+EFB · **NB 3 the optimal categorical split (built, Fisher 1958)** · NB 4 estimator · NB 5 capstone.
+> All three fundamentals now build a mechanism by hand. (See "The per-method arc" below.)
 
 ## What this chapter is
 
@@ -81,15 +86,11 @@ is reused from ch 09 NB 4 (named, not rebuilt).**
 - ~3 figures (the two growth orders side by side; training-loss vs #leaves, leaf-wise ≤ level-wise; one
   lopsided leaf-wise toy tree).
 
-### NB 2 — `num_leaves`, the central dial
-- **One concept:** leaf-wise capacity is set by **`num_leaves`**, not `max_depth` (`-1`, unbounded). Sweep
-  `num_leaves`: test peaks then falls as the trees memorize; **own the quantitative depth-vs-num_leaves
-  result here** (num_leaves=127 → realized depth 15). The rule of thumb `num_leaves < 2^max_depth`;
-  `min_child_samples` (=20) the leaf-size floor. **Re-use ch 09's histogram** (named, not rebuilt).
-- ~3 figures (num_leaves train/test sweep + the peak; realized depth vs num_leaves; num_leaves vs a
-  depth-capped tree — the trap).
+> **Restructured (2026-06-28, re-gated no BLOCK):** the standalone `num_leaves` NB was light (a parameter
+> sweep, no by-hand build, overlapping NB 4) → dropped; `num_leaves` stays the *budget* in NB 1 and the
+> *tuning dial* in NB 4. The three fundamentals are rebalanced onto by-hand-buildable mechanisms.
 
-### NB 3 — GOSS (built) + EFB (named): how LightGBM gets light
+### NB 2 — GOSS (built) + EFB (named): how LightGBM gets light
 - **Scope:** **one built concept — GOSS** + **one named companion — EFB** (the ch 09 NB 4 build-one /
   name-one precedent).
 - **GOSS, by hand, led by statistical efficiency:** recall the split-gain is a **sum over rows** of `g,h`
@@ -104,16 +105,37 @@ is reused from ch 09 NB 4 (named, not rebuilt).**
 - ~3 figures (GOSS: `|gradient|` distribution + kept-top/sampled-rest; **GOSS vs uniform subsample
   accuracy at matched fraction**; EFB bundling schematic).
 
+### NB 3 — The optimal categorical split, by hand (NEW — replaces the light `num_leaves` NB)
+- **One concept:** how to split a *categorical* feature optimally. Naively, partitioning K categories into
+  two groups is `2^(K−1)−1` ways (exponential). Fisher (1958): for a convex split criterion — **the
+  structure-score gain `G²/(H+λ)` built in ch 09 NB 2** — the optimal binary partition is **contiguous**
+  once categories are sorted by their gradient statistic `G/H`, so only **`K−1`** candidates (linear).
+- **Build it by hand** on a toy: per-category `(G,H)`, sort by `G/H`, evaluate the `K−1` contiguous splits
+  with the structure-score gain, pick the max → the category set going left. **Match LightGBM exactly**
+  (de-risked: by-hand LEFT={1,3,5} == LightGBM {0,2,4}, complementary = identical partition;
+  brute-force-confirmed global-optimal). Contrast XGBoost's partition heuristic — ch 09 *used* native
+  categoricals but never built the split (genuinely new).
+- **Build-time pins (ml-expert):** exact parity needs `min_data_per_group=1` (the default 100 returns a
+  non-optimal split on a small toy), plus `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0,
+  cat_smooth=0` — OR ≥100 rows/category. **Teaching note:** with `h=1` (regression toy) `G/H` reduces to
+  the per-category **target mean** (sort categories by their average target); give `G/H` as the general
+  key (carries to classification / second-order). Keep the toy **binary** (multiclass is out of scope).
+- ~3 figures (categories by mean/gradient; the sorted order + the `K−1` contiguous candidates; by-hand
+  partition == LightGBM).
+
 ### NB 4 — The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters
-- **Integrative.** `num_leaves`/`max_depth`/`min_child_samples`; `learning_rate`×`n_estimators`;
-  `feature_fraction`/`bagging_fraction`(+`bagging_freq`); `reg_lambda`/`reg_alpha` (off by default — turn
-  on; the *posture* contrast with XGBoost, not "less regularized"); `data_sample_strategy='goss'` (NB 3);
-  **native categorical** via `category` dtype; **early stopping** via `callbacks=[lgb.early_stopping]`;
-  importances (`'split'` vs `'gain'`, MDI caveat). Honest tuning: `num_leaves` is the dial; defaults
-  overfit on small data; `GridSearchCV` (with `verbose` so folds show — never `verbose=-1`) → one sealed
-  test. **NB 4 *introduces* (names, does not build) the optimal categorical split** (Fisher 1958, contrast
-  XGBoost's heuristic); everything else recaps NB 1–3 / ch 09.
-- ~3–4 figures (num_leaves × min_child_samples; gbdt vs goss accuracy/efficiency; default-vs-tuned).
+- **Integrative.** **`num_leaves`/`min_child_samples` — the leaf-wise capacity dial + its floor (this is
+  where `num_leaves` is tuned).** Close NB 1's lopsided→overfit loop here: a single tree's test peaks ~64
+  leaves then falls (train→1.0, depth→21); `num_leaves` is a *cap* (built 107 of 127); the ensemble is
+  robust (test plateaus ~0.92–0.927, gap widens, depth→25) but the **floor matters** (`min_child_samples=1`
+  → test 0.858 / default 20 → 0.927 / 300 → underfits 0.906); the rule `num_leaves < 2^max_depth`. Also:
+  `learning_rate`×`n_estimators`; `feature_fraction`/`bagging_fraction`(+`bagging_freq`); `reg_lambda`/
+  `reg_alpha` (off by default — the *posture* contrast with XGBoost); `data_sample_strategy='goss'` (NB 2);
+  **native categorical** (NB 3, the optimal split); **early stopping** via `callbacks=[lgb.early_stopping]`;
+  importances (`'split'` vs `'gain'`, MDI caveat). Honest tuning → one sealed test (`GridSearchCV` with
+  `verbose` so folds show — never `verbose=-1`).
+- ~3–4 figures (num_leaves × min_child_samples [the dial + floor]; gbdt vs goss accuracy/efficiency;
+  default-vs-tuned).
 
 ### NB 5 — A demanding case (visualization-first capstone)
 - A **larger** tabular problem where speed can matter. **Dataset (verification owed at NB-5 plan):**
@@ -142,10 +164,14 @@ is reused from ch 09 NB 4 (named, not rebuilt).**
 - **GOSS = statistical efficiency** (near-full quality on fewer rows, beats uniform subsample); its
   **wall-clock benefit is regime-dependent and ~flat on dense moderate data (measured)** — surfaced, not
   asserted. **EFB named** (tolerates a small conflict rate), not built.
-- **Leaf-wise overfits via large `num_leaves`** (measured: depth 15; num_leaves is a *cap*) — the central
-  tuning lesson, owned quantitatively by NB 2.
+- **`num_leaves` is the leaf-wise capacity dial, not `max_depth`** (introduced as the budget in NB 1,
+  *tuned* in NB 4 — measured: single tree peaks ~64 then overfits; ensemble robust; `min_child_samples`
+  the floor). No standalone NB — it is a dial, not a by-hand mechanism.
+- **The optimal categorical split is BUILT (NB 3, Fisher 1958)** — sort categories by `G/H`, best
+  contiguous partition, matched to LightGBM exactly. Genuinely new vs ch 09 (which used native categoricals
+  but never built the split). The three fundamentals are all by-hand builds: leaf-wise · GOSS · categorical.
 - **`reg_lambda=0`** is a posture difference (paired with the capacity-control contrast), not
-  "unregularized." NB 4 *names* the optimal categorical split (Fisher 1958), does not build it.
+  "unregularized."
 - Gain importance MDI-biased → permutation on held-out (ch 06/08/09). Every anchor re-measured at
   NB-plan/build; seeds pinned; the speed/efficiency claims measured, never quoted.
 
