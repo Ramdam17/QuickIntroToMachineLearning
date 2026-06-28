@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **building NB 1 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | **NB 1 `01_leaf_wise_growth`** — branch opened off `chapter/10_LightGBM`; phase `notebook-plan` (measuring anchors live, drafting the cell-by-cell plan). |
-| Phase | `notebook-plan-approved` — NB 1 (leaf-wise growth, by hand) plan **APPROVED by Rémy (2026-06-28) & persisted** (`docs/plans/10_LightGBM__01_leaf_wise_growth.md`); building now. |
-| Active branch | `notebook/10_LightGBM__01_leaf_wise_growth` (off `chapter/10_LightGBM`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: **APPROVED & persisted**. NB 2–5: later. |
-| Next concrete action | **Build NB 1** from a `build_ch10_nb1.py` scratchpad script (~19 cells, 3 figures): leaf-wise (best-first) growth by hand. Re-measure anchors at build (leaf-wise ≪ level-wise train SSE per #leaves — 6 leaves 0.57 vs 65.4; lopsided leaf sizes …109; **exact LightGBM parity** max|Δpred|=0, SSE 0.566==0.566 with `min_data_in_bin=1`/`max_bin` huge/`reg_lambda=0`/1 tree). nbconvert a scratchpad copy from project cwd (3 figures, exit 0; **no `verbose=-1`** — banner visible) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark NB 1 built, pytest 20, STATE) → commit `feat(10_lightgbm): notebook 01 — leaf-wise growth` → `git merge --ff-only` into `chapter/10_LightGBM`. |
+| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 1 `01_leaf_wise_growth` **merged to `chapter/10_LightGBM`**; NB 2 not yet opened). |
+| Phase | `notebook-commit` done — NB 1 **committed & ff-merged** to `chapter/10_LightGBM` (both reviewers NO BLOCK; Rémy validated visually). Next: open & plan NB 2. |
+| Active branch | `chapter/10_LightGBM` (NB 1 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: DONE. NB 2: to be drafted. |
+| Next concrete action | **Open & plan NB 2 — `num_leaves`, the central dial.** `git switch -c notebook/10_LightGBM__02_num_leaves` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: leaf-wise capacity is set by **`num_leaves`**, not `max_depth` (`-1`, unbounded); sweep it (train/test) — test peaks then falls as the trees memorize (num_leaves 127 → realized **depth 15**); the rule `num_leaves < 2^max_depth`; `min_child_samples` (=20) the leaf-size floor; **reuse ch 09's histogram** (named, not rebuilt). Measure anchors live; draft ~20 cells / ~3 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__02_num_leaves.md` + build. |
 
 ## Notes / blockers
 
@@ -50,7 +50,18 @@
   `dump_model`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
   (`docs/plans/10_LightGBM__01_leaf_wise_growth.md`); ~19 cells / 3 figures; anchors measured live
   (leaf-wise ≪ level-wise train SSE; lopsided sizes …109; **exact LightGBM parity** max|Δpred|=0,
-  SSE 0.566==0.566). Building now from a `build_ch10_nb1.py` scratchpad script.
+  SSE 0.566==0.566). **BUILT (17 cells, 3 figures) & REVIEWED — both NO BLOCK, awaiting Rémy visual.**
+  Each reviewer raised one MAJOR → folded: ml-expert caught a real bug — my `grow('level')` descended the
+  left spine **depth-first** instead of breadth-first → rewrote it as a true FIFO (corrected level-wise
+  curve 268→65@4 leaves→12@8; leaf-wise still wins at every budget — 6 leaves 0.57 vs 65.4); pedagogy
+  caught Fig-2 subplot titles colliding → moved leaf sizes to a print + short titles + `tight_layout`.
+  MINOR/NIT folded: named `LAMBDA=0.0`; one line that the leaf value `mean(y)` = `F0 + (−G/H)`; FIFO
+  wording. Parity unchanged (leaf-wise logic untouched). Guards: ruff clean, 0 banned, output-free, hex
+  clean, nbconvert exit 0 (3 figures); LightGBM banner left visible (no `verbose=-1`). **No `src/`
+  change** (pytest 20). **BUILT & MERGED to `chapter/10_LightGBM` — Rémy validated visually.**
+  End-of-NB checklist done: rebuilt from `build_ch10_nb1.py`, `llms.txt` **76**, `course_map` §10 → NB 1
+  built, `common_errors` **+2 rows** (leaf-wise lower-train-loss-≠-better; leaf-wise-is-the-modern-default-
+  not-LightGBM-only), pytest **20**. Next: open & plan NB 2 (`num_leaves`, the central dial).
 - **Chapter 10 (LightGBM) opened.** Branch `chapter/10_LightGBM` created off `main` (synced @ `fe295aa`
   after PR #9). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §10 and
   the per-method arc — **leaf-wise vs level-wise growth** (the XGBoost contrast; ch 09 NB 4 named

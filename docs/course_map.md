@@ -100,7 +100,7 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `XGBClassifier`/`XGBRegressor` & its parameters — owns the histogram method (`tree_method='hist'`, `max_bin`, speed measured); `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; honest tuning (the aggressive defaults overfit).
 5. Demanding case (visualization-first capstone): Adult/Census Income (informative missing + imbalance + native categoricals; Ames fallback) — early stopping, honest cross-method comparison naming native-NaN-vs-imputed as a deliberate axis, gain MDI vs permutation, the LightGBM teaser.
 
-## 10_LightGBM  *(plan approved — five notebooks; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
+## 10_LightGBM  *(in progress — five notebooks; **NB 1 built**; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
 1. Leaf-wise (best-first) growth, by hand — grow the max-loss-reduction leaf first (ch 08 NB 5 / ch 09 NB 4 named it; here built); lower *training* loss per leaf, but lopsided.
 2. `num_leaves` as the central dial — leaf-wise capacity (not `max_depth`, unbounded by default); the overfit trap (num_leaves 127 → depth 15); histogram reused from ch 09 NB 4.
 3. GOSS (built) + EFB (named) — how it gets light: gradient-based one-side sampling with the unbiased `(1−a)/b` reweight (statistical efficiency; beats a uniform subsample); EFB bundles approximately-exclusive sparse features.
