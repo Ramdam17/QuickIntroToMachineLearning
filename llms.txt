@@ -76,3 +76,4 @@
 - [notebooks/10_LightGBM/01_leaf_wise_growth.ipynb](notebooks/10_LightGBM/01_leaf_wise_growth.ipynb) — 01 — Leaf-wise growth: grow the best leaf first — *Chapter 10 · LightGBM · Notebook 1 of 5*
 - [notebooks/10_LightGBM/02_goss_efb.ipynb](notebooks/10_LightGBM/02_goss_efb.ipynb) — 02 — GOSS and EFB: how LightGBM gets light — *Chapter 10 · LightGBM · Notebook 2 of 5*
 - [notebooks/10_LightGBM/03_categorical_split.ipynb](notebooks/10_LightGBM/03_categorical_split.ipynb) — 03 — The optimal categorical split — *Chapter 10 · LightGBM · Notebook 3 of 5*
+- [notebooks/10_LightGBM/04_estimator_and_parameters.ipynb](notebooks/10_LightGBM/04_estimator_and_parameters.ipynb) — 04 — The estimator and its parameters — *Chapter 10 · LightGBM · Notebook 4 of 5*
