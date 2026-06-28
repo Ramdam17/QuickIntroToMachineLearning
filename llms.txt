@@ -66,3 +66,9 @@
 - [notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb](notebooks/08_GradientBoosting/04_shrinkage_and_trees.ipynb) — 04 — Shrinkage and the trees: ν, depth, and the number of trees — *Chapter 08 · Gradient Boosting · Notebook 4 of 6*
 - [notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb](notebooks/08_GradientBoosting/05_estimator_and_parameters.ipynb) — 05 — The estimator and its parameters — *Chapter 08 · Gradient Boosting · Notebook 5 of 6*
 - [notebooks/08_GradientBoosting/06_california_housing.ipynb](notebooks/08_GradientBoosting/06_california_housing.ipynb) — 06 — A demanding case: California housing — *Chapter 08 · Gradient Boosting · Notebook 6 of 6*
+## 09_XGBoost
+- [notebooks/09_XGBoost/01_second_order_view.ipynb](notebooks/09_XGBoost/01_second_order_view.ipynb) — 01 — The second-order view: gradients and curvature — *Chapter 09 · XGBoost · Notebook 1 of 5*
+- [notebooks/09_XGBoost/02_regularized_objective.ipynb](notebooks/09_XGBoost/02_regularized_objective.ipynb) — 02 — The regularized objective: penalising complexity in the loss — *Chapter 09 · XGBoost · Notebook 2 of 5*
+- [notebooks/09_XGBoost/03_sparsity_aware_splits.ipynb](notebooks/09_XGBoost/03_sparsity_aware_splits.ipynb) — 03 — Sparsity-aware splits: a default direction for missing values — *Chapter 09 · XGBoost · Notebook 3 of 5*
+- [notebooks/09_XGBoost/04_estimator_and_parameters.ipynb](notebooks/09_XGBoost/04_estimator_and_parameters.ipynb) — 04 — The estimator and its parameters: XGBoost in practice — *Chapter 09 · XGBoost · Notebook 4 of 5*
+- [notebooks/09_XGBoost/05_census_income.ipynb](notebooks/09_XGBoost/05_census_income.ipynb) — 05 — A demanding case: Census income, end to end — *Chapter 09 · XGBoost · Notebook 5 of 5*

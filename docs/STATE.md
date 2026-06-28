@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`08_GradientBoosting`** (chapter plan APPROVED; **SIX notebooks**, regression-first + an added classification NB, like 03_LogReg's six) — the **general form** of boosting (AdaBoost = its exponential-loss special case). **ALL 6 of 6 SHIPPED** (merged to chapter); chapter complete on the branch — **ready to close via PR → `main`**. Earlier shipped: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | — (NB 6 merged to `chapter/08_GradientBoosting`; chapter complete on the branch). |
-| Phase | `chapter-merge` — NB 6 built (28 cells, 7 figures), reviewed (**both PASS** after a revise round), Rémy-validated visually, merged to `chapter/08_GradientBoosting`. **All 6 notebooks shipped; chapter ready to close via PR `chapter → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only). |
-| Active branch | `chapter/08_GradientBoosting` (all 6 NBs merged). |
-| Active plan | chapter `docs/plans/chapter_08_GradientBoosting.md` (approved); all 6 NB plans done. |
-| Next concrete action | **Close chapter 08 via PR `chapter → main` (`--no-ff`)** — needs Rémy's **explicit go** (outward-facing; `main` is PR-only via the global pre-push hook). Steps: `git push -u origin chapter/08_GradientBoosting`; `gh pr create --base main --head chapter/08_GradientBoosting --title "feat(08_gradient_boosting): complete chapter — Gradient Boosting"`; merge the PR `--no-ff`; `git switch main && git pull`. Then set STATE `idle`, next = **open chapter 09 (XGBoost)**. (All 6 NBs merged at the chapter tip; ruff repo-green; pytest 20.) |
+| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
+| Phase | `chapter-merge` — NB 5 **committed & ff-merged**; **CHAPTER 09 COMPLETE on the branch (5/5)** (both reviewers NO BLOCK on every NB; Rémy validated each visually). Next: close via PR `chapter/09_XGBoost → main` (`--no-ff`). |
+| Active branch | `chapter/09_XGBoost` (NB 1–5 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). **NB 1–5: DONE.** Chapter complete on the branch; PR to `main` pending. |
+| Next concrete action | **Close chapter 09 via PR.** `git push -u origin chapter/09_XGBoost`; `gh pr create --base main --head chapter/09_XGBoost` (title `feat(09_xgboost): complete chapter — XGBoost`); merge the PR `--no-ff` (preserve per-notebook history); `git switch main && git pull`; update `course_map` §09 → "merged to main via PR #N"; STATE → `idle`, next = **open chapter 10 (LightGBM)**. (Reminder: `main` is PR-only — global pre-push hook; remote Ramdam17/QuickIntroToMachineLearning.) |
 
 ## Notes / blockers
 
@@ -38,6 +38,238 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — Adult/Census Income capstone) BUILT & MERGED to `chapter/09_XGBoost` —
+  Rémy validated visually. CHAPTER 09 COMPLETE on the branch (5/5).** 30 cells (9 code / 21 md), **8
+  figures** (class balance; missingness-vs-target;
+  native-vs-imputed PR-AUC [the honest null]; cross-method PR-AUC; early stopping; PR curve + threshold
+  + confusion; gain-MDI vs permutation; base rates by sex/race). A full honest workflow mobilizing all
+  of ch 09 + ch 00. **Anchors reproduced by nbconvert:** positive rate 0.2393; informative missingness
+  (occupation missing 0.094 vs 0.248); **native-vs-imputed Δ −0.0011, within noise** — the honest null
+  (the resampling band flips sign: mean +0.0008, range [−0.0011,+0.0035]; the two informative-missing
+  cols are nearly the same flag, occupation∩workclass 2799/2809); cross-method HistGBR 0.8291 ≈ XGB
+  0.8280 > GB 0.8140 > RF 0.7883 > Logistic 0.7679 > tree 0.6684 (LightGBM teaser 0.8278/2.2s); early
+  stopping best_iteration 263/2000, test PR-AUC 0.8292/acc 0.8730/ROC-AUC 0.9280; threshold 0.5
+  (P 0.782/R 0.650) → val-chosen 0.299 (P 0.649/R 0.825); gain-MDI relationship 0.34 vs permutation
+  capital-gain 0.236; ethics base rates F 0.109/M 0.304, Black 0.121/White 0.254. Reviewers **both NO
+  BLOCK** — pedagogy **PASS** (honest-null framed as the strongest lesson; 8/8 Read-the-figure match
+  the pixels; ethics sober); ml-expert **REVISE→folded** the MAJOR (the cell-12 mechanism was too
+  strong — "recovers the same information elsewhere" → re-aimed to **collinearity** [occ∩workclass
+  2799/2809] + "largely carried elsewhere" + a **measured resampling band** that flips sign, justifying
+  "within noise") + MINOR/NIT (OHE rare-pooling disclosed; native-country "marginally above"; exercise-1
+  recompute hint). Notably ml-expert found the "convenience not power" framing **under**-claimed (at
+  matched capacity on equal inputs XGB 0.810 vs GB 0.814 — the thesis holds harder). Threshold is
+  **val-chosen** (leakage-free). Guards: ruff clean, **0 banned**, output-free, hex clean, nbconvert
+  exit 0 (8 figures); LightGBM + early-stopping logs left **visible** (no silencing). **No `src/`
+  change** (notebook-local; sklearn Pipelines; pytest 20). End-of-NB checklist done: rebuilt from
+  `build_ch09_nb5.py` (kernel-drift guard), `llms.txt` **74**, `course_map` §09 → **COMPLETE**,
+  `common_errors` **+3 rows** (informative-missingness-isn't-always-a-lever / measure-it; convenience-
+  not-power / no-universal-best; threshold-on-validation + PR-AUC-on-imbalance). **Last NB of ch 09 —
+  chapter complete on the branch.** Next: close the chapter via PR `chapter/09_XGBoost → main`
+  (`--no-ff`).
+- **NB 5 (the demanding case — Adult/Census Income, the visualization-first capstone) OPENED.** Branch
+  `notebook/09_XGBoost__05_census_income` off `chapter/09_XGBoost` (@ `8b124e5`). Phase `notebook-plan`:
+  measuring anchors live then drafting the capstone (~26 cells, ≥6 figures). The chapter's **capstone** —
+  a full, honest tabular workflow mobilizing all of ch 09. **Verification owed at plan time** (chapter
+  plan): does Adult's missingness actually move PR-AUC under native-NaN-vs-imputed, and is `?`→NaN; if
+  the lever is negligible, lean the NB-3 callback on categorical native handling or fall back to Ames
+  (rename branch). Arc: measured missingness-vs-target panel → baselines → tuned XGBoost with **early
+  stopping** (`eval_set`) → held-out acc/precision/recall/PR-AUC + threshold → error analysis → honest
+  cross-method comparison (XGB/GB/HistGBR/RF/linear, **native-NaN-vs-imputed a named axis**, XGB run both
+  ways) → gain-MDI vs permutation → LightGBM teaser. **Last NB of ch 09 — after it ships, close the
+  chapter via PR `chapter/09_XGBoost → main` (`--no-ff`).** **Verification done & plan APPROVED by Rémy
+  (via ExitPlanMode + an AskUserQuestion fork, 2026-06-28) & persisted**
+  (`docs/plans/09_XGBoost__05_census_income.md`); ~30 cells / 8 figures. The measured surprise:
+  native-NaN-vs-imputed is **within noise** (Δ −0.001) because the informative missingness is redundant
+  with correlated features → Rémy chose to **keep Adult and feature the honest null** ("measure the
+  lever"), the NB-3 callback leaning on convenience + the cross-method axis. Anchors measured live (see
+  the persisted plan). Building now from a `build_ch09_nb5.py` scratchpad script.
+- **NB 4 (the estimator `XGBClassifier` & its parameters — integrative; owns the histogram method)
+  BUILT & MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 25 cells (8 code / 17 md), 4 figures (the
+  depth dial — test peak@4, default@6 past it, leaves exploding; regularizers close the gap — gamma &
+  min_child_weight, leaves collapse + train/test converge; eta×n_estimators staged, log-x; the
+  histogram engine — binning idea + hist-vs-exact fit-time + test-acc bars). Each knob taught from the
+  concept that owns it (depth=interaction order; reg_lambda/gamma/min_child_weight=NB 2 + Cover=Σh;
+  subsample/colsample=stochasticity; eta×n_estimators=ch 08 NB 4). **Anchors reproduced exactly by
+  nbconvert:** defaults train **1.0000**/test 0.9444 (gap 0.0556, 2608 leaves); depth peak@4 (0.9467);
+  gamma leaves 2608→264 (gap→0.0165); reg_lambda **λ0 0.9456 / λ1 0.9444 / λ100 0.9433 / λ1000 0.9283**;
+  eta0.3 plateaus ~0.944 / eta0.03→0.9511@600 (no collapse); **histogram exact 4.2s/0.9646 vs hist
+  0.85s/0.9660 (~5×, no accuracy cost)**, max_bin64 0.70s; GridSearchCV→sealed **0.9472 vs default
+  0.9444 (+0.0028)**. Reviewers **both NO BLOCK** — pedagogy **PASS** (gap-free knob→concept spine; all
+  4 "Read the figure" match the pixels; +0.003 framed as the lesson; 5 MINOR/NIT optional); ml-expert
+  **REVISE→folded** one **MAJOR** (I had wrongly credited `lambda=1` for the respectable test accuracy
+  and the no-collapse — the counterfactual shows **λ=0 → 0.9456 > λ=1 → 0.9444**, so L2 at its default
+  doesn't lift accuracy; re-aimed: L2's job is to **shrink leaf weights** `−G/(H+λ)`, and the
+  non-collapse is because **accuracy is a coarse, bounded metric near the noise ceiling**, not L2) +
+  MINOR/NIT (added **λ=0 to the printed reg_lambda sweep** so the claim is self-evidently measured;
+  reach 3(a) reframed to the gap/magnitude question; histogram "+0.0014 = noise, bins mildly
+  regularize"; `auto→hist` gloss; Fig-3 names the amber middle eta + best-marker subtlety; Fig-4
+  tight_layout + shorter title). Guards: ruff clean, **0 banned** (JSON scan), output-free, hex clean,
+  nbconvert exit 0 (4 figures). **No `src/` change** (notebook-local matplotlib; `trees_to_dataframe`;
+  pytest 20). End-of-NB checklist done: rebuilt from `build_ch09_nb4.py` (kernel-drift guard), `llms.txt`
+  **73**, `course_map` §09 → NB 1–4 built, `common_errors` **+3 XGBoost rows** (defaults-overfit-but-near-
+  ceiling/depth-peak; L2-default-doesn't-lift-accuracy [the folded MAJOR]; hist-not-less-accurate).
+  **NB 1–4 done.** Next: open & plan NB 5 — the demanding case (visualization-first capstone).
+- **NB 4 (the estimator `XGBClassifier`/`XGBRegressor` & its parameters — the integrative NB; owns the
+  histogram method) OPENED.** Branch `notebook/09_XGBoost__04_estimator_and_parameters` off
+  `chapter/09_XGBoost` (@ `ad7c898`). Phase `notebook-plan`: drafting the cell-by-cell plan — recap the
+  NB-2 by-hand parity, then the **one genuinely new mechanism**, **histogram / approximate split
+  finding** (bin continuous features into ≤`max_bin` buckets → the threshold scan goes from every
+  distinct value to ≤256 bin edges; `tree_method='hist'` is the 3.x default; **measure** hist-vs-`exact`
+  speed + the negligible accuracy cost; the weighted-quantile sketch C&G §3.2–3.3 named & deferred to
+  ch 10). Then the knobs grouped by the concept that owns them — objective regularizers
+  `reg_lambda`/`reg_alpha`/`gamma` (NB 2), tree complexity `max_depth`(6)/`min_child_weight`(a Cover
+  floor, NB 1/2)/`grow_policy` (depthwise vs lossguide — the ch-10 bridge, named-not-used), stochasticity
+  `subsample` (Friedman 2002)/`colsample_*` (new vs sklearn GB), `eta`(0.3)×`n_estimators` (the ch 08
+  NB 4 trade-off re-felt). Honest spine: the **aggressive defaults overfit** (eta 0.3 + depth 6) → show
+  it → `GridSearchCV` on train → one sealed test (tuned vs default); `feature_importances_` gain-MDI
+  caveat (honest reading deferred to NB 5). Anchors being measured at plan time (xgboost 3.2.0). No
+  `src/` change expected (reuse `viz`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-28) & persisted** (`docs/plans/09_XGBoost__04_estimator_and_parameters.md`); ~23 cells / 4
+  figures; anchors measured live — defaults overfit **train 1.0000 / test 0.9444** (gap 0.0556, 2608
+  leaves); **max_depth test peak @4** (default 6 past it); **gamma** prunes leaves 2608→264 (gap
+  0.056→0.017); **min_child_weight** (Cover=ΣH floor) 2608→321; eta×n_estimators staged (eta0.3
+  plateaus ~0.944, eta0.03 climbs to 0.951@600, no collapse); **histogram hist vs exact: 4.23s→0.85s
+  (~5×), no accuracy cost** (0.9646→0.9660); GridSearchCV→sealed test **0.9472 vs default 0.9444
+  (+0.003)**. Building now from a `build_ch09_nb4.py` scratchpad script.
+- **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) BUILT &
+  MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (6 code / 13 md), 3 figures (the
+  data + the missing rows in a side band; the gain-vs-threshold search, both directions; by-hand vs
+  XGBoost). One concept: missing rows take a **learned default direction**, found by computing the NB-2
+  gain both ways and keeping the larger (C&G §3.4) — no imputation. **Anchors (xgboost 3.2.0, reproduced
+  exactly): by-hand search best (x<5, missing→right, half-gain 2.949); XGBoost split x<5, `Missing`→right
+  (No), Gain 5.8985 = 2× (no-½ convention); both missing rows route to the dear leaf (Cover 5 = 3+2); GB
+  rejects NaN (`ValueError`), HistGBR & XGBoost accept.** Reviewers **both PASS, no BLOCK** — ml-expert
+  confirmed the single-default-direction semantics (both NaN rows predict 2.9146) + the exact
+  direction/gain match; pedagogy verified the warm-up (flip the missing y → the direction flips to left).
+  Folded: Fig-1 legend → y-based (cheap y≈1 / dear y≈3); cell-12 spells out `Cover=5 = 3+2`;
+  `tree_method='exact'` commented. Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert
+  exit 0 (3 figures / 0 errors); ruff clean; `llms.txt` **72**; `common_errors` +2 XGBoost rows
+  (learned-default-direction; native-NaN-vs-impute + the GB/HistGBR/XGB contrast). **No `src/` change**
+  (notebook-local matplotlib; `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb3.py` right
+  before `git add` (kernel-drift guard). **Three fundamentals done.** Next: open & plan NB 4 (the
+  estimator & its parameters + the histogram method).
+- **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) OPENED.**
+  Branch `notebook/09_XGBoost__03_sparsity_aware_splits` off `chapter/09_XGBoost` (@ `307983f`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, XGBoost handles **missing** values with
+  no imputation by sending every missing row down a **learned default direction**, chosen by trying both
+  ways and keeping the higher gain (Chen & Guestrin 2016 §3.4). Build by hand on a small NaN-bearing toy
+  (enumerate thresholds on the non-missing values; per threshold compute the NB-2 gain with missing→left
+  vs missing→right; take the global argmax) and check the chosen direction against XGBoost's `Missing`
+  column in `trees_to_dataframe`. Contrast (measured): plain `GradientBoosting*` **rejects** NaN;
+  `HistGradientBoosting*` (ch 08) & XGBoost **accept** it (XGBoost did it first, 2016). Anchors measured
+  at plan time (xgboost 3.2.0). No `src/` change expected (notebook-local matplotlib; `trees_to_dataframe`;
+  pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-27) & persisted**
+  (`docs/plans/09_XGBoost__03_sparsity_aware_splits.md`); ~19 cells / 3 figures; anchors measured live
+  (by-hand best `x<5, missing→right, 2.949`; XGBoost `Missing`→right, Gain `5.8985 = 2×`; GB rejects NaN,
+  HistGBR & XGB accept). Building now from a `build_ch09_nb3.py` scratchpad script.
+- **NB 2 (the regularized objective — λ, γ, and the gain that decides splits, by hand) BUILT & MERGED
+  to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (5 code / 14 md), 3 figures (the
+  regularized parabola λ∈{0,1,10}; the gain + γ threshold with a **measured** split/prune sweep; by-hand
+  vs XGBoost parity). One concept: complexity priced **inside** the objective `Ω = γT + ½λΣw²`.
+  **Anchors (xgboost 3.2.0, reproduced exactly): λ shrinks the leaf `w*=−G/(H+λ)` (+2.0/+1.5/+1.0/
+  +0.4615/+0.0583); the structure-score split gain (C&G eq. 6→7) by-hand ½-gain = 9; XGBoost reports
+  Gain = 18 (= 2×, the ½ dropped) and prunes at γ>18 — so γ is in no-½ units; leaf weights [−1.5,+1.5]
+  == by-hand; Cover = ΣH (3/leaf); base_score learned = mean(y) when unpinned.** Reviewers **both PASS,
+  no BLOCK** — ml-expert re-derived the gain sign and ran a fine γ-sweep (kept 18.00, pruned 18.01),
+  confirming the no-½-units claim across several toys; pedagogy caught a real **Fig-1 colour collision**
+  (`model`==`class_d` share a hex) and confirmed the one-concept build + the kind 2×/½ framing. Folded:
+  Fig-1 colours → blue/amber/coral; the ½'s origin shown by the back-substitution cancellation (cell 8);
+  γ pre-pruning softened + an NB-4 post-prune forward-note; "clearly"→"genuinely"; axis "2×9=18".
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  ruff clean; `llms.txt` **71**; `common_errors` +3 XGBoost rows (regularizer-prices-complexity-inside;
+  the gain sign-trap; the 2×/½-and-γ-units detail). **No `src/` change** (notebook-local matplotlib;
+  `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb2.py` right before `git add`
+  (kernel-drift guard). Next: open & plan NB 3 (sparsity-aware splits).
+- **NB 2 (the regularized objective — λ, γ, and the gain that decides splits, by hand) OPENED.** Branch
+  `notebook/09_XGBoost__02_regularized_objective` off `chapter/09_XGBoost` (@ `113ebb3`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, put complexity **into the objective**
+  `Obj = Σ loss + Ω(f)`, `Ω = γT + ½λΣw²`. Two consequences, both by hand: the leaf weight becomes
+  `w* = −G/(H+λ)` (L2 shrinks it toward 0), and the **split gain** derived from the structure score
+  (C&G eq. 6 → 7) `½[G_L²/(H_L+λ)+G_R²/(H_R+λ)−G²/(H+λ)] − γ` decides whether to split (γ = pre-pruning).
+  The correctness anchor: by-hand leaf weights == XGBoost exactly, and the **measured 2×/½** detail
+  (XGBoost reports 2× the textbook gain, dropping the ½ — argmax-invariant); `Cover = ΣH`; `base_score`
+  honest (learned when unpinned). Anchors measured at plan time (xgboost 3.2.0). No `src/` change
+  expected (notebook-local matplotlib; `trees_to_dataframe`; pytest 20). **Plan APPROVED by Rémy (via
+  ExitPlanMode, 2026-06-27) & persisted** (`docs/plans/09_XGBoost__02_regularized_objective.md`); ~20
+  cells / 3 figures; anchors measured live (λ-shrinkage ±2.0/±1.5/±0.46; ½-gain 9 vs XGBoost 18; γ prune
+  at >18; `Cover=ΣH`; `base_score` learned = mean). Building now from a `build_ch09_nb2.py` scratchpad
+  script.
+- **NB 1 (the second-order view — gradients + curvature, by hand) BUILT & MERGED to
+  `chapter/09_XGBoost` — Rémy validated visually.** 22 cells (7 code / 15 md), 3 figures (the parabola +
+  its 2nd-order approximation; the curvature-blind vs Newton step; the two-losses-one-rule curvature
+  panel). One concept: approximate any loss to second order around F → optimal leaf `w*=−G/H`.
+  **Anchors (xgboost 3.2.0, reproduced exactly): the scalar step `w*=−g/h`; SE recovery on ch 08's sine
+  (F0=−0.1199; per leaf −G/H == mean residual == tree leaf, +0.29451/+0.75892/−0.68149/−0.22921);
+  log-loss recovery on ch 08's moons (F0=0; −G/H == Newton −2.0/+1.72881/−1.62590/+2.0); λ=0 XGBoost
+  parity [−2.0,+2.0].** The unification: ch 08's two leaf rules are **one** second-order rule (SE h=1 →
+  mean; log-loss h=p(1−p) → Newton); the loss only changes G,H. Reviewers **both PASS, no BLOCK** — each
+  re-derived the math and re-ran every anchor (incl. the `trees_to_dataframe` leaf-in-`Gain` quirk, the
+  ×4 rescale, all 3 rendered figures); folded their convergent MINOR polish (h>0 caveat + uniform
+  "twice-differentiable"; recap now says *why* the mean fell short; the `−g=y−p` ↔ "mean residual" tie).
+  Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert exit 0 (3 figures / 0 errors);
+  ruff clean; `llms.txt` **70**; `common_errors` +2 XGBoost rows (two-leaf-rules-are-one-second-order-
+  rule; gradient=direction / curvature=step-length). **No `src/` change** (notebook-local matplotlib;
+  reused `viz`; XGBoost via `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb1.py` right
+  before `git add` (kernel-drift guard). Next: open & plan NB 2 (the regularized objective).
+- **NB 1 (the second-order view — gradients + curvature, by hand) OPENED.** Branch
+  `notebook/09_XGBoost__01_second_order_view` off `chapter/09_XGBoost` (@ `9ebb1e1`). Phase
+  `notebook-plan`: drafting the cell-by-cell plan — one concept, **approximate any loss to second order
+  and read off the optimal leaf**: `L(F+w) ≈ L(F) + g·w + ½h·w²` (a parabola) → minimum `w*=−g/h` → over
+  a leaf `w*=−G/H`. Pin the convention once (`g=∂L/∂F`, `h=∂²L/∂F²`, leaf `−G/H`), then recover **both**
+  ch 08 leaf rules: SE (`g=F−y, h=1`) → mean residual (ch 08 NB 1), log-loss (`g=p−y, h=p(1−p)`) →
+  `Σ(y−p)/Σp(1−p)` (ch 08 NB 3's Newton leaf) — equal billing, classification the climax. NB-1's **own
+  λ=0 XGBoost parity** (`reg_lambda=0, gamma=0, eta=1, base_score` pinned, 1 tree / depth 1 → leaf ==
+  by-hand `−G/H`). Anchors measured at plan time (xgboost 3.2.0). No `src/` change expected
+  (notebook-local matplotlib; reuse `viz`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-27) & persisted** (`docs/plans/09_XGBoost__01_second_order_view.md`); ~22 cells / 3 figures;
+  anchors measured live (`w*=−G/H`; SE→mean & log-loss→Newton recoveries; λ=0 XGBoost parity `[−2.0,+2.0]`).
+  Building now from a `build_ch09_nb1.py` scratchpad script.
+- **Chapter 09 (XGBoost) plan APPROVED by Rémy & persisted** (`docs/plans/chapter_09_XGBoost.md`, this
+  commit). **FIVE notebooks** on the arc — NB 1 the **second-order view** (gradients + curvature by hand;
+  `w*=−G/H` unifies ch 08's SE leaf=mean and log-loss Newton leaf; its own λ=0 XGBoost parity) → NB 2 the
+  **regularized objective** (`Ω=γT+½λΣw²`; the structure-score gain C&G eq. 6–7; the **measured 2×/½**
+  parity detail + `Cover`=ΣH) → NB 3 **sparsity-aware splits** (a learned default direction for missing
+  values, by hand; GB rejects NaN / HistGBR & XGBoost accept) → NB 4 the **estimator & its parameters**
+  (owns the histogram method `tree_method='hist'`/`max_bin` measured; `reg_lambda`/`reg_alpha`/`gamma`,
+  `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; defaults
+  overfit) → NB 5 **demanding case** (Adult/Census visualization-first capstone; Ames fallback). The
+  **regularized, second-order refinement** of ch 08's engine; **XGBoost is not a new algorithm** and does
+  **not** reliably beat tuned GB/HistGBR on accuracy (edges = missing-handling/speed/regularization).
+  **Env fixed & measured live:** `uv sync --extra dev --extra boosting` (xgboost 3.2.0 / lightgbm 4.6.0)
+  + `brew install libomp` (macOS OpenMP runtime — xgboost could not load without it). Reviewer-gated on
+  the live install: **both reviewers NO BLOCK**, each independently re-running the by-hand parity (leaf
+  weights exact, gain 2× textbook, `Cover`=ΣH), the resolved defaults, NaN across GB/HistGBR/XGBoost,
+  native categoricals, the early-stopping API, and Adult's informative missingness. All MAJOR/MINOR folded
+  (NB 1 re-lays the Taylor move + own λ=0 parity + pinned signs + equal billing; NB 2 derives gain from
+  the structure score + kind ½ framing + honest `base_score`; NB 3 kept pure + pinned anchor; NB 4 owns
+  histogram-as-concept; NB 5 informative-missingness + native-vs-imputed axis + Adult/Ames verification).
+  `course_map.md` §09 refined to the 5-NB decomposition. **No `src/` change expected** (reuse `viz`;
+  trees via `trees_to_dataframe`; datasets via `fetch_openml`; pytest 20). Next: open & plan NB 1.
+- **Chapter 09 (XGBoost) opened.** Branch `chapter/09_XGBoost` created off `main` (synced @ `4775fe2`
+  after PR #8). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §09 and
+  the per-method arc — what XGBoost **adds** to gradient boosting (the regularized objective + the
+  second-order / Newton view) → missing-value & sparsity handling + the histogram split → the key knobs
+  (`eta`, `max_depth`, `subsample`, `colsample_*`, `lambda`/`alpha`) → early stopping & overfitting
+  control → a demanding case tuning honestly vs the simpler boosters. Builds directly on ch 08's gradient
+  boosting (XGBoost = a regularized, second-order, engineered refinement of the same engine); ch 10
+  LightGBM is the sibling. `xgboost` lives in the `boosting` extra — confirm the live install/version
+  before pinning any anchors. The pending `idle` STATE edit + `course_map.md` §08 → complete were folded
+  into this opening commit (committed on the chapter branch, not on protected `main`).
+- **CHAPTER 08 (Gradient Boosting) COMPLETE — merged to `main` via PR #8** (merge commit `4775fe2`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  **Six notebooks:** residuals by hand (regression) · the residual *was* the gradient · classification
+  (Newton leaf; exp-loss = AdaBoost) · shrinkage & the trees (overfit-at-large-ν; RF contrast) · the
+  estimator & early stopping · the California-housing capstone — plus a `style` commit making NB 1–3
+  ruff-clean. The **general form** of boosting (AdaBoost = the exp-loss special case); the course's **first
+  regression**; the launchpad for ch 09–10. **No `src/` change** across the chapter (reused
+  `viz.plot_train_test_curve` / `plot_feature_importances`; `make_friedman1` / `fetch_california_housing`
+  direct; pytest stays **20**). Two-reviewer gate + Rémy visual held on every NB; every number re-measured
+  on sklearn 1.9.0, seed-pinned; honest findings throughout (the Newton-leaf trap; exp-GB ≠ AdaBoost
+  predictor; overfit ν-dependent; OOB noisier than held-out; the dramatic MDI-vs-permutation location
+  divergence + the censored $500k cap). NB 6's capstone took a **revise round** (ml-expert BLOCK on the cap
+  mechanism + 2 MAJOR → folded → re-reviewed PASS). `main` synced @ `4775fe2`, ruff green, pytest 20.
+  STATE → `idle` (this edit + `course_map` §08 heading pending, fold into the ch 09 opening). Next: open
+  chapter 09 (XGBoost).
 - **NB 6 (the demanding case — California housing, the visualization-first capstone) BUILT & MERGED to
   `chapter/08_GradientBoosting` — Rémy validated visually. CHAPTER 08 COMPLETE on the branch (6/6).**
   28 cells (9 code / 19 md), 7 figures (target histogram with the $500k cap; geographic price map; GB
