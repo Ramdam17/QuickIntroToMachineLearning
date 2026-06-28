@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — chapter opened off `main` (@ `fe295aa` after PR #9); phase `chapter-plan` (drafting the chapter plan in plan mode). Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (chapter 10 planning; no notebook opened yet). |
-| Phase | `chapter-plan-approved` — chapter 10 (LightGBM) plan **APPROVED by Rémy (2026-06-28) & persisted** (`docs/plans/chapter_10_LightGBM.md`); both gate reviewers **REVISE → no BLOCK** (folded). Ready to plan NB 1. |
-| Active branch | `chapter/10_LightGBM` (off `main` @ `fe295aa`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (**APPROVED**). NB 1–5: to be drafted one at a time. |
-| Next concrete action | **Open & plan NB 1 — leaf-wise (best-first) growth, by hand.** `git switch -c notebook/10_LightGBM__01_leaf_wise_growth` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: grow the max-loss-reduction leaf first (vs level-wise); the learner met it *named* twice (ch 08 NB 5 HistGBR `max_leaf_nodes`, ch 09 NB 4 `lossguide`) — here built by hand on a toy, matched to LightGBM's first tree; lower **training** loss per leaf, lopsided (qualitative; the depth-vs-num_leaves sweep is NB 2). Measure anchors live; draft ~20 cells / ~3 figures per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan); on approval persist `docs/plans/10_LightGBM__01_*.md` + build. |
+| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **building NB 1 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | **NB 1 `01_leaf_wise_growth`** — branch opened off `chapter/10_LightGBM`; phase `notebook-plan` (measuring anchors live, drafting the cell-by-cell plan). |
+| Phase | `notebook-plan` — NB 1 (leaf-wise growth, by hand) branch opened; measuring anchors live then drafting the plan in plan mode. |
+| Active branch | `notebook/10_LightGBM__01_leaf_wise_growth` (off `chapter/10_LightGBM`). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: **drafting** (cell-by-cell, plan mode). NB 2–5: later. |
+| Next concrete action | **Measure NB-1 anchors live, then draft the plan.** One concept: **leaf-wise (best-first) growth, by hand** — maintain a frontier of candidate leaves, repeatedly expand the one whose best split gives the largest loss reduction (SSE/structure-score gain), to a fixed `num_leaves` budget; contrast with level-wise (ch 04/09 depthwise). The learner met leaf-wise *named* twice (ch 08 NB 5 HistGBR `max_leaf_nodes`, ch 09 NB 4 `lossguide`) — **here built**. Anchor: by-hand leaf-wise tree (order + thresholds) **== LightGBM's single tree** on a toy (reg_lambda=0, min_split_gain=0, 1 tree, small num_leaves, max_bin high so histogram is lossless). Show leaf-wise reaches lower **training** loss for the same #leaves, while growing lopsided (qualitative; the depth-vs-num_leaves sweep is NB 2). Draft ~20 cells / ~3 figures per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan); on approval persist `docs/plans/10_LightGBM__01_leaf_wise_growth.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,16 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (leaf-wise / best-first growth, by hand) OPENED.** Branch
+  `notebook/10_LightGBM__01_leaf_wise_growth` off `chapter/10_LightGBM` (@ `b6cb63d`). Phase
+  `notebook-plan`: measuring anchors live then drafting the cell-by-cell plan — one concept, **build
+  leaf-wise (best-first) tree growth by hand** (a frontier of candidate leaves; repeatedly expand the
+  one whose best split gives the largest loss reduction, to a `num_leaves` budget) and contrast with
+  level-wise (ch 04/09 depthwise). Leaf-wise was *named* twice before (ch 08 NB 5 HistGBR
+  `max_leaf_nodes`; ch 09 NB 4 `lossguide`) — **here built**. Anchor: by-hand leaf-wise == LightGBM's
+  single tree on a toy; leaf-wise reaches lower **training** loss for the same #leaves, grows lopsided
+  (qualitative; the depth-vs-num_leaves sweep is NB 2). No `src/` change expected (reuse `viz`;
+  `dump_model`; pytest 20). Next: measure → draft → ExitPlanMode for Rémy.
 - **Chapter 10 (LightGBM) opened.** Branch `chapter/10_LightGBM` created off `main` (synced @ `fe295aa`
   after PR #9). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §10 and
   the per-method arc — **leaf-wise vs level-wise growth** (the XGBoost contrast; ch 09 NB 4 named
