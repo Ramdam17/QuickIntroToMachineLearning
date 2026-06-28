@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `notebook-plan` — NB 5 (the demanding case / capstone) branch opened; measuring anchors live (the Adult missing-value verification first) then drafting the cell-by-cell plan in plan mode. **NB 1–4 done.** |
+| Phase | `notebook-plan-approved` — NB 5 (Adult/Census capstone) plan APPROVED by Rémy (2026-06-28) & persisted; the chapter-plan verification is **done** (native-vs-imputed within noise, Δ −0.001 → **Rémy chose: keep Adult, feature the honest null**); building now. **NB 1–4 done.** |
 | Active branch | `notebook/09_XGBoost__05_census_income` (off `chapter/09_XGBoost` @ `8b124e5`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: **drafting** (cell-by-cell, plan mode). |
-| Next concrete action | **Measure NB 5 anchors live, then draft the capstone plan.** First the chapter-plan **verification**: `fetch_openml('adult', as_frame=True)` — confirm `?`→NaN, the informative-missing pattern (P(>50K | occupation missing) vs present), and **whether native-NaN-vs-imputed actually moves PR-AUC** for XGBoost; if the numeric/categorical missing lever is negligible, lean the NB-3 callback on categorical native handling or fall back to **Ames Housing** (rename branch). Then baselines (logistic/linear + shallow tree), tuned XGB with **early stopping** (`eval_set`), held-out acc/precision/recall/PR-AUC + threshold, cross-method (XGB/GB/HistGBR/RF/linear; native-NaN-vs-imputed as a named axis), gain-MDI vs permutation, LightGBM teaser. Draft ~26 cells / ≥6 figures (capstone visualization-first) → ExitPlanMode for Rémy → on approval persist `docs/plans/09_XGBoost__05_*.md` (phase `notebook-plan-approved`) + commit, then build. After NB 5 ships: close chapter via PR `chapter/09_XGBoost → main` (`--no-ff`). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: **APPROVED & persisted** (`docs/plans/09_XGBoost__05_census_income.md`). |
+| Next concrete action | **Build NB 5** from a `build_ch09_nb5.py` scratchpad script (~30 cells, 8 figures): the Adult/Census capstone. Re-measure every anchor at build (positive rate 0.2393; informative missingness; **native-vs-imputed Δ −0.001 within noise** = the honest null; cross-method HistGBR 0.829 ≈ XGB 0.828 > GB 0.814 > RF 0.788 > Logistic 0.768 > tree 0.668; early stopping 263/2000, test PR-AUC 0.829; threshold 0.5→0.358; gain-MDI relationship vs permutation capital-gain; ethics base rates F 0.109 / M 0.304). nbconvert a scratchpad copy from project cwd (8 figures, exit 0; **never silence LightGBM**) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark §09 complete, pytest 20, STATE) → commit `feat(09_xgboost): notebook 05 — a demanding case: census income` → `git merge --ff-only` into `chapter/09_XGBoost`. **Then close the chapter via PR `chapter/09_XGBoost → main` (`--no-ff`) on Rémy's go.** |
 
 ## Notes / blockers
 
@@ -48,7 +48,13 @@
   stopping** (`eval_set`) → held-out acc/precision/recall/PR-AUC + threshold → error analysis → honest
   cross-method comparison (XGB/GB/HistGBR/RF/linear, **native-NaN-vs-imputed a named axis**, XGB run both
   ways) → gain-MDI vs permutation → LightGBM teaser. **Last NB of ch 09 — after it ships, close the
-  chapter via PR `chapter/09_XGBoost → main` (`--no-ff`).** Next: measure → draft → ExitPlanMode for Rémy.
+  chapter via PR `chapter/09_XGBoost → main` (`--no-ff`).** **Verification done & plan APPROVED by Rémy
+  (via ExitPlanMode + an AskUserQuestion fork, 2026-06-28) & persisted**
+  (`docs/plans/09_XGBoost__05_census_income.md`); ~30 cells / 8 figures. The measured surprise:
+  native-NaN-vs-imputed is **within noise** (Δ −0.001) because the informative missingness is redundant
+  with correlated features → Rémy chose to **keep Adult and feature the honest null** ("measure the
+  lever"), the NB-3 callback leaning on convenience + the cross-method axis. Anchors measured live (see
+  the persisted plan). Building now from a `build_ch09_nb5.py` scratchpad script.
 - **NB 4 (the estimator `XGBClassifier` & its parameters — integrative; owns the histogram method)
   BUILT & MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 25 cells (8 code / 17 md), 4 figures (the
   depth dial — test peak@4, default@6 past it, leaves exploding; regularizers close the gap — gamma &
