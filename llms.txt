@@ -74,3 +74,4 @@
 - [notebooks/09_XGBoost/05_census_income.ipynb](notebooks/09_XGBoost/05_census_income.ipynb) — 05 — A demanding case: Census income, end to end — *Chapter 09 · XGBoost · Notebook 5 of 5*
 ## 10_LightGBM
 - [notebooks/10_LightGBM/01_leaf_wise_growth.ipynb](notebooks/10_LightGBM/01_leaf_wise_growth.ipynb) — 01 — Leaf-wise growth: grow the best leaf first — *Chapter 10 · LightGBM · Notebook 1 of 5*
+- [notebooks/10_LightGBM/02_goss_efb.ipynb](notebooks/10_LightGBM/02_goss_efb.ipynb) — 02 — GOSS and EFB: how LightGBM gets light — *Chapter 10 · LightGBM · Notebook 2 of 5*

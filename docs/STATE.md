@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | **`02_goss_efb`** — branch opened off `chapter/10_LightGBM` (@ `fed6560`); phase `notebook-plan` (measuring GOSS anchors live, then drafting the cell-by-cell plan). |
-| Phase | `notebook-plan-approved` (NB 2 = GOSS built + EFB named) — **plan APPROVED by Rémy & persisted**; building now. Chapter 10 arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB (building)** · NB 3 optimal categorical split (built) · NB 4 estimator · NB 5 capstone. |
-| Active branch | `notebook/10_LightGBM__02_goss_efb` (off `chapter/10_LightGBM` @ `fed6560`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. **NB 2: `docs/plans/10_LightGBM__02_goss_efb.md` APPROVED 2026-06-28** (reframed vs chapter wording — see below). |
-| Next concrete action | **Build NB 2 from a scratchpad `build_ch10_nb2.py`** (~22 cells, 4 figures), then nbconvert-execute a copy → guards (banned/hex/ruff/black/output-free) → two-reviewer gate (no BLOCK) → fold → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt.py`, `common_errors` +rows, `course_map` mark, pytest 20, STATE) → commit `feat(10_lightgbm): notebook 02 — GOSS and EFB` → `git merge --ff-only` into `chapter/10_LightGBM`. Anchors measured live (scripts `measure_ch10_nb2_goss.py` / `_skewed.py` / `_sweep.py`): GOSS unbiased (`H` exact, `G` unbiased); the **variance edge over uniform is gated by gradient concentration (crossover ≈ 0.5)** — dense tabular stays 0.21→0.47 (≤ crossover) so GOSS ≈ full quality on 30 % rows but ~ties uniform there; wall-clock ~flat (2.41 vs 2.45 s); EFB 15→3 bundles (conflict 0.000/0.035). |
+| Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–2 of 5 shipped** (on `chapter/10_LightGBM`); next NB 3 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (**NB 2 `02_goss_efb` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; NB 3 not yet opened). |
+| Phase | NB 2 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 optimal categorical split (NEW, built — next)** · NB 4 estimator · NB 5 capstone. Next: open & plan NB 3. |
+| Active branch | `chapter/10_LightGBM` (NB 1 + NB 2 ff-merged). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. NB 2: DONE (`docs/plans/10_LightGBM__02_goss_efb.md`). **NB 3 (optimal categorical split): to be drafted.** |
+| Next concrete action | **Open & plan NB 3 — the optimal categorical split, by hand (Fisher 1958).** `git switch -c notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: partitioning K categories into two groups is `2^(K−1)−1` ways (exponential); Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only `K−1` candidates (linear). Build by hand on a binary toy and **match LightGBM exactly** (de-risked: LEFT {1,3,5} ≡ LightGBM {0,2,4}). **Build-time pins:** `min_data_per_group=1` (default 100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0` — OR ≥100 rows/category. Teaching note: with `h=1`, `G/H` = per-category target mean (give `G/H` as the general key). Keep toy binary. ~3 figures (categories by mean/gradient; sorted order + the `K−1` contiguous candidates; by-hand == LightGBM). Measure anchors live; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__03_categorical_split.md` + build. |
 
 ## Notes / blockers
 
@@ -65,7 +65,28 @@
   unbiased (`H` exact `a·n+(1−a)/b·b·n=n`; `G` unbiased); the lever is **variance, only when gradients are
   imbalanced** (Ke et al. Thm 3.2). Wall-clock ~flat on dense (2.41 vs 2.45 s). NB teaches this honest
   version (a strict upgrade, consistent with the chapter's "GOSS = statistical efficiency, wall-clock
-  regime-dependent" bar). Building now from `build_ch10_nb2.py`. Next: build → guards → two-reviewer gate.
+  regime-dependent" bar). **BUILT (23 cells: 8 code / 15 md, 4 figures) & MERGED to `chapter/10_LightGBM`
+  — Rémy validated visually.** Figures: |g| distribution + GOSS's kept band; GOSS-vs-uniform gain-estimate
+  distributions on a concentrated set (both centred on the truth, GOSS ~3× tighter); the concentration
+  crossover sweep (variance ratio vs concentration, crossing 1.0 near ~0.5, with the measured dense-tabular
+  band 0.21–0.47 shaded at/below it); the EFB one-hot exclusivity image. **Anchors reproduced by nbconvert
+  (lightgbm 4.6.0, SEED=0):** round-1 toy |g| median 1.467/max 8.101, concentration 0.44; G_full +0.000 /
+  H 2000.0; GOSS G mean +6.77 (std 161.7), **H exact 2000.000 (std 0)**; uniform G +10.4 (std 156.4);
+  concentrated set (conc 0.66) true gain 50.42, GOSS std 1.88 vs uniform 5.54 (ratio 0.34); sweep
+  1.49/1.42/1.06/0.56/0.35/0.27/0.28 at conc 0.20→0.86; ensemble (45k×30, 300 trees) full 0.9313 / GOSS
+  0.9345 / uniform 0.9353 (fit ~2.0 s each — flat); EFB 15 one-hot cols → ~3 bundles (same-group conflict
+  0.0000 / cross-group 0.0354). **Reviewers both PASS, no BLOCK** — ml-expert re-derived the algebra
+  (`E[G_GOSS]=G_full`; `H_GOSS=n` exact every draw) and adversarially confirmed the synthetic feature is
+  **conservative** for GOSS, not flattering; pedagogy verified all 4 Read-the-figure match the pixels, 0
+  banned, charter clean, exercises tiered. **Folds applied:** Thm-3.2 attribution softened (it bounds GOSS's
+  gain error by a term growing with the largest *sampled* gradient; the crossover-vs-uniform is *our*
+  measurement); a feature-conservatism sentence + seeded into exercise 2; "Figure 3" → descriptive;
+  cosmetic line-wrap. Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (4 figures);
+  LightGBM banner left visible (no `verbose=-1`). **No `src/` change** (notebook-local numpy + `LGBMClassifier`;
+  pytest **20**). End-of-NB checklist done: rebuilt from `build_ch10_nb2.py` (kernel-drift guard), `llms.txt`
+  **77**, `course_map` §10 → NB 1–2 built, `common_errors` **+4 LightGBM/GOSS/EFB rows** (GOSS-vs-uniform
+  gated-by-concentration; unbiased-but-variance-is-the-point; GOSS-no-wall-clock-on-dense; EFB≠concatenation)
+  **+ fixed a stale `num_leaves` NB-2→NB-4 ref**. Next: open & plan NB 3 (the optimal categorical split).
 - **CHAPTER 10 RESTRUCTURED (Rémy-initiated) & re-gated — both reviewers no BLOCK.** Reaching NB 2,
   `num_leaves` proved **too light** for a standalone fundamental (a parameter sweep, no by-hand build,
   overlapping NB 4). Rémy chose to restructure. New arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB** ·
