@@ -8,7 +8,7 @@
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–4 of 5 shipped** (on `chapter/10_LightGBM`); next NB 5 (capstone) closes the chapter. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **`05_miniboone`** — branch opened off `chapter/10_LightGBM` (@ `1064a6c`); phase `notebook-plan` (verifying dataset + measuring matched-capacity / dial-`n` anchors live, then drafting the capstone cell-by-cell). |
-| Phase | `notebook-plan` (NB 5 = the demanding case / visualization-first capstone — MiniBooNE). Chapter 10 arc: NB 1–4 shipped · **NB 5 capstone (planning) — last NB, then close ch 10 via PR → main**. |
+| Phase | `notebook-plan-approved` (NB 5 = MiniBooNE capstone) — **plan APPROVED by Rémy & persisted** (`docs/plans/10_LightGBM__05_miniboone.md`); building now. Chapter 10 arc: NB 1–4 shipped · **NB 5 capstone (building) — last NB, then close ch 10 via PR → main**. |
 | Active branch | `notebook/10_LightGBM__05_miniboone` (off `chapter/10_LightGBM` @ `1064a6c`). |
 | Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1–4: DONE. **NB 5 (demanding case / visualization-first capstone): to be drafted.** |
 | Next concrete action | **Open & plan NB 5 — the demanding case (visualization-first capstone)** (chapter plan §NB 5). `git switch -c notebook/10_LightGBM__05_<name>` off `chapter/10_LightGBM`; STATE `notebook-plan`. **Dataset (verification owed at plan):** primary **MiniBooNE** (`fetch_openml`, ~130k×50, binary, numeric — verify loadable, 72/28, no NaN); fallback a **scaled synthetic** (`make_classification` 300k–500k) to **dial `n`** for the speed/accuracy curve. (Avoid reuse: covtype/spambase/California/Adult/breast_cancer.) **The matched-capacity comparison (pre-committed convention):** LightGBM / XGBoost-hist / HistGBR under **one** convention — num_leaves (= HistGBR `max_leaf_nodes`), leaf-wise, depth unbounded — report **fit time AND score**, reconcile in prose vs the spine's unmatched default-vs-default 200k number; then **dial synthetic `n` up** to find where LightGBM crosses ahead. GOSS on/off as **efficiency** (accuracy vs fraction), not a flat speed bar. **Honesty axis:** speed measured & conditional, the three boosters close on accuracy, winner depends on data/shape — "no universal best." **Arc** (≥6 figures, ~28–30 cells): look → baselines → tuned LightGBM + early stopping → held-out PR-AUC/threshold (ch 00) → matched speed/accuracy + dial-`n` crossover → error analysis → cross-method → importances (split vs gain vs **permutation**). Carry NB 4's output hygiene (`LGBM_VERBOSE` switch + named DataFrame). Measure live; ExitPlanMode for Rémy; persist `docs/plans/10_LightGBM__05_*.md` + build. **After it ships, close ch 10 via PR `chapter/10_LightGBM → main` (`--no-ff`).** |
@@ -53,9 +53,20 @@
   held-out PR-AUC/threshold (ch 00) → matched speed/accuracy + dial-`n` crossover → error analysis →
   cross-method → importances (split vs gain vs **permutation**). Carry NB 4's output hygiene
   (`LGBM_VERBOSE` switch + named DataFrame). No `src/` change expected (reuse `viz`; `fetch_openml`;
-  `LGBMClassifier`/`XGBClassifier`/`HistGradientBoostingClassifier`; pytest 20). Next: measure live →
-  draft → ExitPlanMode for Rémy. **After it ships, close ch 10 via PR `chapter/10_LightGBM → main`
-  (`--no-ff`).**
+  `LGBMClassifier`/`XGBClassifier`/`HistGradientBoostingClassifier`; pytest 20). **Plan APPROVED by Rémy
+  (via ExitPlanMode, 2026-06-28) & persisted** (`docs/plans/10_LightGBM__05_miniboone.md`); ~30 cells / 7
+  figures. **Measured refinement (Rémy signed off):** the chapter-plan "dial-`n` crossover" doesn't
+  materialize — at **matched capacity** LightGBM is fastest at every `n` (50k→800k), all 3 boosters tie on
+  PR-AUC (within 0.002); **default-vs-default** XGBoost-depth6 is faster at every `n` up to 4M but the gap
+  narrows (2.4×@50k → 1.11×@4M), overtaking only beyond ~4M. The winner is set by the **convention (tree
+  shape), slowly by scale** — "no universal best." Anchors (`measure_ch10_nb5.py`): MiniBooNE 130064×50/0
+  NaN/72-28; baselines logistic 0.862 / RF 0.945; matched LightGBM 2.37s/0.9573 fastest / XGB-hist
+  2.97s/0.9586 / HistGBR 3.23s/0.9569; default XGB 1.04s/0.9588 vs LightGBM 2.43s/0.9573; tuned early-stop
+  @495 PR-AUC 0.9581, val-threshold 0.455 → test F1 0.9046; **GOSS 0.9579 > uniform 0.9556** (NB-2 edge
+  appears); importances gain vs permutation top-1 differs (PID_0 vs PID_12). Carry NB 4's hygiene
+  (`LGBM_VERBOSE` switch + named DataFrame); live dial-`n` ≤ ~600k, cite offline 1M–4M in prose. Building
+  now from `build_ch10_nb5.py`. Next: build → guards → two-reviewer gate. **After it ships, close ch 10 via
+  PR `chapter/10_LightGBM → main` (`--no-ff`).**
 - **NB 4 (the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — integrative) OPENED.** Branch
   `notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM` (@ `7df00ae`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan
