@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `notebook-commit` — NB 4 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers NO BLOCK; Rémy validated visually). **NB 1–4 done** (the three fundamentals + the estimator). Next: open & plan NB 5 (the capstone). |
-| Active branch | `chapter/09_XGBoost` (NB 1–4 ff-merged in). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: to be drafted. |
-| Next concrete action | **Open & plan NB 5 — the demanding case (visualization-first capstone).** `git switch -c notebook/09_XGBoost__05_<title>` off `chapter/09_XGBoost`; STATE `notebook-plan`. Per the chapter plan: **Adult/Census Income** primary (`fetch_openml('adult', as_frame=True)`, ~48 842×14, informative missing in `occupation`/`workclass`/`native-country`, ~24% positive, native categoricals via `enable_categorical=True`) — **verify the missing-value lever actually moves PR-AUC vs imputation** at plan time; **Ames Housing fallback** if the numeric-missing lever is negligible. Arc: a measured missingness-vs-target panel → baselines (logistic/linear + shallow tree) → tuned XGBoost with **early stopping** (`eval_set`) → held-out acc/precision/recall/PR-AUC + threshold → error analysis → honest cross-method comparison (XGB vs GB/HistGBR/RF/linear, **native-NaN-vs-imputed as a named axis**, run XGB both ways) → gain-MDI vs permutation → LightGBM teaser. ~26 cells, ≥6 figures (capstone visualization-first). Measure all anchors live. After NB 5 ships: close the chapter via PR `chapter/09_XGBoost → main` (`--no-ff`). |
+| Phase | `notebook-plan` — NB 5 (the demanding case / capstone) branch opened; measuring anchors live (the Adult missing-value verification first) then drafting the cell-by-cell plan in plan mode. **NB 1–4 done.** |
+| Active branch | `notebook/09_XGBoost__05_census_income` (off `chapter/09_XGBoost` @ `8b124e5`). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: **drafting** (cell-by-cell, plan mode). |
+| Next concrete action | **Measure NB 5 anchors live, then draft the capstone plan.** First the chapter-plan **verification**: `fetch_openml('adult', as_frame=True)` — confirm `?`→NaN, the informative-missing pattern (P(>50K | occupation missing) vs present), and **whether native-NaN-vs-imputed actually moves PR-AUC** for XGBoost; if the numeric/categorical missing lever is negligible, lean the NB-3 callback on categorical native handling or fall back to **Ames Housing** (rename branch). Then baselines (logistic/linear + shallow tree), tuned XGB with **early stopping** (`eval_set`), held-out acc/precision/recall/PR-AUC + threshold, cross-method (XGB/GB/HistGBR/RF/linear; native-NaN-vs-imputed as a named axis), gain-MDI vs permutation, LightGBM teaser. Draft ~26 cells / ≥6 figures (capstone visualization-first) → ExitPlanMode for Rémy → on approval persist `docs/plans/09_XGBoost__05_*.md` (phase `notebook-plan-approved`) + commit, then build. After NB 5 ships: close chapter via PR `chapter/09_XGBoost → main` (`--no-ff`). |
 
 ## Notes / blockers
 
@@ -38,6 +38,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — Adult/Census Income, the visualization-first capstone) OPENED.** Branch
+  `notebook/09_XGBoost__05_census_income` off `chapter/09_XGBoost` (@ `8b124e5`). Phase `notebook-plan`:
+  measuring anchors live then drafting the capstone (~26 cells, ≥6 figures). The chapter's **capstone** —
+  a full, honest tabular workflow mobilizing all of ch 09. **Verification owed at plan time** (chapter
+  plan): does Adult's missingness actually move PR-AUC under native-NaN-vs-imputed, and is `?`→NaN; if
+  the lever is negligible, lean the NB-3 callback on categorical native handling or fall back to Ames
+  (rename branch). Arc: measured missingness-vs-target panel → baselines → tuned XGBoost with **early
+  stopping** (`eval_set`) → held-out acc/precision/recall/PR-AUC + threshold → error analysis → honest
+  cross-method comparison (XGB/GB/HistGBR/RF/linear, **native-NaN-vs-imputed a named axis**, XGB run both
+  ways) → gain-MDI vs permutation → LightGBM teaser. **Last NB of ch 09 — after it ships, close the
+  chapter via PR `chapter/09_XGBoost → main` (`--no-ff`).** Next: measure → draft → ExitPlanMode for Rémy.
 - **NB 4 (the estimator `XGBClassifier` & its parameters — integrative; owns the histogram method)
   BUILT & MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 25 cells (8 code / 17 md), 4 figures (the
   depth dial — test peak@4, default@6 past it, leaves exploding; regularizers close the gap — gamma &
