@@ -7,9 +7,9 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–4 of 5 shipped** (on `chapter/10_LightGBM`); next NB 5 (capstone) closes the chapter. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 4 `04_estimator_and_parameters` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; NB 5 not yet opened). |
-| Phase | NB 4 **DONE** (built, both reviewers PASS/REVISE→folded no BLOCK, Rémy visual, merged). Chapter 10 arc: NB 1 leaf-wise · NB 2 GOSS+EFB · NB 3 categorical split · NB 4 estimator — all shipped · **NB 5 capstone (next — last NB, then close ch 10 via PR → main)**. |
-| Active branch | `chapter/10_LightGBM` (NB 1–4 ff-merged). |
+| Current notebook | **`05_miniboone`** — branch opened off `chapter/10_LightGBM` (@ `1064a6c`); phase `notebook-plan` (verifying dataset + measuring matched-capacity / dial-`n` anchors live, then drafting the capstone cell-by-cell). |
+| Phase | `notebook-plan` (NB 5 = the demanding case / visualization-first capstone — MiniBooNE). Chapter 10 arc: NB 1–4 shipped · **NB 5 capstone (planning) — last NB, then close ch 10 via PR → main**. |
+| Active branch | `notebook/10_LightGBM__05_miniboone` (off `chapter/10_LightGBM` @ `1064a6c`). |
 | Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1–4: DONE. **NB 5 (demanding case / visualization-first capstone): to be drafted.** |
 | Next concrete action | **Open & plan NB 5 — the demanding case (visualization-first capstone)** (chapter plan §NB 5). `git switch -c notebook/10_LightGBM__05_<name>` off `chapter/10_LightGBM`; STATE `notebook-plan`. **Dataset (verification owed at plan):** primary **MiniBooNE** (`fetch_openml`, ~130k×50, binary, numeric — verify loadable, 72/28, no NaN); fallback a **scaled synthetic** (`make_classification` 300k–500k) to **dial `n`** for the speed/accuracy curve. (Avoid reuse: covtype/spambase/California/Adult/breast_cancer.) **The matched-capacity comparison (pre-committed convention):** LightGBM / XGBoost-hist / HistGBR under **one** convention — num_leaves (= HistGBR `max_leaf_nodes`), leaf-wise, depth unbounded — report **fit time AND score**, reconcile in prose vs the spine's unmatched default-vs-default 200k number; then **dial synthetic `n` up** to find where LightGBM crosses ahead. GOSS on/off as **efficiency** (accuracy vs fraction), not a flat speed bar. **Honesty axis:** speed measured & conditional, the three boosters close on accuracy, winner depends on data/shape — "no universal best." **Arc** (≥6 figures, ~28–30 cells): look → baselines → tuned LightGBM + early stopping → held-out PR-AUC/threshold (ch 00) → matched speed/accuracy + dial-`n` crossover → error analysis → cross-method → importances (split vs gain vs **permutation**). Carry NB 4's output hygiene (`LGBM_VERBOSE` switch + named DataFrame). Measure live; ExitPlanMode for Rémy; persist `docs/plans/10_LightGBM__05_*.md` + build. **After it ships, close ch 10 via PR `chapter/10_LightGBM → main` (`--no-ff`).** |
 
@@ -38,6 +38,24 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — MiniBooNE, the visualization-first capstone) OPENED.** Branch
+  `notebook/10_LightGBM__05_miniboone` off `chapter/10_LightGBM` (@ `1064a6c`). Phase `notebook-plan`:
+  dataset verified + measuring anchors live, then drafting the capstone. **Dataset verified (fetch_openml
+  MiniBooNE v1):** 130064×50, all float64, **0 NaN**, binary `signal` **72/28** (False 93565 / True 36499)
+  — loads in <1s. The **last NB of ch 10**. Scope (chapter plan §NB 5): a larger tabular problem where
+  speed can matter. **Matched-capacity comparison (pre-committed convention):** LightGBM / XGBoost-hist /
+  HistGBR under ONE convention — num_leaves (= HistGBR `max_leaf_nodes`), leaf-wise, depth unbounded —
+  report **fit time AND score**, reconcile in prose vs the spine's unmatched default-vs-default number;
+  then **dial synthetic `n` up** (`make_classification` 300k–500k) to find where LightGBM crosses ahead.
+  GOSS on/off as **efficiency** (accuracy vs fraction), not a flat speed bar. **Honesty axis:** speed
+  measured & conditional, the three boosters close on accuracy, the winner depends on data/shape — "no
+  universal best." Arc (≥6 figures, ~28–30 cells): look → baselines → tuned LightGBM + early stopping →
+  held-out PR-AUC/threshold (ch 00) → matched speed/accuracy + dial-`n` crossover → error analysis →
+  cross-method → importances (split vs gain vs **permutation**). Carry NB 4's output hygiene
+  (`LGBM_VERBOSE` switch + named DataFrame). No `src/` change expected (reuse `viz`; `fetch_openml`;
+  `LGBMClassifier`/`XGBClassifier`/`HistGradientBoostingClassifier`; pytest 20). Next: measure live →
+  draft → ExitPlanMode for Rémy. **After it ships, close ch 10 via PR `chapter/10_LightGBM → main`
+  (`--no-ff`).**
 - **NB 4 (the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — integrative) OPENED.** Branch
   `notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM` (@ `7df00ae`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan
