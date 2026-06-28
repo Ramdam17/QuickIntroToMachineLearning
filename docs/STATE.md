@@ -8,7 +8,7 @@
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–2 of 5 shipped** (on `chapter/10_LightGBM`); next NB 3 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **`03_categorical_split`** — branch opened off `chapter/10_LightGBM` (@ `c08b6c0`); phase `notebook-plan` (measuring categorical-split parity anchors live, then drafting the cell-by-cell plan). |
-| Phase | `notebook-plan` (NB 3 = the optimal categorical split, by hand — Fisher 1958). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 categorical split (planning)** · NB 4 estimator · NB 5 capstone. |
+| Phase | `notebook-plan-approved` (NB 3 = the optimal categorical split, by hand — Fisher 1958) — **plan APPROVED by Rémy & persisted** (`docs/plans/10_LightGBM__03_categorical_split.md`); building now. Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 categorical split (building)** · NB 4 estimator · NB 5 capstone. |
 | Active branch | `notebook/10_LightGBM__03_categorical_split` (off `chapter/10_LightGBM` @ `c08b6c0`). |
 | Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. NB 2: DONE (`docs/plans/10_LightGBM__02_goss_efb.md`). **NB 3 (optimal categorical split): to be drafted.** |
 | Next concrete action | **Open & plan NB 3 — the optimal categorical split, by hand (Fisher 1958).** `git switch -c notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: partitioning K categories into two groups is `2^(K−1)−1` ways (exponential); Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only `K−1` candidates (linear). Build by hand on a binary toy and **match LightGBM exactly** (de-risked: LEFT {1,3,5} ≡ LightGBM {0,2,4}). **Build-time pins:** `min_data_per_group=1` (default 100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0` — OR ≥100 rows/category. Teaching note: with `h=1`, `G/H` = per-category target mean (give `G/H` as the general key). Keep toy binary. ~3 figures (categories by mean/gradient; sorted order + the `K−1` contiguous candidates; by-hand == LightGBM). Measure anchors live; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__03_categorical_split.md` + build. |
@@ -52,8 +52,13 @@
   100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0`
   — OR ≥100 rows/category. **Teaching note:** with `h=1` (regression toy) `G/H` = the per-category target
   mean; give `G/H` as the general key (carries to classification). Keep the toy **binary**. No `src/` change
-  expected (reuse `viz`; `LGBMRegressor` + `dump_model`; pytest 20). Next: measure live → draft ~20 cells /
-  ~3 figures → ExitPlanMode for Rémy.
+  expected (reuse `viz`; `LGBMRegressor` + `dump_model`; pytest 20). **Plan APPROVED by Rémy (via
+  ExitPlanMode, 2026-06-28) & persisted** (`docs/plans/10_LightGBM__03_categorical_split.md`); ~22 cells /
+  3 figures. Anchors measured live (`measure_ch10_nb3_categorical.py`): per-category `G/H = F₀ − mean(y_c)`,
+  sorted [1,3,5,0,2,4]; the `K−1=5` contiguous cuts (gains 448/718/**809**/721/450) → best LEFT={1,3,5};
+  **brute-force all 31 (`2^(K−1)−1`) → global best {0,2,4}, same gain 808.78 = the identical partition**
+  (contiguous == global, 6.2× fewer to check); **LightGBM single tree [[0,2,4],[1,3,5]] == by-hand**.
+  Building now from `build_ch10_nb3.py`. Next: build → guards → two-reviewer gate.
 - **NB 2 (GOSS built + EFB named — how LightGBM gets light) OPENED.** Branch
   `notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM` (@ `fed6560`). Phase `notebook-plan`:
   measuring GOSS anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan §NB 2):** one
