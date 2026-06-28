@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **building NB 1 of 5**. Last shipped: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **NB 1 `01_leaf_wise_growth`** — branch opened off `chapter/10_LightGBM`; phase `notebook-plan` (measuring anchors live, drafting the cell-by-cell plan). |
-| Phase | `notebook-plan` — NB 1 (leaf-wise growth, by hand) branch opened; measuring anchors live then drafting the plan in plan mode. |
+| Phase | `notebook-plan-approved` — NB 1 (leaf-wise growth, by hand) plan **APPROVED by Rémy (2026-06-28) & persisted** (`docs/plans/10_LightGBM__01_leaf_wise_growth.md`); building now. |
 | Active branch | `notebook/10_LightGBM__01_leaf_wise_growth` (off `chapter/10_LightGBM`). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: **drafting** (cell-by-cell, plan mode). NB 2–5: later. |
-| Next concrete action | **Measure NB-1 anchors live, then draft the plan.** One concept: **leaf-wise (best-first) growth, by hand** — maintain a frontier of candidate leaves, repeatedly expand the one whose best split gives the largest loss reduction (SSE/structure-score gain), to a fixed `num_leaves` budget; contrast with level-wise (ch 04/09 depthwise). The learner met leaf-wise *named* twice (ch 08 NB 5 HistGBR `max_leaf_nodes`, ch 09 NB 4 `lossguide`) — **here built**. Anchor: by-hand leaf-wise tree (order + thresholds) **== LightGBM's single tree** on a toy (reg_lambda=0, min_split_gain=0, 1 tree, small num_leaves, max_bin high so histogram is lossless). Show leaf-wise reaches lower **training** loss for the same #leaves, while growing lopsided (qualitative; the depth-vs-num_leaves sweep is NB 2). Draft ~20 cells / ~3 figures per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan); on approval persist `docs/plans/10_LightGBM__01_leaf_wise_growth.md` + build. |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED). NB 1: **APPROVED & persisted**. NB 2–5: later. |
+| Next concrete action | **Build NB 1** from a `build_ch10_nb1.py` scratchpad script (~19 cells, 3 figures): leaf-wise (best-first) growth by hand. Re-measure anchors at build (leaf-wise ≪ level-wise train SSE per #leaves — 6 leaves 0.57 vs 65.4; lopsided leaf sizes …109; **exact LightGBM parity** max|Δpred|=0, SSE 0.566==0.566 with `min_data_in_bin=1`/`max_bin` huge/`reg_lambda=0`/1 tree). nbconvert a scratchpad copy from project cwd (3 figures, exit 0; **no `verbose=-1`** — banner visible) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark NB 1 built, pytest 20, STATE) → commit `feat(10_lightgbm): notebook 01 — leaf-wise growth` → `git merge --ff-only` into `chapter/10_LightGBM`. |
 
 ## Notes / blockers
 
@@ -47,7 +47,10 @@
   `max_leaf_nodes`; ch 09 NB 4 `lossguide`) — **here built**. Anchor: by-hand leaf-wise == LightGBM's
   single tree on a toy; leaf-wise reaches lower **training** loss for the same #leaves, grows lopsided
   (qualitative; the depth-vs-num_leaves sweep is NB 2). No `src/` change expected (reuse `viz`;
-  `dump_model`; pytest 20). Next: measure → draft → ExitPlanMode for Rémy.
+  `dump_model`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
+  (`docs/plans/10_LightGBM__01_leaf_wise_growth.md`); ~19 cells / 3 figures; anchors measured live
+  (leaf-wise ≪ level-wise train SSE; lopsided sizes …109; **exact LightGBM parity** max|Δpred|=0,
+  SSE 0.566==0.566). Building now from a `build_ch10_nb1.py` scratchpad script.
 - **Chapter 10 (LightGBM) opened.** Branch `chapter/10_LightGBM` created off `main` (synced @ `fe295aa`
   after PR #9). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §10 and
   the per-method arc — **leaf-wise vs level-wise growth** (the XGBoost contrast; ch 09 NB 4 named
