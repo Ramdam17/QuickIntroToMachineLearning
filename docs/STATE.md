@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1 of 5 shipped; **building NB 2 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **`02_regularized_objective`** (NB 2 of 5) — the regularized objective: λ, γ, and the gain that decides splits, by hand. |
-| Phase | `notebook-plan` — drafting the NB-2 cell-by-cell plan in plan mode (anchors measured live). No reviewer gate at this stage — Rémy validates the plan alone via ExitPlanMode; reviewers return on the built notebook. |
+| Phase | `notebook-plan-approved` — NB-2 plan **approved by Rémy (2026-06-27)** & persisted (`docs/plans/09_XGBoost__02_regularized_objective.md`). Anchors measured live; building next. |
 | Active branch | `notebook/09_XGBoost__02_regularized_objective` (off `chapter/09_XGBoost` @ `113ebb3`). |
 | Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1: `docs/plans/09_XGBoost__01_second_order_view.md` (DONE). NB 2: drafting → `docs/plans/09_XGBoost__02_regularized_objective.md`. |
-| Next concrete action | **Draft & validate the NB-2 plan** (the regularized objective). Measure anchors live: λ shrinks the leaf to `−G/(H+λ)`; the split gain derived from the **structure score** (C&G eq. 6–7) with the right sign; the **measured 2×/½** detail (XGBoost reports 2× the textbook gain) + the γ prune-threshold semantics; `Cover=ΣH`; `base_score` learned vs pinned. Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy (no reviewer gate at per-NB plan stage); on approval persist `docs/plans/09_XGBoost__02_regularized_objective.md` + build. |
+| Next concrete action | **Build NB 2** via a `build_ch09_nb2.py` scratchpad script (~20 cells, 3 figs: the regularized parabola; the gain + γ threshold; by-hand vs XGBoost). **Re-measure every anchor at build** (λ-shrinkage ±2.0/±1.5/±0.46; ½-gain 9 vs XGBoost 18; γ prune at >18; `Cover=ΣH`; `base_score` learned). Then nbconvert from project cwd (exit 0); two-reviewer gate (no BLOCK); Rémy visual; guards (banned-word JSON scan / hex / ruff / `gen_llms_txt`); commit `feat(09_xgboost): notebook 02 — the regularized objective`; ff-merge `notebook → chapter`. |
 
 ## Notes / blockers
 
@@ -47,8 +47,11 @@
   The correctness anchor: by-hand leaf weights == XGBoost exactly, and the **measured 2×/½** detail
   (XGBoost reports 2× the textbook gain, dropping the ½ — argmax-invariant); `Cover = ΣH`; `base_score`
   honest (learned when unpinned). Anchors measured at plan time (xgboost 3.2.0). No `src/` change
-  expected (notebook-local matplotlib; `trees_to_dataframe`; pytest 20). Next: draft the plan →
-  ExitPlanMode for Rémy → on approval persist + build.
+  expected (notebook-local matplotlib; `trees_to_dataframe`; pytest 20). **Plan APPROVED by Rémy (via
+  ExitPlanMode, 2026-06-27) & persisted** (`docs/plans/09_XGBoost__02_regularized_objective.md`); ~20
+  cells / 3 figures; anchors measured live (λ-shrinkage ±2.0/±1.5/±0.46; ½-gain 9 vs XGBoost 18; γ prune
+  at >18; `Cover=ΣH`; `base_score` learned = mean). Building now from a `build_ch09_nb2.py` scratchpad
+  script.
 - **NB 1 (the second-order view — gradients + curvature, by hand) BUILT & MERGED to
   `chapter/09_XGBoost` — Rémy validated visually.** 22 cells (7 code / 15 md), 3 figures (the parabola +
   its 2nd-order approximation; the curvature-blind vs Newton step; the two-losses-one-rule curvature
