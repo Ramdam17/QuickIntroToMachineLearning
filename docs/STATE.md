@@ -7,9 +7,9 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`10_LightGBM`** — chapter plan APPROVED; **NB 1–2 of 5 shipped** (on `chapter/10_LightGBM`); next NB 3 of 5. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 2 `02_goss_efb` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; NB 3 not yet opened). |
-| Phase | NB 2 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 optimal categorical split (NEW, built — next)** · NB 4 estimator · NB 5 capstone. Next: open & plan NB 3. |
-| Active branch | `chapter/10_LightGBM` (NB 1 + NB 2 ff-merged). |
+| Current notebook | **`03_categorical_split`** — branch opened off `chapter/10_LightGBM` (@ `c08b6c0`); phase `notebook-plan` (measuring categorical-split parity anchors live, then drafting the cell-by-cell plan). |
+| Phase | `notebook-plan` (NB 3 = the optimal categorical split, by hand — Fisher 1958). Chapter 10 arc: NB 1 leaf-wise (shipped) · NB 2 GOSS+EFB (shipped) · **NB 3 categorical split (planning)** · NB 4 estimator · NB 5 capstone. |
+| Active branch | `notebook/10_LightGBM__03_categorical_split` (off `chapter/10_LightGBM` @ `c08b6c0`). |
 | Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). NB 1: DONE. NB 2: DONE (`docs/plans/10_LightGBM__02_goss_efb.md`). **NB 3 (optimal categorical split): to be drafted.** |
 | Next concrete action | **Open & plan NB 3 — the optimal categorical split, by hand (Fisher 1958).** `git switch -c notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM`; STATE `notebook-plan`. One concept: partitioning K categories into two groups is `2^(K−1)−1` ways (exponential); Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only `K−1` candidates (linear). Build by hand on a binary toy and **match LightGBM exactly** (de-risked: LEFT {1,3,5} ≡ LightGBM {0,2,4}). **Build-time pins:** `min_data_per_group=1` (default 100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0` — OR ≥100 rows/category. Teaching note: with `h=1`, `G/H` = per-category target mean (give `G/H` as the general key). Keep toy binary. ~3 figures (categories by mean/gradient; sorted order + the `K−1` contiguous candidates; by-hand == LightGBM). Measure anchors live; ExitPlanMode for Rémy; on approval persist `docs/plans/10_LightGBM__03_categorical_split.md` + build. |
 
@@ -38,6 +38,22 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (the optimal categorical split, by hand — Fisher 1958) OPENED.** Branch
+  `notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM` (@ `c08b6c0`). Phase
+  `notebook-plan`: measuring parity anchors live, then drafting the cell-by-cell plan. **One concept
+  (chapter plan §NB 3):** partitioning K categories into two groups is `2^(K−1)−1` ways (exponential);
+  Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary
+  partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only
+  `K−1` candidates (linear). Build by hand on a binary toy: per-category `(G,H)`, sort by `G/H`, score
+  the `K−1` contiguous splits, take the max → the category set going left; **match LightGBM exactly**
+  (de-risked at the restructure: LEFT {1,3,5} ≡ LightGBM {0,2,4}) and brute-force-confirm it is the global
+  optimum (vs all `2^(K−1)−1`). Genuinely new vs ch 09 (which *used* native categoricals but never built
+  the split); contrast XGBoost's partition heuristic. **Build-time pins:** `min_data_per_group=1` (default
+  100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0`
+  — OR ≥100 rows/category. **Teaching note:** with `h=1` (regression toy) `G/H` = the per-category target
+  mean; give `G/H` as the general key (carries to classification). Keep the toy **binary**. No `src/` change
+  expected (reuse `viz`; `LGBMRegressor` + `dump_model`; pytest 20). Next: measure live → draft ~20 cells /
+  ~3 figures → ExitPlanMode for Rémy.
 - **NB 2 (GOSS built + EFB named — how LightGBM gets light) OPENED.** Branch
   `notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM` (@ `fed6560`). Phase `notebook-plan`:
   measuring GOSS anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan §NB 2):** one
