@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `notebook-plan-approved` — NB 5 (Adult/Census capstone) plan APPROVED by Rémy (2026-06-28) & persisted; the chapter-plan verification is **done** (native-vs-imputed within noise, Δ −0.001 → **Rémy chose: keep Adult, feature the honest null**); building now. **NB 1–4 done.** |
-| Active branch | `notebook/09_XGBoost__05_census_income` (off `chapter/09_XGBoost` @ `8b124e5`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–4: DONE. NB 5: **APPROVED & persisted** (`docs/plans/09_XGBoost__05_census_income.md`). |
-| Next concrete action | **Build NB 5** from a `build_ch09_nb5.py` scratchpad script (~30 cells, 8 figures): the Adult/Census capstone. Re-measure every anchor at build (positive rate 0.2393; informative missingness; **native-vs-imputed Δ −0.001 within noise** = the honest null; cross-method HistGBR 0.829 ≈ XGB 0.828 > GB 0.814 > RF 0.788 > Logistic 0.768 > tree 0.668; early stopping 263/2000, test PR-AUC 0.829; threshold 0.5→0.358; gain-MDI relationship vs permutation capital-gain; ethics base rates F 0.109 / M 0.304). nbconvert a scratchpad copy from project cwd (8 figures, exit 0; **never silence LightGBM**) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark §09 complete, pytest 20, STATE) → commit `feat(09_xgboost): notebook 05 — a demanding case: census income` → `git merge --ff-only` into `chapter/09_XGBoost`. **Then close the chapter via PR `chapter/09_XGBoost → main` (`--no-ff`) on Rémy's go.** |
+| Phase | `chapter-merge` — NB 5 **committed & ff-merged**; **CHAPTER 09 COMPLETE on the branch (5/5)** (both reviewers NO BLOCK on every NB; Rémy validated each visually). Next: close via PR `chapter/09_XGBoost → main` (`--no-ff`). |
+| Active branch | `chapter/09_XGBoost` (NB 1–5 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). **NB 1–5: DONE.** Chapter complete on the branch; PR to `main` pending. |
+| Next concrete action | **Close chapter 09 via PR.** `git push -u origin chapter/09_XGBoost`; `gh pr create --base main --head chapter/09_XGBoost` (title `feat(09_xgboost): complete chapter — XGBoost`); merge the PR `--no-ff` (preserve per-notebook history); `git switch main && git pull`; update `course_map` §09 → "merged to main via PR #N"; STATE → `idle`, next = **open chapter 10 (LightGBM)**. (Reminder: `main` is PR-only — global pre-push hook; remote Ramdam17/QuickIntroToMachineLearning.) |
 
 ## Notes / blockers
 
@@ -38,6 +38,34 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — Adult/Census Income capstone) BUILT & MERGED to `chapter/09_XGBoost` —
+  Rémy validated visually. CHAPTER 09 COMPLETE on the branch (5/5).** 30 cells (9 code / 21 md), **8
+  figures** (class balance; missingness-vs-target;
+  native-vs-imputed PR-AUC [the honest null]; cross-method PR-AUC; early stopping; PR curve + threshold
+  + confusion; gain-MDI vs permutation; base rates by sex/race). A full honest workflow mobilizing all
+  of ch 09 + ch 00. **Anchors reproduced by nbconvert:** positive rate 0.2393; informative missingness
+  (occupation missing 0.094 vs 0.248); **native-vs-imputed Δ −0.0011, within noise** — the honest null
+  (the resampling band flips sign: mean +0.0008, range [−0.0011,+0.0035]; the two informative-missing
+  cols are nearly the same flag, occupation∩workclass 2799/2809); cross-method HistGBR 0.8291 ≈ XGB
+  0.8280 > GB 0.8140 > RF 0.7883 > Logistic 0.7679 > tree 0.6684 (LightGBM teaser 0.8278/2.2s); early
+  stopping best_iteration 263/2000, test PR-AUC 0.8292/acc 0.8730/ROC-AUC 0.9280; threshold 0.5
+  (P 0.782/R 0.650) → val-chosen 0.299 (P 0.649/R 0.825); gain-MDI relationship 0.34 vs permutation
+  capital-gain 0.236; ethics base rates F 0.109/M 0.304, Black 0.121/White 0.254. Reviewers **both NO
+  BLOCK** — pedagogy **PASS** (honest-null framed as the strongest lesson; 8/8 Read-the-figure match
+  the pixels; ethics sober); ml-expert **REVISE→folded** the MAJOR (the cell-12 mechanism was too
+  strong — "recovers the same information elsewhere" → re-aimed to **collinearity** [occ∩workclass
+  2799/2809] + "largely carried elsewhere" + a **measured resampling band** that flips sign, justifying
+  "within noise") + MINOR/NIT (OHE rare-pooling disclosed; native-country "marginally above"; exercise-1
+  recompute hint). Notably ml-expert found the "convenience not power" framing **under**-claimed (at
+  matched capacity on equal inputs XGB 0.810 vs GB 0.814 — the thesis holds harder). Threshold is
+  **val-chosen** (leakage-free). Guards: ruff clean, **0 banned**, output-free, hex clean, nbconvert
+  exit 0 (8 figures); LightGBM + early-stopping logs left **visible** (no silencing). **No `src/`
+  change** (notebook-local; sklearn Pipelines; pytest 20). End-of-NB checklist done: rebuilt from
+  `build_ch09_nb5.py` (kernel-drift guard), `llms.txt` **74**, `course_map` §09 → **COMPLETE**,
+  `common_errors` **+3 rows** (informative-missingness-isn't-always-a-lever / measure-it; convenience-
+  not-power / no-universal-best; threshold-on-validation + PR-AUC-on-imbalance). **Last NB of ch 09 —
+  chapter complete on the branch.** Next: close the chapter via PR `chapter/09_XGBoost → main`
+  (`--no-ff`).
 - **NB 5 (the demanding case — Adult/Census Income, the visualization-first capstone) OPENED.** Branch
   `notebook/09_XGBoost__05_census_income` off `chapter/09_XGBoost` (@ `8b124e5`). Phase `notebook-plan`:
   measuring anchors live then drafting the capstone (~26 cells, ≥6 figures). The chapter's **capstone** —
