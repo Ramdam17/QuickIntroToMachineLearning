@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
 | Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `notebook-plan` — NB 4 branch opened; drafting the cell-by-cell plan in plan mode (anchors being measured live). **Three fundamentals done (NB 1–3).** |
+| Phase | `notebook-plan-approved` — NB 4 plan APPROVED by Rémy (2026-06-28) & persisted; building now. **Three fundamentals done (NB 1–3).** |
 | Active branch | `notebook/09_XGBoost__04_estimator_and_parameters` (off `chapter/09_XGBoost` @ `ad7c898`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: **drafting** (cell-by-cell, plan mode). |
-| Next concrete action | **Draft NB 4's cell-by-cell plan** (the estimator `XGBClassifier`/`XGBRegressor` & its parameters — the integrative NB; it **owns the histogram method**). Measure anchors live (hist vs `exact` timing + accuracy; `reg_lambda`/`reg_alpha`/`gamma`; `max_depth`/`min_child_weight`/`grow_policy`; `subsample`/`colsample_*`; eta×n_estimators; the aggressive defaults overfit → `GridSearchCV` on train → one sealed test, tuned vs default). ~20 cells per `docs/notebook_template.md`, 3–4 figures; ExitPlanMode for Rémy; on approval persist `docs/plans/09_XGBoost__04_estimator_and_parameters.md` (phase `notebook-plan-approved`) + commit, then build from `build_ch09_nb4.py`. |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: **APPROVED & persisted** (`docs/plans/09_XGBoost__04_estimator_and_parameters.md`). |
+| Next concrete action | **Build NB 4** from a `build_ch09_nb4.py` scratchpad script (~23 cells, 4 figures): the estimator `XGBClassifier` & its parameters. Re-measure every anchor at build (defaults overfit train→1.0/test 0.9444; max_depth peak@4; gamma/min_child_weight close the gap; eta×n_estimators staged; **hist vs exact ~5× no accuracy cost**; GridSearchCV→sealed test +0.003). nbconvert a scratchpad copy from project cwd (4 figures, exit 0) → guards (banned-word JSON scan, hex, ruff/black, output-free) → two-reviewer gate (no BLOCK) → Rémy visual (`code .`) → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` mark, pytest 20, STATE) → commit `feat(09_xgboost): notebook 04 — the estimator and its parameters` → `git merge --ff-only` into `chapter/09_XGBoost`. |
 
 ## Notes / blockers
 
@@ -52,8 +52,14 @@
   NB 4 trade-off re-felt). Honest spine: the **aggressive defaults overfit** (eta 0.3 + depth 6) → show
   it → `GridSearchCV` on train → one sealed test (tuned vs default); `feature_importances_` gain-MDI
   caveat (honest reading deferred to NB 5). Anchors being measured at plan time (xgboost 3.2.0). No
-  `src/` change expected (reuse `viz`; pytest 20). Next: draft the plan → ExitPlanMode for Rémy → on
-  approval persist + build.
+  `src/` change expected (reuse `viz`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode,
+  2026-06-28) & persisted** (`docs/plans/09_XGBoost__04_estimator_and_parameters.md`); ~23 cells / 4
+  figures; anchors measured live — defaults overfit **train 1.0000 / test 0.9444** (gap 0.0556, 2608
+  leaves); **max_depth test peak @4** (default 6 past it); **gamma** prunes leaves 2608→264 (gap
+  0.056→0.017); **min_child_weight** (Cover=ΣH floor) 2608→321; eta×n_estimators staged (eta0.3
+  plateaus ~0.944, eta0.03 climbs to 0.951@600, no collapse); **histogram hist vs exact: 4.23s→0.85s
+  (~5×), no accuracy cost** (0.9646→0.9660); GridSearchCV→sealed test **0.9472 vs default 0.9444
+  (+0.003)**. Building now from a `build_ch09_nb4.py` scratchpad script.
 - **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) BUILT &
   MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (6 code / 13 md), 3 figures (the
   data + the missing rows in a side band; the gain-vs-threshold search, both directions; by-hand vs
