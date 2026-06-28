@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–2 of 5 shipped; **building NB 3 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **`03_sparsity_aware_splits`** (NB 3 of 5) — sparsity-aware splits: a learned default direction for missing values, by hand. |
-| Phase | `notebook-plan-approved` — NB-3 plan **approved by Rémy (2026-06-27)** & persisted (`docs/plans/09_XGBoost__03_sparsity_aware_splits.md`). Anchors measured live; building next. |
-| Active branch | `notebook/09_XGBoost__03_sparsity_aware_splits` (off `chapter/09_XGBoost` @ `307983f`). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–2: DONE. NB 3: drafting → `docs/plans/09_XGBoost__03_sparsity_aware_splits.md`. |
-| Next concrete action | **Build NB 3** via a `build_ch09_nb3.py` scratchpad script (~19 cells, 3 figs: the data + the question; the gain-vs-threshold search; by-hand vs XGBoost). **Re-measure every anchor at build** (by-hand best `x<5, missing→right, 2.949`; XGBoost `Missing`→right, Gain `5.8985 = 2×`; GB rejects NaN, HistGBR & XGB accept). Then nbconvert from project cwd (exit 0); two-reviewer gate (no BLOCK); Rémy visual; guards (banned-word JSON scan / hex / ruff / `gen_llms_txt`); commit `feat(09_xgboost): notebook 03 — sparsity-aware splits`; ff-merge `notebook → chapter`. |
+| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
+| Current notebook | — (NB 3 `03_sparsity_aware_splits` **merged to `chapter/09_XGBoost`**; NB 4 not yet opened). |
+| Phase | `notebook-commit` done — NB 3 **committed & ff-merged** to `chapter/09_XGBoost` (both reviewers PASS, Rémy validated visually). **Three fundamentals done (NB 1–3).** Next: open & plan NB 4. |
+| Active branch | `chapter/09_XGBoost` (NB 1–3 ff-merged in). |
+| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). NB 1–3: DONE. NB 4: to be drafted. |
+| Next concrete action | **Open & plan NB 4 — the estimator `XGBClassifier`/`XGBRegressor` & its parameters** (the integrative NB; it **owns the histogram method**). `git switch -c notebook/09_XGBoost__04_estimator_and_parameters` off `chapter/09_XGBoost`; STATE `notebook-plan`; measure anchors live (histogram `tree_method='hist'` vs `'exact'` speed; `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; the aggressive defaults overfit → GridSearch on train → one sealed test). Draft ~20 cells per `docs/notebook_template.md`; ExitPlanMode for Rémy; on approval persist `docs/plans/09_XGBoost__04_estimator_and_parameters.md` + build. |
 
 ## Notes / blockers
 
@@ -38,6 +38,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) BUILT &
+  MERGED to `chapter/09_XGBoost` — Rémy validated visually.** 19 cells (6 code / 13 md), 3 figures (the
+  data + the missing rows in a side band; the gain-vs-threshold search, both directions; by-hand vs
+  XGBoost). One concept: missing rows take a **learned default direction**, found by computing the NB-2
+  gain both ways and keeping the larger (C&G §3.4) — no imputation. **Anchors (xgboost 3.2.0, reproduced
+  exactly): by-hand search best (x<5, missing→right, half-gain 2.949); XGBoost split x<5, `Missing`→right
+  (No), Gain 5.8985 = 2× (no-½ convention); both missing rows route to the dear leaf (Cover 5 = 3+2); GB
+  rejects NaN (`ValueError`), HistGBR & XGBoost accept.** Reviewers **both PASS, no BLOCK** — ml-expert
+  confirmed the single-default-direction semantics (both NaN rows predict 2.9146) + the exact
+  direction/gain match; pedagogy verified the warm-up (flip the missing y → the direction flips to left).
+  Folded: Fig-1 legend → y-based (cheap y≈1 / dear y≈3); cell-12 spells out `Cover=5 = 3+2`;
+  `tree_method='exact'` commented. Guards: **0 banned** (JSON scan), hex clean, output-free; nbconvert
+  exit 0 (3 figures / 0 errors); ruff clean; `llms.txt` **72**; `common_errors` +2 XGBoost rows
+  (learned-default-direction; native-NaN-vs-impute + the GB/HistGBR/XGB contrast). **No `src/` change**
+  (notebook-local matplotlib; `trees_to_dataframe`; pytest **20**). Rebuilt from `build_ch09_nb3.py` right
+  before `git add` (kernel-drift guard). **Three fundamentals done.** Next: open & plan NB 4 (the
+  estimator & its parameters + the histogram method).
 - **NB 3 (sparsity-aware splits — a learned default direction for missing values, by hand) OPENED.**
   Branch `notebook/09_XGBoost__03_sparsity_aware_splits` off `chapter/09_XGBoost` (@ `307983f`). Phase
   `notebook-plan`: drafting the cell-by-cell plan — one concept, XGBoost handles **missing** values with
