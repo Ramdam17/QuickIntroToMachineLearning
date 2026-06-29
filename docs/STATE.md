@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 1 `01_the_neuron_is_logistic` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). |
-| Phase | **NB 1 DONE** (phase `notebook-commit`): built (20 cells, 3 figures), both reviewers no BLOCK (ml-expert REVISE→folded, pedagogy PASS), Rémy visual, guards green, output-free, ff-merged. Next: open & plan NB 2. |
-| Active branch | `chapter/11_MLP` (NB 1 ff-merged @ the `feat(11_mlp): notebook 01` commit). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (**DONE**). NB 2–5: per-NB plans drafted one at a time. |
-| Next concrete action | **Open & plan NB 2** on Rémy's "go": `git switch -c notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **the hidden layer + why a non-linearity is essential** (a single neuron draws only a straight boundary; a hidden layer + non-linearity carves curved ones; linear∘linear = `Wx` collapses; seat the universal-approximation *intuition*, existence-not-proof). By-hand `2→H→1` forward pass; **hand-set** the weights (training is NB 3's concept); measured discriminators: XOR logistic 0.50 vs MLP(4) 1.0, circles `identity` 0.528 vs `tanh`/`relu` ~0.99 (sigmoid demo pins `lbfgs`). NB-plan = Rémy validates alone (no reviewer gate). **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current notebook | **`02_why_one_neuron_is_not_enough`** (NB 2 of 5) — phase `notebook-plan`. |
+| Phase | **`notebook-plan`** — measuring anchors live, then drafting the NB 2 cell-by-cell plan (the hidden layer + why a non-linearity is essential). NB-plan stage = **Rémy validates alone** (no reviewer gate). |
+| Active branch | `notebook/11_MLP__02_why_one_neuron_is_not_enough` (off `chapter/11_MLP` @ `c46a428`). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED); NB 1 DONE. NB 2 plan: `docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md` (to be written on approval). |
+| Next concrete action | Measure NB 2 anchors live (single neuron fails — XOR logistic 0.50, circles linear ~0.528; the by-hand `2→H→1` forward pass; the **linear-collapse** identity-MLP == one neuron ~0.528; a non-linear hidden layer wins — circles `tanh`/`relu` MLP ~0.99, the hand-set ReLU XOR net == XOR exactly) → draft cell-by-cell per `docs/notebook_template.md` → present via ExitPlanMode (Rémy validates alone). Then build → two-reviewer gate → Rémy visual → commit → ff-merge into `chapter/11_MLP`. |
 
 ## Notes / blockers
 
@@ -38,6 +38,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (why one neuron is not enough — the hidden layer) OPENED.** Branch
+  `notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP` (@ `c46a428`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 2):** a single neuron draws only a **straight** boundary; a **hidden layer + a non-linearity** carves
+  curved ones; **why the non-linearity is essential** — linear∘linear = `Wx` collapses. Seat the
+  universal-approximation *intuition* (Cybenko/Hornik, existence stated not proved). By hand: the `2→H→1`
+  forward pass (numpy matrices); the linear-collapse (identity-MLP == one neuron); **hand-set** the classic
+  ReLU **XOR** net (Goodfellow §6.1: W1=[[1,1],[1,1]], b1=[0,−1], w2=[1,−2]) → computes XOR exactly with
+  *no training* (finding the weights is NB 3); an opaque `lbfgs`-fitted MLP for the circles **curved
+  boundary**. Anchors to pin: XOR logistic 0.50 vs MLP 1.0; circles `identity` ~0.528 (chance, collapse) vs
+  `tanh`/`relu` ~0.99. ~3 figures. Helpers: `viz.plot_decision_boundary`, `make_circles`/`make_moons`
+  (sklearn). No `src/` change expected. **NB-plan = Rémy validates alone.** Next: measure, draft, ExitPlanMode.
 - **NB 1 (the artificial neuron == the logistic unit you already built) OPENED.** Branch
   `notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP` (@ `c6ea3be`). Phase `notebook-plan`:
   measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 1):** the
