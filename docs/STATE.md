@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **`01_the_neuron_is_logistic`** (NB 1 of 5) — phase `notebook-plan`. |
-| Phase | **`notebook-plan`** — measuring anchors live, then drafting the NB 1 cell-by-cell plan (the artificial neuron == the ch 03 logistic unit). NB-plan stage = **Rémy validates alone** (no reviewer gate; reviewers return on the built notebook). |
+| Phase | **`notebook-plan-approved → notebook-build`** — NB 1 plan **APPROVED by Rémy** (via ExitPlanMode, 2026-06-29) & persisted (`docs/plans/11_MLP__01_the_neuron_is_logistic.md`). Building the notebook now from `build_ch11_nb1.py`. |
 | Active branch | `notebook/11_MLP__01_the_neuron_is_logistic` (off `chapter/11_MLP` @ `c6ea3be`). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1 plan: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (to be written on approval). |
-| Next concrete action | Measure NB 1 anchors live (the bridge: `MLPClassifier(hidden_layer_sizes=())` == LogisticRegression on `make_moons`, test acc; the by-hand sigmoid neuron with logistic's `(w,b)` == `predict_proba` to machine precision) → draft cell-by-cell per `docs/notebook_template.md` (header → recap of ch 03 → the neuron framing → the three activations → the empty-hidden MLP == logistic boundary → Your turn → What you built → References) → present via ExitPlanMode (Rémy validates alone). Then build → two-reviewer gate → Rémy visual → commit → ff-merge into `chapter/11_MLP`. |
+| Active plan | NB 1: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (**APPROVED 2026-06-29**). Chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). |
+| Next concrete action | **Build NB 1** from a `build_ch11_nb1.py` scratchpad script (~20 cells, 3 figures): header → ch 03 recap → neuron-in-3-steps → Fig 1 neuron diagram → 3 activations + Fig 2 → the bridge + by-hand σ-neuron == predict_proba (0.00e+00) → empty-hidden MLP == logistic (0.9300 == 0.9300) + Fig 3 boundaries → Your turn → What you built → Going further → References. Then nbconvert-verify (exit 0, 3 figures, anchors), guards (ruff/hex/banned/output-free), **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), fold, **Rémy visual**, end-of-NB checklist, commit `feat(11_mlp): notebook 01 — the neuron is logistic`, ff-merge into `chapter/11_MLP`. |
 
 ## Notes / blockers
 
