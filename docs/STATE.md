@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — **ALL 5 NBs shipped on `chapter/10_LightGBM`; chapter COMPLETE on the branch — ready to close via PR → main (`--no-ff`)**. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 5 `05_miniboone` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; chapter complete). |
-| Phase | NB 5 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). **Chapter 10 COMPLETE on the branch (5/5).** Next: **close ch 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go. |
-| Active branch | `chapter/10_LightGBM` (NB 1–5 ff-merged). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). **NB 1–5: ALL DONE.** |
-| Next concrete action | **Close chapter 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only — global pre-push hook; remote `git@github.com:Ramdam17/QuickIntroToMachineLearning.git`, gh `Ramdam17`). Push the chapter branch, `gh pr create` (title `feat(10_lightgbm): chapter 10 — LightGBM (5 notebooks)`, body summarizing the 5 NBs, ending `🤖 Generated with [Claude Code](https://claude.com/claude-code)`), `gh pr merge --merge` (per-notebook history preserved; the chapter shows as a unit). Then fold the post-close edits (STATE → idle / `course_map` §10 → "merged via PR #N") into the **ch 11 (MLP) opening** commit. **Course is then 00→10 complete; next chapter = 11_MLP.** |
+| Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (none yet; chapter-planning). |
+| Phase | **`chapter-plan`** — drafting the chapter 11 (MLP) plan in plan mode per `course_map.md` §11 and the per-method arc. Then the two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then Rémy approves via ExitPlanMode. |
+| Active branch | `chapter/11_MLP` (off `main` @ `6609afb`). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (to be written on approval). |
+| Next concrete action | Draft the chapter 11 (MLP) plan in plan mode: concept tour (`@concept-cartographer`) → primordial concepts across NBs 1–3 (one concept each, by-hand-first) → NB 4 (the estimator `MLPClassifier` & its parameters) → NB 5 (the demanding case). Cross-check `course_map.md` §11. Two-reviewer gate (no BLOCK). ExitPlanMode → on Rémy's approval write `docs/plans/chapter_11_MLP.md`, update `course_map` §11, set STATE phase `chapter-plan-approved`, commit `docs(plan): chapter 11_MLP`. **MLP builds directly on ch 03 (the single sigmoid neuron = logistic regression: sigmoid, log-odds, log-loss, gradient descent) and ch 00 (scaling, over/underfitting, learning curves) — re-establish, never presuppose. The ch 11 / ch 12 scope boundary is the key planning decision.** |
 
 ## Notes / blockers
 
@@ -38,6 +38,21 @@
 
 ## Progress log (most recent first)
 
+- **CHAPTER 11 (MLP) opened; chapter 10 (LightGBM) closed via PR #10** (merge commit `6609afb`,
+  `gh pr merge --merge`; 5 NBs, per-notebook history preserved; remote
+  `Ramdam17/QuickIntroToMachineLearning`). Branch `chapter/11_MLP` created off `main` (synced @
+  `6609afb`). Phase `chapter-plan`: concept tour dispatched (`@concept-cartographer`, MLP scope),
+  then drafting the chapter plan in plan mode per `course_map.md` §11 and the per-method arc, then the
+  two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then Rémy approves via
+  ExitPlanMode. The deferred ch-10-close housekeeping (`course_map` §10 → "merged via PR #10") is
+  folded into this opening commit (on the chapter branch, not protected `main`). **MLP = the first
+  method beyond trees (learned representations); it builds directly on ch 03 (the single sigmoid
+  neuron IS logistic regression — sigmoid, log-odds, log-loss, gradient descent built by hand there)
+  and re-uses ch 00 (scaling, over/underfitting, learning curves) — re-establish, never presuppose.**
+  Chapter 12 (NeuralNetworks) follows — **the ch 11 / ch 12 scope boundary is the key planning
+  decision** (ch 11 self-contained but not overloaded; leave real material for ch 12). No `src/`
+  change anticipated yet (reuse `viz`/`colors`/`datasets`; pandas-first; pytest 20). Next: ingest the
+  concept map → draft + gate the chapter 11 plan.
 - **NB 5 (the demanding case — MiniBooNE, the visualization-first capstone) OPENED.** Branch
   `notebook/10_LightGBM__05_miniboone` off `chapter/10_LightGBM` (@ `1064a6c`). Phase `notebook-plan`:
   dataset verified + measuring anchors live, then drafting the capstone. **Dataset verified (fetch_openml
