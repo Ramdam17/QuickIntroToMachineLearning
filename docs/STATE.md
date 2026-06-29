@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 2 `02_why_one_neuron_is_not_enough` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). |
-| Phase | **NB 2 DONE** (phase `notebook-commit`): built (21 cells, 3 figures), both reviewers PASS no BLOCK (2 MINOR folded), Rémy visual, guards green, output-free, ff-merged. Next: open & plan NB 3. |
-| Active branch | `chapter/11_MLP` (NB 1–2 ff-merged; NB 2 @ the `feat(11_mlp): notebook 02` commit). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–2 DONE. NB 3–5: per-NB plans drafted one at a time. |
-| Next concrete action | **Open & plan NB 3** on Rémy's "go": `git switch -c notebook/11_MLP__03_backpropagation` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **how a network learns: backpropagation (the chain rule)** — the forward pass caches activations, the backward pass carries the error back (`dH = d_out @ W2.T * H·(1−H)` for a sigmoid hidden layer); gradient-check vs finite differences (~2e-9); run GD (the ch 03 loop, now multi-layer); **weight init / symmetry breaking** (zeros init → frozen / identical units). Anchor: by-hand 2-4-1 net trained by GD == `MLPClassifier((4,),'logistic','lbfgs')`, train acc 1.0 on circles. The general L-layer algorithm as a *picture*, not a multi-index grind. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current notebook | **NB 3 `03_backpropagation`** — OPENED (phase `notebook-plan`). NB 1–2 BUILT & ff-merged into `chapter/11_MLP`. |
+| Phase | **NB 3 `notebook-plan`** — measuring anchors live, then drafting the cell-by-cell plan; then ExitPlanMode (Rémy validates **alone** — no reviewer gate at NB-plan; both reviewers return on the built notebook). NB 1–2 DONE. |
+| Active branch | `notebook/11_MLP__03_backpropagation` (off `chapter/11_MLP` @ `0cfc642`; NB 1–2 ff-merged). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–2 DONE. NB 3 plan in progress. NB 4–5: per-NB plans drafted one at a time. |
+| Next concrete action | **NB 3 plan in progress.** Measure anchors live (`measure_ch11_nb3.py`, from project root): by-hand **2-4-1** sigmoid net, forward-cache + backward (`d_out`; `dH=d_out@W2.T*H·(1−H)`; `dW1`,`dW2`), **gradient-check vs finite differences (~2e-9)**, full-batch GD → **train acc 1.0 on circles == `MLPClassifier((4,),'logistic','lbfgs')`**; zeros-init collapse (full-zero → all-grad-0/frozen; W1=0,W2≠0 → identical-nonzero columns; random init breaks it). Then draft cell-by-cell (~3 figures: forward→backward error flow; loss falling by-hand vs sklearn; zeros-vs-random init), EnterPlanMode → `mighty-jumping-owl.md` → ExitPlanMode (**Rémy alone**). On approval: persist `docs/plans/11_MLP__03_backpropagation.md`, STATE → `notebook-plan-approved`, commit. |
 
 ## Notes / blockers
 
@@ -38,6 +38,21 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (how a network learns — backpropagation, the chain rule) OPENED.** Branch
+  `notebook/11_MLP__03_backpropagation` off `chapter/11_MLP` (@ `0cfc642`). Phase `notebook-plan`: measuring
+  anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 3):** backprop = the
+  **chain rule applied layer by layer** — the forward pass **caches** activations, the backward pass carries
+  the error back (`d_out`; `dH = d_out @ W2.T * H·(1−H)` for a sigmoid hidden layer; then `dW1`, `dW2`); the
+  optimizer is **ch 03's GD loop, now multi-layer**; **init must not be zeros** (symmetry breaking). By hand
+  on a `2-H-1` net: forward+backward, **gradient-check vs finite differences (rel_err ~2e-9)**, run full-batch
+  GD, **demonstrate the zeros-init collapse**. The general L-layer algorithm as a **picture**, not a
+  multi-index grind. Anchor: by-hand **2-4-1** sigmoid net trained by GD → **train acc 1.0 on circles**,
+  matching `MLPClassifier((4,),'logistic','lbfgs')`; zeros-init — full zeros → all gradients **0** (frozen),
+  W1=0/W2≠0 → identical-nonzero columns, random init breaks it. ~3 figures (forward-cache → backward-error
+  flow; loss falling, by-hand vs sklearn overlaid; zeros vs random init). No `src/` change expected
+  (notebook-local numpy by-hand net + `MLPClassifier`; `make_circles`; `viz.plot_decision_boundary`; pytest
+  20). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
+  Next: measure anchors → draft → ExitPlanMode.
 - **NB 2 (why one neuron is not enough — the hidden layer) OPENED.** Branch
   `notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP` (@ `c46a428`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
