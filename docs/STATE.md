@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | **`01_the_neuron_is_logistic`** (NB 1 of 5) — phase `notebook-plan`. |
-| Phase | **`notebook-plan-approved → notebook-build`** — NB 1 plan **APPROVED by Rémy** (via ExitPlanMode, 2026-06-29) & persisted (`docs/plans/11_MLP__01_the_neuron_is_logistic.md`). Building the notebook now from `build_ch11_nb1.py`. |
-| Active branch | `notebook/11_MLP__01_the_neuron_is_logistic` (off `chapter/11_MLP` @ `c6ea3be`). |
-| Active plan | NB 1: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (**APPROVED 2026-06-29**). Chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). |
-| Next concrete action | **Build NB 1** from a `build_ch11_nb1.py` scratchpad script (~20 cells, 3 figures): header → ch 03 recap → neuron-in-3-steps → Fig 1 neuron diagram → 3 activations + Fig 2 → the bridge + by-hand σ-neuron == predict_proba (0.00e+00) → empty-hidden MLP == logistic (0.9300 == 0.9300) + Fig 3 boundaries → Your turn → What you built → Going further → References. Then nbconvert-verify (exit 0, 3 figures, anchors), guards (ruff/hex/banned/output-free), **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), fold, **Rémy visual**, end-of-NB checklist, commit `feat(11_mlp): notebook 01 — the neuron is logistic`, ff-merge into `chapter/11_MLP`. |
+| Current notebook | — (**NB 1 `01_the_neuron_is_logistic` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). |
+| Phase | **NB 1 DONE** (phase `notebook-commit`): built (20 cells, 3 figures), both reviewers no BLOCK (ml-expert REVISE→folded, pedagogy PASS), Rémy visual, guards green, output-free, ff-merged. Next: open & plan NB 2. |
+| Active branch | `chapter/11_MLP` (NB 1 ff-merged @ the `feat(11_mlp): notebook 01` commit). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (**DONE**). NB 2–5: per-NB plans drafted one at a time. |
+| Next concrete action | **Open & plan NB 2** on Rémy's "go": `git switch -c notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **the hidden layer + why a non-linearity is essential** (a single neuron draws only a straight boundary; a hidden layer + non-linearity carves curved ones; linear∘linear = `Wx` collapses; seat the universal-approximation *intuition*, existence-not-proof). By-hand `2→H→1` forward pass; **hand-set** the weights (training is NB 3's concept); measured discriminators: XOR logistic 0.50 vs MLP(4) 1.0, circles `identity` 0.528 vs `tanh`/`relu` ~0.99 (sigmoid demo pins `lbfgs`). NB-plan = Rémy validates alone (no reviewer gate). **Do NOT auto-start — Rémy initiates each NB with "go".** |
 
 ## Notes / blockers
 
@@ -50,8 +50,19 @@
   precision. ~3 figures (neuron diagram; the three activations; empty-hidden MLP boundary == logistic).
   Helpers: `viz.plot_decision_boundary` (exists), `make_moons` (sklearn, called directly — no datasets
   loader). No `src/` change expected (notebook-local numpy + `MLPClassifier`/`LogisticRegression`; pytest
-  20). **NB-plan = Rémy validates alone (no reviewer gate).** Next: present the cell-by-cell plan via
-  ExitPlanMode.
+  20). **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted**
+  (`docs/plans/11_MLP__01_the_neuron_is_logistic.md`). **BUILT (20 cells: 6 code / 14 md, 3 figures) &
+  ff-merged into `chapter/11_MLP` — Rémy validated visually.** Anchors reproduced by nbconvert (exit 0):
+  by-hand σ-neuron == `predict_proba` **0.00e+00**; logistic **0.9300** == MLP(()) **0.9300**. **Both
+  reviewers no BLOCK** — ml-expert REVISE→folded 1 MAJOR (cell 16: the logistic↔MLP weight gap is the
+  **default L2 penalty** `C=1` vs `alpha=1e-4`, *not* the optimizer — both `lbfgs`; matching it makes the
+  weights coincide) + MINOR/NIT (ReLU "simplest non-linearity / single kink"; tanh-ReLU forward-motivation;
+  drop "different optimizers"); pedagogy PASS (arc complete; *why*-non-linearity correctly teased to NB 2;
+  voice/exercises clean). Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (3
+  figures), pytest 20. **No `src/` change** (notebook-local numpy + `MLPClassifier`/`LogisticRegression`;
+  `viz.plot_decision_boundary`). End-of-NB checklist: rebuilt from `build_ch11_nb1.py` (kernel-drift guard),
+  `llms.txt` **82**, `course_map` §11 → NB 1 built, `common_errors` **+2 MLP rows** (neuron==logistic;
+  weight-gap-is-L2-penalty-not-optimizer). Next: open & plan NB 2 (the hidden layer).
 - **CHAPTER 11 (MLP) plan APPROVED & persisted.** Phase `chapter-plan-approved`. Concept tour
   (`@concept-cartographer`) → draft → **two-reviewer gate** on the draft: `@ml-expert-reviewer` **REVISE →
   PASS-after-fold** (science verified to machine precision — the bridge `MLPClassifier(hidden_layer_sizes=())`
