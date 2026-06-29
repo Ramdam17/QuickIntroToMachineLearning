@@ -81,3 +81,4 @@
 ## 11_MLP
 - [notebooks/11_MLP/01_the_neuron_is_logistic.ipynb](notebooks/11_MLP/01_the_neuron_is_logistic.ipynb) — 01 — The artificial neuron == the logistic unit you already built — Welcome to the first method beyond trees — and a gentle place to start, because you have **already
 - [notebooks/11_MLP/02_why_one_neuron_is_not_enough.ipynb](notebooks/11_MLP/02_why_one_neuron_is_not_enough.ipynb) — 02 — Why one neuron is not enough: the hidden layer — In the last notebook a single neuron turned out to be logistic regression — and it draws a
+- [notebooks/11_MLP/03_backpropagation.ipynb](notebooks/11_MLP/03_backpropagation.ipynb) — 03 — How a network learns: backpropagation — Last notebook we *set* a network's weights by hand to solve XOR. That left the real question open:
