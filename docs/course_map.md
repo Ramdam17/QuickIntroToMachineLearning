@@ -100,19 +100,19 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `XGBClassifier`/`XGBRegressor` & its parameters — owns the histogram method (`tree_method='hist'`, `max_bin`, speed measured); `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; honest tuning (the aggressive defaults overfit).
 5. Demanding case (visualization-first capstone): Adult/Census Income (informative missing + imbalance + native categoricals; Ames fallback) — early stopping, honest cross-method comparison naming native-NaN-vs-imputed as a deliberate axis, gain MDI vs permutation, the LightGBM teaser.
 
-## 10_LightGBM  *(COMPLETE — five notebooks on `chapter/10_LightGBM`, closing to `main` via PR; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
+## 10_LightGBM  *(COMPLETE — merged to `main` via PR #10; five notebooks; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
 1. Leaf-wise (best-first) growth, by hand — grow the max-loss-reduction leaf first (ch 08 NB 5 / ch 09 NB 4 named it; here built); lower *training* loss per leaf, but lopsided.
 2. GOSS (built) + EFB (named) — how it gets light: gradient-based one-side sampling with the unbiased `(1−a)/b` reweight (statistical efficiency; beats a uniform subsample); EFB bundles approximately-exclusive sparse features.
 3. The optimal categorical split, by hand (Fisher 1958) — sort categories by their gradient statistic `G/H`, take the best *contiguous* partition (`K−1` candidates, not `2^(K−1)−1`); matched to LightGBM exactly. (`num_leaves`, the leaf-wise capacity dial, is introduced as the budget in NB 1 and tuned in NB 4 — not a standalone NB.)
 4. The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — `num_leaves`/`min_child_samples` (the capacity dial + its floor), learning_rate×n_estimators, feature/bagging fractions, `reg_lambda`/`reg_alpha` (off by default), GOSS, native categorical, early stopping; honest tuning.
 5. Demanding case (visualization-first capstone): larger tabular data (MiniBooNE / scaled synthetic) — the speed/accuracy trade-off measured at matched capacity vs XGBoost & HistGBR (the winner flips with the convention; no universal best).
 
-## 11_MLP
-1. A neuron: weighted sum + activation, by hand.
-2. Layers and non-linearity; what depth buys.
-3. Training intuition: loss, backpropagation (picture, not heavy derivation), learning rate.
-4. Parameters (layers, units, activation, regularization, optimizer); over/underfitting.
-5. Demanding case: a small end-to-end MLP; scaling, seeds, honest evaluation.
+## 11_MLP  *(plan approved 2026-06-29; **NB 1–5 built — chapter COMPLETE on the branch, pending PR to main**; five notebooks; the first method beyond trees; the single sigmoid neuron == ch 03 logistic regression, one hidden layer + backprop the new idea; ch 12 owns depth/representations/dropout)*
+1. The artificial neuron == the logistic unit you already built — weighted sum + bias + activation; a single sigmoid neuron is exactly logistic regression (the ch 03 bridge); sigmoid/tanh/ReLU plotted; `MLPClassifier(hidden_layer_sizes=())` == logistic (measured).
+2. Why one neuron is not enough: the hidden layer — a hidden layer + non-linearity carves curved boundaries one neuron cannot (XOR/circles); why linear∘linear collapses to one linear map; the universal-approximation intuition (existence, stated not proved).
+3. How a network learns: backpropagation (the chain rule) — forward pass + backward pass by hand on a 2-H-1 net (gradient-checked); weight init / symmetry breaking; by-hand net == `MLPClassifier`.
+4. The estimator `MLPClassifier`/`MLPRegressor` & its parameters — `hidden_layer_sizes`, `activation` (ReLU the default — no saturation), `solver` (Adam named), `alpha` (L2), `learning_rate_init`, `early_stopping`, `batch_size`/epoch; the K-class softmax output head; scaling mandatory; the loss curve as a diagnostic; honest tuning.
+5. Demanding case (visualization-first capstone): handwritten digits (`load_digits`) — scale, tune, held-out evaluation, loss curve, seed-variance, a fair tree foil (competitive, not superior); honest limits (non-convex; not interpretable; seed-sensitive).
 
 ## 12_NeuralNetworks
 1. From MLP to networks: representations learned layer by layer.

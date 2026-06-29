@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`10_LightGBM`** — **ALL 5 NBs shipped on `chapter/10_LightGBM`; chapter COMPLETE on the branch — ready to close via PR → main (`--no-ff`)**. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 5 `05_miniboone` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; chapter complete). |
-| Phase | NB 5 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). **Chapter 10 COMPLETE on the branch (5/5).** Next: **close ch 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go. |
-| Active branch | `chapter/10_LightGBM` (NB 1–5 ff-merged). |
-| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). **NB 1–5: ALL DONE.** |
-| Next concrete action | **Close chapter 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only — global pre-push hook; remote `git@github.com:Ramdam17/QuickIntroToMachineLearning.git`, gh `Ramdam17`). Push the chapter branch, `gh pr create` (title `feat(10_lightgbm): chapter 10 — LightGBM (5 notebooks)`, body summarizing the 5 NBs, ending `🤖 Generated with [Claude Code](https://claude.com/claude-code)`), `gh pr merge --merge` (per-notebook history preserved; the chapter shows as a unit). Then fold the post-close edits (STATE → idle / `course_map` §10 → "merged via PR #N") into the **ch 11 (MLP) opening** commit. **Course is then 00→10 complete; next chapter = 11_MLP.** |
+| Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (**NB 5 `05_digits_capstone` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). **CHAPTER 11 COMPLETE on the branch (5/5).** |
+| Phase | **NB 5 DONE / CHAPTER 11 COMPLETE on the branch** (phase `notebook-commit`): built (28 cells, 6 figures), both reviewers PASS no BLOCK (2 NIT + 1 MINOR folded), Rémy visual, guards green, output-free, ff-merged. Next: close the chapter via PR → main. |
+| Active branch | `chapter/11_MLP` (NB 1–5 ff-merged; NB 5 @ the `feat(11_mlp): notebook 05` commit). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). **All 5 NBs DONE — chapter complete on the branch.** |
+| Next concrete action | **Close chapter 11 on Rémy's explicit go:** PR `chapter/11_MLP → main` (`--no-ff`, preserve per-notebook history — 5 NBs) via `gh pr create` + `gh pr merge --merge` (main is PR-only — global pre-push hook; remote `Ramdam17/QuickIntroToMachineLearning`; PR body ends `🤖 Generated with [Claude Code](https://claude.com/claude-code)`). After merge: `course_map` §11 → "merged via PR #11", STATE → `idle` / next = open chapter 12 (NeuralNetworks). **Do NOT open the PR without Rémy's explicit go.** — Original scope (chapter plan §NB 5): `load_digits` (8×8, 1797×64, 10-class, offline, CPU-fast); `Pipeline(StandardScaler, MLPClassifier)`; tune lightly; held-out eval; read the **loss curve**; **confusion matrix + per-digit error analysis**; **seed-variance** check (single split → init variance ~0.974–0.980); a **fair tree-foil** (RF/HistGB on **raw** features vs the MLP in its `StandardScaler` pipeline, same split/metric — the preprocessing difference *is* the point). **Honest verdict (measured):** MLP **fully competitive, NOT superior** (HistGB ~0.982 ≥ MLP; not an MLP win); trees need no scaling + stay interpretable; loss non-convex (a minimum, not *the*); seed-sensitive; UAT = existence. The genuine MLP accuracy win lives elsewhere (`breast_cancer` 0.9754 > RF/HistGB). **≥6 figures, ~28–30 cells, visualization-first.** **Last NB of ch 11 → after it ships, close the chapter via PR `chapter/11_MLP → main` (`--no-ff`) on Rémy's explicit go.** NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** — Original scope (chapter plan §NB 4): the estimator `MLPClassifier`/`MLPRegressor`, each knob from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation** (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`; `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration introduced as vocabulary** (their genuine home). **The K-class softmax output head — its explicit home** (a short subsection turning the single sigmoid output into K softmax units; formula recap from ch 03 NB 5). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence diagnostic. Honest spine: unscaled-vs-scaled on a **synthetic 2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a capacity sweep; `alpha` up/down; defaults-vs-`GridSearchCV` → one sealed test. `ConvergenceWarning` stays **visible**; `verbose=True` where it aids — never silenced. ~4 figures. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
 
 ## Notes / blockers
 
@@ -38,6 +38,232 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — handwritten digits, the visualization-first capstone) OPENED.** Branch
+  `notebook/11_MLP__05_digits_capstone` off `chapter/11_MLP` (@ `9b1394d`). Phase `notebook-plan`: measuring
+  anchors live, then drafting the capstone. **The LAST NB of ch 11.** Scope (chapter plan §NB 5): a full,
+  honest, multi-class workflow on **`load_digits`** (8×8, 1797×64, 10-class, offline, CPU-fast).
+  `Pipeline(StandardScaler, MLPClassifier)`; tune lightly; held-out eval; read the **loss curve**; **confusion
+  matrix + per-digit error analysis**; **seed-variance** check (single split → init variance ~0.974–0.980); a
+  **fair tree-foil** — RF/HistGB on **raw** features (trees need no scaling) vs the MLP in its
+  `StandardScaler` pipeline, same split/metric — *the preprocessing difference is the point*. **Honest verdict
+  (measured):** MLP **fully competitive, NOT superior** (HistGB ~0.982 ≥ MLP; RF ~0.970, logistic ~0.972) —
+  earns "learned features" as a *conceptual* virtue (ch 12 bridge), but trees need no scaling + stay
+  interpretable; loss **non-convex** (a minimum, not *the*); **seed-sensitive**; UAT = existence. The genuine
+  MLP accuracy win lives **elsewhere** (`breast_cancer` 0.9754 > RF 0.9649 / HistGB 0.9701 — the measured
+  "MLP can win" fact). Arc (**≥6 figures, ~28–30 cells, visualization-first**): look at the digits → baseline
+  → scaled MLP + loss curve → held-out metrics (confusion, per-class) → seed-variance → fair tree foil +
+  honest limit → error gallery (which digits confuse). No `src/` change expected (reuse `viz`/`colors`;
+  `load_digits`/`load_breast_cancer`; `MLPClassifier` + `Pipeline` + `StandardScaler`; RF/HistGB; pytest 20).
+  NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
+  **After it ships, close chapter 11 via PR `chapter/11_MLP → main` (`--no-ff`) on Rémy's explicit go.**
+  **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted** (`docs/plans/11_MLP__05_digits_capstone.md`),
+  with **two measured refinements approved** — (1) the digits cross-method is a **statistical TIE** (5-fold CV:
+  MLP 0.9772±0.007 ≈ RF 0.9766±0.004 ≈ HistGB 0.9733±0.006), NOT the chapter-plan "HistGB ~0.982 ≥ MLP, RF
+  ~0.970" (a single sealed split gave RF 0.984/MLP 0.978/HistGB 0.973 — split-luck); (2) the fair foil uses
+  **5-fold CV** (not the noisy single split) while the MLP diagnostics stay on the sealed split. Anchors
+  measured live (`measure_ch11_nb5.py`): baselines dummy 0.102 / logistic 0.969 / tree 0.856; scaled MLP(100,)
+  sealed **0.9778** / n_iter 145 / loss 2.52→0.005; seed-variance (10 seeds) **0.971–0.982** mean 0.977;
+  confusion **10 errors/450** (9→3, 8→3/1…); GridSearchCV picks the default (tuned==default 0.9778);
+  breast_cancer CV MLP **0.9754** > RF 0.9631 / HistGB 0.9648. Next: build NB 5 from `build_ch11_nb5.py`.
+  **BUILT (28 cells: 9 code / 19 md, 6 figures) & ff-merged into `chapter/11_MLP` — Rémy validated visually.
+  CHAPTER 11 COMPLETE on the branch (5/5).** Figures: digit gallery; loss curve; confusion matrix; error
+  gallery (all 10 mistakes, true→pred); seed-variance strip; 2-panel cross-method CV (digits tie /
+  breast_cancer MLP-leads). **Anchors reproduced by nbconvert (exit 0, 6 figures):** baselines dummy 0.102 /
+  logistic 0.969 / tree 0.856; scaled MLP(100,) sealed **0.9778** / n_iter 145 / loss 2.52→0.005; **10
+  errors/450**; seed-variance 0.971–0.982 (mean 0.977, std 0.003); GridSearchCV→default 0.9778; **digits CV
+  TIE** MLP 0.9772±0.007 ≈ RF 0.9766±0.004 ≈ HistGB 0.9733±0.006 (logistic 0.9694); **breast_cancer CV** MLP
+  **0.9754** > HistGB 0.9701 > RF 0.9578 (MLP leads — shuffled `StratifiedKFold`). **Both reviewers PASS — no
+  BLOCK** — `@ml-expert-reviewer` PASS (reproduced every anchor; ran unshown **paired t-tests** confirming the
+  digits tie p≈0.49/0.92 and breast_cancer "a touch ahead" p=0.53; leakage-free paired CV; CV-over-single-split
+  justified) + 1 MINOR / 1 NIT; `@pedagogy-reviewer` PASS (complete capstone arc; visualization-first backbone;
+  empowering honest verdict; chapter synthesis) + 2 NIT. **Folded:** "8,000"→**7,400** weights (exact); dropped
+  bare "clearly" before "ahead of RF" (±std bars touch). **Interruption recovery:** the prior process exited
+  mid-gate; the **scratchpad build script was lost** (ephemeral `/private/tmp`), so it was **reconstructed from
+  history and diff-verified** against the on-disk notebook (only the intended comment differed) — see
+  [[scratchpad-build-scripts-ephemeral]]. Guards: 0 banned, hex clean, ruff clean (2 E501 fixed), output-free,
+  nbconvert exit 0 (6 figures), pytest 20; no `ConvergenceWarning` (max_iter budgets sufficient). **No `src/`
+  change** (reuse `viz.plot_confusion_matrix`/`colors`; `load_digits`/`load_breast_cancer`; `MLPClassifier` +
+  `make_pipeline` + `StandardScaler`; RF/HistGB/logistic/dummy/tree; `GridSearchCV`/`cross_val_score`).
+  End-of-NB checklist: rebuilt from `build_ch11_nb5.py`, `llms.txt` **86**, `course_map` §11 → **COMPLETE on
+  branch**, `common_errors` **+3 MLP rows** (highest-accuracy-misleads / compare-on-CV-report-spread;
+  no-universal-best / data-dependent / UAT-existence; accuracy-hides-error-structure-and-seed-wobble). **Last
+  NB — chapter complete on the branch.** Next: close via PR `chapter/11_MLP → main` (`--no-ff`) on Rémy's
+  explicit go.
+- **NB 4 (the estimator `MLPClassifier`/`MLPRegressor` & its parameters — integrative) OPENED.** Branch
+  `notebook/11_MLP__04_estimator_and_parameters` off `chapter/11_MLP` (@ `9ee1f9e`). Phase `notebook-plan`:
+  measuring anchors live, then drafting the cell-by-cell plan. **Integrative (chapter plan §NB 4):** each knob
+  from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is
+  the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation**
+  (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an
+  adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`;
+  `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration
+  introduced as vocabulary** (their genuine home; the loss-curve x-axis). **The K-class softmax output head —
+  its explicit home** (turn the single sigmoid output into K softmax units; formula recap from ch 03 NB 5; one
+  schematic + Read-the-figure). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence
+  diagnostic (reading recapped from ch 03 NB 4 fig (c)). Honest spine: unscaled-vs-scaled on a **synthetic
+  2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a
+  capacity sweep (width/depth) reading boundary + loss curve; `alpha` up/down; defaults-vs-`GridSearchCV` →
+  **one sealed test**. `ConvergenceWarning` stays **visible**; `verbose=True` where per-iteration loss aids the
+  lesson — never `verbose=False`-as-suppression. ~4 figures. No `src/` change expected (reuse `viz`/`colors`;
+  `MLPClassifier` + `Pipeline` + `StandardScaler`; `make_classification`/`make_blobs`/`make_circles`/
+  `make_moons`; `GridSearchCV`; pytest 20). NB-plan = **Rémy validates alone** (no reviewer gate; both
+  reviewers return on the built notebook). **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted**
+  (`docs/plans/11_MLP__04_estimator_and_parameters.md`), with the **figure-set swap approved** — 4 figures =
+  ReLU-reveal · capacity-boundary · scaling-loss-curves · softmax-schematic (the chapter-plan alpha-path
+  figure replaced by the activation/ReLU-reveal figure; alpha/lr/solver/batch/early-stopping/tuning become
+  printed tables). Anchors measured live (`measure_ch11_nb4.py` + `_nb4b.py`): logistic+adam **0.373 stall**
+  (loss≈ln2) vs relu **1.0** on circles (logistic+lbfgs 1.0 — the sigmoid+adam combo stalls); solver adam
+  999it / sgd 2000it / **lbfgs 20it no loss_curve_**; **`len(loss_curve_)==n_iter_==epochs`**; capacity
+  (1,)0.85 vs (50,)0.97; alpha sweet-spot **0.1→test 0.987** / 10→0.813 (underfit); early_stopping **n_iter 12
+  vs 180** (costs acc here); scaling unscaled loss 7.2→0.116/test 0.94 vs scaled 0.71→0.073/test 0.99; softmax
+  **n_outputs_ 3 / out_activation_ softmax / rows sum to 1**; defaults≈tuned (within noise). Next: build NB 4
+  from `build_ch11_nb4.py`.
+  **BUILT (27 cells: 9 code / 18 md, 4 figures) & ff-merged into `chapter/11_MLP` — Rémy validated visually.**
+  Figures: the ReLU-reveal (sigmoid loss flat at ln2 vs ReLU descending); capacity→boundary (1 unit vs 50);
+  scaling unscaled-vs-scaled loss curves; the softmax-head schematic. **Anchors reproduced by nbconvert (exit
+  0, 4 figures):** logistic+adam **0.373 stall** (loss 0.693≈ln2) vs relu **1.0**; solver adam 999ep / sgd
+  2000 / lbfgs 20ep **no loss_curve_**; `len(loss_curve_)==n_iter_==epochs`; capacity (1,) **0.853** /(50,)
+  0.973; alpha sweet-spot 0.1→**0.987** / 10→**0.813** (underfit); early_stopping **12 vs 180 ep** (0.87 vs
+  0.97); scaling unscaled 0.94 vs scaled 0.99; softmax n_outputs_ 3 / rows sum to 1; **tuned 0.987 vs default
+  0.973**. **Both reviewers PASS-after-fold — no BLOCK.** `@ml-expert-reviewer` REVISE→folded **1 MAJOR** — my
+  build-time "raw moons" refinement backfired on the capacity cell (the (1,)→0.50 was a **seed-fragile
+  *unscaled* optimization stall**, not the representational ceiling ~0.85); **reverted to the approved plan's
+  *scaled* moons** → (1,) **0.853** (honest single-fold underfit, robust) + 2 NIT (sklearn `n_iter_`=epochs
+  clause; softmax shown to 4 decimals). `@pedagogy-reviewer` REVISE→folded **1 MAJOR** — the visible
+  `ConvergenceWarning` was never *named* → added a cell-6 paragraph (it's information: a net hit `max_iter`
+  before the loss flattened; raise `max_iter`, never hide it) + 1 MINOR (0.50/0.51, dissolved by the scaled
+  revert). **Happy side effect:** the scaled revert restored alpha's sweet-spot story (0.1→0.987), per the
+  plan. Guards: 0 banned, hex clean, ruff clean (2 E501 fixed), output-free, nbconvert exit 0 (4 figures),
+  pytest 20. `ConvergenceWarning`s left **visible** (never silenced; now named). **No `src/` change** (reuse
+  `viz`/`colors`; `MLPClassifier` + `make_pipeline` + `StandardScaler` + `GridSearchCV`; the four `make_*`
+  generators). End-of-NB checklist: rebuilt from `build_ch11_nb4.py`, `llms.txt` **85**, `course_map` §11 → NB
+  1–4 built, `common_errors` **+4 MLP rows** (ReLU-vs-sigmoid-saturation; scaling-mandatory; capacity-enough-
+  then-regularize; early_stopping/GridSearchCV-not-free + sealed-test). Next: open & plan NB 5 (the digits
+  capstone) — last NB, then close ch 11 via PR → main.
+- **NB 3 (how a network learns — backpropagation, the chain rule) OPENED.** Branch
+  `notebook/11_MLP__03_backpropagation` off `chapter/11_MLP` (@ `0cfc642`). Phase `notebook-plan`: measuring
+  anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 3):** backprop = the
+  **chain rule applied layer by layer** — the forward pass **caches** activations, the backward pass carries
+  the error back (`d_out`; `dH = d_out @ W2.T * H·(1−H)` for a sigmoid hidden layer; then `dW1`, `dW2`); the
+  optimizer is **ch 03's GD loop, now multi-layer**; **init must not be zeros** (symmetry breaking). By hand
+  on a `2-H-1` net: forward+backward, **gradient-check vs finite differences (rel_err ~2e-9)**, run full-batch
+  GD, **demonstrate the zeros-init collapse**. The general L-layer algorithm as a **picture**, not a
+  multi-index grind. Anchor: by-hand **2-4-1** sigmoid net trained by GD → **train acc 1.0 on circles**,
+  matching `MLPClassifier((4,),'logistic','lbfgs')`; zeros-init — full zeros → all gradients **0** (frozen),
+  W1=0/W2≠0 → identical-nonzero columns, random init breaks it. ~3 figures (forward-cache → backward-error
+  flow; loss falling, by-hand vs sklearn overlaid; zeros vs random init). No `src/` change expected
+  (notebook-local numpy by-hand net + `MLPClassifier`; `make_circles`; `viz.plot_decision_boundary`; pytest
+  20). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
+  **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted** (`docs/plans/11_MLP__03_backpropagation.md`),
+  with **two measured refinements approved** — (1) **parity is init-dependent**, not the chapter-plan
+  "1.0==1.0": by-hand 2-4-1 GD reaches train/test **1.0** robustly (seeds 0–4), while
+  `MLPClassifier((4,),'logistic','lbfgs')` lands **0.85–1.0 / 0.76–1.0** (rs=0 **0.98/0.95**) — the
+  non-convexity the chapter flags; (2) the **symmetry sub-claim corrected** — W1=0/W2≠0 actually *breaks*
+  symmetry (col-spread 0→3.37, acc 1.0), so the frozen/stuck demos are **full-zeros** (`|grad|=0`, loss
+  ln2=0.6931, acc 0.50) + **fully-symmetric units** (identical W1 cols + W2 → col-spread 0→0, acc 0.68) vs
+  **random** (col-spread 0.47→3.66, acc 1.0). Anchors measured live (`measure_ch11_nb3.py` + `_nb3b.py`):
+  grad-check rel_err **6.0e-10**; sigmoid + adam/sgd **stall 0.48/0.50** → parity pins `lbfgs`.
+  **BUILT (22 cells: 7 code / 15 md, 3 figures) & ff-merged into `chapter/11_MLP` — Rémy validated visually.**
+  Figures: the backprop schematic (forward sky / backward rose); the GD loss curve + by-hand boundary with
+  the lbfgs boundary overlaid (dashed, same ring); the symmetry experiment (4 weight vectors identical-on-one-
+  point vs distinct; 3 loss curves). **Anchors reproduced by nbconvert (exit 0):** grad-check rel_err
+  **2.51e-10** (seed=0; the plan's 6.0e-10 was seed=1 — same order; the prose commits only to "order of
+  1e-10"); by-hand 2-4-1 GD **train/test 1.00**, final loss 0.0035; parity `MLPClassifier((4,),'logistic',
+  'lbfgs')` **0.98/0.95**; **symmetry** — full-zeros `|grad|=0`/loss ln2/acc 0.50/spread 0→0, identical-units
+  acc 0.68/spread 0→0, random acc 1.00/spread **0.342→5.269**. **Both reviewers PASS — no BLOCK** —
+  `@ml-expert-reviewer` PASS (re-derived the backward pass to machine precision; confirmed the `1/n`↔mean-loss
+  consistency, the gradient-check floor, the non-convexity attribution [adam 0.477/sgd 0.500 measured], the
+  symmetry mechanism, the L-layer recursion, all DOIs; **1 MINOR folded** — the "every gradient exactly zero"
+  claim scoped to *balanced* data, since on imbalanced data `db2≠0`); `@pedagogy-reviewer` PASS (progression on
+  11.1/11.2/ch 03; epoch/mini-batch correctly deferred to NB 4; charter clean; every figure's "Read the
+  figure" matches the pixels; exercises well-tiered; **1 MINOR + 1 NIT folded** — bridge `δ`↔`dH` in cell 19,
+  "near machine precision" in cell 8). Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0
+  (3 figures), pytest **20**. **No `src/` change** (notebook-local numpy by-hand net + `MLPClassifier`;
+  `make_circles`; `viz.plot_decision_boundary`). End-of-NB checklist: rebuilt from `build_ch11_nb3.py`
+  (kernel-drift guard), `llms.txt` **84**, `course_map` §11 → NB 1–3 built, `common_errors` **+3 MLP rows**
+  (backprop-is-the-gradient-not-the-optimizer; init-must-break-symmetry; non-convex-so-init-dependent). Next:
+  open & plan NB 4 (the estimator `MLPClassifier` & its parameters).
+- **NB 2 (why one neuron is not enough — the hidden layer) OPENED.** Branch
+  `notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP` (@ `c46a428`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 2):** a single neuron draws only a **straight** boundary; a **hidden layer + a non-linearity** carves
+  curved ones; **why the non-linearity is essential** — linear∘linear = `Wx` collapses. Seat the
+  universal-approximation *intuition* (Cybenko/Hornik, existence stated not proved). By hand: the `2→H→1`
+  forward pass (numpy matrices); the linear-collapse (identity-MLP == one neuron); **hand-set** the classic
+  ReLU **XOR** net (Goodfellow §6.1: W1=[[1,1],[1,1]], b1=[0,−1], w2=[1,−2]) → computes XOR exactly with
+  *no training* (finding the weights is NB 3); an opaque `lbfgs`-fitted MLP for the circles **curved
+  boundary**. Anchors to pin: XOR logistic 0.50 vs MLP 1.0; circles `identity` ~0.528 (chance, collapse) vs
+  `tanh`/`relu` ~0.99. ~3 figures. Helpers: `viz.plot_decision_boundary`, `make_circles`/`make_moons`
+  (sklearn). No `src/` change expected. **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) &
+  persisted** (`docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md`). **BUILT (21 cells: 6 code / 15 md,
+  3 figures) & ff-merged into `chapter/11_MLP` — Rémy validated visually.** Anchors reproduced (nbconvert
+  exit 0): XOR logistic 0.50 / hand-set ReLU net `[0,1,1,0]`; circles logistic 0.41 == identity-MLP 0.41;
+  linear collapse `2.22e-16`; non-linear MLP 1.0 (XOR & circles). **Both reviewers PASS — no BLOCK** —
+  ml-expert PASS (re-derived the Goodfellow XOR net 3 independent ways; collapse `2e-16`; UAT
+  existence-framing exemplary; citations correct), pedagogy PASS (one-concept arc; training correctly
+  deferred to NB 3; voice/exercises clean); **2 MINOR folded** (tanh refresher in the recap; a clause noting
+  0.41 is within the coin-flip band on 100 points). Guards: 0 banned, hex clean, ruff clean (after an E501
+  fix), output-free, pytest 20. **No `src/` change.** End-of-NB checklist: rebuilt from `build_ch11_nb2.py`,
+  `llms.txt` **83**, `course_map` §11 → NB 1–2 built, `common_errors` **+2 MLP rows** (depth needs a
+  non-linearity / the linear collapse; can-represent ≠ will-learn). Next: open & plan NB 3 (backpropagation).
+- **NB 1 (the artificial neuron == the logistic unit you already built) OPENED.** Branch
+  `notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP` (@ `c6ea3be`). Phase `notebook-plan`:
+  measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 1):** the
+  artificial neuron = weighted sum + bias + activation `a=φ(w·x+b)`; **a single sigmoid neuron is exactly
+  logistic regression** (the ch 03 bridge — sigmoid / `z=w·x+b` / log-loss / GD all already built in ch 03);
+  the activation is a *pluggable* φ — sigmoid (recap), tanh, ReLU. By hand: re-frame σ and `w·x+b` as "a
+  neuron"; plot tanh/ReLU from scratch; one-unit forward pass; show `MLPClassifier(hidden_layer_sizes=())`
+  reproduces the ch 03 logistic boundary. Anchor: empty-hidden MLP test == logistic (measure ~0.917 on
+  `make_moons`) + the by-hand sigmoid neuron with logistic's `(w,b)` == `predict_proba` to machine
+  precision. ~3 figures (neuron diagram; the three activations; empty-hidden MLP boundary == logistic).
+  Helpers: `viz.plot_decision_boundary` (exists), `make_moons` (sklearn, called directly — no datasets
+  loader). No `src/` change expected (notebook-local numpy + `MLPClassifier`/`LogisticRegression`; pytest
+  20). **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted**
+  (`docs/plans/11_MLP__01_the_neuron_is_logistic.md`). **BUILT (20 cells: 6 code / 14 md, 3 figures) &
+  ff-merged into `chapter/11_MLP` — Rémy validated visually.** Anchors reproduced by nbconvert (exit 0):
+  by-hand σ-neuron == `predict_proba` **0.00e+00**; logistic **0.9300** == MLP(()) **0.9300**. **Both
+  reviewers no BLOCK** — ml-expert REVISE→folded 1 MAJOR (cell 16: the logistic↔MLP weight gap is the
+  **default L2 penalty** `C=1` vs `alpha=1e-4`, *not* the optimizer — both `lbfgs`; matching it makes the
+  weights coincide) + MINOR/NIT (ReLU "simplest non-linearity / single kink"; tanh-ReLU forward-motivation;
+  drop "different optimizers"); pedagogy PASS (arc complete; *why*-non-linearity correctly teased to NB 2;
+  voice/exercises clean). Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (3
+  figures), pytest 20. **No `src/` change** (notebook-local numpy + `MLPClassifier`/`LogisticRegression`;
+  `viz.plot_decision_boundary`). End-of-NB checklist: rebuilt from `build_ch11_nb1.py` (kernel-drift guard),
+  `llms.txt` **82**, `course_map` §11 → NB 1 built, `common_errors` **+2 MLP rows** (neuron==logistic;
+  weight-gap-is-L2-penalty-not-optimizer). Next: open & plan NB 2 (the hidden layer).
+- **CHAPTER 11 (MLP) plan APPROVED & persisted.** Phase `chapter-plan-approved`. Concept tour
+  (`@concept-cartographer`) → draft → **two-reviewer gate** on the draft: `@ml-expert-reviewer` **REVISE →
+  PASS-after-fold** (science verified to machine precision — the bridge `MLPClassifier(hidden_layer_sizes=())`
+  == logistic 0.9167; backprop `dH=d_out@W2.T·H(1−H)` rel_err 2e-9; the 2-4-1 parity; non-convexity;
+  UAT-as-existence; the `breast_cancer` win; DOIs; **one BLOCK folded** — the false "sigmoid/tanh/relu all
+  ~0.99 on circles": sigmoid+`adam` actually stalls near chance, so the by-hand build is
+  sigmoid+full-batch-GD/`lbfgs`, library sigmoid demos pin `lbfgs`, and the stall is reframed as the measured
+  ReLU motivation; **two MAJORs folded** — the wild-scale scaling demo moved to a robust synthetic 2-feature
+  problem, the digits capstone reframed "shines"→"fully competitive" with the foil that matches/beats it
+  [HistGB ~0.982 ≥ MLP]); `@pedagogy-reviewer` **REVISE → no-BLOCK** (bridge load-bearing; 5-NB split
+  justified; voice/charter clean; **two MAJORs folded** — the K-class softmax output head given an explicit
+  home in NB 4, the prereq table's mini-batch/epoch framing reconciled [epoch absent in ch 03] with a home
+  in NB 4). **5 notebooks:** (1) the neuron == the logistic unit · (2) the hidden layer + why non-linearity ·
+  (3) backprop (chain rule) + init/symmetry · (4) `MLPClassifier` & params (+ the softmax head, epoch/batch,
+  ReLU revealed) · (5) the digits capstone. Plan **APPROVED by Rémy via ExitPlanMode (2026-06-29) &
+  persisted** (`docs/plans/chapter_11_MLP.md`); `course_map` §11 refined to the 5-NB decomposition. No `src/`
+  change anticipated (reuse `viz`/`colors`/`datasets`; `MLPClassifier`; pytest 20). Next: open & plan NB 1 on
+  Rémy's "go".
+- **CHAPTER 11 (MLP) opened; chapter 10 (LightGBM) closed via PR #10** (merge commit `6609afb`,
+  `gh pr merge --merge`; 5 NBs, per-notebook history preserved; remote
+  `Ramdam17/QuickIntroToMachineLearning`). Branch `chapter/11_MLP` created off `main` (synced @
+  `6609afb`). Phase `chapter-plan`: concept tour dispatched (`@concept-cartographer`, MLP scope),
+  then drafting the chapter plan in plan mode per `course_map.md` §11 and the per-method arc, then the
+  two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then Rémy approves via
+  ExitPlanMode. The deferred ch-10-close housekeeping (`course_map` §10 → "merged via PR #10") is
+  folded into this opening commit (on the chapter branch, not protected `main`). **MLP = the first
+  method beyond trees (learned representations); it builds directly on ch 03 (the single sigmoid
+  neuron IS logistic regression — sigmoid, log-odds, log-loss, gradient descent built by hand there)
+  and re-uses ch 00 (scaling, over/underfitting, learning curves) — re-establish, never presuppose.**
+  Chapter 12 (NeuralNetworks) follows — **the ch 11 / ch 12 scope boundary is the key planning
+  decision** (ch 11 self-contained but not overloaded; leave real material for ch 12). No `src/`
+  change anticipated yet (reuse `viz`/`colors`/`datasets`; pandas-first; pytest 20). Next: ingest the
+  concept map → draft + gate the chapter 11 plan.
 - **NB 5 (the demanding case — MiniBooNE, the visualization-first capstone) OPENED.** Branch
   `notebook/10_LightGBM__05_miniboone` off `chapter/10_LightGBM` (@ `1064a6c`). Phase `notebook-plan`:
   dataset verified + measuring anchors live, then drafting the capstone. **Dataset verified (fetch_openml
