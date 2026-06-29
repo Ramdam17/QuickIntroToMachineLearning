@@ -93,19 +93,19 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 5. The estimator `GradientBoostingRegressor`/`Classifier` & its parameters: `loss` (`'deviance'` removed), `subsample` (stochastic GB + OOB), early stopping, importances; `HistGradientBoosting*` named as the fast modern default + the ch 09–10 bridge.
 6. Demanding case (visualization-first capstone): tuning a competitive model honestly — California housing (regression); R²/MAE in dollars, residual error analysis, RF/linear foil, HistGB teaser.
 
-## 09_XGBoost  *(COMPLETE — five notebooks; the regularized, second-order refinement of ch 08's engine)*
+## 09_XGBoost  *(COMPLETE — merged to `main` via PR #9; five notebooks; the regularized, second-order refinement of ch 08's engine)*
 1. The second-order view: gradients **and** curvature, by hand — `w* = −G/H` minimizes the 2nd-order loss; it unifies ch 08's two leaf rules (squared-error leaf=mean with h=1; log-loss Newton leaf with h=p(1−p)). Its own λ=0 XGBoost parity.
 2. The regularized objective: λ, γ, and the gain that decides splits, by hand — `Ω=γT+½λΣw²` → leaf `w*=−G/(H+λ)`, the structure-score gain (Chen & Guestrin eq. 6–7); the measured 2×/½ parity detail (`Cover`=ΣH).
 3. Sparsity-aware splits: a learned default direction for missing values, by hand (C&G §3.4) — try both directions, keep the higher gain; GB rejects NaN, HistGBR & XGBoost accept it.
 4. The estimator `XGBClassifier`/`XGBRegressor` & its parameters — owns the histogram method (`tree_method='hist'`, `max_bin`, speed measured); `reg_lambda`/`reg_alpha`/`gamma`, `max_depth`/`min_child_weight`/`grow_policy`, `subsample`/`colsample_*`, eta×n_estimators; honest tuning (the aggressive defaults overfit).
 5. Demanding case (visualization-first capstone): Adult/Census Income (informative missing + imbalance + native categoricals; Ames fallback) — early stopping, honest cross-method comparison naming native-NaN-vs-imputed as a deliberate axis, gain MDI vs permutation, the LightGBM teaser.
 
-## 10_LightGBM
-1. Leaf-wise growth vs level-wise; why it is fast (intuition).
-2. Histogram binning and `num_leaves` as the central dial.
-3. Categorical handling; key parameters and their traps (overfitting with deep leaves).
-4. Tuning and early stopping; comparison points with XGBoost.
-5. Demanding case: larger tabular data; speed/accuracy trade-offs, measured.
+## 10_LightGBM  *(COMPLETE — five notebooks on `chapter/10_LightGBM`, closing to `main` via PR; the leaf-wise, GOSS/EFB sibling of ch 09; histogram reused, not re-taught)*
+1. Leaf-wise (best-first) growth, by hand — grow the max-loss-reduction leaf first (ch 08 NB 5 / ch 09 NB 4 named it; here built); lower *training* loss per leaf, but lopsided.
+2. GOSS (built) + EFB (named) — how it gets light: gradient-based one-side sampling with the unbiased `(1−a)/b` reweight (statistical efficiency; beats a uniform subsample); EFB bundles approximately-exclusive sparse features.
+3. The optimal categorical split, by hand (Fisher 1958) — sort categories by their gradient statistic `G/H`, take the best *contiguous* partition (`K−1` candidates, not `2^(K−1)−1`); matched to LightGBM exactly. (`num_leaves`, the leaf-wise capacity dial, is introduced as the budget in NB 1 and tuned in NB 4 — not a standalone NB.)
+4. The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — `num_leaves`/`min_child_samples` (the capacity dial + its floor), learning_rate×n_estimators, feature/bagging fractions, `reg_lambda`/`reg_alpha` (off by default), GOSS, native categorical, early stopping; honest tuning.
+5. Demanding case (visualization-first capstone): larger tabular data (MiniBooNE / scaled synthetic) — the speed/accuracy trade-off measured at matched capacity vs XGBoost & HistGBR (the winner flips with the convention; no universal best).
 
 ## 11_MLP
 1. A neuron: weighted sum + activation, by hand.

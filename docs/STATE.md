@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`09_XGBoost`** — chapter plan APPROVED; NB 1–3 of 5 shipped; **building NB 4 of 5**. Last shipped: **`08_GradientBoosting` COMPLETE — merged to `main` via PR #8** (merge `4775fe2`; six notebooks). Earlier: ch 07 AdaBoost PR #7 (`b256580`), ch 06 RF PR #6 (`9f18507`), ch 05 SVM PR #5 (`b5c00f7`). |
-| Current notebook | **NB 4 `04_estimator_and_parameters`** — branch opened off `chapter/09_XGBoost` (@ `ad7c898`); phase `notebook-plan` (drafting the cell-by-cell plan, measuring anchors live). |
-| Phase | `chapter-merge` — NB 5 **committed & ff-merged**; **CHAPTER 09 COMPLETE on the branch (5/5)** (both reviewers NO BLOCK on every NB; Rémy validated each visually). Next: close via PR `chapter/09_XGBoost → main` (`--no-ff`). |
-| Active branch | `chapter/09_XGBoost` (NB 1–5 ff-merged in). |
-| Active plan | chapter: `docs/plans/chapter_09_XGBoost.md` (APPROVED). **NB 1–5: DONE.** Chapter complete on the branch; PR to `main` pending. |
-| Next concrete action | **Close chapter 09 via PR.** `git push -u origin chapter/09_XGBoost`; `gh pr create --base main --head chapter/09_XGBoost` (title `feat(09_xgboost): complete chapter — XGBoost`); merge the PR `--no-ff` (preserve per-notebook history); `git switch main && git pull`; update `course_map` §09 → "merged to main via PR #N"; STATE → `idle`, next = **open chapter 10 (LightGBM)**. (Reminder: `main` is PR-only — global pre-push hook; remote Ramdam17/QuickIntroToMachineLearning.) |
+| Current chapter | **`10_LightGBM`** — **ALL 5 NBs shipped on `chapter/10_LightGBM`; chapter COMPLETE on the branch — ready to close via PR → main (`--no-ff`)**. Last shipped to `main`: **`09_XGBoost` COMPLETE — PR #9** (`fe295aa`; 5 NBs). Earlier: ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
+| Current notebook | — (**NB 5 `05_miniboone` BUILT & ff-merged into `chapter/10_LightGBM` — Rémy validated visually**; chapter complete). |
+| Phase | NB 5 **DONE** (built, both reviewers PASS no BLOCK, Rémy visual, merged). **Chapter 10 COMPLETE on the branch (5/5).** Next: **close ch 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go. |
+| Active branch | `chapter/10_LightGBM` (NB 1–5 ff-merged). |
+| Active plan | chapter: `docs/plans/chapter_10_LightGBM.md` (APPROVED + RESTRUCTURED 2026-06-28). **NB 1–5: ALL DONE.** |
+| Next concrete action | **Close chapter 10 via PR `chapter/10_LightGBM → main` (`--no-ff`)** on Rémy's explicit go (`main` is PR-only — global pre-push hook; remote `git@github.com:Ramdam17/QuickIntroToMachineLearning.git`, gh `Ramdam17`). Push the chapter branch, `gh pr create` (title `feat(10_lightgbm): chapter 10 — LightGBM (5 notebooks)`, body summarizing the 5 NBs, ending `🤖 Generated with [Claude Code](https://claude.com/claude-code)`), `gh pr merge --merge` (per-notebook history preserved; the chapter shows as a unit). Then fold the post-close edits (STATE → idle / `course_map` §10 → "merged via PR #N") into the **ch 11 (MLP) opening** commit. **Course is then 00→10 complete; next chapter = 11_MLP.** |
 
 ## Notes / blockers
 
@@ -38,6 +38,266 @@
 
 ## Progress log (most recent first)
 
+- **NB 5 (the demanding case — MiniBooNE, the visualization-first capstone) OPENED.** Branch
+  `notebook/10_LightGBM__05_miniboone` off `chapter/10_LightGBM` (@ `1064a6c`). Phase `notebook-plan`:
+  dataset verified + measuring anchors live, then drafting the capstone. **Dataset verified (fetch_openml
+  MiniBooNE v1):** 130064×50, all float64, **0 NaN**, binary `signal` **72/28** (False 93565 / True 36499)
+  — loads in <1s. The **last NB of ch 10**. Scope (chapter plan §NB 5): a larger tabular problem where
+  speed can matter. **Matched-capacity comparison (pre-committed convention):** LightGBM / XGBoost-hist /
+  HistGBR under ONE convention — num_leaves (= HistGBR `max_leaf_nodes`), leaf-wise, depth unbounded —
+  report **fit time AND score**, reconcile in prose vs the spine's unmatched default-vs-default number;
+  then **dial synthetic `n` up** (`make_classification` 300k–500k) to find where LightGBM crosses ahead.
+  GOSS on/off as **efficiency** (accuracy vs fraction), not a flat speed bar. **Honesty axis:** speed
+  measured & conditional, the three boosters close on accuracy, the winner depends on data/shape — "no
+  universal best." Arc (≥6 figures, ~28–30 cells): look → baselines → tuned LightGBM + early stopping →
+  held-out PR-AUC/threshold (ch 00) → matched speed/accuracy + dial-`n` crossover → error analysis →
+  cross-method → importances (split vs gain vs **permutation**). Carry NB 4's output hygiene
+  (`LGBM_VERBOSE` switch + named DataFrame). No `src/` change expected (reuse `viz`; `fetch_openml`;
+  `LGBMClassifier`/`XGBClassifier`/`HistGradientBoostingClassifier`; pytest 20). **Plan APPROVED by Rémy
+  (via ExitPlanMode, 2026-06-28) & persisted** (`docs/plans/10_LightGBM__05_miniboone.md`); ~30 cells / 7
+  figures. **Measured refinement (Rémy signed off):** the chapter-plan "dial-`n` crossover" doesn't
+  materialize — at **matched capacity** LightGBM is fastest at every `n` (50k→800k), all 3 boosters tie on
+  PR-AUC (within 0.002); **default-vs-default** XGBoost-depth6 is faster at every `n` up to 4M but the gap
+  narrows (2.4×@50k → 1.11×@4M), overtaking only beyond ~4M. The winner is set by the **convention (tree
+  shape), slowly by scale** — "no universal best." Anchors (`measure_ch10_nb5.py`): MiniBooNE 130064×50/0
+  NaN/72-28; baselines logistic 0.862 / RF 0.945; matched LightGBM 2.37s/0.9573 fastest / XGB-hist
+  2.97s/0.9586 / HistGBR 3.23s/0.9569; default XGB 1.04s/0.9588 vs LightGBM 2.43s/0.9573; tuned early-stop
+  @495 PR-AUC 0.9581, val-threshold 0.455 → test F1 0.9046; **GOSS 0.9579 > uniform 0.9556** (NB-2 edge
+  appears); importances gain vs permutation top-1 differs (PID_0 vs PID_12). Carry NB 4's hygiene
+  (`LGBM_VERBOSE` switch + named DataFrame); live dial-`n` ≤ ~600k, cite offline 1M–4M in prose.
+  **BUILT (32 cells: 12 code / 20 md, 7 figures) & MERGED to `chapter/10_LightGBM` — Rémy validated
+  visually. CHAPTER 10 COMPLETE on the branch (5/5).** **Anchors reproduced (nbconvert):** MiniBooNE
+  130064×50 / 0 NaN / 468 -999 sentinels (0.36%) / 72-28; baselines logistic 0.862 / RF 0.945;
+  **truly-matched** (L2 off all three, HistGBR early_stopping=False, 300 trees) LightGBM 2.33s/0.9573
+  fastest / XGB-hist 2.99s/0.9578 / HistGBR 3.97s/0.9577 (**band 0.0005**); default XGB 1.04s/0.9588 vs
+  LightGBM 2.40s/0.9573; dial-`n` matched LightGBM faster at all, default XGBoost faster at all (gap
+  narrows, offline 1.11×@4M); **GOSS 0.9579 > uniform 0.9556**; tuned early-stop @495 PR-AUC 0.9581,
+  val-threshold 0.455 → test F1 0.9046; gain top PID_0 vs permutation top PID_12. **Reviewers both PASS,
+  no BLOCK** — ml-expert **REVISE→folded 2 MAJOR**: (1) "one convention/300 trees" was inaccurate (HistGBR
+  auto-stopped ~270 + internal val; L2 posture differed) → made it **truly-matched** so the band tightened
+  to 0.0005 and the thesis holds harder; (2) timings unpinned → **threading caveat** added (ordering is the
+  portable lesson). + MINOR (statistically-a-tie → "within 0.001"; offline 4M marked synthetic/beyond-plot/
+  reproducible; GOSS zoomed-axis note); pedagogy PASS. **Rémy-caught data-quality fix:** the PCA "look" was
+  bizarre — diagnosed **−999 sentinels + a 16M outlier** wrecking StandardScaler+PCA (trees scale-invariant
+  → the rest of the NB valid); fixed by **naming the sentinels** (dataset note + count; trees handle them
+  natively — ch 09 NB 3 callback) and **setting those rows aside for the PCA projection only** + clipped
+  axes → readable (signal left / background right / overlap). Guards: 0 banned, hex clean, ruff clean,
+  output-free, nbconvert exit 0 (7 figures); **0 noise** (`[LightGBM] [Info]` 0 via `LGBM_VERBOSE`,
+  feature-name warning 0 via named DataFrame, No-further-splits 0). **No `src/` change** (reuse `viz`;
+  `fetch_openml`; the 4 estimators + `permutation_importance`; pytest **20**). End-of-NB checklist done:
+  rebuilt from `build_ch10_nb5.py`, `llms.txt` **80**, `course_map` §10 → **COMPLETE**, `common_errors`
+  **+2 rows** (library-X-faster = no-universal-best/convention; no-NaN≠clean / -999 sentinels handled
+  natively but wreck PCA/linear). **Last NB — chapter 10 complete on the branch.** Next: close via PR
+  `chapter/10_LightGBM → main` (`--no-ff`) on Rémy's explicit go.
+- **NB 4 (the estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — integrative) OPENED.** Branch
+  `notebook/10_LightGBM__04_estimator_and_parameters` off `chapter/10_LightGBM` (@ `7df00ae`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan
+  §NB 4):** the genuinely-new spine is **`num_leaves`/`min_child_samples` — the leaf-wise capacity dial +
+  its floor, *tuned* here — which CLOSES NB 1's lopsided→overfit loop** (single tree test peaks ~64 leaves
+  then falls as train→1.0; `num_leaves` is a *cap*; ensemble robust but the floor `min_child_samples`
+  matters; rule `num_leaves < 2^max_depth`). Then knobs grouped by the concept that owns them:
+  `learning_rate`×`n_estimators` (ch 08 NB 4 trade-off re-felt); `feature_fraction`/`bagging_fraction`
+  (+`bagging_freq`) (stochasticity, ch 06/08); `reg_lambda`/`reg_alpha` **off by default** — the *posture*
+  contrast with XGBoost's λ=1 (measure whether L2 lifts accuracy — expect not, like ch 09 NB 4);
+  `data_sample_strategy='goss'` (NB 2); native categorical (NB 3); **early stopping via
+  `callbacks=[lgb.early_stopping(N)]`+`eval_set`** (the 4.x API detail); importances `'split'` vs `'gain'`
+  (MDI caveat, ch 06/08/09). Honest spine: the defaults vs a `GridSearchCV`-tuned model → **one sealed
+  test** (`verbose` on so folds show — never `verbose=-1`). No `src/` change expected (reuse `viz`;
+  `LGBMClassifier`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
+  (`docs/plans/10_LightGBM__04_estimator_and_parameters.md`); ~24 cells / 4 figures. Anchors measured live
+  (`measure_ch10_nb4.py`): defaults num_leaves31/max_depth−1/min_child_samples20/lr0.1/reg_lambda0; single
+  tree test **peaks ~64 (0.878) then overfits** (255→168 leaves, a cap); ensemble plateau **0.92–0.927**;
+  floor **mcs 1→0.858 / 20→0.927 / 300→0.906**; **reg_lambda flat** (0→0.919/1→0.921/100→0.906 — posture
+  not lever); goss/bagging/feature ≈ flat; lr↓+trees↑ 0.9225→0.9267; **GridSearchCV tuned 0.9233 vs
+  default 0.9225 (Δ+0.0008)**; importances split vs gain rankings differ (top-1 agrees).
+  **BUILT (26 cells: 10 code / 16 md, 4 figures) & MERGED to `chapter/10_LightGBM` — Rémy validated
+  visually.** **Two Rémy-arbitrated build decisions (his calls):** (1) the vivid `min_child_samples` floor
+  lesson and zero "No further splits" warnings are **coupled** (vivid floor needs tiny leaves → over-requests
+  splits → flood; can't silence without the banned `verbose=-1`) → Rémy chose **"gros jeu propre"**: the toy
+  is **n=10000** (sweeps stay fillable, ~0 flood) and the floor is shown on a **single tree** (where it
+  binds: leaves 256→18, depth 18→8, train 0.976→0.857, test peak@mcs20=0.902, underfit@300=0.858) — the
+  ensemble being nearly inert to the floor on ample data; (2) a residual `[LightGBM] [Info]` banner flood
+  (~6 lines × dozens of fits) + a spurious sklearn "feature names" warning → Rémy chose a documented
+  **`LGBM_VERBOSE = 0` switch** (cell-exposed, explained, flip to 1 to see every banner; keeps real warnings
+  — NOT the banned `verbose=-1`), and the feature-names warning fixed **at the root** by a named pandas
+  DataFrame (`f0..f19`, pandas-first). Result: `[LightGBM] [Info]` **0**, feature-warn **0**, 4 benign "No
+  further splits" left visible. **Final anchors (n=10000):** defaults nl31/md−1/mcs20/lr0.1/ne100/λ0; single
+  tree num_leaves test peak@64 (0.910) then 128→0.904; ensemble plateau 0.918→0.951; single-tree floor as
+  above; lr×n_est 0.945→0.950; reg_lambda flat 0.951/0.951/0.949 (posture); goss/bagging/feature ≈ 0.95;
+  early stop best_iteration_ 139, test 0.948; **GridSearchCV (ne fixed 100) default 0.9493 / tuned 0.9483
+  (Δ−0.0010, within noise — defaults strong)**, best {lr0.1,mcs10,nl63}; importances split [11,13,2,16,3] vs
+  gain [13,3,4,10,11] (top-1 differs). **Reviewers both PASS/REVISE→folded, no BLOCK** — ml-expert PASS
+  (re-mesured every anchor to the digit; verified single-tree-vs-ensemble floor claim, `predict` uses
+  `best_iteration_`, LightGBM defaults genuinely gentler than XGBoost); pedagogy **REVISE→folded** the
+  MAJOR (**missing "Your turn"** — added, 3 tiered exercises) + MINOR (predict/best_iteration_ note;
+  Fig-1 wiggle/marker; `LGBMRegressor` aside; cell-24 read). Guards: 0 banned, hex clean, ruff clean,
+  output-free, nbconvert exit 0 (4 figures), 225 KB. **No `src/` change** (notebook-local; pytest **20**).
+  End-of-NB checklist done: rebuilt from `build_ch10_nb4.py`, `llms.txt` **79**, `course_map` §10 → NB 1–4
+  built, `common_errors` **+3 rows** (num_leaves-vs-max_depth capacity dial; min_child_samples floor;
+  tuning-within-noise). Next: open & plan NB 5 (the capstone) — last NB, then close ch 10 via PR → main.
+- **NB 3 (the optimal categorical split, by hand — Fisher 1958) OPENED.** Branch
+  `notebook/10_LightGBM__03_categorical_split` off `chapter/10_LightGBM` (@ `c08b6c0`). Phase
+  `notebook-plan`: measuring parity anchors live, then drafting the cell-by-cell plan. **One concept
+  (chapter plan §NB 3):** partitioning K categories into two groups is `2^(K−1)−1` ways (exponential);
+  Fisher (1958) — for the convex structure-score gain `G²/(H+λ)` (ch 09 NB 2) — the optimal binary
+  partition is **contiguous** once categories are sorted by their gradient statistic `G/H`, so only
+  `K−1` candidates (linear). Build by hand on a binary toy: per-category `(G,H)`, sort by `G/H`, score
+  the `K−1` contiguous splits, take the max → the category set going left; **match LightGBM exactly**
+  (de-risked at the restructure: LEFT {1,3,5} ≡ LightGBM {0,2,4}) and brute-force-confirm it is the global
+  optimum (vs all `2^(K−1)−1`). Genuinely new vs ch 09 (which *used* native categoricals but never built
+  the split); contrast XGBoost's partition heuristic. **Build-time pins:** `min_data_per_group=1` (default
+  100 breaks parity on a small toy), `min_data_in_leaf=1, min_sum_hessian_in_leaf=0, cat_l2=0, cat_smooth=0`
+  — OR ≥100 rows/category. **Teaching note:** with `h=1` (regression toy) `G/H` = the per-category target
+  mean; give `G/H` as the general key (carries to classification). Keep the toy **binary**. No `src/` change
+  expected (reuse `viz`; `LGBMRegressor` + `dump_model`; pytest 20). **Plan APPROVED by Rémy (via
+  ExitPlanMode, 2026-06-28) & persisted** (`docs/plans/10_LightGBM__03_categorical_split.md`); ~22 cells /
+  3 figures. Anchors measured live (`measure_ch10_nb3_categorical.py`): per-category `G/H = F₀ − mean(y_c)`,
+  sorted [1,3,5,0,2,4]; the `K−1=5` contiguous cuts (gains 448/718/**809**/721/450) → best LEFT={1,3,5};
+  **brute-force all 31 (`2^(K−1)−1`) → global best {0,2,4}, same gain 808.78 = the identical partition**
+  (contiguous == global, 6.2× fewer to check); **LightGBM single tree [[0,2,4],[1,3,5]] == by-hand**.
+  **BUILT (22 cells: 8 code / 14 md, 3 figures) & MERGED to `chapter/10_LightGBM` — Rémy validated
+  visually.** Figures: per-category `G/H` bars (scrambled index order); gain vs the `K−1` contiguous cuts
+  (single peak at cut-3, annotated `K−1=5` vs `2^(K−1)−1=31`); LightGBM's two leaf values coloured by the
+  by-hand side (== the partition). **Anchors reproduced by nbconvert (lightgbm 4.6.0, SEED=0):** F0 2.499;
+  `G/H` sorted [1,3,5,0,2,4]; contiguous gains 448.08/718.45/**808.78**/720.59/449.99 → best {1,3,5};
+  brute-force all 31 → global {0,2,4} gain 808.78 (**contiguous == global**); K=6/10/30 → 5/9/29 vs
+  31/511/536,870,911; LightGBM [[0,2,4],[1,3,5]] == by-hand (identical). **Reviewers both PASS, no BLOCK**
+  — ml-expert verified `G/H`≡Fisher between-groups (Δ 4.5e-13), contiguity on 400/400 configs (incl. λ>0),
+  the multiclass break by counterexample (~37% — the caveat is earned), parity method valid; pedagogy
+  verified the 3 Read-the-figure match the pixels, the brute-force honesty check lands, 0 banned, charter
+  clean, exercises tiered. **Folds applied (markdown):** convexity argument tightened (sum of convex
+  functions → max at a contiguous/extreme partition; + a pointer to the brute-force check) and **Fisher's
+  exact scope** stated (least-squares / sort-by-mean; the convex generalization = CART/LightGBM); cell-14
+  partition orientation aligned with the figure + "no loss of optimality" conditioned; a sign-chain
+  reminder (`g=F₀−y` → high mean = negative `G/H` → `−G/H` positive) in Fig-3 read; dropped "you have
+  seen". Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (3 figures); LightGBM
+  banner + the `min_data_in_leaf`/`min_sum_hessian_in_leaf` override warnings left visible. **No `src/`
+  change** (notebook-local numpy/`itertools` + `LGBMRegressor`; pytest **20**). End-of-NB checklist done:
+  rebuilt from `build_ch10_nb3.py` (kernel-drift guard), `llms.txt` **78**, `course_map` §10 → NB 1–3
+  built, `common_errors` **+3 categorical rows** (native-not-one-hot; `2^(K−1)−1`→`K−1` Fisher;
+  native-optimal-only-convex+1D / guards). Next: open & plan NB 4 (the estimator & its parameters).
+- **NB 2 (GOSS built + EFB named — how LightGBM gets light) OPENED.** Branch
+  `notebook/10_LightGBM__02_goss_efb` off `chapter/10_LightGBM` (@ `fed6560`). Phase `notebook-plan`:
+  measuring GOSS anchors live, then drafting the cell-by-cell plan. **Scope (chapter plan §NB 2):** one
+  built concept — **GOSS** (Gradient-based One-Side Sampling, Ke et al. 2017 §3.2) — + one named companion
+  — **EFB** (Exclusive Feature Bundling, §4). Name the ch 09 NB 2 anchor: the split-gain is a **sum over
+  rows** of `g,h`. GOSS: rank rows by `|gradient|`, keep the top `a`, sample `b` of the rest, **up-weight
+  the sampled rest by `(1−a)/b`** so `G,H` stay ~unbiased (`H` exactly: `a·n + (1−a)/b · b·n = n`). The
+  discriminating story: large-`|g|` rows are kept **exactly** (zero sampling variance) → the GOSS
+  gain-estimate is **lower-variance** than a uniform subsample at the same fraction `a+b`, both ~centred on
+  the full-data gain; this translates to **GOSS ≈ full-data held-out quality & beating a uniform subsample
+  at matched fraction** (LightGBM ensemble). **Honesty bar:** GOSS's wall-clock benefit is
+  **regime-dependent (~flat on dense moderate data — measured; bites on very large/wide data)**; the gain
+  is `G²/(H+λ)`, a *function* of the row-sums, so it is *approximately* (not exactly) unbiased — GOSS lowers
+  its **variance**, the honest claim (Ke Thm 3.2). EFB named (approximately-exclusive sparse features,
+  tolerates a small conflict rate — more than concatenating one-hot columns). No `src/` change expected
+  (reuse `viz`; `LGBMClassifier` `data_sample_strategy='goss'` / `bagging_fraction` for the uniform foil;
+  pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
+  (`docs/plans/10_LightGBM__02_goss_efb.md`); ~22 cells / 4 figures. **Measured-before-claim reframe (Rémy
+  signed off):** the chapter-plan wording "GOSS beats a uniform subsample at matched fraction" proved
+  **regime-dependent** — GOSS's variance edge over uniform is gated by **gradient concentration**
+  (crossover ≈ 0.5; synthetic sweep GOSS/uniform std ratio 1.64/1.24/0.99/0.64/0.27 at conc
+  0.20/0.36/0.49/0.67/0.86). On **moderate dense tabular data** concentration stays **0.21→0.47** even at
+  200 boosting rounds (≤ crossover) → GOSS **≈ full quality on 30 % rows** (ensemble 0.9345 vs full 0.9313)
+  but **~ties** uniform there; GOSS's real win is the large/wide/sparse concentrated regime (→ NB 5). Both
+  unbiased (`H` exact `a·n+(1−a)/b·b·n=n`; `G` unbiased); the lever is **variance, only when gradients are
+  imbalanced** (Ke et al. Thm 3.2). Wall-clock ~flat on dense (2.41 vs 2.45 s). NB teaches this honest
+  version (a strict upgrade, consistent with the chapter's "GOSS = statistical efficiency, wall-clock
+  regime-dependent" bar). **BUILT (23 cells: 8 code / 15 md, 4 figures) & MERGED to `chapter/10_LightGBM`
+  — Rémy validated visually.** Figures: |g| distribution + GOSS's kept band; GOSS-vs-uniform gain-estimate
+  distributions on a concentrated set (both centred on the truth, GOSS ~3× tighter); the concentration
+  crossover sweep (variance ratio vs concentration, crossing 1.0 near ~0.5, with the measured dense-tabular
+  band 0.21–0.47 shaded at/below it); the EFB one-hot exclusivity image. **Anchors reproduced by nbconvert
+  (lightgbm 4.6.0, SEED=0):** round-1 toy |g| median 1.467/max 8.101, concentration 0.44; G_full +0.000 /
+  H 2000.0; GOSS G mean +6.77 (std 161.7), **H exact 2000.000 (std 0)**; uniform G +10.4 (std 156.4);
+  concentrated set (conc 0.66) true gain 50.42, GOSS std 1.88 vs uniform 5.54 (ratio 0.34); sweep
+  1.49/1.42/1.06/0.56/0.35/0.27/0.28 at conc 0.20→0.86; ensemble (45k×30, 300 trees) full 0.9313 / GOSS
+  0.9345 / uniform 0.9353 (fit ~2.0 s each — flat); EFB 15 one-hot cols → ~3 bundles (same-group conflict
+  0.0000 / cross-group 0.0354). **Reviewers both PASS, no BLOCK** — ml-expert re-derived the algebra
+  (`E[G_GOSS]=G_full`; `H_GOSS=n` exact every draw) and adversarially confirmed the synthetic feature is
+  **conservative** for GOSS, not flattering; pedagogy verified all 4 Read-the-figure match the pixels, 0
+  banned, charter clean, exercises tiered. **Folds applied:** Thm-3.2 attribution softened (it bounds GOSS's
+  gain error by a term growing with the largest *sampled* gradient; the crossover-vs-uniform is *our*
+  measurement); a feature-conservatism sentence + seeded into exercise 2; "Figure 3" → descriptive;
+  cosmetic line-wrap. Guards: 0 banned, hex clean, ruff clean, output-free, nbconvert exit 0 (4 figures);
+  LightGBM banner left visible (no `verbose=-1`). **No `src/` change** (notebook-local numpy + `LGBMClassifier`;
+  pytest **20**). End-of-NB checklist done: rebuilt from `build_ch10_nb2.py` (kernel-drift guard), `llms.txt`
+  **77**, `course_map` §10 → NB 1–2 built, `common_errors` **+4 LightGBM/GOSS/EFB rows** (GOSS-vs-uniform
+  gated-by-concentration; unbiased-but-variance-is-the-point; GOSS-no-wall-clock-on-dense; EFB≠concatenation)
+  **+ fixed a stale `num_leaves` NB-2→NB-4 ref**. Next: open & plan NB 3 (the optimal categorical split).
+- **CHAPTER 10 RESTRUCTURED (Rémy-initiated) & re-gated — both reviewers no BLOCK.** Reaching NB 2,
+  `num_leaves` proved **too light** for a standalone fundamental (a parameter sweep, no by-hand build,
+  overlapping NB 4). Rémy chose to restructure. New arc: NB 1 leaf-wise (shipped) · **NB 2 GOSS+EFB** ·
+  **NB 3 the optimal categorical split (NEW — built by hand, Fisher 1958: sort categories by `G/H`, best
+  contiguous partition, `K−1` candidates; de-risked == LightGBM exactly, LEFT {1,3,5} ≡ {0,2,4})** · NB 4
+  estimator (`num_leaves`/`min_child_samples` *tuned* here, closing NB 1's lopsided→overfit loop) · NB 5
+  capstone. `num_leaves` standalone NB dropped → budget in NB 1 + dial in NB 4. All three fundamentals now
+  **build a mechanism by hand** (leaf-wise · GOSS · categorical split). Re-gate folds: ml-expert (pin
+  `min_data_per_group=1` for NB-3 parity; `G/H`↔mean note; structure-score criterion; toy binary);
+  pedagogy (NB 1 had **5** forward-ref seams not 3 — repointed: overfit→NB 4, "Next"→NB 2 GOSS; NB 4 must
+  close the NB-1 loop). **NB 1 forward-refs repointed** (cells 1/8/14/16 → NB 4; "Next" → NB 2 GOSS+EFB),
+  rebuilt, guards green (0 residual seams, 0 banned, ruff clean, 3 figures, output-free). `chapter_10` plan
+  + `course_map` §10 updated. Next: open & plan NB 2 (GOSS + EFB).
+- **NB 1 (leaf-wise / best-first growth, by hand) OPENED.** Branch
+  `notebook/10_LightGBM__01_leaf_wise_growth` off `chapter/10_LightGBM` (@ `b6cb63d`). Phase
+  `notebook-plan`: measuring anchors live then drafting the cell-by-cell plan — one concept, **build
+  leaf-wise (best-first) tree growth by hand** (a frontier of candidate leaves; repeatedly expand the
+  one whose best split gives the largest loss reduction, to a `num_leaves` budget) and contrast with
+  level-wise (ch 04/09 depthwise). Leaf-wise was *named* twice before (ch 08 NB 5 HistGBR
+  `max_leaf_nodes`; ch 09 NB 4 `lossguide`) — **here built**. Anchor: by-hand leaf-wise == LightGBM's
+  single tree on a toy; leaf-wise reaches lower **training** loss for the same #leaves, grows lopsided
+  (qualitative; the depth-vs-num_leaves sweep is NB 2). No `src/` change expected (reuse `viz`;
+  `dump_model`; pytest 20). **Plan APPROVED by Rémy (via ExitPlanMode, 2026-06-28) & persisted**
+  (`docs/plans/10_LightGBM__01_leaf_wise_growth.md`); ~19 cells / 3 figures; anchors measured live
+  (leaf-wise ≪ level-wise train SSE; lopsided sizes …109; **exact LightGBM parity** max|Δpred|=0,
+  SSE 0.566==0.566). **BUILT (17 cells, 3 figures) & REVIEWED — both NO BLOCK, awaiting Rémy visual.**
+  Each reviewer raised one MAJOR → folded: ml-expert caught a real bug — my `grow('level')` descended the
+  left spine **depth-first** instead of breadth-first → rewrote it as a true FIFO (corrected level-wise
+  curve 268→65@4 leaves→12@8; leaf-wise still wins at every budget — 6 leaves 0.57 vs 65.4); pedagogy
+  caught Fig-2 subplot titles colliding → moved leaf sizes to a print + short titles + `tight_layout`.
+  MINOR/NIT folded: named `LAMBDA=0.0`; one line that the leaf value `mean(y)` = `F0 + (−G/H)`; FIFO
+  wording. Parity unchanged (leaf-wise logic untouched). Guards: ruff clean, 0 banned, output-free, hex
+  clean, nbconvert exit 0 (3 figures); LightGBM banner left visible (no `verbose=-1`). **No `src/`
+  change** (pytest 20). **BUILT & MERGED to `chapter/10_LightGBM` — Rémy validated visually.**
+  End-of-NB checklist done: rebuilt from `build_ch10_nb1.py`, `llms.txt` **76**, `course_map` §10 → NB 1
+  built, `common_errors` **+2 rows** (leaf-wise lower-train-loss-≠-better; leaf-wise-is-the-modern-default-
+  not-LightGBM-only), pytest **20**. Next: open & plan NB 2 (`num_leaves`, the central dial).
+- **Chapter 10 (LightGBM) opened.** Branch `chapter/10_LightGBM` created off `main` (synced @ `fe295aa`
+  after PR #9). Phase `chapter-plan`: drafting the chapter plan in plan mode per `course_map.md` §10 and
+  the per-method arc — **leaf-wise vs level-wise growth** (the XGBoost contrast; ch 09 NB 4 named
+  `grow_policy=lossguide` as this bridge); histogram binning + **`num_leaves`** as the central dial;
+  categorical handling & the overfitting traps; tuning / early stopping vs XGBoost; a demanding case on
+  larger tabular data (speed/accuracy measured). LightGBM 4.6.0 lives in the `boosting` extra (+
+  `libomp`); confirm the live API/behaviour before pinning anchors. Chapter plan is reviewer-gated (both
+  reviewers, no BLOCK) before Rémy approves. The pending ch-09-close edits (STATE → idle + `course_map`
+  §09 → "merged via PR #9") are folded into this opening commit (committed on the chapter branch, not on
+  protected `main`). **Plan APPROVED by Rémy (via ExitPlanMode + the two-reviewer gate, 2026-06-28) &
+  persisted** (`docs/plans/chapter_10_LightGBM.md`); both reviewers **REVISE → no BLOCK**, folded: the
+  speed thesis → **matched-capacity both directions** (the winner flips with the convention; not "XGBoost
+  faster"); GOSS → **statistical efficiency** (wall-clock regime-dependent, ~flat on dense data, measured);
+  the **HistGBR-is-already-leaf-wise gift** (it defaults `max_leaf_nodes=31` = LightGBM's `num_leaves=31`)
+  → used in the spine + as NB 5's matched sibling; NB 3 = "one built (GOSS) + one named (EFB)". Live
+  anchors measured (num_leaves 31 / max_depth −1; num_leaves 127 → depth 15; GOSS API; categorical;
+  early-stopping callbacks; speed/accuracy). `course_map` §10 refined to the 5-NB decomposition. Next:
+  open & plan NB 1 (leaf-wise growth, by hand).
+- **CHAPTER 09 (XGBoost) COMPLETE — merged to `main` via PR #9** (merge commit `fe295aa`,
+  `gh pr merge --merge`; per-notebook history preserved; pushed to Ramdam17/QuickIntroToMachineLearning).
+  **Five notebooks:** the second-order view (`w*=−G/H` unifies ch 08's two leaf rules) · the regularized
+  objective (λ/γ, the structure-score gain, `Cover=Σh`, the measured 2×/½ convention) · sparsity-aware
+  splits (a learned default direction for NaN) · the estimator & its parameters (each knob from its
+  concept; **owns the histogram method**, ~5× faster at no accuracy cost; defaults overfit → honest
+  tuning) · the Census-income capstone (8 figures: imbalance/PR-AUC, the **honest native-vs-imputed
+  null**, cross-method, early stopping, validation-chosen threshold, MDI-vs-permutation, ethics /
+  do-not-deploy). The **regularized, second-order, engineered refinement** of ch 08's engine — **not a
+  new algorithm**, and **no universal best** (edges = speed / native missing+categorical handling /
+  regularization, not accuracy). Two-reviewer gate (no BLOCK) + Rémy visual on every NB; every number
+  measured live (xgboost 3.2.0 / lightgbm 4.6.0), seed-pinned; honest findings throughout (the 2×/½ gain
+  convention; defaults memorize but L2-on is about calibration not accuracy; native-NaN ≈ imputed when
+  missingness is redundant; convenience ≠ power; MDI-vs-permutation divergence). **No `src/` change**
+  across the chapter (reused `viz`; `trees_to_dataframe`; `fetch_openml`; sklearn Pipelines) — pytest
+  stays **20**. `main` synced @ `fe295aa`, ruff green, pytest 20, `llms.txt` 74. Env: `boosting` extra +
+  `libomp`. STATE → `idle` (this edit + `course_map` §09 → "merged via PR #9" pending on `main`, fold
+  into the ch-10 opening). Next: open chapter 10 (LightGBM).
 - **NB 5 (the demanding case — Adult/Census Income capstone) BUILT & MERGED to `chapter/09_XGBoost` —
   Rémy validated visually. CHAPTER 09 COMPLETE on the branch (5/5).** 30 cells (9 code / 21 md), **8
   figures** (class balance; missingness-vs-target;
