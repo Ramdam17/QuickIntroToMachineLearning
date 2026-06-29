@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (none yet; chapter-planning). |
-| Phase | **`chapter-plan-approved`** — chapter 11 (MLP) plan **APPROVED by Rémy** (via ExitPlanMode + the two-reviewer gate, 2026-06-29) & persisted (`docs/plans/chapter_11_MLP.md`). Ready to plan notebook 01. |
-| Active branch | `chapter/11_MLP` (off `main` @ `6609afb`). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (**APPROVED 2026-06-29**; both reviewers REVISE→no-BLOCK, all folds applied). 5 NBs; per-NB plans drafted/validated one at a time before each build. |
-| Next concrete action | **Open & plan NB 1** on Rémy's "go": `git switch -c notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **the artificial neuron == the ch 03 logistic unit** (weighted sum + bias + activation; a single sigmoid neuron *is* logistic regression; sigmoid/tanh/ReLU; `MLPClassifier(hidden_layer_sizes=())` == logistic, measured 0.917). Measure anchors live, draft cell-by-cell per `docs/notebook_template.md`, present via ExitPlanMode (**NB-plan = Rémy validates alone, no reviewer gate**). Then build → two-reviewer gate → Rémy visual → commit → ff-merge. **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current notebook | **`01_the_neuron_is_logistic`** (NB 1 of 5) — phase `notebook-plan`. |
+| Phase | **`notebook-plan`** — measuring anchors live, then drafting the NB 1 cell-by-cell plan (the artificial neuron == the ch 03 logistic unit). NB-plan stage = **Rémy validates alone** (no reviewer gate; reviewers return on the built notebook). |
+| Active branch | `notebook/11_MLP__01_the_neuron_is_logistic` (off `chapter/11_MLP` @ `c6ea3be`). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1 plan: `docs/plans/11_MLP__01_the_neuron_is_logistic.md` (to be written on approval). |
+| Next concrete action | Measure NB 1 anchors live (the bridge: `MLPClassifier(hidden_layer_sizes=())` == LogisticRegression on `make_moons`, test acc; the by-hand sigmoid neuron with logistic's `(w,b)` == `predict_proba` to machine precision) → draft cell-by-cell per `docs/notebook_template.md` (header → recap of ch 03 → the neuron framing → the three activations → the empty-hidden MLP == logistic boundary → Your turn → What you built → References) → present via ExitPlanMode (Rémy validates alone). Then build → two-reviewer gate → Rémy visual → commit → ff-merge into `chapter/11_MLP`. |
 
 ## Notes / blockers
 
@@ -38,6 +38,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (the artificial neuron == the logistic unit you already built) OPENED.** Branch
+  `notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP` (@ `c6ea3be`). Phase `notebook-plan`:
+  measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 1):** the
+  artificial neuron = weighted sum + bias + activation `a=φ(w·x+b)`; **a single sigmoid neuron is exactly
+  logistic regression** (the ch 03 bridge — sigmoid / `z=w·x+b` / log-loss / GD all already built in ch 03);
+  the activation is a *pluggable* φ — sigmoid (recap), tanh, ReLU. By hand: re-frame σ and `w·x+b` as "a
+  neuron"; plot tanh/ReLU from scratch; one-unit forward pass; show `MLPClassifier(hidden_layer_sizes=())`
+  reproduces the ch 03 logistic boundary. Anchor: empty-hidden MLP test == logistic (measure ~0.917 on
+  `make_moons`) + the by-hand sigmoid neuron with logistic's `(w,b)` == `predict_proba` to machine
+  precision. ~3 figures (neuron diagram; the three activations; empty-hidden MLP boundary == logistic).
+  Helpers: `viz.plot_decision_boundary` (exists), `make_moons` (sklearn, called directly — no datasets
+  loader). No `src/` change expected (notebook-local numpy + `MLPClassifier`/`LogisticRegression`; pytest
+  20). **NB-plan = Rémy validates alone (no reviewer gate).** Next: present the cell-by-cell plan via
+  ExitPlanMode.
 - **CHAPTER 11 (MLP) plan APPROVED & persisted.** Phase `chapter-plan-approved`. Concept tour
   (`@concept-cartographer`) → draft → **two-reviewer gate** on the draft: `@ml-expert-reviewer` **REVISE →
   PASS-after-fold** (science verified to machine precision — the bridge `MLPClassifier(hidden_layer_sizes=())`
