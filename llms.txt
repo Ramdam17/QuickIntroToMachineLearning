@@ -77,3 +77,4 @@
 - [notebooks/10_LightGBM/02_goss_efb.ipynb](notebooks/10_LightGBM/02_goss_efb.ipynb) — 02 — GOSS and EFB: how LightGBM gets light — *Chapter 10 · LightGBM · Notebook 2 of 5*
 - [notebooks/10_LightGBM/03_categorical_split.ipynb](notebooks/10_LightGBM/03_categorical_split.ipynb) — 03 — The optimal categorical split — *Chapter 10 · LightGBM · Notebook 3 of 5*
 - [notebooks/10_LightGBM/04_estimator_and_parameters.ipynb](notebooks/10_LightGBM/04_estimator_and_parameters.ipynb) — 04 — The estimator and its parameters — *Chapter 10 · LightGBM · Notebook 4 of 5*
+- [notebooks/10_LightGBM/05_miniboone.ipynb](notebooks/10_LightGBM/05_miniboone.ipynb) — 05 — A demanding case: MiniBooNE — *Chapter 10 · LightGBM · Notebook 5 of 5 — the capstone*
