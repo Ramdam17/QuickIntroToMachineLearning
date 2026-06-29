@@ -107,12 +107,12 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `LGBMClassifier`/`LGBMRegressor` & its parameters — `num_leaves`/`min_child_samples` (the capacity dial + its floor), learning_rate×n_estimators, feature/bagging fractions, `reg_lambda`/`reg_alpha` (off by default), GOSS, native categorical, early stopping; honest tuning.
 5. Demanding case (visualization-first capstone): larger tabular data (MiniBooNE / scaled synthetic) — the speed/accuracy trade-off measured at matched capacity vs XGBoost & HistGBR (the winner flips with the convention; no universal best).
 
-## 11_MLP
-1. A neuron: weighted sum + activation, by hand.
-2. Layers and non-linearity; what depth buys.
-3. Training intuition: loss, backpropagation (picture, not heavy derivation), learning rate.
-4. Parameters (layers, units, activation, regularization, optimizer); over/underfitting.
-5. Demanding case: a small end-to-end MLP; scaling, seeds, honest evaluation.
+## 11_MLP  *(plan approved 2026-06-29 — five notebooks; the first method beyond trees; the single sigmoid neuron == ch 03 logistic regression, one hidden layer + backprop the new idea; ch 12 owns depth/representations/dropout)*
+1. The artificial neuron == the logistic unit you already built — weighted sum + bias + activation; a single sigmoid neuron is exactly logistic regression (the ch 03 bridge); sigmoid/tanh/ReLU plotted; `MLPClassifier(hidden_layer_sizes=())` == logistic (measured).
+2. Why one neuron is not enough: the hidden layer — a hidden layer + non-linearity carves curved boundaries one neuron cannot (XOR/circles); why linear∘linear collapses to one linear map; the universal-approximation intuition (existence, stated not proved).
+3. How a network learns: backpropagation (the chain rule) — forward pass + backward pass by hand on a 2-H-1 net (gradient-checked); weight init / symmetry breaking; by-hand net == `MLPClassifier`.
+4. The estimator `MLPClassifier`/`MLPRegressor` & its parameters — `hidden_layer_sizes`, `activation` (ReLU the default — no saturation), `solver` (Adam named), `alpha` (L2), `learning_rate_init`, `early_stopping`, `batch_size`/epoch; the K-class softmax output head; scaling mandatory; the loss curve as a diagnostic; honest tuning.
+5. Demanding case (visualization-first capstone): handwritten digits (`load_digits`) — scale, tune, held-out evaluation, loss curve, seed-variance, a fair tree foil (competitive, not superior); honest limits (non-convex; not interpretable; seed-sensitive).
 
 ## 12_NeuralNetworks
 1. From MLP to networks: representations learned layer by layer.

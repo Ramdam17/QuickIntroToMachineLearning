@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | — (none yet; chapter-planning). |
-| Phase | **`chapter-plan`** — drafting the chapter 11 (MLP) plan in plan mode per `course_map.md` §11 and the per-method arc. Then the two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK), then Rémy approves via ExitPlanMode. |
+| Phase | **`chapter-plan-approved`** — chapter 11 (MLP) plan **APPROVED by Rémy** (via ExitPlanMode + the two-reviewer gate, 2026-06-29) & persisted (`docs/plans/chapter_11_MLP.md`). Ready to plan notebook 01. |
 | Active branch | `chapter/11_MLP` (off `main` @ `6609afb`). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (to be written on approval). |
-| Next concrete action | Draft the chapter 11 (MLP) plan in plan mode: concept tour (`@concept-cartographer`) → primordial concepts across NBs 1–3 (one concept each, by-hand-first) → NB 4 (the estimator `MLPClassifier` & its parameters) → NB 5 (the demanding case). Cross-check `course_map.md` §11. Two-reviewer gate (no BLOCK). ExitPlanMode → on Rémy's approval write `docs/plans/chapter_11_MLP.md`, update `course_map` §11, set STATE phase `chapter-plan-approved`, commit `docs(plan): chapter 11_MLP`. **MLP builds directly on ch 03 (the single sigmoid neuron = logistic regression: sigmoid, log-odds, log-loss, gradient descent) and ch 00 (scaling, over/underfitting, learning curves) — re-establish, never presuppose. The ch 11 / ch 12 scope boundary is the key planning decision.** |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (**APPROVED 2026-06-29**; both reviewers REVISE→no-BLOCK, all folds applied). 5 NBs; per-NB plans drafted/validated one at a time before each build. |
+| Next concrete action | **Open & plan NB 1** on Rémy's "go": `git switch -c notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **the artificial neuron == the ch 03 logistic unit** (weighted sum + bias + activation; a single sigmoid neuron *is* logistic regression; sigmoid/tanh/ReLU; `MLPClassifier(hidden_layer_sizes=())` == logistic, measured 0.917). Measure anchors live, draft cell-by-cell per `docs/notebook_template.md`, present via ExitPlanMode (**NB-plan = Rémy validates alone, no reviewer gate**). Then build → two-reviewer gate → Rémy visual → commit → ff-merge. **Do NOT auto-start — Rémy initiates each NB with "go".** |
 
 ## Notes / blockers
 
@@ -38,6 +38,24 @@
 
 ## Progress log (most recent first)
 
+- **CHAPTER 11 (MLP) plan APPROVED & persisted.** Phase `chapter-plan-approved`. Concept tour
+  (`@concept-cartographer`) → draft → **two-reviewer gate** on the draft: `@ml-expert-reviewer` **REVISE →
+  PASS-after-fold** (science verified to machine precision — the bridge `MLPClassifier(hidden_layer_sizes=())`
+  == logistic 0.9167; backprop `dH=d_out@W2.T·H(1−H)` rel_err 2e-9; the 2-4-1 parity; non-convexity;
+  UAT-as-existence; the `breast_cancer` win; DOIs; **one BLOCK folded** — the false "sigmoid/tanh/relu all
+  ~0.99 on circles": sigmoid+`adam` actually stalls near chance, so the by-hand build is
+  sigmoid+full-batch-GD/`lbfgs`, library sigmoid demos pin `lbfgs`, and the stall is reframed as the measured
+  ReLU motivation; **two MAJORs folded** — the wild-scale scaling demo moved to a robust synthetic 2-feature
+  problem, the digits capstone reframed "shines"→"fully competitive" with the foil that matches/beats it
+  [HistGB ~0.982 ≥ MLP]); `@pedagogy-reviewer` **REVISE → no-BLOCK** (bridge load-bearing; 5-NB split
+  justified; voice/charter clean; **two MAJORs folded** — the K-class softmax output head given an explicit
+  home in NB 4, the prereq table's mini-batch/epoch framing reconciled [epoch absent in ch 03] with a home
+  in NB 4). **5 notebooks:** (1) the neuron == the logistic unit · (2) the hidden layer + why non-linearity ·
+  (3) backprop (chain rule) + init/symmetry · (4) `MLPClassifier` & params (+ the softmax head, epoch/batch,
+  ReLU revealed) · (5) the digits capstone. Plan **APPROVED by Rémy via ExitPlanMode (2026-06-29) &
+  persisted** (`docs/plans/chapter_11_MLP.md`); `course_map` §11 refined to the 5-NB decomposition. No `src/`
+  change anticipated (reuse `viz`/`colors`/`datasets`; `MLPClassifier`; pytest 20). Next: open & plan NB 1 on
+  Rémy's "go".
 - **CHAPTER 11 (MLP) opened; chapter 10 (LightGBM) closed via PR #10** (merge commit `6609afb`,
   `gh pr merge --merge`; 5 NBs, per-notebook history preserved; remote
   `Ramdam17/QuickIntroToMachineLearning`). Branch `chapter/11_MLP` created off `main` (synced @
