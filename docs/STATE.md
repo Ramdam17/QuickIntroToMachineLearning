@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **NB 3 `03_backpropagation`** — OPENED (phase `notebook-plan`). NB 1–2 BUILT & ff-merged into `chapter/11_MLP`. |
-| Phase | **NB 3 `notebook-plan`** — measuring anchors live, then drafting the cell-by-cell plan; then ExitPlanMode (Rémy validates **alone** — no reviewer gate at NB-plan; both reviewers return on the built notebook). NB 1–2 DONE. |
+| Phase | **NB 3 `notebook-plan-approved`** — plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted (`docs/plans/11_MLP__03_backpropagation.md`); **two measured refinements approved** (parity init-dependent / non-convexity, NOT "1.0==1.0"; symmetry = full-zeros + fully-symmetric units, NOT W1=0/W2≠0). NB 1–2 DONE. |
 | Active branch | `notebook/11_MLP__03_backpropagation` (off `chapter/11_MLP` @ `0cfc642`; NB 1–2 ff-merged). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–2 DONE. NB 3 plan in progress. NB 4–5: per-NB plans drafted one at a time. |
-| Next concrete action | **NB 3 plan in progress.** Measure anchors live (`measure_ch11_nb3.py`, from project root): by-hand **2-4-1** sigmoid net, forward-cache + backward (`d_out`; `dH=d_out@W2.T*H·(1−H)`; `dW1`,`dW2`), **gradient-check vs finite differences (~2e-9)**, full-batch GD → **train acc 1.0 on circles == `MLPClassifier((4,),'logistic','lbfgs')`**; zeros-init collapse (full-zero → all-grad-0/frozen; W1=0,W2≠0 → identical-nonzero columns; random init breaks it). Then draft cell-by-cell (~3 figures: forward→backward error flow; loss falling by-hand vs sklearn; zeros-vs-random init), EnterPlanMode → `mighty-jumping-owl.md` → ExitPlanMode (**Rémy alone**). On approval: persist `docs/plans/11_MLP__03_backpropagation.md`, STATE → `notebook-plan-approved`, commit. |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB: `docs/plans/11_MLP__03_backpropagation.md` (APPROVED). NB 1–2 DONE. NB 4–5: per-NB plans drafted one at a time. |
+| Next concrete action | **Build NB 3** from `build_ch11_nb3.py` (scratchpad source of truth): ~22 cells / 3 figures per the approved plan. Anchors: grad-check **6.0e-10**; by-hand 2-4-1 GD train/test **1.0** (lr=3, iters=8000); parity lbfgs rs=0 **0.98/0.95** (init-dependent 0.85–1.0 — non-convex); symmetry full-zeros (loss ln2, acc 0.50) / fully-symmetric (col-spread 0, acc 0.68) / random (col-spread 3.66, acc 1.0). Then nbconvert-verify a scratchpad copy (exit 0, 3 figures) + guards (hex, banned, ruff, black, output-free, pytest 20) → **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK) → fold → **Rémy visual** → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` §11) → commit `feat(11_mlp): notebook 03 — backpropagation` → `git merge --ff-only` into `chapter/11_MLP`. |
 
 ## Notes / blockers
 
@@ -52,7 +52,16 @@
   flow; loss falling, by-hand vs sklearn overlaid; zeros vs random init). No `src/` change expected
   (notebook-local numpy by-hand net + `MLPClassifier`; `make_circles`; `viz.plot_decision_boundary`; pytest
   20). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
-  Next: measure anchors → draft → ExitPlanMode.
+  **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted** (`docs/plans/11_MLP__03_backpropagation.md`),
+  with **two measured refinements approved** — (1) **parity is init-dependent**, not the chapter-plan
+  "1.0==1.0": by-hand 2-4-1 GD reaches train/test **1.0** robustly (seeds 0–4), while
+  `MLPClassifier((4,),'logistic','lbfgs')` lands **0.85–1.0 / 0.76–1.0** (rs=0 **0.98/0.95**) — the
+  non-convexity the chapter flags; (2) the **symmetry sub-claim corrected** — W1=0/W2≠0 actually *breaks*
+  symmetry (col-spread 0→3.37, acc 1.0), so the frozen/stuck demos are **full-zeros** (`|grad|=0`, loss
+  ln2=0.6931, acc 0.50) + **fully-symmetric units** (identical W1 cols + W2 → col-spread 0→0, acc 0.68) vs
+  **random** (col-spread 0.47→3.66, acc 1.0). Anchors measured live (`measure_ch11_nb3.py` + `_nb3b.py`):
+  grad-check rel_err **6.0e-10**; sigmoid + adam/sgd **stall 0.48/0.50** → parity pins `lbfgs`. Next: build
+  NB 3 from `build_ch11_nb3.py`.
 - **NB 2 (why one neuron is not enough — the hidden layer) OPENED.** Branch
   `notebook/11_MLP__02_why_one_neuron_is_not_enough` off `chapter/11_MLP` (@ `c46a428`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
