@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 3 `03_backpropagation` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). NB 1–3 done. |
-| Phase | **NB 3 DONE** (phase `notebook-commit`): built (22 cells, 3 figures), both reviewers PASS no BLOCK (2 MINOR + 1 NIT folded), Rémy visual, guards green, output-free, ff-merged. Next: open & plan NB 4. |
-| Active branch | `chapter/11_MLP` (NB 1–3 ff-merged; NB 3 @ the `feat(11_mlp): notebook 03` commit). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–3 DONE. NB 4–5: per-NB plans drafted one at a time. |
-| Next concrete action | **Open & plan NB 4** on Rémy's "go": `git switch -c notebook/11_MLP__04_estimator_and_parameters` off `chapter/11_MLP`; phase `notebook-plan`. **Integrative** (chapter plan §NB 4): the estimator `MLPClassifier`/`MLPRegressor`, each knob from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation** (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`; `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration introduced as vocabulary** (their genuine home). **The K-class softmax output head — its explicit home** (a short subsection turning the single sigmoid output into K softmax units; formula recap from ch 03 NB 5). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence diagnostic. Honest spine: unscaled-vs-scaled on a **synthetic 2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a capacity sweep; `alpha` up/down; defaults-vs-`GridSearchCV` → one sealed test. `ConvergenceWarning` stays **visible**; `verbose=True` where it aids — never silenced. ~4 figures. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current notebook | **NB 4 `04_estimator_and_parameters`** — OPENED (phase `notebook-plan`). NB 1–3 BUILT & ff-merged into `chapter/11_MLP`. |
+| Phase | **NB 4 `notebook-plan`** — measuring anchors live, then drafting the cell-by-cell plan; then ExitPlanMode (Rémy validates **alone** — no reviewer gate at NB-plan; both reviewers return on the built notebook). NB 1–3 DONE. |
+| Active branch | `notebook/11_MLP__04_estimator_and_parameters` (off `chapter/11_MLP` @ `9ee1f9e`; NB 1–3 ff-merged). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–3 DONE. NB 4 plan in progress. NB 5: per-NB plan drafted one at a time. |
+| Next concrete action | **NB 4 plan in progress.** Measure anchors live (`measure_ch11_nb4.py`, from project root): defaults; **ReLU vs sigmoid+adam stall** on circles (the ReLU motivation); solver sgd/adam/lbfgs; `alpha` up/down; `learning_rate_init`; capacity sweep (width/depth) → boundary + loss curve; `batch_size`/epoch (the loss_curve_ x-axis); **scaling** unscaled-vs-scaled on a synthetic 2-feature mismatched-scale problem (~0.96→~0.99); **K-class softmax head** (3-class fit, `predict_proba` rows sum to 1); defaults-vs-`GridSearchCV` → one sealed test. Then draft cell-by-cell (~4 figures), EnterPlanMode → `mighty-jumping-owl.md` → ExitPlanMode (**Rémy alone**). On approval: persist `docs/plans/11_MLP__04_estimator_and_parameters.md`, STATE → `notebook-plan-approved`, commit. — Original scope (chapter plan §NB 4): the estimator `MLPClassifier`/`MLPRegressor`, each knob from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation** (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`; `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration introduced as vocabulary** (their genuine home). **The K-class softmax output head — its explicit home** (a short subsection turning the single sigmoid output into K softmax units; formula recap from ch 03 NB 5). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence diagnostic. Honest spine: unscaled-vs-scaled on a **synthetic 2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a capacity sweep; `alpha` up/down; defaults-vs-`GridSearchCV` → one sealed test. `ConvergenceWarning` stays **visible**; `verbose=True` where it aids — never silenced. ~4 figures. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
 
 ## Notes / blockers
 
@@ -38,6 +38,25 @@
 
 ## Progress log (most recent first)
 
+- **NB 4 (the estimator `MLPClassifier`/`MLPRegressor` & its parameters — integrative) OPENED.** Branch
+  `notebook/11_MLP__04_estimator_and_parameters` off `chapter/11_MLP` (@ `9ee1f9e`). Phase `notebook-plan`:
+  measuring anchors live, then drafting the cell-by-cell plan. **Integrative (chapter plan §NB 4):** each knob
+  from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is
+  the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation**
+  (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an
+  adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`;
+  `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration
+  introduced as vocabulary** (their genuine home; the loss-curve x-axis). **The K-class softmax output head —
+  its explicit home** (turn the single sigmoid output into K softmax units; formula recap from ch 03 NB 5; one
+  schematic + Read-the-figure). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence
+  diagnostic (reading recapped from ch 03 NB 4 fig (c)). Honest spine: unscaled-vs-scaled on a **synthetic
+  2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a
+  capacity sweep (width/depth) reading boundary + loss curve; `alpha` up/down; defaults-vs-`GridSearchCV` →
+  **one sealed test**. `ConvergenceWarning` stays **visible**; `verbose=True` where per-iteration loss aids the
+  lesson — never `verbose=False`-as-suppression. ~4 figures. No `src/` change expected (reuse `viz`/`colors`;
+  `MLPClassifier` + `Pipeline` + `StandardScaler`; `make_classification`/`make_blobs`/`make_circles`/
+  `make_moons`; `GridSearchCV`; pytest 20). NB-plan = **Rémy validates alone** (no reviewer gate; both
+  reviewers return on the built notebook). Next: measure anchors → draft → ExitPlanMode.
 - **NB 3 (how a network learns — backpropagation, the chain rule) OPENED.** Branch
   `notebook/11_MLP__03_backpropagation` off `chapter/11_MLP` (@ `0cfc642`). Phase `notebook-plan`: measuring
   anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 3):** backprop = the
