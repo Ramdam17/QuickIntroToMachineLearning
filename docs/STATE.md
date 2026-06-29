@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 5 `05_digits_capstone` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). **CHAPTER 11 COMPLETE on the branch (5/5).** |
-| Phase | **NB 5 DONE / CHAPTER 11 COMPLETE on the branch** (phase `notebook-commit`): built (28 cells, 6 figures), both reviewers PASS no BLOCK (2 NIT + 1 MINOR folded), Rémy visual, guards green, output-free, ff-merged. Next: close the chapter via PR → main. |
-| Active branch | `chapter/11_MLP` (NB 1–5 ff-merged; NB 5 @ the `feat(11_mlp): notebook 05` commit). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). **All 5 NBs DONE — chapter complete on the branch.** |
-| Next concrete action | **Close chapter 11 on Rémy's explicit go:** PR `chapter/11_MLP → main` (`--no-ff`, preserve per-notebook history — 5 NBs) via `gh pr create` + `gh pr merge --merge` (main is PR-only — global pre-push hook; remote `Ramdam17/QuickIntroToMachineLearning`; PR body ends `🤖 Generated with [Claude Code](https://claude.com/claude-code)`). After merge: `course_map` §11 → "merged via PR #11", STATE → `idle` / next = open chapter 12 (NeuralNetworks). **Do NOT open the PR without Rémy's explicit go.** — Original scope (chapter plan §NB 5): `load_digits` (8×8, 1797×64, 10-class, offline, CPU-fast); `Pipeline(StandardScaler, MLPClassifier)`; tune lightly; held-out eval; read the **loss curve**; **confusion matrix + per-digit error analysis**; **seed-variance** check (single split → init variance ~0.974–0.980); a **fair tree-foil** (RF/HistGB on **raw** features vs the MLP in its `StandardScaler` pipeline, same split/metric — the preprocessing difference *is* the point). **Honest verdict (measured):** MLP **fully competitive, NOT superior** (HistGB ~0.982 ≥ MLP; not an MLP win); trees need no scaling + stay interpretable; loss non-convex (a minimum, not *the*); seed-sensitive; UAT = existence. The genuine MLP accuracy win lives elsewhere (`breast_cancer` 0.9754 > RF/HistGB). **≥6 figures, ~28–30 cells, visualization-first.** **Last NB of ch 11 → after it ships, close the chapter via PR `chapter/11_MLP → main` (`--no-ff`) on Rémy's explicit go.** NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** — Original scope (chapter plan §NB 4): the estimator `MLPClassifier`/`MLPRegressor`, each knob from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation** (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`; `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration introduced as vocabulary** (their genuine home). **The K-class softmax output head — its explicit home** (a short subsection turning the single sigmoid output into K softmax units; formula recap from ch 03 NB 5). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence diagnostic. Honest spine: unscaled-vs-scaled on a **synthetic 2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a capacity sweep; `alpha` up/down; defaults-vs-`GridSearchCV` → one sealed test. `ConvergenceWarning` stays **visible**; `verbose=True` where it aids — never silenced. ~4 figures. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current chapter | **`12_NeuralNetworks` — OPENING (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last.** |
+| Current notebook | — (chapter-plan phase; no notebook opened yet). |
+| Phase | **`chapter-plan`** — drafting the chapter 12 plan in plan mode. On `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). The opening commit folds the deferred ch-11-close housekeeping (`course_map` §11 → "merged via PR #11" + this STATE flip). |
+| Active branch | `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). `chapter/11_MLP` + its per-NB branches can be deleted (merged via PR #11). |
+| Active plan | drafting `docs/plans/chapter_12_NeuralNetworks.md` (not yet written — plan mode; persisted on Rémy's approval). ch 11 plans all DONE. |
+| Next concrete action | **Draft the chapter 12 plan** (plan mode, per `tutor-plan-module`): (1) **concept tour** via `@concept-cartographer` over the neural-networks scope — enumerate every concept; (2) **draft the 5-NB decomposition** (NBs 1–3 one concept each · NB 4 the estimator & its parameters · NB 5 the demanding case). **The key planning decision is the ch 11 / ch 12 boundary:** ch 11 already shipped the hidden layer, backprop by hand, ReLU, the K-class softmax head, mandatory scaling, and the loss curve — so ch 12 must add the genuinely-new deep-learning material (depth as a representation *hierarchy*; dropout; depth-driven gradient pathologies — vanishing/exploding; modern init / normalization; the deep-learning-framework move) without repeating ch 11 or overloading; (3) **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer` in parallel on the draft — no BLOCK); (4) Rémy approves via **ExitPlanMode** → write `docs/plans/chapter_12_NeuralNetworks.md`, refine `course_map` §12, set phase `chapter-plan-approved`, commit. No `src/` change anticipated yet (reuse `viz`/`colors`/`datasets`; pytest 20). **Do NOT auto-start notebooks — Rémy initiates with "go".** |
 
 ## Notes / blockers
 
@@ -38,6 +38,20 @@
 
 ## Progress log (most recent first)
 
+- **CHAPTER 12 (NeuralNetworks) OPENED — the course finale (13th & final module).** Chapter 11 (MLP)
+  closed via PR #11 (merge `0ce9d93`; 5 NBs, per-notebook history preserved). Branch
+  `chapter/12_NeuralNetworks` created off `main` (@ `0ce9d93`). Phase `chapter-plan`: concept tour
+  (`@concept-cartographer`, neural-networks scope) → draft the 5-NB chapter plan per `course_map.md`
+  §12 and the per-method arc → **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no
+  BLOCK) → Rémy approves via ExitPlanMode. The deferred ch-11-close housekeeping (`course_map` §11 →
+  "merged via PR #11") is folded into this opening commit (on the chapter branch, not protected
+  `main`). **The key planning decision is the ch 11 / ch 12 scope boundary:** ch 11 already built the
+  hidden layer, backprop by hand, ReLU, the K-class softmax head, mandatory scaling, and the loss
+  curve — so ch 12 must teach the genuinely-new deep-learning material (depth as a representation
+  *hierarchy*; dropout; depth-driven gradient pathologies — vanishing/exploding; modern init /
+  normalization; the deep-learning-framework move) without repeating ch 11 or overloading. No `src/`
+  change anticipated yet (reuse `viz`/`colors`/`datasets`; pytest 20). Next: run the concept tour →
+  draft + gate the chapter 12 plan.
 - **NB 5 (the demanding case — handwritten digits, the visualization-first capstone) OPENED.** Branch
   `notebook/11_MLP__05_digits_capstone` off `chapter/11_MLP` (@ `9b1394d`). Phase `notebook-plan`: measuring
   anchors live, then drafting the capstone. **The LAST NB of ch 11.** Scope (chapter plan §NB 5): a full,
