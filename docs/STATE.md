@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | **`02_why_one_neuron_is_not_enough`** (NB 2 of 5) — phase `notebook-plan`. |
-| Phase | **`notebook-plan-approved → notebook-build`** — NB 2 plan **APPROVED by Rémy** (via ExitPlanMode, 2026-06-29) & persisted (`docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md`). Building the notebook now from `build_ch11_nb2.py`. |
-| Active branch | `notebook/11_MLP__02_why_one_neuron_is_not_enough` (off `chapter/11_MLP` @ `c46a428`). |
-| Active plan | NB 2: `docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md` (**APPROVED 2026-06-29**). Chapter: `docs/plans/chapter_11_MLP.md` (APPROVED); NB 1 DONE. |
-| Next concrete action | **Build NB 2** from a `build_ch11_nb2.py` scratchpad script (~21 cells, 3 figures): header → recap → not-linearly-separable → Fig 1 (logistic fails XOR/circles) → the `2→H→1` hidden layer + Fig 2 schematic → the linear collapse (identity-MLP == logistic 0.41; `(x@W1)@W2 == x@(W1@W2)` 2.22e-16) → hand-set ReLU XOR net (`[0,1,1,0]`) → Fig 3 (non-linear MLP wins XOR/circles, opaque fit) → universal-approximation (existence) + NB-3 tease → Your turn → What you built → References. Then nbconvert-verify (exit 0, 3 figures, anchors), guards (ruff/hex/banned/output-free), **two-reviewer gate** (no BLOCK), fold, **Rémy visual**, end-of-NB checklist, commit `feat(11_mlp): notebook 02 — why one neuron is not enough`, ff-merge into `chapter/11_MLP`. |
+| Current notebook | — (**NB 2 `02_why_one_neuron_is_not_enough` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). |
+| Phase | **NB 2 DONE** (phase `notebook-commit`): built (21 cells, 3 figures), both reviewers PASS no BLOCK (2 MINOR folded), Rémy visual, guards green, output-free, ff-merged. Next: open & plan NB 3. |
+| Active branch | `chapter/11_MLP` (NB 1–2 ff-merged; NB 2 @ the `feat(11_mlp): notebook 02` commit). |
+| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). NB 1–2 DONE. NB 3–5: per-NB plans drafted one at a time. |
+| Next concrete action | **Open & plan NB 3** on Rémy's "go": `git switch -c notebook/11_MLP__03_backpropagation` off `chapter/11_MLP`; phase `notebook-plan`. One concept — **how a network learns: backpropagation (the chain rule)** — the forward pass caches activations, the backward pass carries the error back (`dH = d_out @ W2.T * H·(1−H)` for a sigmoid hidden layer); gradient-check vs finite differences (~2e-9); run GD (the ch 03 loop, now multi-layer); **weight init / symmetry breaking** (zeros init → frozen / identical units). Anchor: by-hand 2-4-1 net trained by GD == `MLPClassifier((4,),'logistic','lbfgs')`, train acc 1.0 on circles. The general L-layer algorithm as a *picture*, not a multi-index grind. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
 
 ## Notes / blockers
 
@@ -49,7 +49,18 @@
   *no training* (finding the weights is NB 3); an opaque `lbfgs`-fitted MLP for the circles **curved
   boundary**. Anchors to pin: XOR logistic 0.50 vs MLP 1.0; circles `identity` ~0.528 (chance, collapse) vs
   `tanh`/`relu` ~0.99. ~3 figures. Helpers: `viz.plot_decision_boundary`, `make_circles`/`make_moons`
-  (sklearn). No `src/` change expected. **NB-plan = Rémy validates alone.** Next: measure, draft, ExitPlanMode.
+  (sklearn). No `src/` change expected. **Plan APPROVED by Rémy via ExitPlanMode (2026-06-29) &
+  persisted** (`docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md`). **BUILT (21 cells: 6 code / 15 md,
+  3 figures) & ff-merged into `chapter/11_MLP` — Rémy validated visually.** Anchors reproduced (nbconvert
+  exit 0): XOR logistic 0.50 / hand-set ReLU net `[0,1,1,0]`; circles logistic 0.41 == identity-MLP 0.41;
+  linear collapse `2.22e-16`; non-linear MLP 1.0 (XOR & circles). **Both reviewers PASS — no BLOCK** —
+  ml-expert PASS (re-derived the Goodfellow XOR net 3 independent ways; collapse `2e-16`; UAT
+  existence-framing exemplary; citations correct), pedagogy PASS (one-concept arc; training correctly
+  deferred to NB 3; voice/exercises clean); **2 MINOR folded** (tanh refresher in the recap; a clause noting
+  0.41 is within the coin-flip band on 100 points). Guards: 0 banned, hex clean, ruff clean (after an E501
+  fix), output-free, pytest 20. **No `src/` change.** End-of-NB checklist: rebuilt from `build_ch11_nb2.py`,
+  `llms.txt` **83**, `course_map` §11 → NB 1–2 built, `common_errors` **+2 MLP rows** (depth needs a
+  non-linearity / the linear collapse; can-represent ≠ will-learn). Next: open & plan NB 3 (backpropagation).
 - **NB 1 (the artificial neuron == the logistic unit you already built) OPENED.** Branch
   `notebook/11_MLP__01_the_neuron_is_logistic` off `chapter/11_MLP` (@ `c6ea3be`). Phase `notebook-plan`:
   measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan §NB 1):** the
