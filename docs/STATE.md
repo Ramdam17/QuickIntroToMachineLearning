@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — OPENING (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last.** |
-| Current notebook | — (chapter-plan phase; no notebook opened yet). |
-| Phase | **`chapter-plan`** — drafting the chapter 12 plan in plan mode. On `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). The opening commit folds the deferred ch-11-close housekeeping (`course_map` §11 → "merged via PR #11" + this STATE flip). |
+| Current chapter | **`12_NeuralNetworks` — chapter plan APPROVED (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | — (chapter plan approved; NB 1 not yet opened — awaiting Rémy's "go"). |
+| Phase | **`chapter-plan-approved`** — the chapter 12 plan is validated by Rémy (ExitPlanMode) after the two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, both REVISE→no-BLOCK; all folds applied) and **persisted** to `docs/plans/chapter_12_NeuralNetworks.md`. On `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). |
 | Active branch | `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). `chapter/11_MLP` + its per-NB branches can be deleted (merged via PR #11). |
-| Active plan | drafting `docs/plans/chapter_12_NeuralNetworks.md` (not yet written — plan mode; persisted on Rémy's approval). ch 11 plans all DONE. |
-| Next concrete action | **Draft the chapter 12 plan** (plan mode, per `tutor-plan-module`): (1) **concept tour** via `@concept-cartographer` over the neural-networks scope — enumerate every concept; (2) **draft the 5-NB decomposition** (NBs 1–3 one concept each · NB 4 the estimator & its parameters · NB 5 the demanding case). **The key planning decision is the ch 11 / ch 12 boundary:** ch 11 already shipped the hidden layer, backprop by hand, ReLU, the K-class softmax head, mandatory scaling, and the loss curve — so ch 12 must add the genuinely-new deep-learning material (depth as a representation *hierarchy*; dropout; depth-driven gradient pathologies — vanishing/exploding; modern init / normalization; the deep-learning-framework move) without repeating ch 11 or overloading; (3) **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer` in parallel on the draft — no BLOCK); (4) Rémy approves via **ExitPlanMode** → write `docs/plans/chapter_12_NeuralNetworks.md`, refine `course_map` §12, set phase `chapter-plan-approved`, commit. No `src/` change anticipated yet (reuse `viz`/`colors`/`datasets`; pytest 20). **Do NOT auto-start notebooks — Rémy initiates with "go".** |
+| Active plan | **`docs/plans/chapter_12_NeuralNetworks.md` — APPROVED & persisted** (10-NB PyTorch finale; framework B; Fashion-MNIST capstone). ch 11 plans all DONE. |
+| Next concrete action | **Open & plan NB 1 (the numpy hello-world) on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__01_numpy_hello_world`; phase `notebook-plan`; draft the cell-by-cell NB-1 plan; **Rémy validates alone via ExitPlanMode (no reviewer gate at the NB-plan stage — both reviewers return on the built notebook)**; then build. **NB-1 pins (from the approved chapter plan):** the reference net is **multi-class softmax + cross-entropy on a 2-D `make_blobs` 3-class toy**; the binary chain-rule backward is **ch-11-NB-3 recap (black-boxed, NOT re-derived)**; the **softmax-cross-entropy gradient is NB 1's one genuinely-new derivation**; this is the **same architecture NB 7 re-instantiates in torch**; **show** (never assign) the full machinery — forward / loss / backward / short GD training loop / train-test / eval / optimizer. **Pure numpy — no torch in NB 1** (the `deep` extra + torch install + the on-box determinism check land at NB 7). Full 10-NB shape + all reviewer folds in `docs/plans/chapter_12_NeuralNetworks.md`. **Do NOT auto-start — Rémy initiates with "go".** |
 
 ## Notes / blockers
 
@@ -49,9 +49,16 @@
   hidden layer, backprop by hand, ReLU, the K-class softmax head, mandatory scaling, and the loss
   curve — so ch 12 must teach the genuinely-new deep-learning material (depth as a representation
   *hierarchy*; dropout; depth-driven gradient pathologies — vanishing/exploding; modern init /
-  normalization; the deep-learning-framework move) without repeating ch 11 or overloading. No `src/`
-  change anticipated yet (reuse `viz`/`colors`/`datasets`; pytest 20). Next: run the concept tour →
-  draft + gate the chapter 12 plan.
+  normalization; the deep-learning-framework move) without repeating ch 11 or overloading. **`src/` WILL change** (the `deep` extra + a Fashion-MNIST loader + tests → pytest rises
+  from 20 at the NB-7/NB-9 builds). **Concept tour DONE** (full map c01–c11 + dependency graph + live
+  anchors + verified offline datasets + refs); the cartographer **recommended A (stay sklearn)**, but
+  **Rémy chose B (PyTorch) with eyes open** for a faithful finale; structural direction = **~10 thicker
+  NBs**, two hello-worlds (numpy NB 1 / torch NB 7), torch **shown not hand-coded** (skorch dropped).
+  **Chapter plan drafted → two-reviewer gate (both REVISE→no-BLOCK; the ml-expert live-verified every
+  sklearn anchor and measured the capstone-foil fix — Fashion-MNIST MLP 0.859 ≈ RF 0.853 < HistGB 0.874,
+  a tree genuinely wins) → APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted**
+  (`docs/plans/chapter_12_NeuralNetworks.md`); `course_map` §12 refined to the 10-NB decomposition.
+  Next: open & plan NB 1 (numpy hello-world) on Rémy's go.
 - **NB 5 (the demanding case — handwritten digits, the visualization-first capstone) OPENED.** Branch
   `notebook/11_MLP__05_digits_capstone` off `chapter/11_MLP` (@ `9b1394d`). Phase `notebook-plan`: measuring
   anchors live, then drafting the capstone. **The LAST NB of ch 11.** Scope (chapter plan §NB 5): a full,

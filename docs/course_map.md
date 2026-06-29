@@ -114,9 +114,14 @@ notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
 4. The estimator `MLPClassifier`/`MLPRegressor` & its parameters — `hidden_layer_sizes`, `activation` (ReLU the default — no saturation), `solver` (Adam named), `alpha` (L2), `learning_rate_init`, `early_stopping`, `batch_size`/epoch; the K-class softmax output head; scaling mandatory; the loss curve as a diagnostic; honest tuning.
 5. Demanding case (visualization-first capstone): handwritten digits (`load_digits`) — scale, tune, held-out evaluation, loss curve, seed-variance, a fair tree foil (competitive, not superior); honest limits (non-convex; not interpretable; seed-sensitive).
 
-## 12_NeuralNetworks
-1. From MLP to networks: representations learned layer by layer.
-2. Key building blocks and where they matter (intuition over a chosen framework).
-3. Training dynamics: batches, epochs, regularization (dropout, early stopping).
-4. Parameters and diagnostics (learning curves, over/underfitting signatures).
-5. Demanding case: a complete, honestly evaluated network on a realistic problem; stated limits.
+## 12_NeuralNetworks  *(plan approved 2026-06-29 — the course finale; **10 notebooks** (5-NB ceiling deliberately derogated, thicker NBs); **PyTorch introduced** (shown, not hand-coded); NB 1–6 by-hand numpy, NB 7–9 PyTorch, NB 10 the whole-course send-off; the gradient-pathology → init/norm/dropout spine + depth/representations are what ch 12 owns)*
+1. A neural network from scratch in numpy — the hello-world / reference (multi-class softmax + cross-entropy on a 2-D toy; the binary backward recapped from ch 11, the softmax-CE gradient the one new derivation; forward / loss / backward / training-loop / eval / optimizer consolidated).
+2. Depth is a representation hierarchy — why stack layers (features compose); an honest, modest measured gain; the vivid edge→part→object hierarchy deferred to CNNs.
+3. Vanishing & exploding gradients (the pivot) — backprop across many layers multiplies many factors → the signal collapses (~1e-16) or explodes (~1e6); measured per layer, plus the deep-sigmoid training failure (0.500 vs ~1.000).
+4. Initialization: He & Xavier — variance-preserving init, the fix for the pathology (He for ReLU, Xavier for tanh; sigmoid the awkward non-zero-centered case).
+5. Dropout — the net-specific regularizer (inverted dropout, an implicit ensemble; contrasted with L2 / early-stopping); by hand (MLPClassifier has none).
+6. Normalization: batch & layer norm — a complete by-hand batch-norm forward layer (learnable γ/β + a training-time effect); the running-stats / train-eval nuance named, realized as nn.BatchNorm in NB 8.
+7. Hello-world in PyTorch — the same net as NB 1, shown in torch: nn.Module, autograd (the backward you no longer write), the canonical training loop, .train()/.eval(); an explicit by-hand ↔ framework bridge + the matching gradient.
+8. The model and its parameters in PyTorch — depth/width, the activation pathology knob, optimizers (momentum / Adam, why-deep), real nn.Dropout / nn.BatchNorm / nn.init, train-vs-val curves incl. optimization-failure, honest tuning.
+9. Demanding case (visualization-first capstone): Fashion-MNIST — a deep He + dropout torch net, loss curve, confusion + error gallery, seed-variance, a fair tree foil on CV (a tree genuinely wins → the pixels want a CNN); honest limits + a tabular-humility aside.
+10. Where ML goes next, and the whole course — CNN / RNN / transformer named (not built), motivated by the capstone; the whole-course synthesis (instance-based → … → learned representations); "no universal best." The course's send-off.
