@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
 | Current notebook | **`02_why_one_neuron_is_not_enough`** (NB 2 of 5) — phase `notebook-plan`. |
-| Phase | **`notebook-plan`** — measuring anchors live, then drafting the NB 2 cell-by-cell plan (the hidden layer + why a non-linearity is essential). NB-plan stage = **Rémy validates alone** (no reviewer gate). |
+| Phase | **`notebook-plan-approved → notebook-build`** — NB 2 plan **APPROVED by Rémy** (via ExitPlanMode, 2026-06-29) & persisted (`docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md`). Building the notebook now from `build_ch11_nb2.py`. |
 | Active branch | `notebook/11_MLP__02_why_one_neuron_is_not_enough` (off `chapter/11_MLP` @ `c46a428`). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED); NB 1 DONE. NB 2 plan: `docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md` (to be written on approval). |
-| Next concrete action | Measure NB 2 anchors live (single neuron fails — XOR logistic 0.50, circles linear ~0.528; the by-hand `2→H→1` forward pass; the **linear-collapse** identity-MLP == one neuron ~0.528; a non-linear hidden layer wins — circles `tanh`/`relu` MLP ~0.99, the hand-set ReLU XOR net == XOR exactly) → draft cell-by-cell per `docs/notebook_template.md` → present via ExitPlanMode (Rémy validates alone). Then build → two-reviewer gate → Rémy visual → commit → ff-merge into `chapter/11_MLP`. |
+| Active plan | NB 2: `docs/plans/11_MLP__02_why_one_neuron_is_not_enough.md` (**APPROVED 2026-06-29**). Chapter: `docs/plans/chapter_11_MLP.md` (APPROVED); NB 1 DONE. |
+| Next concrete action | **Build NB 2** from a `build_ch11_nb2.py` scratchpad script (~21 cells, 3 figures): header → recap → not-linearly-separable → Fig 1 (logistic fails XOR/circles) → the `2→H→1` hidden layer + Fig 2 schematic → the linear collapse (identity-MLP == logistic 0.41; `(x@W1)@W2 == x@(W1@W2)` 2.22e-16) → hand-set ReLU XOR net (`[0,1,1,0]`) → Fig 3 (non-linear MLP wins XOR/circles, opaque fit) → universal-approximation (existence) + NB-3 tease → Your turn → What you built → References. Then nbconvert-verify (exit 0, 3 figures, anchors), guards (ruff/hex/banned/output-free), **two-reviewer gate** (no BLOCK), fold, **Rémy visual**, end-of-NB checklist, commit `feat(11_mlp): notebook 02 — why one neuron is not enough`, ff-merge into `chapter/11_MLP`. |
 
 ## Notes / blockers
 
