@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — chapter plan APPROVED (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | — (chapter plan approved; NB 1 not yet opened — awaiting Rémy's "go"). |
-| Phase | **`chapter-plan-approved`** — the chapter 12 plan is validated by Rémy (ExitPlanMode) after the two-reviewer gate (`@ml-expert-reviewer` + `@pedagogy-reviewer`, both REVISE→no-BLOCK; all folds applied) and **persisted** to `docs/plans/chapter_12_NeuralNetworks.md`. On `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). |
-| Active branch | `chapter/12_NeuralNetworks` (off `main` @ `0ce9d93`). `chapter/11_MLP` + its per-NB branches can be deleted (merged via PR #11). |
-| Active plan | **`docs/plans/chapter_12_NeuralNetworks.md` — APPROVED & persisted** (10-NB PyTorch finale; framework B; Fashion-MNIST capstone). ch 11 plans all DONE. |
-| Next concrete action | **Open & plan NB 1 (the numpy hello-world) on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__01_numpy_hello_world`; phase `notebook-plan`; draft the cell-by-cell NB-1 plan; **Rémy validates alone via ExitPlanMode (no reviewer gate at the NB-plan stage — both reviewers return on the built notebook)**; then build. **NB-1 pins (from the approved chapter plan):** the reference net is **multi-class softmax + cross-entropy on a 2-D `make_blobs` 3-class toy**; the binary chain-rule backward is **ch-11-NB-3 recap (black-boxed, NOT re-derived)**; the **softmax-cross-entropy gradient is NB 1's one genuinely-new derivation**; this is the **same architecture NB 7 re-instantiates in torch**; **show** (never assign) the full machinery — forward / loss / backward / short GD training loop / train-test / eval / optimizer. **Pure numpy — no torch in NB 1** (the `deep` extra + torch install + the on-box determinism check land at NB 7). Full 10-NB shape + all reviewer folds in `docs/plans/chapter_12_NeuralNetworks.md`. **Do NOT auto-start — Rémy initiates with "go".** |
+| Current notebook | **`01_numpy_hello_world`** (NB 1 of 10) — phase `notebook-plan`. |
+| Phase | **`notebook-plan`** — measuring NB-1 anchors live (the by-hand multi-class softmax+CE net), then drafting the cell-by-cell plan. On `notebook/12_NeuralNetworks__01_numpy_hello_world` (off `chapter/12_NeuralNetworks` @ `d009480`). |
+| Active branch | `notebook/12_NeuralNetworks__01_numpy_hello_world` (off `chapter/12_NeuralNetworks` @ `d009480`). |
+| Active plan | chapter: **`docs/plans/chapter_12_NeuralNetworks.md` (APPROVED)** → drafting **`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`** (NB-1; persisted on Rémy's ExitPlanMode approval). |
+| Next concrete action | **Measure NB-1 anchors live, then draft + validate the NB-1 plan.** (1) Measure (pure numpy + `make_blobs` 3-class): build the by-hand multi-class **softmax + cross-entropy** net (forward → loss → backward → GD loop), **gradient-check the softmax-CE gradient vs finite differences** (target rel_err ~1e-7 or better), train → record train/test accuracy; (2) **enter plan mode → draft the cell-by-cell NB-1 plan** (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`); (3) **ExitPlanMode → Rémy validates alone (NO reviewer gate at the NB-plan stage; both reviewers return on the built notebook)**; (4) on approval, persist + commit the NB-1 plan, then build from `build_ch12_nb1.py`. **NB-1 pins:** softmax-CE on a 2-D `make_blobs` 3-class toy; binary backward = **ch-11-NB-3 recap (black-boxed)**; the **softmax-CE gradient = the one new derivation**; same arch as NB 7's torch net; **show** (never assign) the full machinery; **pure numpy — no torch** (the `deep` extra lands at NB 7). |
 
 ## Notes / blockers
 
@@ -38,6 +38,17 @@
 
 ## Progress log (most recent first)
 
+- **NB 1 (a neural network from scratch in numpy — the hello-world / reference) OPENED.** Branch
+  `notebook/12_NeuralNetworks__01_numpy_hello_world` off `chapter/12_NeuralNetworks` (@ `d009480`). Phase
+  `notebook-plan`: measuring anchors live (a by-hand multi-class **softmax + cross-entropy** net on
+  `make_blobs` 3-class — gradient-check the softmax-CE gradient vs finite differences; train via GD), then
+  drafting the cell-by-cell plan. **NB-1 pins (approved chapter plan):** the reference net is multi-class
+  softmax+CE on a 2-D `make_blobs` 3-class toy; the binary chain-rule backward is **ch-11-NB-3 recap
+  (black-boxed, NOT re-derived)**; the **softmax-CE gradient is the one genuinely-new derivation**; it is the
+  **same architecture NB 7 re-instantiates in torch**; **show** (never assign) the full machinery — forward /
+  loss / backward / short GD loop / train-test / eval / optimizer. **Pure numpy — no torch** (the `deep`
+  extra + torch land at NB 7). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on
+  the built notebook). Next: measure anchors → draft → ExitPlanMode.
 - **CHAPTER 12 (NeuralNetworks) OPENED — the course finale (13th & final module).** Chapter 11 (MLP)
   closed via PR #11 (merge `0ce9d93`; 5 NBs, per-notebook history preserved). Branch
   `chapter/12_NeuralNetworks` created off `main` (@ `0ce9d93`). Phase `chapter-plan`: concept tour
