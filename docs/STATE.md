@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–5 shipped (5/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
 | Current notebook | **`06_normalization`** (NB 6 of 10) — **OPENED** (phase `notebook-plan`). The **LAST by-hand numpy NB**. 5/10 shipped. |
-| Phase | **`notebook-plan-approved`** — NB 6 plan validated by Rémy via ExitPlanMode (no edits) & persisted (`docs/plans/12_NeuralNetworks__06_normalization.md`). Ready to build. |
+| Phase | **`notebook-visual-check`** — NB 6 BUILT (24 cells: 8 code / 16 md, 3 figures, pure numpy, all by-hand). **Both reviewers PASS, no BLOCK** (`@ml-expert-reviewer` + `@pedagogy-reviewer`); **5 folds applied** (all markdown/colour, anchors intact). Guards green (ruff/hex/banned 0/output-free, nbconvert exit 0 + 3 figures, pytest 20). **Awaiting Rémy's visual validation.** |
 | Active branch | **`notebook/12_NeuralNetworks__06_normalization`** (off `chapter/12_NeuralNetworks` @ `db388cd`). |
 | Active plan | **NB 6 plan APPROVED & persisted** (`docs/plans/12_NeuralNetworks__06_normalization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 6). Prior NBs 1–5 DONE. |
-| Next concrete action | **Build NB 6 from `build_ch12_nb6.py`** (ephemeral scratchpad — [[scratchpad-build-scripts-ephemeral]]). ~22 cells (3 figures), pure numpy, all by-hand: a **complete batch-norm layer** — forward (`bn_forward`: per-feature batch mean/var → normalize → learnable **γ/β**) + backward (`bn_backward`: the BN Jacobian, **gradient-checked ~1e-9**, `db`≈0 = BN makes the pre-BN bias redundant); the **drift fix** (10-layer ReLU stack: small dies → 0 / large explodes → 1e5 / he ok, **all flat ~0.58–0.61 with BN**); the **training effect** (deep ReLU small-init **none 0.500/ln2 → BN 1.000/0.003**; he lr 1.0 **none 0.500 → BN 1.000** lr-robustness; honest: he lr 0.3 plain already 1.000 & a touch faster → BN's win is **robustness not raw speed**); **layer norm** named/contrasted (cols vs rows; transformers — NB 10); **`nn.BatchNorm` running stats + train/eval named, deferred to NB 8**; the "why BN helps is debated" honesty (Santurkar 2018). Figs: BN schematic; drift 2-panel (log/linear); training loss none-vs-BN. **Still pure numpy.** Then nbconvert (exit 0, 3 figs) → guards (ruff/hex/banned/output-free, **pytest 20**) → **two-reviewer gate** (`@ml-expert` + `@pedagogy`, no BLOCK) → Rémy visual → end-of-NB checklist (rebuild [kernel-drift], `gen_llms_txt`, `common_errors` +rows, `course_map` §12 → NB 6 built) → commit `feat(12_neuralnetworks): notebook 06 — normalization` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. |
+| Next concrete action | **On Rémy's "validé": run the end-of-NB checklist, commit, ff-merge.** Rebuild from `build_ch12_nb6.py` (kernel-drift guard) → `gen_llms_txt` → `common_errors` +2 rows (normalization re-centers *during* training, not only at init / BN pins activations flat regardless of init; BN's-win-is-robustness-not-raw-speed + why-it-helps-is-debated) → `course_map` §12 → NB 6 built → `pytest` 20 (no `src/` change) → STATE → commit `feat(12_neuralnetworks): notebook 06 — normalization` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. **Then NB 7 = torch hello-world** (the `deep` extra + Fashion-MNIST loader + tests land there → pytest rises from 20) on Rémy's go. Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -55,6 +55,29 @@
   train-time loss effect; the BN-layer schematic. **Still pure numpy — no torch.** NB-plan = **Rémy validates
   alone** (no reviewer gate; both reviewers return on the built notebook). Refs: Ioffe & Szegedy 2015
   (BatchNorm; arXiv:1502.03167); Ba et al. 2016 (LayerNorm; arXiv:1607.06450); Goodfellow et al. 2016 ch 8.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__06_normalization.md`).
+  **BUILT (24 cells: 8 code / 16 md, 3 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  A complete by-hand BN layer (`bn_forward`: per-feature batch mean/var → ẑ → learnable γ/β; `bn_backward`:
+  the simplified BN Jacobian) placed between the linear map and the activation; reused the NB-1–5 `L`-layer
+  net. **Anchors reproduced (nbconvert exit 0, 3 figures):** forward drift (10-layer ReLU stack, width 32) —
+  small no-BN **0.079→0.000** (dies), large no-BN **0.790→128542** (explodes), he no-BN 0.790→0.490; **all
+  three flat ~0.575→0.613 with BN**; BN backward **gradient-checked** dW **1.3e-10** / dγ 8.9e-9 & 2.5e-10 /
+  dβ 2.8e-9, `db`≈**2.7e-19** (BN makes the pre-BN bias redundant — β is the effective bias); training (deep
+  ReLU 6×16 on circles) small-init **none 0.500/ln2 → BN 1.000/0.0033**, he lr1.0 **none 0.500 → BN 1.000**
+  (lr-robustness), tanh/sigmoid small none 0.500 → BN 1.000, **honest: he lr0.3 plain already 1.000 & a touch
+  faster than BN** (BN's win = robustness, not raw speed); BN cols vs LN rows mean0/std1; batch stats wander
+  2.49–3.25 / 3.58–4.77. **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-derived the BN
+  backward 3 ways: isolated JVP 1.6e-9, compact==explicit chain 3.3e-16, in-notebook 1.3e-10; `db=0` exact by
+  construction Σẑ=0; honest robustness-not-speed + Santurkar covariate-shift caveat faithful; no torch leak;
+  DOIs resolve; 1 MINOR + 2 NIT) ; `@pedagogy-reviewer` **PASS** (recap boundary exact, forward-refs all
+  named-as-horizon [zero torch code], one-concept respected [LN named not built], 3/3 Read-the-figure match
+  pixels, exos verified; 2 MINOR + 1 NIT). **Folds (5, applied, markdown/colour — anchors intact):** cell 7 —
+  attribute the width-32 rerun (NB 4 was width 16); cell 10 — grammar "keeps only the positive half" + adossed
+  the explode value to the table (128 542); cell 23 exo 3 — "equals" → "recovers up to ε (use `np.allclose`)";
+  Fig 3 — the `ln 2 = chance` guide `zero`(white, invisible) → `muted`(visible); Fig 2 — removed the unlabeled
+  invisible `zero` guide lines. Guards: ruff *All checks passed*, hex clean, **banned 0**, output-free; black
+  skips `.ipynb`. **No `src/` change** (notebook-local numpy net + BN; `make_circles`/`StandardScaler`;
+  `viz`/`colors`; inline matplotlib). Next: Rémy visual → end-of-NB checklist → commit + ff-merge into `chapter/12`.
 - **NB 5 (dropout — c05) OPENED.** Branch `notebook/12_NeuralNetworks__05_dropout` off
   `chapter/12_NeuralNetworks` (@ `cc1546a`). Phase `notebook-plan`: measuring anchors live, then drafting the
   cell-by-cell plan. **One concept (chapter plan §NB 5):** **dropout** — randomly zero a fraction `p` of
