@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–5 shipped (5/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`05_dropout`** (NB 5 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 5/10 shipped. |
-| Phase | **`notebook-commit` done** — NB 5 committed (`feat(12_neuralnetworks): notebook 05 — dropout`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 5/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 6.** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 5 merged via ff-only). `notebook/12_NeuralNetworks__05_dropout` is merged (deletable). |
-| Active plan | NB 5 DONE (`docs/plans/12_NeuralNetworks__05_dropout.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 6 (normalization — batch & layer norm; **the LAST by-hand numpy NB**) on Rémy's go. |
-| Next concrete action | **Open & plan NB 6 — normalization: batch & layer norm (c04) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__06_normalization`; phase `notebook-plan`; measure anchors live (a **complete by-hand batch-norm forward layer** in numpy: batch mean/var → normalize → the **learnable γ/β**; show it on the drifting-activation stack [NB 3/4] AND demonstrate a **training-time effect** — a deeper net that stalled now trains / loss descends faster; then **name in one sentence** what the real `nn.BatchNorm` adds beyond the forward transform: **running statistics + the train/eval-mode difference** — explicitly NB 8's, no oversold from-scratch BN *trainer*). **The last by-hand numpy NB** (NB 7 = the torch hello-world; the `deep` extra + Fashion-MNIST loader + tests land there → pytest rises). Figs: activation distributions drifting vs normalized; the train-time loss effect; the BN-layer schematic. Draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy.** **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current notebook | **`06_normalization`** (NB 6 of 10) — **OPENED** (phase `notebook-plan`). The **LAST by-hand numpy NB**. 5/10 shipped. |
+| Phase | **`notebook-plan`** — measuring anchors live (a complete by-hand batch-norm forward layer in numpy), then drafting the cell-by-cell plan → ExitPlanMode (Rémy alone, no reviewer gate). |
+| Active branch | **`notebook/12_NeuralNetworks__06_normalization`** (off `chapter/12_NeuralNetworks` @ `db388cd`). |
+| Active plan | Planning NB 6 (normalization — batch & layer norm, c04). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 6). Prior NBs 1–5 DONE. |
+| Next concrete action | **Measure anchors live, then draft NB 6 cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate).** A **complete by-hand batch-norm forward layer** in numpy (batch mean/var → normalize → learnable **γ/β**, **with the backward through it** so the net trains end-to-end); show it on the **drifting-activation stack** (NB 3/4) AND demonstrate a **training-time effect** (a deeper net that stalled / trained slowly now trains / loss descends faster); then **name in one sentence** what the real `nn.BatchNorm` adds beyond the forward transform — **running statistics + the train/eval-mode difference** (explicitly NB 8's; no oversold from-scratch BN *trainer*). **Layer norm** named as the per-sample sibling (BN normalizes across the batch, LN across features; LN is what transformers use — ties to NB 10 horizons) — contrasted in a sentence, not a second by-hand build. Figs: activation distributions drifting vs normalized; the train-time loss effect; the BN-layer schematic. **Still pure numpy** (torch arrives NB 7 — the `deep` extra + Fashion-MNIST loader + tests land there → pytest rises from 20). On approval: write `docs/plans/12_NeuralNetworks__06_normalization.md` + commit (`docs(plan): NB 6 — normalization (approved)`), then build from `build_ch12_nb6.py` (**ephemeral** scratchpad — [[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,23 @@
 
 ## Progress log (most recent first)
 
+- **NB 6 (normalization: batch & layer norm — c04) OPENED.** Branch
+  `notebook/12_NeuralNetworks__06_normalization` off `chapter/12_NeuralNetworks` (@ `db388cd`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 6):** **normalization** — re-center/re-scale a layer's activations to a healthy range *during* training
+  (the same "control the variance with depth" lever as init [NB 4], now applied at every step). **By hand — a
+  complete batch-norm forward layer** in numpy (batch mean/var → normalize → the **learnable γ/β**, with the
+  **backward through it** so the net trains end-to-end); show it on the **drifting-activation stack** (NB 3/4)
+  AND demonstrate a **training-time effect** (a deeper net that stalled / trained slowly now trains / loss
+  descends faster). Then **name in one sentence** what the real `nn.BatchNorm` adds beyond the forward
+  transform: **running statistics + the train/eval-mode difference** (explicitly NB 8's — no oversold
+  from-scratch BN *trainer*). **Layer norm** named as the per-sample sibling (BN across the batch, LN across
+  features; LN is what transformers use — ties to NB 10 horizons) — contrasted in a sentence, not a second
+  by-hand build. **The LAST by-hand numpy NB** (NB 7 = the torch hello-world; the `deep` extra + Fashion-MNIST
+  loader + tests land there → pytest rises from 20). Figs: activation distributions drifting vs normalized; the
+  train-time loss effect; the BN-layer schematic. **Still pure numpy — no torch.** NB-plan = **Rémy validates
+  alone** (no reviewer gate; both reviewers return on the built notebook). Refs: Ioffe & Szegedy 2015
+  (BatchNorm; arXiv:1502.03167); Ba et al. 2016 (LayerNorm; arXiv:1607.06450); Goodfellow et al. 2016 ch 8.
 - **NB 5 (dropout — c05) OPENED.** Branch `notebook/12_NeuralNetworks__05_dropout` off
   `chapter/12_NeuralNetworks` (@ `cc1546a`). Phase `notebook-plan`: measuring anchors live, then drafting the
   cell-by-cell plan. **One concept (chapter plan §NB 5):** **dropout** — randomly zero a fraction `p` of
