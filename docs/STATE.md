@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–4 shipped (4/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`05_dropout`** (NB 5 of 10) — **OPENED** (phase `notebook-plan`). NB 1–4 DONE & ff-merged (4/10 shipped). |
-| Phase | **`notebook-plan-approved`** — NB 5 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__05_dropout.md`). Ready to build. |
-| Active branch | **`notebook/12_NeuralNetworks__05_dropout`** (off `chapter/12_NeuralNetworks` @ `cc1546a`). |
-| Active plan | NB 5 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__05_dropout.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 5). NB 1–4 DONE. |
-| Next concrete action | **Build NB 5 from `build_ch12_nb5.py`** (pure numpy, all by-hand; reuse the `L`-layer net + inverted dropout [mask the hidden activations + gate the backward gradient by the same mask; train applies, eval doesn't]; He init; **2 figs, ~20 cells**). **Anchors (measured) to reproduce:** mechanism on N(0,1) — p=0.5 var **1.0→1.99** mean preserved E[mask]=1.0 (p=0.2→1.25, p=0.8→5.07); overfitting (50 feat / 200 train / `[50,256,256,2]`) none val **0.752** gap 0.248 → dropout 0.3 val **0.780** gap 0.220 (beats L2 0.776) / dropout 0.5 0.771; train-vs-val curves none ~0.75 vs dropout ~0.77. **Honest: gentle on small nets, decisive in vision; demo in high-dim.** Then nbconvert-verify (exit 0, 2 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 05 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–5 shipped (5/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`05_dropout`** (NB 5 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 5/10 shipped. |
+| Phase | **`notebook-commit` done** — NB 5 committed (`feat(12_neuralnetworks): notebook 05 — dropout`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 5/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 6.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 5 merged via ff-only). `notebook/12_NeuralNetworks__05_dropout` is merged (deletable). |
+| Active plan | NB 5 DONE (`docs/plans/12_NeuralNetworks__05_dropout.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 6 (normalization — batch & layer norm; **the LAST by-hand numpy NB**) on Rémy's go. |
+| Next concrete action | **Open & plan NB 6 — normalization: batch & layer norm (c04) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__06_normalization`; phase `notebook-plan`; measure anchors live (a **complete by-hand batch-norm forward layer** in numpy: batch mean/var → normalize → the **learnable γ/β**; show it on the drifting-activation stack [NB 3/4] AND demonstrate a **training-time effect** — a deeper net that stalled now trains / loss descends faster; then **name in one sentence** what the real `nn.BatchNorm` adds beyond the forward transform: **running statistics + the train/eval-mode difference** — explicitly NB 8's, no oversold from-scratch BN *trainer*). **The last by-hand numpy NB** (NB 7 = the torch hello-world; the `deep` extra + Fashion-MNIST loader + tests land there → pytest rises). Figs: activation distributions drifting vs normalized; the train-time loss effect; the BN-layer schematic. Draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy.** **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -59,7 +59,32 @@
   2-D toy effect is negligible (0.805→0.815).** **Decisions: all by-hand (MLPClassifier has no dropout);
   mechanism is the strong core, overfitting reduction real-but-modest, scope stated not hidden.** **Plan
   APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__05_dropout.md`).
-  Next: build NB 5 from `build_ch12_nb5.py`.
+  **BUILT (19 cells: 5 code / 14 md, 2 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  Reused the `L`-layer net (He init) + inverted dropout (mask the hidden activations in forward [train only];
+  gate the backward gradient by the same mask; eval = no dropout). **Anchors reproduced (nbconvert exit 0, 2
+  figures):** mechanism on N(0,1) p=0.5 var **1.0→1.99** mean preserved E[mask]≈1.0 (p=0.2→1.25, p=0.8→5.07);
+  overfitting (50 feat/10 inf, 200 train/1000 val, `[50,256,256,2]`) none val **0.752** gap 0.248 → dropout 0.3
+  val **0.780** gap 0.220 / dropout 0.5 0.771 / L2 1e-2 0.776; train-vs-val curves none ~0.75 vs dropout ~0.77.
+  **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (the by-hand dropout **backward gradient-checked
+  to 8.1e-08** — correct; inverted-dropout mean/variance match closed forms `1/(1−p)`; zero train/val overlap;
+  no torch leak; 2 MINOR folded); `@pedagogy-reviewer` **PASS** (one-concept arc, no forward refs, 2/2
+  Read-the-figure match pixels, honest scope empowering; 2 MINOR + 1 NIT, the load-bearing ones folded).
+  **Folds (3, applied, markdown):** cell 14 — added the **single-split-noise caveat** on the dropout-vs-L2
+  ordering (the ch-11-NB-5 lesson: both beat *none*, but which wins by a hair is within split noise — ml-expert
+  MINOR-1, the most valuable); cell 7 — "averaging" → named it a **geometric mean** (Srivastava §7) + removed
+  the "exactly"/"approximates" adjacency; cell 1 — "almost absurdly simple" → "almost suspiciously simple"
+  (banned-family-adjacent). Guards: ruff *All checks passed* (1 E501 fixed), hex clean, **banned 0**,
+  output-free; black skips `.ipynb`. **No `src/` change** (notebook-local numpy net + inverted dropout;
+  `make_classification`/`train_test_split`/`StandardScaler`; `viz`/`colors`; inline matplotlib). Next: Rémy
+  visual → end-of-NB checklist (rebuild [kernel-drift], `gen_llms_txt`, `common_errors` +rows, `course_map` §12
+  → NB 5 built, pytest 20) → commit + ff-merge into `chapter/12`.
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb5.py`
+  (kernel-drift guard), `llms.txt` **92**, `course_map` §12 → **NB 1–5 built**, `common_errors` **+2 rows**
+  (dropout-is-inverted-rescale-not-deletion / implicit-ensemble; dropout-gentle-here-decisive-at-scale /
+  ordering-within-split-noise), **pytest 20** (no `src/` change). **No `src/` change** (notebook-local numpy net
+  + inverted dropout; `make_classification`/`train_test_split`/`StandardScaler`; `viz`/`colors`; inline
+  matplotlib). **COMMITTED & ff-merged into `chapter/12`.** Next: open & plan NB 6 (normalization — the LAST
+  by-hand numpy NB) on Rémy's go.
 - **NB 4 (initialization: He & Xavier — c03, the fix) OPENED.** Branch
   `notebook/12_NeuralNetworks__04_initialization` off `chapter/12_NeuralNetworks` (@ `71aa5e8`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
