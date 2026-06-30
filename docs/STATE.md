@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–3 shipped (3/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
 | Current notebook | **`04_initialization`** (NB 4 of 10) — **OPENED** (phase `notebook-plan`). NB 1–3 DONE & ff-merged (3/10 shipped). |
-| Phase | **`notebook-plan`** — NB 4 opened on `notebook/12_NeuralNetworks__04_initialization`. Measuring anchors live → drafting the cell-by-cell plan → ExitPlanMode (Rémy validates alone; **no reviewer gate** at the NB-plan stage; both reviewers return on the built notebook). |
+| Phase | **`notebook-plan-approved`** — NB 4 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__04_initialization.md`). Ready to build. |
 | Active branch | **`notebook/12_NeuralNetworks__04_initialization`** (off `chapter/12_NeuralNetworks` @ `71aa5e8`). |
-| Active plan | NB 4 in planning (`docs/plans/12_NeuralNetworks__04_initialization.md` — to be written & committed on approval). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 4). NB 1–3 DONE. |
-| Next concrete action | **Measure NB-4 anchors live → draft the cell-by-cell plan → ExitPlanMode for Rémy's validation.** Anchors (chapter plan §NB 4): the fix for NB 3's pathology — choose the initial weight **variance** so signal/gradient magnitude is ~preserved across depth. Re-run NB-3's per-layer RMS with **He `sqrt(2/n)` → ReLU's gradient/activation RMS flat across 10 layers**, **Xavier `1/sqrt(n)` → tanh healthy**; **sigmoid the awkward non-zero-centered case** (Xavier slows but does not fully preserve — Glorot's larger-gain note; NOT "Xavier rescues sigmoid"). The *training* payoff: a deep ReLU net that stalled with naive init now trains with He. Figs: gradient-RMS before/after He & Xavier; activation distributions (drift vs preserved). **Still pure numpy** (reuse NB-3's stack; torch arrives at NB 7). Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Active plan | NB 4 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__04_initialization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 4). NB 1–3 DONE. |
+| Next concrete action | **Build NB 4 from `build_ch12_nb4.py`** (pure numpy, all by-hand; reuse NB-3's `L`-layer net + a fan-in-scaled init [`he` √(2/n) / `xavier` √(1/n) / `glorot` / naive `small`,`large`]; **3 figs, ~23 cells**). **Anchors (measured) to reproduce:** derive `Var(Wx)=n·Var(W)·Var(x)` → Xavier `1/√n` / He `2/√n`; gradient RMS ReLU+he **flat 0.05–0.22** / tanh+xavier flat 6e-3–2e-2 / **sigmoid+xavier still vanishing ratio ~2e7** (vs tanh 3.8); forward std ReLU+he **0.69→0.53** (preserved) vs small→0; training 8-layer ReLU small/large **0.500** → he **1.000**, tanh small 0.500 → xavier 1.000. Then nbconvert-verify (exit 0, 3 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 04 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -51,8 +51,17 @@
   all 10 layers; plus the *training* payoff (a deep ReLU net that stalled with naive init now trains with He).
   Figs: gradient-RMS before/after He & Xavier; activation distributions (drift vs preserved). **Still pure
   numpy — no torch** (the `deep` extra + torch land at NB 7; `torch.nn.init` realizes He/Xavier in NB 8).
-  NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook). Next:
-  measure anchors → draft → ExitPlanMode.
+  NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
+  **Anchors measured live** (`measure_ch12_nb4.py`): derivation `Var(Wx)=n·Var(W)·Var(x)` → Xavier `σ=1/√n` /
+  He `σ=√(2/n)` (ReLU halves variance); per-layer gradient RMS **ReLU+he flat 4.6e-2→2.2e-1** (min 0.03/max
+  0.22) / tanh+xavier flat 6.1e-3→2.3e-2 / **sigmoid+xavier still vanishing 3.4e-9→7.8e-2 ratio 2.3e7** (vs
+  tanh+xavier ratio 3.8 — same Xavier, opposite outcome → sigmoid the awkward non-zero-centered case, NOT
+  "rescued"); forward activation std **ReLU+he 0.69→0.53 preserved** vs ReLU+small 0.07→0.00 (dies); **training
+  8-hidden-layer (by-hand GD, 3 seeds): ReLU small/large 0.500 → he 1.000; tanh small 0.500 → xavier 1.000.**
+  **Decisions: all by-hand numpy (diagnostics + training payoff, no MLPClassifier); sigmoid awkward not rescued;
+  report measured flat values (grad 0.05–0.22, fwd std 0.53–0.69), not the chapter-plan's "0.71–0.80".** **Plan
+  APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__04_initialization.md`).
+  Next: build NB 4 from `build_ch12_nb4.py`.
 - **NB 3 (vanishing & exploding gradients — c02, the pivot) OPENED.** Branch
   `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients` off `chapter/12_NeuralNetworks` (@ `199d900`).
   Phase `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter
