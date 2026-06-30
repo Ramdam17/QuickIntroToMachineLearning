@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–4 shipped (4/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
 | Current notebook | **`05_dropout`** (NB 5 of 10) — **OPENED** (phase `notebook-plan`). NB 1–4 DONE & ff-merged (4/10 shipped). |
-| Phase | **`notebook-plan`** — NB 5 opened on `notebook/12_NeuralNetworks__05_dropout`. Measuring anchors live → drafting the cell-by-cell plan → ExitPlanMode (Rémy validates alone; **no reviewer gate** at the NB-plan stage; both reviewers return on the built notebook). |
+| Phase | **`notebook-plan-approved`** — NB 5 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__05_dropout.md`). Ready to build. |
 | Active branch | **`notebook/12_NeuralNetworks__05_dropout`** (off `chapter/12_NeuralNetworks` @ `cc1546a`). |
-| Active plan | NB 5 in planning (`docs/plans/12_NeuralNetworks__05_dropout.md` — to be written & committed on approval). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 5). NB 1–4 DONE. |
-| Next concrete action | **Measure NB-5 anchors live → draft the cell-by-cell plan → ExitPlanMode for Rémy's validation.** Anchors (chapter plan §NB 5): **inverted dropout by hand** — zero a fraction `p` of activations each step + rescale `1/(1−p)` so the **expected activation is preserved** (measured: mean ~0→~0, variance injected 1.0→~2.0 — an implicit ensemble); show it **reduce overfitting** on a small net (train-vs-val gap shrinks); contrast explicitly with **L2/`alpha`** (weight penalty) and early-stopping (stop rule). `MLPClassifier` has **no dropout** → it MUST be by-hand here (the real `nn.Dropout` arrives at NB 8). Figs: the dropout mask / expected-activation preservation; train-vs-val with vs without dropout. **Still pure numpy** (reuse the `L`-layer net; torch arrives at NB 7). Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Active plan | NB 5 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__05_dropout.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 5). NB 1–4 DONE. |
+| Next concrete action | **Build NB 5 from `build_ch12_nb5.py`** (pure numpy, all by-hand; reuse the `L`-layer net + inverted dropout [mask the hidden activations + gate the backward gradient by the same mask; train applies, eval doesn't]; He init; **2 figs, ~20 cells**). **Anchors (measured) to reproduce:** mechanism on N(0,1) — p=0.5 var **1.0→1.99** mean preserved E[mask]=1.0 (p=0.2→1.25, p=0.8→5.07); overfitting (50 feat / 200 train / `[50,256,256,2]`) none val **0.752** gap 0.248 → dropout 0.3 val **0.780** gap 0.220 (beats L2 0.776) / dropout 0.5 0.771; train-vs-val curves none ~0.75 vs dropout ~0.77. **Honest: gentle on small nets, decisive in vision; demo in high-dim.** Then nbconvert-verify (exit 0, 2 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 05 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -49,7 +49,17 @@
   here; the real `nn.Dropout` layer arrives in NB 8.** Figs: the dropout mask / expected-activation
   preservation; train-vs-val with vs without dropout. **Still pure numpy — no torch** (the `deep` extra + torch
   land at NB 7). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built
-  notebook). Next: measure anchors → draft → ExitPlanMode.
+  notebook). **Anchors measured live** (`measure_ch12_nb5.py` / `_nb5b.py` / `_nb5c.py`): mechanism on N(0,1)
+  100k — inverted dropout preserves the mean (≈0→≈0), injects variance, E[mask]=1.0 (**p=0.5 var 1.00→1.99**;
+  p=0.2→1.25; p=0.8→5.07); overfitting (50 feat/10 inf, 200 train/1000 val, `[50,256,256,2]`, He, ReLU,
+  mini-batch lr0.1 batch32 1500ep) none train 1.0/val **0.752**/gap 0.248 → **dropout 0.3 val 0.780/gap 0.220**
+  (beats L2 1e-2 val 0.776) / dropout 0.5 0.771; train-vs-val curves none plateau ~0.75 vs dropout ~0.77
+  (modest, real; no peak-then-collapse on this data). **Honest scope: dropout gentle on a small net (~+2–3 val
+  pts, ≈ L2); decisive wins are large vision nets (Srivastava 2014) — demo uses high-dim (50 feat) since the
+  2-D toy effect is negligible (0.805→0.815).** **Decisions: all by-hand (MLPClassifier has no dropout);
+  mechanism is the strong core, overfitting reduction real-but-modest, scope stated not hidden.** **Plan
+  APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__05_dropout.md`).
+  Next: build NB 5 from `build_ch12_nb5.py`.
 - **NB 4 (initialization: He & Xavier — c03, the fix) OPENED.** Branch
   `notebook/12_NeuralNetworks__04_initialization` off `chapter/12_NeuralNetworks` (@ `71aa5e8`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
