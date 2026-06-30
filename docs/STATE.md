@@ -8,10 +8,10 @@
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–2 shipped (2/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
 | Current notebook | **`03_vanishing_exploding_gradients`** (NB 3 of 10) — **OPENED** (phase `notebook-plan`). NB 1–2 DONE & ff-merged (2/10 shipped). |
-| Phase | **`notebook-plan`** — NB 3 opened on `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`. Measuring anchors live → drafting the cell-by-cell plan → ExitPlanMode (Rémy validates alone; **no reviewer gate** at the NB-plan stage; both reviewers return on the built notebook). |
+| Phase | **`notebook-plan-approved`** — NB 3 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Ready to build. |
 | Active branch | **`notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`** (off `chapter/12_NeuralNetworks` @ `199d900`). |
-| Active plan | NB 3 in planning (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md` — to be written & committed on approval). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 3). NB 1–2 DONE. |
-| Next concrete action | **Measure NB-3 anchors live → draft the cell-by-cell plan → ExitPlanMode for Rémy's validation.** Anchors (chapter plan §NB 3): run the by-hand backward through a **10-layer** stack → **per-layer gradient RMS** — **sigmoid + small init collapses ~2.5e-1 → ~1e-16** (vanish), **ReLU + unit-Gaussian init explodes → ~5e6**; then the *training* proof — a **5-layer sigmoid** net at **0.500 (chance)** vs **tanh/ReLU at ~1.000** on circles. Figs: gradient-RMS-by-layer (vanish vs explode); flat sigmoid loss curve vs descending ReLU; the chain-of-factors schematic. **Still pure numpy** (reuse NB-2's `L`-layer net; torch arrives at NB 7). Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Active plan | NB 3 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 3). NB 1–2 DONE. |
+| Next concrete action | **Build NB 3 from `build_ch12_nb3.py`** (pure numpy; reuse NB-2's `L`-layer net + sigmoid option + init-scale knob [small 0.1 / large 1.0 — **no He/Xavier, that's NB 4**]; **3 figs, ~21 cells**). **Anchors (measured) to reproduce:** mechanism by-hand — sigmoid+small gradient **2.9e-2 → 8.4e-14** (vanish), ReLU+large **~1e3–5e3** (explode), forward sigmoid flat ~0.5 / ReLU+large 0.8→7800; training proof `MLPClassifier` (16,)×5 — sigmoid **0.500** loss flat at **ln2**, tanh/ReLU **1.000**; lbfgs depth **1→1.0 / 5→chance** (unrecoverable). Then nbconvert-verify (exit 0, 3 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 03 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -49,7 +49,17 @@
   Figs: gradient-RMS-by-layer (vanish vs explode); the flat sigmoid loss curve vs the descending ReLU one; the
   chain-of-factors schematic. **This is why c03 (init), c04 (norm), c06 (the flat-curve diagnostic) all exist.**
   **Still pure numpy — no torch** (the `deep` extra + torch land at NB 7). NB-plan = **Rémy validates alone**
-  (no reviewer gate; both reviewers return on the built notebook). Next: measure anchors → draft → ExitPlanMode.
+  (no reviewer gate; both reviewers return on the built notebook). **Anchors measured live** (`measure_ch12_nb3.py`
+  / `_nb3b.py` / `_nb3c.py` / `_nb3d.py`): mechanism by-hand (10-layer × width-16 stack on circles) — **sigmoid +
+  small gradient 2.9e-2 → 8.4e-14 (vanish, ~12 orders)**, **ReLU + large(std1) ~1e3–5e3 (explode)**; forward
+  activations sigmoid flat ~0.5 (saturated) / ReLU+large 0.8 → 7800; training proof `MLPClassifier` (16,)×5 adam
+  — **sigmoid 0.500 loss flat at ln2 (0.6932)**, tanh/ReLU 1.000; **lbfgs depth 1 → 1.0, depth 5 → 0.478
+  (chance)** = unrecoverable (depth, not optimizer; the clean contrast needs lbfgs since sigmoid+adam stalls at
+  every depth — ch 11 NB 4). Exercise: sigmoid ×20 → 4.4e-24; ReLU+small → small-but-flat ~1e-7 (no explode →
+  scale is the lever, NB 4). **Decisions: mechanism by-hand numpy / training proof MLPClassifier (no He
+  forward-ref); only small+large init in code; report measured explode (~1e3, not the chapter-plan's order "5e6").**
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted**
+  (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Next: build NB 3 from `build_ch12_nb3.py`.
 - **NB 2 (depth is a representation hierarchy — c01) OPENED.** Branch
   `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` off `chapter/12_NeuralNetworks` (@ `9fffa02`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
