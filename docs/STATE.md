@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1 shipped (1/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`02_depth_is_a_hierarchy`** (NB 2 of 10) — **OPENED** (phase `notebook-plan`). NB 1 DONE & ff-merged (1/10 shipped). |
-| Phase | **`notebook-plan-approved`** — NB 2 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). Ready to build. |
-| Active branch | **`notebook/12_NeuralNetworks__02_depth_is_a_hierarchy`** (off `chapter/12_NeuralNetworks` @ `9fffa02`). |
-| Active plan | NB 2 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). NB 1 DONE (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`). |
-| Next concrete action | **Build NB 2 from `build_ch12_nb2.py`** (pure numpy; reuse NB-1's machinery generalized to `L` layers; flat-0.1 init [no He forward-ref]; moons `[2,2,2,1]` remap [3 panels] + linsep-rises + MNIST depth bars; **3 figs, ~24 cells**). **Anchors to reproduce:** gradcheck ~1e-8; moons acc ~0.96 + linsep 0.877→~0.92→~0.97; MNIST 50u ~0.943 / 448u-wide ~0.954 / deep(256,128,64) ~0.956 (equal-budget near-wash). Then nbconvert-verify (exit 0, 3 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 02 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current notebook | **`02_depth_is_a_hierarchy`** (NB 2 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 2/10 shipped. |
+| Phase | **`notebook-commit` done** — NB 2 committed (`feat(12_neuralnetworks): notebook 02 — depth is a representation hierarchy`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 2/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 3.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 2 merged via ff-only). `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` is merged (deletable). |
+| Active plan | NB 2 DONE (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 3 (vanishing & exploding gradients — the pivot) on Rémy's go. |
+| Next concrete action | **Open & plan NB 3 — vanishing & exploding gradients (c02, the pivot) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`; phase `notebook-plan`; measure anchors live (run the by-hand backward through a 10-layer stack → per-layer gradient RMS: **sigmoid+small-init collapses ~2.5e-1 → ~1e-16**, **ReLU+unit-Gaussian explodes → ~5e6**; the *training* proof — a 5-layer sigmoid `MLPClassifier` at **0.500** vs tanh/ReLU at **~1.000** on circles) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -57,7 +57,29 @@
   at 60 ep, both train 1.0); sklearn cross-check 0.940/0.9486/0.9490; **flat-0.1 init (NB-1's) trains every net
   → no He forward-ref**; `[2,8,1]` width alone untangles moons (~0.965); `[2,2,2,2,1]` deeper net sometimes
   stalls (seed0 0.887 — NB-3 foreshadow). **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted**
-  (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). Next: build NB 2 from `build_ch12_nb2.py`.
+  (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). **BUILT (22 cells: 7 code / 15 md, 3 figures;
+  pure numpy) — awaiting Rémy's visual validation.** Unified machinery (NB-1's softmax+CE generalized to an
+  `L`-layer loop; hidden act a choice tanh/ReLU; flat-0.1 init — **no He forward-ref**). **Anchors reproduced
+  (nbconvert exit 0, 3 figures):** gradient-check **1.45e-7**; moons `[2,2,2,2]` (tanh, lr0.5, 8000 ep) loss
+  ln2(0.693)→0.089, acc **0.965**; one wide layer `[2,8,2]` **0.965**; MNIST 10k/5k (ReLU, flat-0.1, 60 ep)
+  **50u 0.9432 / 448u-wide 0.9538 / deep(256,128,64) 0.9558** (width +1.06pp; equal-budget depth +0.20pp,
+  near-wash). **Both reviewers no-BLOCK** — `@pedagogy-reviewer` **PASS** (one-concept arc, no forward refs,
+  3 Read-the-figure match the pixels, exemplary equal-budget control) + 2 NIT folded (named the mini-batch loop
+  in cell 5; fixed "NB-1's single sigmoid" → "a sigmoid of ch 11" in cell 7); `@ml-expert-reviewer` **REVISE→
+  no-BLOCK** — verified every anchor live, **MAJOR folded:** the linsep staircase used the **default
+  regularized** `LogisticRegression` probe (understated h1 ~5pp → false "rises step by step"); switched to a
+  near-unregularized probe (`C=1e6`) → honest **input 0.877 → h1 0.970 → h2 0.970** ("the **first** layer does
+  almost all the untangling; the second consolidates" — strengthens the anti-hype thesis, ties to the wide-layer
+  + MNIST near-wash) + 2 MINOR (gradient-check message softened to "finite-difference precision"; float-order
+  "about" confirmed sufficient). Removed an extra "clearly" (cell 21, ml-expert-adjacent). Guards: ruff *All
+  checks passed*, hex clean, **banned 0**, output-free; black skips `.ipynb` (no `black[jupyter]`, as NB 1).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb2.py`
+  (kernel-drift guard), `llms.txt` **89**, `course_map` §12 → **NB 1–2 built**, `common_errors` **+2 rows**
+  (deep-net-remaps-into-linear-separability-not-a-wiggly-boundary; deeper-isn't-always-better / equal-budget
+  near-wash / vivid-hierarchy-needs-a-CNN), **pytest 20** (no `src/` change). **No `src/` change** (notebook-local
+  numpy `L`-layer net; sklearn utilities `make_moons`/`fetch_openml`/`train_test_split`/`StandardScaler` +
+  `LogisticRegression` as a linsep probe; `viz`/`colors`; inline matplotlib). **COMMITTED & ff-merged into
+  `chapter/12`.** Next: open & plan NB 3 (vanishing & exploding gradients — the pivot) on Rémy's go.
 - **NB 1 (a neural network from scratch in numpy — the hello-world / reference) OPENED.** Branch
   `notebook/12_NeuralNetworks__01_numpy_hello_world` off `chapter/12_NeuralNetworks` (@ `d009480`). Phase
   `notebook-plan`: measuring anchors live (a by-hand multi-class **softmax + cross-entropy** net on

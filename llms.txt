@@ -86,3 +86,4 @@
 - [notebooks/11_MLP/05_digits_capstone.ipynb](notebooks/11_MLP/05_digits_capstone.ipynb) — 05 — A demanding case: handwritten digits, end to end — This is the capstone. We take everything from this chapter — the network, ReLU, scaling, the loss
 ## 12_NeuralNetworks
 - [notebooks/12_NeuralNetworks/01_numpy_hello_world.ipynb](notebooks/12_NeuralNetworks/01_numpy_hello_world.ipynb) — 01 — A neural network from scratch in numpy — Welcome to the final chapter of the course. We open it the way we have opened every method — **by
+- [notebooks/12_NeuralNetworks/02_depth_is_a_hierarchy.ipynb](notebooks/12_NeuralNetworks/02_depth_is_a_hierarchy.ipynb) — 02 — Depth is a representation hierarchy — In notebook 1 you built a complete network by hand: one hidden layer, a softmax head, a training
