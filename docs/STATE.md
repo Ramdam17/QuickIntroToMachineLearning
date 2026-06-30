@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1 shipped (1/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`02_depth_is_a_hierarchy`** (NB 2 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 2/10 shipped. |
-| Phase | **`notebook-commit` done** — NB 2 committed (`feat(12_neuralnetworks): notebook 02 — depth is a representation hierarchy`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 2/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 3.** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 2 merged via ff-only). `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` is merged (deletable). |
-| Active plan | NB 2 DONE (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 3 (vanishing & exploding gradients — the pivot) on Rémy's go. |
-| Next concrete action | **Open & plan NB 3 — vanishing & exploding gradients (c02, the pivot) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`; phase `notebook-plan`; measure anchors live (run the by-hand backward through a 10-layer stack → per-layer gradient RMS: **sigmoid+small-init collapses ~2.5e-1 → ~1e-16**, **ReLU+unit-Gaussian explodes → ~5e6**; the *training* proof — a 5-layer sigmoid `MLPClassifier` at **0.500** vs tanh/ReLU at **~1.000** on circles) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–2 shipped (2/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`03_vanishing_exploding_gradients`** (NB 3 of 10) — **OPENED** (phase `notebook-plan`). NB 1–2 DONE & ff-merged (2/10 shipped). |
+| Phase | **`notebook-plan`** — NB 3 opened on `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`. Measuring anchors live → drafting the cell-by-cell plan → ExitPlanMode (Rémy validates alone; **no reviewer gate** at the NB-plan stage; both reviewers return on the built notebook). |
+| Active branch | **`notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`** (off `chapter/12_NeuralNetworks` @ `199d900`). |
+| Active plan | NB 3 in planning (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md` — to be written & committed on approval). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 3). NB 1–2 DONE. |
+| Next concrete action | **Measure NB-3 anchors live → draft the cell-by-cell plan → ExitPlanMode for Rémy's validation.** Anchors (chapter plan §NB 3): run the by-hand backward through a **10-layer** stack → **per-layer gradient RMS** — **sigmoid + small init collapses ~2.5e-1 → ~1e-16** (vanish), **ReLU + unit-Gaussian init explodes → ~5e6**; then the *training* proof — a **5-layer sigmoid** net at **0.500 (chance)** vs **tanh/ReLU at ~1.000** on circles. Figs: gradient-RMS-by-layer (vanish vs explode); flat sigmoid loss curve vs descending ReLU; the chain-of-factors schematic. **Still pure numpy** (reuse NB-2's `L`-layer net; torch arrives at NB 7). Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,18 @@
 
 ## Progress log (most recent first)
 
+- **NB 3 (vanishing & exploding gradients — c02, the pivot) OPENED.** Branch
+  `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients` off `chapter/12_NeuralNetworks` (@ `199d900`).
+  Phase `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter
+  plan §NB 3 — THE PIVOT):** backprop through many layers multiplies one factor per layer → the gradient signal
+  **collapses (vanish)** or **blows up (explode)** — the reason naive deep nets don't train. By hand (pure
+  numpy, reuse NB-2's `L`-layer net): run the backward pass through a **10-layer** stack and **measure the
+  per-layer gradient RMS** (**sigmoid + small init → ~1e-16**; **ReLU + unit-Gaussian init → ~5e6**); then the
+  *training* proof — a **5-layer sigmoid** net stalls at **0.500 (chance)** vs **tanh/ReLU ~1.000** on circles.
+  Figs: gradient-RMS-by-layer (vanish vs explode); the flat sigmoid loss curve vs the descending ReLU one; the
+  chain-of-factors schematic. **This is why c03 (init), c04 (norm), c06 (the flat-curve diagnostic) all exist.**
+  **Still pure numpy — no torch** (the `deep` extra + torch land at NB 7). NB-plan = **Rémy validates alone**
+  (no reviewer gate; both reviewers return on the built notebook). Next: measure anchors → draft → ExitPlanMode.
 - **NB 2 (depth is a representation hierarchy — c01) OPENED.** Branch
   `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` off `chapter/12_NeuralNetworks` (@ `9fffa02`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
