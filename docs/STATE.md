@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — chapter plan APPROVED (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`01_numpy_hello_world`** (NB 1 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 1/10 shipped. |
-| Phase | **`notebook-commit` done** — NB 1 committed (`feat(12_neuralnetworks): notebook 01 — a neural network from scratch in numpy`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers PASS, no BLOCK). 1/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 2.** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 1 merged via ff-only). `notebook/12_NeuralNetworks__01_numpy_hello_world` is merged (deletable). |
-| Active plan | NB 1 DONE (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 2 (depth) on Rémy's go. |
-| Next concrete action | **Open & plan NB 2 — depth is a representation hierarchy (c01) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__02_depth_is_a_hierarchy`; phase `notebook-plan`; measure anchors live (the honest depth gain MLP `(50,)`→`(256,128,64)` ~0.941→0.949 on a MNIST-10k subset; a layer-by-layer activation remap on a 2-D toy; optionally an equal-budget `(448,)` vs `(256,128,64)` check — likely a near-wash, itself the honest lesson) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1 shipped (1/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`02_depth_is_a_hierarchy`** (NB 2 of 10) — **OPENED** (phase `notebook-plan`). NB 1 DONE & ff-merged (1/10 shipped). |
+| Phase | **`notebook-plan`** — NB 2 opened on `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy`. Measuring anchors live → drafting the cell-by-cell plan → ExitPlanMode (Rémy validates alone; **no reviewer gate** at the NB-plan stage; both reviewers return on the built notebook). |
+| Active branch | **`notebook/12_NeuralNetworks__02_depth_is_a_hierarchy`** (off `chapter/12_NeuralNetworks` @ `9fffa02`). |
+| Active plan | NB 2 in planning (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md` — to be written & committed on approval). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). NB 1 DONE (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`). |
+| Next concrete action | **Measure NB-2 anchors live → draft the cell-by-cell plan → ExitPlanMode for Rémy's validation.** Anchors: (a) **layer-by-layer activation remap** — stack the NB-1 forward pass into an `L`-layer net on a 2-D toy (`make_moons`/`make_circles`) and show how each hidden layer remaps the representation; (b) the **honest depth gain** MLP `(50,)`→`(256,128,64)` ~0.941→0.949 on a MNIST-10k subset; (c) **optional** equal-budget `(448,)` vs `(256,128,64)` check — likely a near-wash, itself the honest lesson. **Drop the equal-unit-budget claim** — land on "depth remaps the feature space; a modest, honest gain." Still **pure numpy** (torch arrives at NB 7). Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,20 @@
 
 ## Progress log (most recent first)
 
+- **NB 2 (depth is a representation hierarchy — c01) OPENED.** Branch
+  `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` off `chapter/12_NeuralNetworks` (@ `9fffa02`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 2):** *why* stack layers — successive layers **compose / remap** features; depth (not just width) is the
+  bet. By hand (pure numpy): stack the NB-1 forward pass into an `L`-layer net; show what successive hidden
+  layers represent on a 2-D problem (the **layer-by-layer activation remap**); show — **honestly, measured** —
+  that depth helps modestly (MNIST-10k `(50,)` ~0.941 → `(256,128,64)` ~0.949). **Drop the equal-unit-budget
+  claim** (the anchor compares 50 vs 448 units) → land on "depth remaps the feature space; a modest, honest
+  gain"; *optional* equal-budget `(448,)` vs `(256,128,64)` near-wash check (itself the honest lesson).
+  *Honesty:* the vivid edge→part→object hierarchy is a **CNN** phenomenon (c09, NB 10 horizon) — NB 2 shows
+  the honest version and defers the vivid picture. Figs: layer-by-layer activation remap; depth-vs-accuracy
+  (honest, modest). **Still pure numpy — no torch** (the `deep` extra + torch land at NB 7). NB-plan = **Rémy
+  validates alone** (no reviewer gate; both reviewers return on the built notebook). Next: measure anchors →
+  draft → ExitPlanMode.
 - **NB 1 (a neural network from scratch in numpy — the hello-world / reference) OPENED.** Branch
   `notebook/12_NeuralNetworks__01_numpy_hello_world` off `chapter/12_NeuralNetworks` (@ `d009480`). Phase
   `notebook-plan`: measuring anchors live (a by-hand multi-class **softmax + cross-entropy** net on
