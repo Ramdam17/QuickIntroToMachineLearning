@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — chapter plan APPROVED (the course finale; 13th & final module).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`01_numpy_hello_world`** (NB 1 of 10) — phase `notebook-plan-approved` (building). |
-| Phase | **`notebook-plan-approved`** — the NB-1 plan is validated by Rémy (ExitPlanMode) & persisted (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`); anchors measured (initial loss ≈ ln3 ≈ 1.10; gradient-check ~3e-8; loss 1.10→0.31; train 0.87 / test 0.89). **Ready to build.** On `notebook/12_NeuralNetworks__01_numpy_hello_world`. |
-| Active branch | `notebook/12_NeuralNetworks__01_numpy_hello_world` (off `chapter/12_NeuralNetworks` @ `d009480`). |
-| Active plan | NB-1: **`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md` — APPROVED & persisted**. Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). |
-| Next concrete action | **Build NB 1** from `build_ch12_nb1.py` (~24 cells, 4 figures, **pure numpy**): the by-hand multi-class **softmax+CE** net on `make_blobs` 3-class — forward / loss / **backward (softmax-CE gradient = the one new derivation)** / gradient-check ~3e-8 / full-batch GD / held-out eval; figures = data scatter · net schematic · loss curve (1.10→0.31) · decision regions. Then **rebuild → nbconvert verify** (anchors: initial loss ≈ ln3; loss 1.10→0.31; train 0.87/test 0.89; gradcheck ~3e-8) → **guards** (hex / banned-word / ruff / output-free) → **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK) → **Rémy visual** → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` §12 → NB 1 built, pytest 20, STATE) → commit `feat(12_neuralnetworks): notebook 01 — a neural network from scratch in numpy` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. |
+| Current notebook | **`01_numpy_hello_world`** (NB 1 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 1/10 shipped. |
+| Phase | **`notebook-commit` done** — NB 1 committed (`feat(12_neuralnetworks): notebook 01 — a neural network from scratch in numpy`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers PASS, no BLOCK). 1/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 2.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 1 merged via ff-only). `notebook/12_NeuralNetworks__01_numpy_hello_world` is merged (deletable). |
+| Active plan | NB 1 DONE (`docs/plans/12_NeuralNetworks__01_numpy_hello_world.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 2 (depth) on Rémy's go. |
+| Next concrete action | **Open & plan NB 2 — depth is a representation hierarchy (c01) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__02_depth_is_a_hierarchy`; phase `notebook-plan`; measure anchors live (the honest depth gain MLP `(50,)`→`(256,128,64)` ~0.941→0.949 on a MNIST-10k subset; a layer-by-layer activation remap on a 2-D toy; optionally an equal-budget `(448,)` vs `(256,128,64)` check — likely a near-wash, itself the honest lesson) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -48,7 +48,18 @@
   **same architecture NB 7 re-instantiates in torch**; **show** (never assign) the full machinery — forward /
   loss / backward / short GD loop / train-test / eval / optimizer. **Pure numpy — no torch** (the `deep`
   extra + torch land at NB 7). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on
-  the built notebook). Next: measure anchors → draft → ExitPlanMode.
+  the built notebook). **Plan APPROVED & persisted.** **BUILT (25 cells: 7 code / 18 md, 4 figures; pure
+  numpy) & ff-merged into `chapter/12` — Rémy validated visually.** Anchors reproduced (nbconvert exit 0):
+  untrained loss **1.1012 ≈ ln3**; softmax-CE **gradient-check 5.28e-8**; loss **1.10→0.31**; **train 0.867
+  / test 0.893** (chance 0.333). **Both reviewers PASS, no BLOCK** — `@ml-expert` re-verified every anchor
+  live and derived the softmax-CE gradient from first principles (rel-err **2.4e-10**, exact); `@pedagogy`
+  found no concept gap and a clean recap/new boundary. **Folds (markdown only):** added a *Going further*
+  derivation of `(p−y)` (the softmax Jacobian and the `1/p_c` cancel); re-anchored the generalization
+  verdict on the **gap-to-chance** (not the noisy 75-pt train/test ordering — the ch-11-NB-5 lesson);
+  bridged the schematic (5 units drawn → `W₁` is (2×16)). Guards: ruff / hex / banned 0 / output-free;
+  **pytest 20** (no `src/` change); `llms.txt` **88**; `course_map` §12 → NB 1 built; `common_errors`
+  **+2 rows** (softmax-CE-gradient-is-(p−y); untrained-loss-is-lnK). Next: open & plan NB 2 (depth) on
+  Rémy's go.
 - **CHAPTER 12 (NeuralNetworks) OPENED — the course finale (13th & final module).** Chapter 11 (MLP)
   closed via PR #11 (merge `0ce9d93`; 5 NBs, per-notebook history preserved). Branch
   `chapter/12_NeuralNetworks` created off `main` (@ `0ce9d93`). Phase `chapter-plan`: concept tour
