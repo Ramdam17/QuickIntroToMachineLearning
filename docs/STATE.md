@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–3 shipped (3/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`04_initialization`** (NB 4 of 10) — **OPENED** (phase `notebook-plan`). NB 1–3 DONE & ff-merged (3/10 shipped). |
-| Phase | **`notebook-plan-approved`** — NB 4 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__04_initialization.md`). Ready to build. |
-| Active branch | **`notebook/12_NeuralNetworks__04_initialization`** (off `chapter/12_NeuralNetworks` @ `71aa5e8`). |
-| Active plan | NB 4 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__04_initialization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 4). NB 1–3 DONE. |
-| Next concrete action | **Build NB 4 from `build_ch12_nb4.py`** (pure numpy, all by-hand; reuse NB-3's `L`-layer net + a fan-in-scaled init [`he` √(2/n) / `xavier` √(1/n) / `glorot` / naive `small`,`large`]; **3 figs, ~23 cells**). **Anchors (measured) to reproduce:** derive `Var(Wx)=n·Var(W)·Var(x)` → Xavier `1/√n` / He `2/√n`; gradient RMS ReLU+he **flat 0.05–0.22** / tanh+xavier flat 6e-3–2e-2 / **sigmoid+xavier still vanishing ratio ~2e7** (vs tanh 3.8); forward std ReLU+he **0.69→0.53** (preserved) vs small→0; training 8-layer ReLU small/large **0.500** → he **1.000**, tanh small 0.500 → xavier 1.000. Then nbconvert-verify (exit 0, 3 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 04 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–4 shipped (4/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`04_initialization`** (NB 4 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 4/10 shipped. |
+| Phase | **`notebook-commit` done** — NB 4 committed (`feat(12_neuralnetworks): notebook 04 — initialization (He and Xavier)`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 4/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 5.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 4 merged via ff-only). `notebook/12_NeuralNetworks__04_initialization` is merged (deletable). |
+| Active plan | NB 4 DONE (`docs/plans/12_NeuralNetworks__04_initialization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 5 (dropout — the net-specific regularizer) on Rémy's go. |
+| Next concrete action | **Open & plan NB 5 — dropout (c05) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__05_dropout`; phase `notebook-plan`; measure anchors live (inverted dropout by hand: randomly zero a fraction `p` of activations each step + rescale by `1/(1−p)` so the **expected activation is preserved** — measured mean ~0 → ~0, variance injected 1.0 → ~2.0; show it **reduce overfitting** on a small net — train-vs-val gap shrinks; contrast explicitly with **L2/`alpha`** [a weight penalty] and early-stopping [a stop rule] — dropout breaks co-adaptation, an *implicit ensemble*; `MLPClassifier` has **no dropout** → it MUST be by-hand here; the real `nn.Dropout` arrives at NB 8) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -61,7 +61,31 @@
   **Decisions: all by-hand numpy (diagnostics + training payoff, no MLPClassifier); sigmoid awkward not rescued;
   report measured flat values (grad 0.05–0.22, fwd std 0.53–0.69), not the chapter-plan's "0.71–0.80".** **Plan
   APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__04_initialization.md`).
-  Next: build NB 4 from `build_ch12_nb4.py`.
+  **BUILT (22 cells: 7 code / 15 md, 3 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  Reused NB-3's `L`-layer net + a fan-in-scaled init (he/xavier/glorot/small/large). **Anchors reproduced
+  (nbconvert exit 0, 3 figures):** derivation `Var(Wx)=n·σ²·Var(x)` → Xavier `1/√n` / He `√(2/n)`; gradient RMS
+  ReLU+he flat **0.03–0.22** (0.22 = softmax output layer; hidden band tighter), tanh+xavier flat 5.7e-3–2.3e-2,
+  **sigmoid+xavier still vanishing ratio 2.3e7** (vs tanh 3.8; input 8.4e-14→3.4e-9); forward std ReLU+he
+  **0.69→0.53** preserved vs small 0.07→0.00; training 8-layer ReLU small/large **0.500** → he **1.000**, tanh
+  small 0.500 → xavier 1.000. **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran every anchor
+  bit-for-bit; confirmed the 0.22 max is the softmax layer & hidden layers sit in a tight 0.029–0.084 band;
+  verified seed-robustness 0/1/2; sigmoid mechanism measured [Xavier sigmoid means ~0.5/layer vs tanh ~1e-4];
+  no torch leak; 2 MINOR folded); `@pedagogy-reviewer` **PASS** (cure framing exact, derivation from scratch,
+  3/3 Read-the-figure match pixels, sigmoid honesty empowering; 1 MINOR + 1 NIT folded). **Folds (4, applied):**
+  (ml-expert) cell 3 — ReLU "halves the **second moment** `E[x²]`" not variance (rigor, matches the sigmoid
+  argument); cell 21 exo 2 — reframed toward the gradient (mismatch often still trains on this easy net; gap
+  grows with depth); (pedagogy) cell 8 — "0.05–0.22" → **0.03–0.22** (match the printout) + the 0.22-is-softmax
+  note; cell 10 — **print the forward-std anchors** (0.69→0.53 / 0.07→0.00) for checkability. Guards: ruff *All
+  checks passed* (1 E501 fixed), hex clean, **banned 0**, output-free; black skips `.ipynb`. **No `src/` change**
+  (notebook-local numpy net; `make_circles`/`StandardScaler`; `viz`/`colors`; inline matplotlib). Next: Rémy
+  visual → end-of-NB checklist (rebuild [kernel-drift], `gen_llms_txt`, `common_errors` +rows, `course_map` §12
+  → NB 4 built, pytest 20) → commit + ff-merge into `chapter/12`.
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb4.py`
+  (kernel-drift guard), `llms.txt` **91**, `course_map` §12 → **NB 1–4 built**, `common_errors` **+2 rows**
+  (init-scale-is-precise-not-arbitrary / He-Xavier-formulas + the 8-layer chance→100% payoff;
+  init-is-matched-to-the-activation / sigmoid-awkward-not-rescued), **pytest 20** (no `src/` change). **No
+  `src/` change** (notebook-local numpy net; `make_circles`/`StandardScaler`; `viz`/`colors`; inline
+  matplotlib). **COMMITTED & ff-merged into `chapter/12`.** Next: open & plan NB 5 (dropout) on Rémy's go.
 - **NB 3 (vanishing & exploding gradients — c02, the pivot) OPENED.** Branch
   `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients` off `chapter/12_NeuralNetworks` (@ `199d900`).
   Phase `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter
