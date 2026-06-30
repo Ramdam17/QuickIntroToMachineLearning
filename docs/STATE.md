@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–2 shipped (2/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`03_vanishing_exploding_gradients`** (NB 3 of 10) — **OPENED** (phase `notebook-plan`). NB 1–2 DONE & ff-merged (2/10 shipped). |
-| Phase | **`notebook-plan-approved`** — NB 3 plan APPROVED by Rémy (via ExitPlanMode, no edits) & persisted (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Ready to build. |
-| Active branch | **`notebook/12_NeuralNetworks__03_vanishing_exploding_gradients`** (off `chapter/12_NeuralNetworks` @ `199d900`). |
-| Active plan | NB 3 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 3). NB 1–2 DONE. |
-| Next concrete action | **Build NB 3 from `build_ch12_nb3.py`** (pure numpy; reuse NB-2's `L`-layer net + sigmoid option + init-scale knob [small 0.1 / large 1.0 — **no He/Xavier, that's NB 4**]; **3 figs, ~21 cells**). **Anchors (measured) to reproduce:** mechanism by-hand — sigmoid+small gradient **2.9e-2 → 8.4e-14** (vanish), ReLU+large **~1e3–5e3** (explode), forward sigmoid flat ~0.5 / ReLU+large 0.8→7800; training proof `MLPClassifier` (16,)×5 — sigmoid **0.500** loss flat at **ln2**, tanh/ReLU **1.000**; lbfgs depth **1→1.0 / 5→chance** (unrecoverable). Then nbconvert-verify (exit 0, 3 figures) → **two-reviewer gate** → Rémy visual → end-of-NB checklist → commit `feat(12_neuralnetworks): notebook 03 …` → `git merge --ff-only` into `chapter/12`. Build script in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–3 shipped (3/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`03_vanishing_exploding_gradients`** (NB 3 of 10) — **DONE** (committed + ff-merged to `chapter/12`). 3/10 shipped. |
+| Phase | **`notebook-commit` done** — NB 3 committed (`feat(12_neuralnetworks): notebook 03 — vanishing and exploding gradients`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). 3/10 notebooks shipped. **Between notebooks — awaiting Rémy's "go" to open NB 4.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 3 merged via ff-only). `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients` is merged (deletable). |
+| Active plan | NB 3 DONE (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 4 (initialization — He & Xavier, the fix for NB 3's pathology) on Rémy's go. |
+| Next concrete action | **Open & plan NB 4 — initialization: He & Xavier (c03, the fix) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__04_initialization`; phase `notebook-plan`; measure anchors live (variance-preserving init: re-run NB-3's per-layer gradient/forward RMS with **He `sqrt(2/n)` for ReLU** → flattens to ~0.71–0.80 across 10 layers, **Xavier `1/sqrt(n)` for tanh** healthy band; **sigmoid the awkward non-zero-centered case** — Xavier slows but does not fully preserve it [Glorot's larger-gain note], NOT "Xavier rescues sigmoid"; and the *training* payoff — a deep ReLU/tanh net that stalled with bad init now trains with He/Xavier) → draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). **Still pure numpy** (torch arrives at NB 7). **Do NOT auto-start — Rémy initiates with "go".** Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -59,7 +59,26 @@
   scale is the lever, NB 4). **Decisions: mechanism by-hand numpy / training proof MLPClassifier (no He
   forward-ref); only small+large init in code; report measured explode (~1e3, not the chapter-plan's order "5e6").**
   **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted**
-  (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). Next: build NB 3 from `build_ch12_nb3.py`.
+  (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). **BUILT (21 cells: 6 code / 15 md,
+  3 figures) — awaiting Rémy's visual validation.** Reused NB-2's `L`-layer net + a sigmoid option + an
+  init-scale knob (`small` 0.1 / `large` 1.0 — **no He/Xavier**); mechanism by-hand, training proof via
+  `MLPClassifier`. **Anchors reproduced (nbconvert exit 0, 3 figures):** sigmoid+small gradient **8.38e-14
+  (input) → 2.94e-2 (output)** (vanish); ReLU+large **~2e3** gradient, forward **0.8 → 7783** (explode);
+  `MLPClassifier` (16,)×5 adam — sigmoid **0.500** loss flat at **ln2 (0.6932)**, tanh/ReLU **1.000**; lbfgs
+  sigmoid depth **1 → 1.0 / 5 → 0.507** (unrecoverable). **Both reviewers no-BLOCK** — `@ml-expert-reviewer`
+  **PASS** (re-verified every anchor live, σ'≤0.25 to machine precision, 0.25¹⁰≈9.5e-7, by-hand backward ==
+  NB-1/2 chain rule, lbfgs choice *principled* not cherry-picked [adam stalls sigmoid at every depth], no
+  He/Xavier leak, DOIs resolve; 1 MINOR = schematic fixed-factors, explicitly "no change required");
+  `@pedagogy-reviewer` **PASS** (clean pivot framing, deferrals textbook-clean, 3/3 Read-the-figure match the
+  pixels, exercises bridge to NB 4; 2 MINOR folded). **Folds (markdown only):** cell 14 — tied `ln 2` to the
+  two-class circles (`ln K` with K=2; NB 1 showed `ln 3`); cell 5 — softened "annihilates/detonates" register.
+  Guards: ruff *All checks passed*, hex clean, **banned 0**, output-free; black skips `.ipynb`. **No `src/`
+  change** (notebook-local numpy net; `make_circles`/`StandardScaler`/`MLPClassifier`; `viz`/`colors`; inline
+  matplotlib). **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from
+  `build_ch12_nb3.py` (kernel-drift guard), `llms.txt` **90**, `course_map` §12 → **NB 1–3 built**,
+  `common_errors` **+2 rows** (deeper-isn't-free / vanishing-exploding-mechanism + flat-loss-from-epoch-1;
+  depth-not-the-optimizer / fixes-are-structural), **pytest 20** (no `src/` change). **COMMITTED & ff-merged
+  into `chapter/12`.** Next: open & plan NB 4 (initialization — He & Xavier, the fix) on Rémy's go.
 - **NB 2 (depth is a representation hierarchy — c01) OPENED.** Branch
   `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` off `chapter/12_NeuralNetworks` (@ `9fffa02`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
