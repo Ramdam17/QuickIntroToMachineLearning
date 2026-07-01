@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–7 shipped (7/10) — the by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`08_model_and_parameters`** (NB 8 of 10) — **plan APPROVED** (phase `notebook-plan-approved`). The **estimator notebook** (integrative), in PyTorch. 7/10 shipped. |
-| Phase | **`notebook-plan-approved`** — NB 8 plan validated by Rémy via ExitPlanMode (no edits) & persisted (`docs/plans/12_NeuralNetworks__08_model_and_parameters.md`). Anchors measured on-box, all consistent on a unified split. Ready to build. |
+| Current notebook | **`08_model_and_parameters`** (NB 8 of 10) — **BUILT** (phase `notebook-visual-check`). The **estimator notebook** (integrative), in PyTorch. 7/10 shipped. |
+| Phase | **`notebook-visual-check`** — NB 8 BUILT (30 cells: 12 code / 18 md, 4 figures). **Both reviewers no-BLOCK** (`@ml-expert` PASS; `@pedagogy` REVISE→**MAJOR fixed**: the core "Your turn" crashed on `batchnorm=True`+`init` — `build_net` now guards `if m.bias is not None`; verified the exercise path builds). **7 folds applied** (1 one-line code guard + markdown; body anchors intact). Guards green (ruff/hex/banned 0/output-free, nbconvert exit 0 + 4 figures, **pytest 22**). **Awaiting Rémy's visual validation.** |
 | Active branch | **`notebook/12_NeuralNetworks__08_model_and_parameters`** (off `chapter/12_NeuralNetworks` @ `25c5b51`). |
 | Active plan | **NB 8 plan APPROVED & persisted** (`docs/plans/12_NeuralNetworks__08_model_and_parameters.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 8). Prior NBs 1–7 DONE. |
-| Next concrete action | **Build NB 8 from `build_ch12_nb8.py`** (ephemeral scratchpad — [[scratchpad-build-scripts-ephemeral]]). ~30 cells, **4 figures**, torch (shown not assigned): a reusable `build_net`/`train` harness + the knobs — **capacity** (tiny w2d1 0.868 underfit → wide w64d1 0.967 → deep w32d3 1.000/0.950 overfit); **`activation` stall** (deep w16d8 SGD+He: relu/tanh descend, **sigmoid flat at ln2 / val 0.800**; Adam partly masks → structural fix is ReLU); **init** (small/default flat at ln2, **He 0.722→0.074**); **optimizer menu** table (SGD 42 / momentum 10 / Adam 1 epochs to val-loss<0.35); **lr** table (1e-4 crawls / 1e-2 best 0.967 / 1.0 unstable); **`nn.Dropout`/`nn.BatchNorm`** at fixed w256 (none gap 0.288 → dropout 0.252 best / BN 0.278 gentle / wd 0.262); the **three failure modes** off the loss curve (c06); **tuning grid on val → one sealed test** (w256+dropout0.5 val 0.738 → **test 0.756**). Determinism contract in-notebook (verified on-box). Figs: capacity bars; activation stall curves; init curves; regularizer gap bars. Then nbconvert (exit 0, 4 figs) → guards (ruff/hex/banned/output-free, **pytest 22**) → **two-reviewer gate** → Rémy visual → end-of-NB checklist (rebuild, `gen_llms_txt`, `common_errors` +rows, `course_map` §12 → NB 8 built, STATE) → commit `feat(12_neuralnetworks): notebook 08 — model and parameters` → `git merge --ff-only` into `chapter/12`. **Then NB 9 = the Fashion-MNIST capstone** (the loader + vendor + tests land there → pytest rises) on Rémy's go. |
+| Next concrete action | **On Rémy's "validé": run the end-of-NB checklist, commit, ff-merge.** Rebuild from `build_ch12_nb8.py` (kernel-drift guard) → `gen_llms_txt` → `common_errors` +2 rows (each torch knob traces to the concept that owns it / capacity-activation-init-optimizer-lr-dropout-BN; a flat loss ≠ convergence — the 3 failure modes off the loss curve) → `course_map` §12 → NB 8 built → `pytest` **22** → STATE → commit `feat(12_neuralnetworks): notebook 08 — model and parameters` → `git merge --ff-only` into `chapter/12`. **Then NB 9 = the Fashion-MNIST capstone** (the loader + `scripts/vendor_fashion_mnist.py` + tests land there → pytest rises; the deep He/dropout torch net vs a tree foil; "the pixels want a CNN") on Rémy's go. |
 
 ## Notes / blockers
 
@@ -55,6 +55,30 @@
   NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook). Torch
   anchors = **build-time, on-box** (determinism contract from NB 7). Refs: Kingma & Ba 2015 (Adam;
   arXiv:1412.6980); the per-concept refs (He/Glorot/Srivastava/Ioffe-Szegedy) recap from NB 4/5/6.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__08_model_and_parameters.md`).
+  **BUILT (30 cells: 12 code / 18 md, 4 figures) — awaiting Rémy's visual validation.** A reusable
+  `build_net`/`train` harness (SHOWN) turned knob by knob. **Anchors reproduced (nbconvert exit 0, 4 figures;
+  torch 2.12.1, CPU, determinism contract in-notebook):** capacity tiny 0.868 underfit → wide 0.967 → deep
+  1.000/0.950 overfit; activation (deep w16d8 SGD+He) relu 0.758→0.068 / tanh 0.507→0.076 / **sigmoid 0.790→
+  0.693 flat / val 0.800**; init small/default flat at ln2 / **He 0.758→0.068**; optimizer **SGD 42 / momentum
+  10 / Adam 1** epochs to val-loss<0.35; lr 1e-4 crawls / 1e-2 best 0.967 / 1.0 unstable; regularizers (w256)
+  none gap 0.288 → **dropout 0.252** / wd 0.262 / **BN 0.278 (gentle)**; tuning grid on val → **sealed test
+  0.756** (w256+dropout0.5, val 0.738). **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran the
+  whole notebook, every anchor bit-stable; harness `bias=not batchnorm` + `.train()/.eval()` correct; honesty
+  caveats all *measured* — Adam-masks-sigmoid, default-init-stalls, BN-gentlest, tuning-within-noise; 2 MINOR +
+  2 NIT); `@pedagogy-reviewer` **REVISE→fixed** (found the **core "Your turn" tier-2 crash** — `batchnorm=True`
+  + explicit `init` hit `nn.init.zeros_(m.bias)` with `bias=None`; a real harness bug the body masked). **Folds
+  (7, applied):** (pedagogy MAJOR) `build_net` now guards `if m.bias is not None` — the small-init+BN exercise
+  path builds (reviewer measured 0.500→0.968 with the guard); cell "batch=" reworded (harness has no `batch=`);
+  optimizer why-deep softened to claim-as-horizon + momentum `0.9` stated + Polyak 1964 cite; Adam-rescue
+  "~0.32" → "roughly 0.3–0.4" (both reviewers; the figure was lr-dependent); "flat from the first epoch" made
+  precise for the sigmoid dip; scaler-on-full-X caveat added (ml-expert NIT — leak is conservative/immaterial,
+  0.756 vs 0.770 leak-free; a code comment points to strict train-only, ch 00, rather than re-pin ~20 anchors).
+  The `black`-reformat NIT is intentional (black skips `.ipynb`; ruff is the gate and passes). Guards: ruff
+  clean (12 E501/E702/B007 fixed across two passes), hex clean, **banned 0** (2 "just" reworded), output-free;
+  **pytest 22** (no new `src/`). **No `src/` change** (notebook-local harness; `deep` extra already shipped
+  `08fbcf2`; `make_moons`/`make_classification`/`StandardScaler`; `viz`/`colors`; inline matplotlib). Next:
+  Rémy visual → end-of-NB checklist → commit + ff-merge into `chapter/12`.
 - **NB 7 (hello-world in PyTorch — c08, the framework move) OPENED.** Branch
   `notebook/12_NeuralNetworks__07_pytorch_hello_world` off `chapter/12_NeuralNetworks` (@ `0efcb8d`). Phase
   `notebook-plan`. **First torch NB + first `src/` change of the chapter.** **One concept (chapter plan §NB 7):**
