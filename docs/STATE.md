@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–5 shipped (5/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`06_normalization`** (NB 6 of 10) — **DONE** (committed + ff-merged to `chapter/12`). The LAST by-hand numpy NB. **6/10 shipped.** |
-| Phase | **`notebook-commit` done** — NB 6 committed (`feat(12_neuralnetworks): notebook 06 — normalization`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). **6/10 notebooks shipped.** **Between notebooks — awaiting Rémy's "go" to open NB 7 (hello-world in PyTorch).** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 6 merged via ff-only). `notebook/12_NeuralNetworks__06_normalization` is merged (deletable). |
-| Active plan | NB 6 DONE (`docs/plans/12_NeuralNetworks__06_normalization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 7 (hello-world in PyTorch — **PyTorch arrives**: the `deep` extra + Fashion-MNIST loader + tests → pytest rises from 20) on Rémy's go. |
-| Next concrete action | **Open & plan NB 7 — hello-world in PyTorch (c08, the framework move, SHOWN) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__07_pytorch_hello_world`; phase `notebook-plan`. **FIRST real `src/` change in ch 12:** add a `deep = ["torch>=2.2"]` extra to `pyproject.toml` (pin a concrete CPU version; `uv sync --extra deep`), a `load_fashion_mnist()` (+ likely `load_mnist()`) loader in `datasets.py` (fetch-and-cache, INFO-logged **never silenced**) + `scripts/vendor_fashion_mnist.py` + tests → **pytest rises from 20** (state the new total at build). **Build-time FIRST step: install torch + verify a trivial CPU-deterministic example ON THE BOX** (pinned seeds + `torch.use_deterministic_algorithms(True)` + CPU + single thread; pin the version) before trusting any torch number. Content (chapter plan §NB 7): the **same net as NB 1**, now in torch — `nn.Module`/`nn.Sequential`, the canonical loop (`zero_grad → forward → loss → backward → step`), optimizer, `.train()`/`.eval()` — **SHOWN, not assigned**; the **numpy↔torch bridge** as an explicit component-by-component "Read the figure" + **the one number: autograd gradient == NB-1 numpy gradient** (build anchor). Overlap-watch: epoch/mini-batch/loss-curve = ch-11 recap; NEW = autograd, the `nn.Module` idiom, `.train()/.eval()`. Draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). Torch anchors = **build-time, on-box**. Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–6 shipped (6/10) — the by-hand numpy arc complete.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`07_pytorch_hello_world`** (NB 7 of 10) — **OPENED** (phase `notebook-plan`). **First torch NB + first `src/` change of ch 12.** 6/10 shipped. |
+| Phase | **`notebook-plan`** — verifying torch installs + is CPU-deterministic **on the box** (the flagged risk), measuring torch anchors live (autograd gradient == NB-1 numpy gradient), then drafting the cell-by-cell plan → ExitPlanMode (Rémy alone, no reviewer gate). |
+| Active branch | **`notebook/12_NeuralNetworks__07_pytorch_hello_world`** (off `chapter/12_NeuralNetworks` @ `0efcb8d`). |
+| Active plan | Planning NB 7 (hello-world in PyTorch — the framework move, SHOWN). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 7). Prior NBs 1–6 DONE (the by-hand numpy arc is complete). |
+| Next concrete action | **Verify torch on-box, measure anchors, draft NB 7 → ExitPlanMode.** (1) Add `deep = ["torch>=2.x"]` to `pyproject.toml`, `uv sync --extra deep`, **pin the resolved version**; verify a trivial **CPU-deterministic** torch example runs bit-identically twice (seeds + `torch.use_deterministic_algorithms(True)` + `torch.set_num_threads(1)`). (2) Rebuild the **NB-1 net** (2-D `make_blobs` 3-class softmax+CE) in torch (`nn.Sequential`/`nn.Module`, canonical loop) and measure the **build anchor: autograd gradient matches the NB-1 numpy gradient**; confirm it trains to comparable accuracy. (3) **Loader-scope decision (recommend to Rémy):** Fashion-MNIST loader + `vendor` script + tests land **at NB 9** (just-in-time, where used) — NB 7 adds only the `deep` extra + a torch-determinism smoke test → state the new pytest total. Draft cell-by-cell (SHOWN not assigned; the numpy↔torch bridge + the gradient-match number; `.train()/.eval()` the new beat; epoch/mini-batch/loss-curve = ch-11 recap) → ExitPlanMode. Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,25 @@
 
 ## Progress log (most recent first)
 
+- **NB 7 (hello-world in PyTorch — c08, the framework move) OPENED.** Branch
+  `notebook/12_NeuralNetworks__07_pytorch_hello_world` off `chapter/12_NeuralNetworks` (@ `0efcb8d`). Phase
+  `notebook-plan`. **First torch NB + first `src/` change of the chapter.** **One concept (chapter plan §NB 7):**
+  the real modern tool — define a model, **autograd builds the backward pass for you**, the canonical training
+  loop, optimizer, `.train()`/`.eval()` mode. **The same net as NB 1** (2-D `make_blobs` 3-class softmax+CE),
+  now in torch. **SHOWN, not assigned** (Rémy's rule) — `nn.Module`/`nn.Sequential` + the canonical loop
+  (`zero_grad → forward → loss → backward → step`) demonstrated to read; challenges in "Your turn" *modify* the
+  shown loop. **The numpy↔torch bridge is an explicit component-by-component "Read the figure"** (your `forward`
+  ↔ `nn.Module.forward`; your hand-derived `backward` ↔ `loss.backward()`/autograd; your `θ←θ−η∇L` ↔
+  `optimizer.step()`) **+ the one number: the autograd gradient == the NB-1 numpy gradient** (build anchor).
+  **Overlap-watch:** epoch/mini-batch/loss-curve = ch-11 recap (one sentence); NEW = autograd, the `nn.Module`
+  idiom, `.train()/.eval()` (matters the moment dropout/BN appear in NB 8). **FIRST build step (flagged risk):**
+  install the `deep = ["torch>=2.x"]` extra + verify a trivial **CPU-deterministic** torch example **on the box**
+  (pinned seeds + `torch.use_deterministic_algorithms(True)` + `torch.set_num_threads(1)`; **pin the resolved
+  version**) before trusting any torch number. **Loader-scope decision (to present):** recommend the
+  Fashion-MNIST loader + `scripts/vendor_fashion_mnist.py` + tests land **at NB 9** (just-in-time), so NB 7's
+  `src/` change is only the `deep` extra + a torch-determinism smoke test → **pytest rises from 20** (state new
+  total). Torch anchors = **build-time, on-box**. NB-plan = **Rémy validates alone** (no reviewer gate; both
+  reviewers return on the built notebook). Refs: Paszke et al. 2019 (PyTorch; NeurIPS).
 - **NB 6 (normalization: batch & layer norm — c04) OPENED.** Branch
   `notebook/12_NeuralNetworks__06_normalization` off `chapter/12_NeuralNetworks` (@ `db388cd`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
