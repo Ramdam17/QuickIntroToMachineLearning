@@ -21,6 +21,11 @@ boosting = [
     "xgboost>=2.0",
     "lightgbm>=4.1",
 ]
+# Deep-learning framework for the neural-network finale (12 NeuralNetworks, NB 7-9): plain CPU PyTorch.
+# The exact resolved version is pinned in uv.lock for reproducibility (CPU-only, deterministic).
+deep = [
+    "torch>=2.2",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.4",
