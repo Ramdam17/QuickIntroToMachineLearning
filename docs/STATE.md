@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–5 shipped (5/10).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`06_normalization`** (NB 6 of 10) — **OPENED** (phase `notebook-plan`). The **LAST by-hand numpy NB**. 5/10 shipped. |
-| Phase | **`notebook-visual-check`** — NB 6 BUILT (24 cells: 8 code / 16 md, 3 figures, pure numpy, all by-hand). **Both reviewers PASS, no BLOCK** (`@ml-expert-reviewer` + `@pedagogy-reviewer`); **5 folds applied** (all markdown/colour, anchors intact). Guards green (ruff/hex/banned 0/output-free, nbconvert exit 0 + 3 figures, pytest 20). **Awaiting Rémy's visual validation.** |
-| Active branch | **`notebook/12_NeuralNetworks__06_normalization`** (off `chapter/12_NeuralNetworks` @ `db388cd`). |
-| Active plan | **NB 6 plan APPROVED & persisted** (`docs/plans/12_NeuralNetworks__06_normalization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 6). Prior NBs 1–5 DONE. |
-| Next concrete action | **On Rémy's "validé": run the end-of-NB checklist, commit, ff-merge.** Rebuild from `build_ch12_nb6.py` (kernel-drift guard) → `gen_llms_txt` → `common_errors` +2 rows (normalization re-centers *during* training, not only at init / BN pins activations flat regardless of init; BN's-win-is-robustness-not-raw-speed + why-it-helps-is-debated) → `course_map` §12 → NB 6 built → `pytest` 20 (no `src/` change) → STATE → commit `feat(12_neuralnetworks): notebook 06 — normalization` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. **Then NB 7 = torch hello-world** (the `deep` extra + Fashion-MNIST loader + tests land there → pytest rises from 20) on Rémy's go. Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current notebook | **`06_normalization`** (NB 6 of 10) — **DONE** (committed + ff-merged to `chapter/12`). The LAST by-hand numpy NB. **6/10 shipped.** |
+| Phase | **`notebook-commit` done** — NB 6 committed (`feat(12_neuralnetworks): notebook 06 — normalization`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). **6/10 notebooks shipped.** **Between notebooks — awaiting Rémy's "go" to open NB 7 (hello-world in PyTorch).** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 6 merged via ff-only). `notebook/12_NeuralNetworks__06_normalization` is merged (deletable). |
+| Active plan | NB 6 DONE (`docs/plans/12_NeuralNetworks__06_normalization.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 7 (hello-world in PyTorch — **PyTorch arrives**: the `deep` extra + Fashion-MNIST loader + tests → pytest rises from 20) on Rémy's go. |
+| Next concrete action | **Open & plan NB 7 — hello-world in PyTorch (c08, the framework move, SHOWN) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__07_pytorch_hello_world`; phase `notebook-plan`. **FIRST real `src/` change in ch 12:** add a `deep = ["torch>=2.2"]` extra to `pyproject.toml` (pin a concrete CPU version; `uv sync --extra deep`), a `load_fashion_mnist()` (+ likely `load_mnist()`) loader in `datasets.py` (fetch-and-cache, INFO-logged **never silenced**) + `scripts/vendor_fashion_mnist.py` + tests → **pytest rises from 20** (state the new total at build). **Build-time FIRST step: install torch + verify a trivial CPU-deterministic example ON THE BOX** (pinned seeds + `torch.use_deterministic_algorithms(True)` + CPU + single thread; pin the version) before trusting any torch number. Content (chapter plan §NB 7): the **same net as NB 1**, now in torch — `nn.Module`/`nn.Sequential`, the canonical loop (`zero_grad → forward → loss → backward → step`), optimizer, `.train()`/`.eval()` — **SHOWN, not assigned**; the **numpy↔torch bridge** as an explicit component-by-component "Read the figure" + **the one number: autograd gradient == NB-1 numpy gradient** (build anchor). Overlap-watch: epoch/mini-batch/loss-curve = ch-11 recap; NEW = autograd, the `nn.Module` idiom, `.train()/.eval()`. Draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). Torch anchors = **build-time, on-box**. Build scripts live in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -77,7 +77,14 @@
   Fig 3 — the `ln 2 = chance` guide `zero`(white, invisible) → `muted`(visible); Fig 2 — removed the unlabeled
   invisible `zero` guide lines. Guards: ruff *All checks passed*, hex clean, **banned 0**, output-free; black
   skips `.ipynb`. **No `src/` change** (notebook-local numpy net + BN; `make_circles`/`StandardScaler`;
-  `viz`/`colors`; inline matplotlib). Next: Rémy visual → end-of-NB checklist → commit + ff-merge into `chapter/12`.
+  `viz`/`colors`; inline matplotlib).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb6.py`
+  (kernel-drift guard — kernelspec canonical `ml-course (3.12.12)`, output-free), `llms.txt` **93**,
+  `course_map` §12 → **NB 1–6 built**, `common_errors` **+2 rows** (init-fixed-the-scale-but-drift-returns /
+  BN-pins-flat-regardless-of-init + bias-redundant; BN-win-is-robustness-not-raw-speed / why-debated-Santurkar
+  + LN-per-sample-transformer), **pytest 20** (no `src/` change). **COMMITTED & ff-merged into `chapter/12`.**
+  **The by-hand numpy arc (NB 1–6) is complete.** Next: open & plan NB 7 (hello-world in PyTorch — the
+  framework move; the `deep` extra + Fashion-MNIST loader + tests → pytest rises) on Rémy's go.
 - **NB 5 (dropout — c05) OPENED.** Branch `notebook/12_NeuralNetworks__05_dropout` off
   `chapter/12_NeuralNetworks` (@ `cc1546a`). Phase `notebook-plan`: measuring anchors live, then drafting the
   cell-by-cell plan. **One concept (chapter plan §NB 5):** **dropout** — randomly zero a fraction `p` of
