@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–6 shipped (6/10) — the by-hand numpy arc complete.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`07_pytorch_hello_world`** (NB 7 of 10) — **BUILT** (phase `notebook-visual-check`). **First torch NB + first `src/` change of ch 12** (`deep` extra committed `08fbcf2`; torch 2.12.1 CPU; determinism verified on-box). 6/10 shipped. |
-| Phase | **`notebook-visual-check`** — NB 7 BUILT (21 cells: 7 code / 14 md, 2 figures). **Both reviewers PASS, no BLOCK** (`@ml-expert-reviewer` + `@pedagogy-reviewer`); **2 folds applied** (markdown clarifications, anchors intact). Guards green (ruff/hex/banned 0/output-free, nbconvert exit 0 + 2 figures, **pytest 22**). **Awaiting Rémy's visual validation.** |
-| Active branch | **`notebook/12_NeuralNetworks__07_pytorch_hello_world`** (off `chapter/12_NeuralNetworks` @ `0efcb8d`; `deep` extra @ `08fbcf2`). |
-| Active plan | **NB 7 plan APPROVED & persisted** (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 7). Prior NBs 1–6 DONE. |
-| Next concrete action | **On Rémy's "validé": run the end-of-NB checklist, commit, ff-merge.** Rebuild from `build_ch12_nb7.py` (kernel-drift guard) → `gen_llms_txt` → `common_errors` +2 rows (the framework computes the backward *you derived* — autograd == by-hand gradient to ~1e-17, "exactly what you built, automated"; `.train()/.eval()` is a no-op until dropout/BN arrive) → `course_map` §12 → NB 7 built → `pytest` **22** → STATE → commit `feat(12_neuralnetworks): notebook 07 — pytorch hello-world` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. **Then NB 8 = the model & its parameters in PyTorch** (real `nn.Dropout` / `nn.BatchNorm` / `torch.nn.init` + the optimizer menu SGD/momentum/Adam; the activation-as-pathology knob; `.train()/.eval()` starts to matter) on Rémy's go. |
+| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–7 shipped (7/10) — the by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7).** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`07_pytorch_hello_world`** (NB 7 of 10) — **DONE** (committed + ff-merged to `chapter/12`). First torch NB + first `src/` change of ch 12. **7/10 shipped.** |
+| Phase | **`notebook-commit` done** — NB 7 committed (`feat(12_neuralnetworks): notebook 07 — pytorch hello-world`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK). **7/10 notebooks shipped.** **Between notebooks — awaiting Rémy's "go" to open NB 8 (the model & its parameters in PyTorch).** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 7 merged via ff-only; `deep` extra @ `08fbcf2`). `notebook/12_NeuralNetworks__07_pytorch_hello_world` is merged (deletable). |
+| Active plan | NB 7 DONE (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 8 (the model & its parameters in PyTorch) on Rémy's go. |
+| Next concrete action | **Open & plan NB 8 — the model & its parameters in PyTorch (the estimator notebook) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__08_model_and_parameters`; phase `notebook-plan`; measure torch anchors **on-box** (determinism contract from NB 7). **Integrative (chapter plan §NB 8):** each knob from its owning concept — depth/width (capacity); **`activation` as the depth-pathology knob** (flip to sigmoid → a deep net stalls — c02, now a *tunable* failure); optimizers **SGD / momentum / Adam** (c07, *why they matter more with depth* — a deepened recap, kept short); learning rate; **real `nn.Dropout` (c05) and `nn.BatchNorm` (c04, incl. the running-stats + `.train()/.eval()` nuance NB 6/7 named)** as one-line layers; init via **`torch.nn.init`** (He/Xavier — c03); epochs / batch size; **train-vs-validation loss curves** to separate underfitting / overfitting / **optimization failure** (the flat-curve case — c06); honest tuning (small grid) → one sealed test. Overlap-watch: `alpha`/early-stopping/Adam named in ch 11 → one tight recap; the new owners are the real dropout/BN layers, the activation-as-pathology knob, the optimization-failure reading. Figs: deep-vs-shallow capacity & loss curves; the activation-knob stall; dropout/BN effect; init effect. **Torch, shown not assigned.** Draft cell-by-cell → ExitPlanMode (Rémy alone, no reviewer gate). Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -79,8 +79,13 @@
   project; ruff is the gate and passes — the course's didactic layout). Guards: ruff *All checks passed* (7
   E501/E702/B007 fixed), hex clean, **banned 0** (1 "just" reworded), output-free; **pytest 22** (rose from 20:
   `tests/test_torch_determinism.py`). **`src/` change:** the `deep` extra (committed `08fbcf2`) + the
-  determinism test; **Fashion-MNIST loader deferred to NB 9** (approved). Next: Rémy visual → end-of-NB
-  checklist → commit + ff-merge into `chapter/12`.
+  determinism test; **Fashion-MNIST loader deferred to NB 9** (approved).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb7.py`
+  (kernel-drift guard — kernelspec canonical, output-free), `llms.txt` **94**, `course_map` §12 → **NB 1–7
+  built**, `common_errors` **+2 rows** (framework-is-not-a-black-box / autograd==by-hand-to-1e-17;
+  `.train()/.eval()`-is-a-no-op-until-dropout/BN + logits-not-probs), **pytest 22** (the `deep` extra + the
+  determinism test). **COMMITTED & ff-merged into `chapter/12`.** (Restored an editor-drifted NB 6 — cosmetic
+  key-reorder — before staging.) Next: open & plan NB 8 (the model & its parameters in PyTorch) on Rémy's go.
 - **NB 6 (normalization: batch & layer norm — c04) OPENED.** Branch
   `notebook/12_NeuralNetworks__06_normalization` off `chapter/12_NeuralNetworks` (@ `db388cd`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
