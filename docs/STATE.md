@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–6 shipped (6/10) — the by-hand numpy arc complete.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`07_pytorch_hello_world`** (NB 7 of 10) — **plan APPROVED** (phase `notebook-plan-approved`). **First torch NB + first `src/` change of ch 12** (`deep` extra committed `08fbcf2`; torch 2.12.1 CPU; determinism verified on-box). 6/10 shipped. |
-| Phase | **`notebook-plan-approved`** — NB 7 plan validated by Rémy via ExitPlanMode (no edits) & persisted (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`). Ready to build. |
+| Current notebook | **`07_pytorch_hello_world`** (NB 7 of 10) — **BUILT** (phase `notebook-visual-check`). **First torch NB + first `src/` change of ch 12** (`deep` extra committed `08fbcf2`; torch 2.12.1 CPU; determinism verified on-box). 6/10 shipped. |
+| Phase | **`notebook-visual-check`** — NB 7 BUILT (21 cells: 7 code / 14 md, 2 figures). **Both reviewers PASS, no BLOCK** (`@ml-expert-reviewer` + `@pedagogy-reviewer`); **2 folds applied** (markdown clarifications, anchors intact). Guards green (ruff/hex/banned 0/output-free, nbconvert exit 0 + 2 figures, **pytest 22**). **Awaiting Rémy's visual validation.** |
 | Active branch | **`notebook/12_NeuralNetworks__07_pytorch_hello_world`** (off `chapter/12_NeuralNetworks` @ `0efcb8d`; `deep` extra @ `08fbcf2`). |
 | Active plan | **NB 7 plan APPROVED & persisted** (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 7). Prior NBs 1–6 DONE. |
-| Next concrete action | **Build NB 7 from `build_ch12_nb7.py`** (ephemeral scratchpad — [[scratchpad-build-scripts-ephemeral]]). ~21 cells (2 figures): the **same 2→16→3 net as NB 1** in torch (`nn.Sequential` + `nn.CrossEntropyLoss`, the canonical loop `zero_grad→forward→loss→backward→step` **SHOWN**); the **build anchor** autograd gradient == NB-1 numpy gradient (**~1e-17**, float64, weights synced; untrained loss ln 3); **training parity** (SGD lr 0.5 → loss ln3→~0.31, **train 0.867 / test 0.893 = NB 1**); `.train()/.eval()` the new beat; the **determinism contract** set in-notebook (seeds + `use_deterministic_algorithms(True)` + `set_num_threads(1)`). Fig 1 = numpy↔torch component bridge + gradient-scatter (max|Δ|~1e-17); Fig 2 = numpy-vs-torch loss overlay. Add **`tests/test_torch_determinism.py`** → **pytest rises from 20** (state new total). **Fashion-MNIST loader deferred to NB 9** (recommended in the approved plan). Then nbconvert (exit 0, 2 figs) → guards (ruff/hex/banned/output-free, pytest new count) → **two-reviewer gate** (`@ml-expert` + `@pedagogy`, no BLOCK) → Rémy visual → end-of-NB checklist (rebuild, `gen_llms_txt`, `common_errors` +rows, `course_map` §12 → NB 7 built, STATE) → commit `feat(12_neuralnetworks): notebook 07 — pytorch hello-world` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. |
+| Next concrete action | **On Rémy's "validé": run the end-of-NB checklist, commit, ff-merge.** Rebuild from `build_ch12_nb7.py` (kernel-drift guard) → `gen_llms_txt` → `common_errors` +2 rows (the framework computes the backward *you derived* — autograd == by-hand gradient to ~1e-17, "exactly what you built, automated"; `.train()/.eval()` is a no-op until dropout/BN arrive) → `course_map` §12 → NB 7 built → `pytest` **22** → STATE → commit `feat(12_neuralnetworks): notebook 07 — pytorch hello-world` → `git merge --ff-only` into `chapter/12_NeuralNetworks`. **Then NB 8 = the model & its parameters in PyTorch** (real `nn.Dropout` / `nn.BatchNorm` / `torch.nn.init` + the optimizer menu SGD/momentum/Adam; the activation-as-pathology knob; `.train()/.eval()` starts to matter) on Rémy's go. |
 
 ## Notes / blockers
 
@@ -57,6 +57,30 @@
   `src/` change is only the `deep` extra + a torch-determinism smoke test → **pytest rises from 20** (state new
   total). Torch anchors = **build-time, on-box**. NB-plan = **Rémy validates alone** (no reviewer gate; both
   reviewers return on the built notebook). Refs: Paszke et al. 2019 (PyTorch; NeurIPS).
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`).
+  **BUILT (21 cells: 7 code / 14 md, 2 figures) — awaiting Rémy's visual validation.** The same `2→16→3`
+  net as NB 1 in torch (`nn.Sequential` + `nn.CrossEntropyLoss`, the canonical loop SHOWN). **Anchors
+  reproduced (nbconvert exit 0, 2 figures):** **build anchor** autograd gradient == NB-1 numpy gradient to
+  machine precision (weights synced, float64 — dW1 **6.9e-18**, db1 1.7e-17, dW2 6.9e-18, db2 2.4e-17;
+  untrained loss by-hand **1.101153** == torch **1.101153** ≈ ln 3); **training parity** (float32, SGD lr 0.5,
+  400 ep, NB-1 init synced) final loss **0.308**, **train 0.867 / test 0.893** = NB 1; `.train()/.eval()`
+  toggle True/False, predictions identical (no dropout/BN yet). Fig 1 = numpy↔torch component bridge +
+  gradient-scatter on the diagonal (max|Δ|≈2e-17); Fig 2 = numpy-vs-torch loss overlay (two curves, one line,
+  ln3→~0.31). **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran the gradient-match with a
+  masked-bug control: perturbing a W2 entry by 0.05 jumps the mismatch to ~5e-5, 12 orders above the 1e-17
+  baseline → a genuine equivalence proof; parity reproduced independently 0.3076/0.867/0.893; `nn.Linear`
+  (out,in)=Wᵀ transpose + CrossEntropyLoss mean-reduction correct; determinism cross-process confirmed; no
+  forward-ref leak; 2 NIT) ; `@pedagogy-reviewer` **PASS** (recap boundary exact, NB-1 net reused byte-for-byte,
+  shown-not-assigned airtight, 2/2 Read-the-figure = pixels, exos modify-not-author + doable; 2 NIT). **Folds
+  (2, applied, markdown — anchors intact):** cell 7 — noted the gradient-match runs in float64 via
+  `F.cross_entropy` (the functional form of the same loss), so the comparison reflects the maths not float32
+  rounding (both reviewers' shared NIT); cell 14 — named the ~0.003 gap (small random weights nudge the start a
+  hair above the exact `ln 3`). The `black`-would-reformat NIT is **intentional** (black skips `.ipynb` in this
+  project; ruff is the gate and passes — the course's didactic layout). Guards: ruff *All checks passed* (7
+  E501/E702/B007 fixed), hex clean, **banned 0** (1 "just" reworded), output-free; **pytest 22** (rose from 20:
+  `tests/test_torch_determinism.py`). **`src/` change:** the `deep` extra (committed `08fbcf2`) + the
+  determinism test; **Fashion-MNIST loader deferred to NB 9** (approved). Next: Rémy visual → end-of-NB
+  checklist → commit + ff-merge into `chapter/12`.
 - **NB 6 (normalization: batch & layer norm — c04) OPENED.** Branch
   `notebook/12_NeuralNetworks__06_normalization` off `chapter/12_NeuralNetworks` (@ `db388cd`). Phase
   `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
