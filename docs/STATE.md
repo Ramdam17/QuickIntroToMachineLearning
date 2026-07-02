@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–9 shipped (9/10) — by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7), the torch estimator (NB 8) & the Fashion-MNIST capstone (NB 9). 1 left: NB 10 synthesis.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **OPENED** (phase `notebook-plan`). The whole-course synthesis + horizons; the reflective close. **9/10 shipped; NB 10 in planning.** |
-| Phase | **`notebook-plan-approved`** — NB 10 plan **APPROVED by Rémy via ExitPlanMode (no edits, 2026-07-02)** & persisted (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). **The ONE intentional exception** (reflective close; ~17 cells, mostly prose + 2 schematic figures, no measured anchors, no executable "Your turn"). **Next: BUILD** the notebook from `build_ch12_nb10.py`. |
+| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **BUILT** (17 cells: 2 code / 15 md, 2 schematic figures). Both reviewers **PASS** (no BLOCK), folds applied. **Awaiting Rémy's visual validation.** |
+| Phase | **`notebook-visual-check`** — NB 10 built + executed clean (nbconvert exit 0, 2 figures, 0 errors). **Both reviewers PASS** (`@ml-expert-reviewer` PASS — honesty spine verified, breast_cancer no-regression consistency check passes, horizons not overclaimed, citations verified; `@pedagogy-reviewer` PASS — the exception is earned, synthesis faithful, count consistent); 4 folds applied (NB conditional-independence, Fig 2 4-adjacent pair, loop-met-not-wrote NB 7, digits→HistGB+module-11 cue). **Awaiting Rémy's visual validation, then commit + ff-merge → chapter close PR #12.** |
 | Active branch | **`notebook/12_NeuralNetworks__10_where_ml_goes_next`** (off `chapter/12_NeuralNetworks` @ `d07b195`). |
 | Active plan | NB 10 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 10). |
-| Next concrete action | **BUILD NB 10** from `build_ch12_nb10.py` (ephemeral scratchpad) — **~17 cells, 2 schematic figures** (Fig 1 course map / Fig 2 flatten-vs-conv), reflective close, **no `src/` change**. Two halves: (1) **whole-course synthesis** — the 12-method spine (KNN → NB → LogReg → DTree → SVM → RF/AdaBoost/GBM/XGBoost/LightGBM → MLP/NeuralNetworks) + the two earned through-lines (**no universal best** — digits tie / `breast_cancer` MLP-competitive-within-noise / Fashion-MNIST tree-wins, all measured; **honest evaluation is the transferable skill**); (2) **horizons named, not built** — CNN (fixes NB 9's flatten) / RNN / transformer, motivated by NB 9's verdict. Reflective "Where to go next" (prompts, **not** code) + whole-course "What you built". **Consistency guard:** keep NB 9's corrected framing — no "MLP wins on breast_cancer" overclaim. Then: nbconvert (exit 0, 2 figs) → guards (hex / banned-0 / ruff / output-free) → **two-reviewer gate** (no BLOCK) → **Rémy visual** → end-of-NB checklist (`gen_llms_txt`; `course_map` §12 → **COMPLETE 10/10**; STATE; **pytest 26**) → commit `feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis` → `git merge --ff-only` into `chapter/12`. **Then the chapter closes: PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the course finale — on Rémy's explicit go.** Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Next concrete action | **Rémy validates NB 10 visually.** On his go: rebuild from `build_ch12_nb10.py` (kernel-drift guard — canonical kernelspec, output-free), then end-of-NB checklist — `uv run python scripts/gen_llms_txt.py`; `docs/course_map.md` §12 → **COMPLETE (10/10)**; STATE; **pytest 26** (no `src/` change). Commit `feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis` on the notebook branch → `git switch chapter/12_NeuralNetworks && git merge --ff-only notebook/12_NeuralNetworks__10_where_ml_goes_next`. **Then THE CHAPTER CLOSES — and with it the course:** PR `chapter/12_NeuralNetworks → main` (`--no-ff`, PR #12, the course finale) on Rémy's explicit go (push the chapter branch, `gh pr create --base main`, merge `--no-ff`, `git switch main && git pull`); set STATE phase `idle` — **13/13 modules complete on `main`.** Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -53,6 +53,26 @@
   validates alone** (no reviewer gate; both reviewers return on the built notebook). Draft cell-by-cell →
   ExitPlanMode. **After it ships: chapter close via PR #12** (`chapter/12_NeuralNetworks → main`, `--no-ff`) —
   the course finale — on Rémy's explicit go.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits, 2026-07-02) & persisted**
+  (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). **BUILT (17 cells: 2 code / 15 md, 2 schematic
+  figures) from `build_ch12_nb10.py` — awaiting Rémy's visual validation.** Fig 1 = the course map (12 methods,
+  7 families, charter colours, arrows = the spine); Fig 2 = flatten-vs-convolution (dense scrambles adjacency /
+  a shared filter slides). nbconvert **exit 0, 2 figures, 0 errors**; no `src/` change (pytest stays 26). **Both
+  reviewers PASS — no BLOCK.** `@ml-expert-reviewer` **PASS** (verified the honesty spine: the **breast_cancer
+  no-regression consistency check passes** — cell 7 keeps NB 9's "competitive, not a decisive win"; all three
+  through-line-#1 anchors faithful to measured verdicts [digits tie / breast_cancer competitive / Fashion-MNIST
+  real-margin win]; horizons named-not-built, nothing horizon claimed as measured; LeCun/H&S/Vaswani DOIs
+  verified; 2 MINOR + 2 NIT). `@pedagogy-reviewer` **PASS** (the intentional exception is earned & well-framed
+  [cell 2]; all 12 methods present in build order, faithfully characterized; **13-modules/12-methods count
+  consistent**, NB-9 miscount not reintroduced; both Read-the-figure paragraphs match the rendered images;
+  voice/charter clean, "you did the work" earned not flattery; 2 MINOR + 2 NIT). **Folds applied (4, all
+  prose + one figure-cell pick — no anchor impact):** Naive Bayes "independent" → "independent **given the
+  class**" (conditional, ml-expert MINOR); Fig 2 emphasized pair → **4-adjacent** `(2,2)`/`(2,3)` so "right next
+  to each other" is literal (ml-expert MINOR); "the loop you **wrote** in NB 7" → "**met** in NB 7 (and wrote by
+  hand before that)" (ml-expert NIT — NB 7 read it, NB 1–6 wrote it); digits bullet "gradient boosting" →
+  "**histogram-boosted trees** (the module-11 capstone)" (pedagogy MINOR — matches the measured source). Guards:
+  ruff clean, hex clean, **banned 0** (3 "just" reworded during build), output-free. **Awaiting Rémy's visual
+  validation** → end-of-NB checklist + commit + ff-merge → **chapter close PR #12 (the course finale).**
 - **NB 9 (the demanding case — Fashion-MNIST, the visualization-first capstone; the finale's applied notebook) OPENED.**
   Branch `notebook/12_NeuralNetworks__09_fashion_mnist_capstone` off `chapter/12_NeuralNetworks` (@ `425498f`). Phase
   `notebook-plan`: measuring the torch/tree anchors on-box (fetch Fashion-MNIST via a scratchpad `fetch_openml`; the
