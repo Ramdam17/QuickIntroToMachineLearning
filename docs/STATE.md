@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–8 shipped (8/10) — by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7) & the torch estimator (NB 8). 2 left: NB 9 capstone, NB 10 synthesis.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`08_model_and_parameters`** (NB 8 of 10) — **DONE** (committed + ff-merged to `chapter/12`). The estimator notebook, in PyTorch. **8/10 shipped.** |
-| Phase | **`notebook-commit` done** — NB 8 committed (`feat(12_neuralnetworks): notebook 08 — model and parameters`) & ff-merged into `chapter/12_NeuralNetworks` (Rémy validated visually; both reviewers no-BLOCK, MAJOR fixed). **8/10 notebooks shipped.** **Between notebooks — awaiting Rémy's "go" to open NB 9 (the Fashion-MNIST capstone).** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 8 merged via ff-only; `deep` extra @ `08fbcf2`). `notebook/12_NeuralNetworks__08_model_and_parameters` is merged (deletable). |
-| Active plan | NB 8 DONE (`docs/plans/12_NeuralNetworks__08_model_and_parameters.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED). Next: plan NB 9 (the Fashion-MNIST capstone) on Rémy's go. |
-| Next concrete action | **Open & plan NB 9 — capstone: Fashion-MNIST, end to end (visualization-first; ≥6 figures, ~28–30 cells) — on Rémy's go.** `git switch chapter/12_NeuralNetworks && git switch -c notebook/12_NeuralNetworks__09_fashion_mnist_capstone`; phase `notebook-plan`; measure torch anchors **on-box**. **`src/` CHANGE (the second of ch 12):** add `load_fashion_mnist()` (+ likely `load_mnist()`) to `datasets.py` (fetch-and-cache via `fetch_openml`, INFO-logged **never silenced**, cache git-ignored) + `scripts/vendor_fashion_mnist.py` (mirror `vendor_penguins.py`) + tests in `tests/test_datasets.py` → **pytest rises from 22** (state new total). **Chapter plan §NB 9 (visualization-first capstone):** Fashion-MNIST 70k×784 → 10k-train/5k-test subset; look at the data → baselines → a **deep, He-initialized, dropout-regularized torch net** (scaled pipeline) → loss curve & convergence → held-out **confusion matrix + error gallery** → **seed-variance** → a **fair cross-method foil** (the torch net vs RF / HistGB on **raw** pixels, same protocol) → the **honest verdict**. **Measured foil (chapter plan): MLP 0.859 ≈ RF 0.853 < HistGB 0.874** — a tree genuinely wins ~1.4pp; trees need no scaling; **the pixels have spatial structure a dense net discards → a CNN's job (NB 10 bridge)**; optional first-layer-weight gallery. Tabular-humility aside: ch-11 `breast_cancer` MLP 0.975 > 0.967/0.970 (an MLP *can* win on clean tabular). Beats applied-not-re-taught (the finale). Torch, shown not assigned. Draft cell-by-cell → ExitPlanMode. **Then NB 10 = the whole-course synthesis** (the reflective close). Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current notebook | **`09_fashion_mnist_capstone`** (NB 9 of 10) — **OPENED** (phase `notebook-plan`). The visualization-first capstone, in PyTorch. **8/10 shipped; NB 9 in planning.** |
+| Phase | **`notebook-plan`** — NB 9 branch created off `chapter/12_NeuralNetworks` (@ `425498f`). Measuring the torch/tree anchors **on-box** (fetch Fashion-MNIST via a scratchpad `fetch_openml`; the formal loader lands at build), then drafting the cell-by-cell plan → ExitPlanMode. NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook). |
+| Active branch | **`notebook/12_NeuralNetworks__09_fashion_mnist_capstone`** (off `chapter/12_NeuralNetworks` @ `425498f`; `deep` extra @ `08fbcf2`). |
+| Active plan | Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 9). Drafting `docs/plans/12_NeuralNetworks__09_fashion_mnist_capstone.md` (written & committed on Rémy's ExitPlanMode approval). |
+| Next concrete action | **Measure NB-9 anchors on-box, then draft the cell-by-cell plan → ExitPlanMode.** Capstone (chapter plan §NB 9, visualization-first, ≥6 figures, ~28–30 cells): Fashion-MNIST 70k×784 → 10k-train / 5k-test subset (offline, CPU); look at the data → baselines → a **deep, He-initialized, dropout-regularized** torch net (scaled pipeline) → loss curve & convergence → held-out **confusion matrix + error gallery** → **seed-variance** → a **fair cross-method foil on 5-fold CV** (the torch net vs RF / HistGB on **raw** pixels, same protocol) → the **honest verdict** + optional first-layer-weight gallery (the CNN bridge). **Measured foil target (chapter plan): MLP 0.859 ≈ RF 0.853 < HistGB 0.874** — a tree wins ~1.4pp; trees need no scaling; the pixels have spatial structure a dense net discards → a CNN's job (NB 10 bridge). Tabular-humility aside: ch-11 `breast_cancer` MLP 0.975 > 0.967/0.970. Torch, shown not assigned; the workflow beats are **applied, not re-taught** (the finale). **`src/` CHANGE at build (the 2nd of ch 12):** `load_fashion_mnist()` (+ likely `load_mnist()`) in `datasets.py` (fetch-and-cache via `fetch_openml`, INFO-logged **never silenced**, cache git-ignored) + `scripts/vendor_fashion_mnist.py` (mirror `vendor_penguins.py`) + tests in `tests/test_datasets.py` → **pytest rises from 22** (state new total at build). **Then NB 10 = the whole-course synthesis** (reflective close). Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,28 @@
 
 ## Progress log (most recent first)
 
+- **NB 9 (the demanding case — Fashion-MNIST, the visualization-first capstone; the finale's applied notebook) OPENED.**
+  Branch `notebook/12_NeuralNetworks__09_fashion_mnist_capstone` off `chapter/12_NeuralNetworks` (@ `425498f`). Phase
+  `notebook-plan`: measuring the torch/tree anchors on-box (fetch Fashion-MNIST via a scratchpad `fetch_openml`; the
+  formal loader lands at build), then drafting the cell-by-cell plan. **Scope (chapter plan §NB 9, visualization-first,
+  ≥6 figures, ~28–30 cells):** a full honest workflow on **Fashion-MNIST** (70k×784 → 10k-train / 5k-test subset;
+  offline, CPU) — look at the data → baselines → a **deep, He-initialized, dropout-regularized** torch net (scaled
+  pipeline) → loss curve & convergence → held-out **confusion matrix + error gallery** → **seed-variance** → a **fair
+  cross-method foil on 5-fold CV** (the torch net vs RF / HistGB on **raw** pixels, same split/metric — the preprocessing
+  difference is the point) → the **honest verdict** + optional first-layer-weight gallery. **The workflow beats are
+  applied, NOT re-taught** (baseline → loss curve → confusion → error gallery → seed-variance → CV foil are the
+  learner's reflex by the finale); NB 9's genuinely-new content is the torch deep net in the pipeline, the He/dropout
+  stack as the thing under test, and the **spatial-structure verdict** (→ the CNN bridge). **Honest verdict (measured
+  target; re-pin at build): MLP 0.859 ≈ RF 0.853 < HistGB 0.874** — a tree genuinely wins ~1.4pp; trees need no scaling;
+  **the pixels have spatial structure a dense net throws away: a CNN's job (c09, NB 10 bridge).** Tabular-humility aside
+  re-uses ch-11's measured `breast_cancer` MLP **0.975** > 0.967/0.970 (so "no universal best" lands both ways).
+  **Torch, shown not assigned** (the "Your turn" tiers *modify* the shown pipeline). **`src/` CHANGE at build (the 2nd
+  of ch 12):** `load_fashion_mnist()` (+ likely `load_mnist()`) in `datasets.py` (fetch-and-cache via `fetch_openml`,
+  INFO-logged **never silenced**, cache under `src/ml_course/data/` git-ignored) + `scripts/vendor_fashion_mnist.py`
+  (mirror `vendor_penguins.py`) + tests in `tests/test_datasets.py` → **pytest rises from 22**. NB-plan = **Rémy
+  validates alone** (no reviewer gate; both reviewers return on the built notebook). Torch anchors = build-time, on-box
+  (determinism contract from NB 7). Refs: LeCun et al. 1998 (CNN/MNIST; DOI 10.1109/5.726791); Xiao et al. 2017
+  (Fashion-MNIST; arXiv:1708.07747); Paszke et al. 2019 (PyTorch).
 - **NB 8 (the model & its parameters in PyTorch — the estimator notebook) OPENED.** Branch
   `notebook/12_NeuralNetworks__08_model_and_parameters` off `chapter/12_NeuralNetworks` (@ `25c5b51`). Phase
   `notebook-plan`: measuring torch anchors on-box, then drafting the cell-by-cell plan. **Integrative (chapter
