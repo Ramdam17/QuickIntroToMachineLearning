@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — the course finale (13th & final module). NB 1–10 shipped (10/10) — CHAPTER COMPLETE on the branch: by-hand numpy arc (NB 1–6), PyTorch (NB 7–9), the whole-course synthesis (NB 10). Awaiting Rémy's explicit go for the chapter-close PR #12 → `main`.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **DONE** (committed + ff-merged to `chapter/12`; Rémy validated visually 2026-07-02). **10/10 shipped — chapter complete on branch.** |
-| Phase | **`chapter-merge`** — NB 10 committed (`feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis`) & ff-merged into `chapter/12_NeuralNetworks`; both reviewers PASS, folds applied, Rémy validated. **Chapter 12 is COMPLETE on the branch (10/10).** **Awaiting Rémy's explicit "go" for the chapter-close PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the course finale.** |
-| Active branch | **`chapter/12_NeuralNetworks`** (NB 10 merged via ff-only; Fashion-MNIST loader @ `2acd9ab`; `deep` extra @ `08fbcf2`). `notebook/12_NeuralNetworks__10_where_ml_goes_next` is merged (deletable). |
-| Active plan | NB 10 DONE (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). Chapter **COMPLETE on branch** (`docs/plans/chapter_12_NeuralNetworks.md`, all 10 NBs built). Next: chapter-close PR #12 on Rémy's go. |
-| Next concrete action | **CHAPTER CLOSE — the course finale — on Rémy's explicit "go".** Chapter 12 is complete on `chapter/12_NeuralNetworks` (10/10, NB 10 ff-merged). Open PR #12 → `main`: `git push -u origin chapter/12_NeuralNetworks`; `gh pr create --base main --head chapter/12_NeuralNetworks --title "feat(12_neuralnetworks): complete chapter — neural networks (PyTorch finale)"` (body ends with the Claude Code line); merge as a **`--no-ff`** merge commit (remote `main` is **PR-only** — global pre-push hook; gh account `Ramdam17`); `git switch main && git pull`. Then set STATE phase **`idle`** — **13/13 modules complete on `main`; the course is done.** (Optionally delete merged `notebook/*` branches.) Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **COURSE COMPLETE — 13/13 modules on `main`.** No chapter in progress. All chapters merged to `main` via PR: ch 12 PR #12 (`628d742`), ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`) — each a visible `--no-ff` unit; ch 00–04 landed earlier. |
+| Current notebook | — (none; the course is built). |
+| Phase | **`idle`** — the course is complete. Chapter 12 (the PyTorch neural-networks finale — 10 notebooks) closed via **PR #12** (merge `628d742`, 2026-07-02); `main` now carries **13/13 modules**, pytest **26** green. Nothing in progress. |
+| Active branch | **`main`** (synced with `origin/main`). Merged branches `chapter/12_NeuralNetworks` and `notebook/12_NeuralNetworks__*` retained (not deleted — Rémy left them). |
+| Active plan | None — the course is built. Every chapter/notebook plan is preserved under `docs/plans/`. |
+| Next concrete action | **None — the course is complete (13/13 on `main`).** Any future revision or extension starts a fresh branch off `main` (there is no chapter 13). Optional cleanup: delete the merged `chapter/12_NeuralNetworks` / `notebook/12_NeuralNetworks__*` branches. |
 
 ## Notes / blockers
 
@@ -38,6 +38,15 @@
 
 ## Progress log (most recent first)
 
+- **🎓 COURSE COMPLETE — chapter 12 closed via PR #12; 13/13 modules on `main`.** The chapter-close PR
+  (`chapter/12_NeuralNetworks → main`, `--no-ff`) was opened and merged on Rémy's explicit go
+  (2026-07-02): merge commit **`628d742`**, PR state MERGED. `main` now carries all thirteen modules —
+  `00_GettingStarted` → KNN → Naive Bayes → Logistic Regression → Decision Tree → SVM → Random Forest →
+  AdaBoost → Gradient Boosting → XGBoost → LightGBM → MLP → **Neural Networks** — 26 tests green, working
+  tree clean. Chapter 12 shipped 10 notebooks (NB 1–6 by-hand numpy; NB 7–9 PyTorch; NB 10 the reflective
+  synthesis), each validated by both reviewers (no BLOCK) and by Rémy. **The course is built.** This
+  `docs(state)` closure (STATE → `idle`) was itself merged to `main` via a small docs PR, since `main` is
+  PR-only. Merged `chapter/12…` / `notebook/12…` branches were left in place (no cleanup requested).
 - **NB 10 (where ML goes next, and the whole course — THE COURSE FINALE) OPENED.** Branch
   `notebook/12_NeuralNetworks__10_where_ml_goes_next` off `chapter/12_NeuralNetworks` (@ `d07b195`). Phase
   `notebook-plan`. **The ONE intentional exception** (chapter plan §NB 10, Rémy ✅) to the by-hand +
