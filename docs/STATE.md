@@ -7,11 +7,11 @@
 | Field | Value |
 |---|---|
 | Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–8 shipped (8/10) — by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7) & the torch estimator (NB 8). 2 left: NB 9 capstone, NB 10 synthesis.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`09_fashion_mnist_capstone`** (NB 9 of 10) — **OPENED** (phase `notebook-plan`). The visualization-first capstone, in PyTorch. **8/10 shipped; NB 9 in planning.** |
-| Phase | **`notebook-plan-approved`** — NB 9 plan **APPROVED by Rémy via ExitPlanMode (no edits, 2026-07-01)** & persisted (`docs/plans/12_NeuralNetworks__09_fashion_mnist_capstone.md`). All anchors measured on-box (`measure_ch12_nb9_{a,b,c}.py`). **Next: BUILD** — the `src/` change first (Fashion-MNIST loader + vendor + tests), then the notebook. |
+| Current notebook | **`09_fashion_mnist_capstone`** (NB 9 of 10) — **BUILT** (32 cells: 13 code / 19 md, 7 figures). Both reviewers no-BLOCK, all folds applied. **Awaiting Rémy's visual validation.** |
+| Phase | **`notebook-visual-check`** — NB 9 built + executed clean (nbconvert exit 0, 7 figures, 0 errors; every anchor reproduces). **Both reviewers no-BLOCK** (`@ml-expert-reviewer` REVISE→no-BLOCK — re-ran all anchors bit-for-bit + paired tests confirming HistGB>MLP p=0.015 5/5 folds; `@pedagogy-reviewer` REVISE→no-BLOCK); all folds applied (see progress log). `src/` loader committed (`2acd9ab`, pytest 22→26). **Awaiting Rémy's visual validation, then commit + ff-merge.** |
 | Active branch | **`notebook/12_NeuralNetworks__09_fashion_mnist_capstone`** (off `chapter/12_NeuralNetworks` @ `425498f`; `deep` extra @ `08fbcf2`). |
 | Active plan | NB 9 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__09_fashion_mnist_capstone.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 9). |
-| Next concrete action | **BUILD NB 9.** (1) **`src/` change first (the 2nd of ch 12):** add `load_fashion_mnist()` + `load_mnist()` + `fashion_mnist_subset()` + `FASHION_MNIST_CLASSES` to `src/ml_course/datasets.py` (fetch-and-cache via `fetch_openml`, cache `.npz` under `src/ml_course/data/` git-ignored, INFO-logged **never silenced**; **returns numpy arrays** — the image carve-out); `scripts/vendor_fashion_mnist.py` (mirror `vendor_penguins.py`); tests in `tests/test_datasets.py` → **pytest rises from 22** (state new total). `uv run pytest` green + `uv run ruff check .` clean. (2) **Build the notebook** from `build_ch12_nb9.py` (ephemeral scratchpad) — **31 cells, 7 figures, visualization-first**; determinism contract in-notebook. Anchors (all measured on-box): baselines 0.100 / 0.803; net **0.865**, loss 0.797→0.109; per-class Shirt 0.614 … Trouser 0.978 + top confusions (Shirt→T-shirt 72 …); seed-variance **0.863 ± 0.004**; **CV foil MLP 0.863 ≈ RF 0.855 < HistGB 0.876** (HistGB wins ~1.3pp **and** is the priciest; RF ties cheaply — no free lunch on accuracy *or* compute); `breast_cancer` MLP **0.979** > 0.970 / 0.965. (3) nbconvert verify (exit 0, 7 figs) → guards (hex / banned-0 / ruff / output-free) → **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no BLOCK) → **Rémy visual** → end-of-NB checklist (`gen_llms_txt`, `common_errors` +rows, `course_map` §12 → NB 9 built, STATE) → commit `feat(12_neuralnetworks): notebook 09 — Fashion-MNIST capstone` → `git merge --ff-only` into `chapter/12`. **Then NB 10 = the whole-course synthesis** (reflective close), then **chapter close via PR #12**. Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Next concrete action | **Rémy validates NB 9 visually.** On his go: rebuild from `build_ch12_nb9.py` (kernel-drift guard — canonical kernelspec, output-free), then the end-of-NB checklist — `uv run python scripts/gen_llms_txt.py`; `docs/common_errors.md` +2 rows; `docs/course_map.md` §12 → NB 1–9 built; STATE; **pytest 26** (loader already committed `2acd9ab`). Commit `feat(12_neuralnetworks): notebook 09 — Fashion-MNIST capstone` on the notebook branch → `git switch chapter/12_NeuralNetworks && git merge --ff-only notebook/12_NeuralNetworks__09_fashion_mnist_capstone`. **Then NB 10 = the whole-course synthesis** (the reflective close — the one intentional exception to by-hand + executable-"Your turn"), then **chapter close via PR #12** (the course finale). Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -60,6 +60,32 @@
   validates alone** (no reviewer gate; both reviewers return on the built notebook). Torch anchors = build-time, on-box
   (determinism contract from NB 7). Refs: LeCun et al. 1998 (CNN/MNIST; DOI 10.1109/5.726791); Xiao et al. 2017
   (Fashion-MNIST; arXiv:1708.07747); Paszke et al. 2019 (PyTorch).
+  **`src/` change BUILT & COMMITTED (`2acd9ab`):** `load_fashion_mnist()` / `load_mnist()` / `fashion_mnist_subset()`
+  / `FASHION_MNIST_CLASSES` in `datasets.py` (fetch-and-cache `.npz`, INFO-logged, arrays — image carve-out) +
+  `scripts/vendor_fashion_mnist.py` + 4 tests → **pytest 22 → 26**; caches git-ignored (`*.npz`, confirmed
+  untracked). **NOTEBOOK BUILT (32 cells: 13 code / 19 md, 7 figures) from `build_ch12_nb9.py`.** Anchors
+  reproduced (nbconvert exit 0, 7 figures, 0 errors, determinism contract in-notebook): baselines dummy 0.100 /
+  logistic(scaled) 0.803; deep net (784→256→128→10, He, Dropout 0.2, Adam 1e-3, 30 ep, scaled) **0.865**, loss
+  0.797→0.109; per-class Shirt **0.614** … Trouser 0.978 (677/5000=13.5% err) + confusions Shirt→T-shirt 72 /
+  Pullover→Coat 66; seed-variance **0.863 ± 0.004** [0.858, 0.871]; **CV foil MLP 0.863 ± 0.005 ≈ RF 0.855 ±
+  0.005 < HistGB 0.876 ± 0.009**; `breast_cancer` MLP 0.979 / HistGB 0.970 / RF 0.965. Figs: image gallery / loss
+  curve / confusion matrix / error gallery / seed strip / cross-method CV bars / first-layer weights. **Both
+  reviewers no-BLOCK.** `@ml-expert-reviewer` REVISE→no-BLOCK (re-ran all anchors bit-for-bit; **paired tests
+  confirm HistGB>MLP p=0.015, 5/5 folds** — a real win; no leakage, fold-internal scaling verified; quantified
+  Fig 7 honesty [trained-filter neighbor-corr 0.20 vs 0.00 init, 0/256 > 0.3]; 2 MAJOR + 2 MINOR + 1 NIT).
+  `@pedagogy-reviewer` REVISE→no-BLOCK (all 7 Read-the-figure numbers verified vs live run; every net knob
+  attributed to its NB; honest verdict + Fig 7 land as empowering; 2 MAJOR + 1 MINOR + 1 NIT). **Folds applied
+  (all prose + one `n_classes` passthrough — zero anchor change):** (ml-expert MAJOR-1, the important one) fixed a
+  **causal-conflation error** — the tree>MLP gap was wrongly attributed to spatial structure, but trees see the
+  same flattened pixels and are equally blind to it (ch-11 digits tie is the tell); cell 26 now **separates** the
+  two truths — tree>MLP is an empirical *tabular* result, while *all* flat-pixel models ignore spatial structure
+  → that's the CNN's job; (ml-expert MAJOR-2) `breast_cancer` aside now respects the notebook's own ~0.01 noise
+  ruler (MLP "fully competitive," not a "win" — 0.009 gap within noise, paired p=0.27); (pedagogy MAJOR-1) softened
+  the **unmeasured/thread-mismatched cost claim** (RF ran `n_jobs=-1`) to an honest general point; (pedagogy
+  MAJOR-2) named the reach-exercise's two edits (relabel {0,2,4,6}→0–3 + `train_net(n_classes=4)`, now supported
+  by the harness); "thirteen methods"→"twelve"; loss-curve per-epoch-mean clarification; MLP-edges-RF-5/5-folds
+  nuance; Fig 7 title "…and did not". Guards: ruff clean, hex clean, **banned 0** (2 "clearly" reworded),
+  output-free. **Awaiting Rémy's visual validation** → then end-of-NB checklist + commit + ff-merge into `chapter/12`.
 - **NB 8 (the model & its parameters in PyTorch — the estimator notebook) OPENED.** Branch
   `notebook/12_NeuralNetworks__08_model_and_parameters` off `chapter/12_NeuralNetworks` (@ `25c5b51`). Phase
   `notebook-plan`: measuring torch anchors on-box, then drafting the cell-by-cell plan. **Integrative (chapter
