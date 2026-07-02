@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`11_MLP`** — chapter just opened off `main` (synced @ `6609afb` after PR #10). Last shipped to `main`: **`10_LightGBM` COMPLETE — PR #10** (`6609afb`; 5 NBs). Earlier: ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). |
-| Current notebook | — (**NB 5 `05_digits_capstone` BUILT & ff-merged into `chapter/11_MLP` — Rémy validated visually**). **CHAPTER 11 COMPLETE on the branch (5/5).** |
-| Phase | **NB 5 DONE / CHAPTER 11 COMPLETE on the branch** (phase `notebook-commit`): built (28 cells, 6 figures), both reviewers PASS no BLOCK (2 NIT + 1 MINOR folded), Rémy visual, guards green, output-free, ff-merged. Next: close the chapter via PR → main. |
-| Active branch | `chapter/11_MLP` (NB 1–5 ff-merged; NB 5 @ the `feat(11_mlp): notebook 05` commit). |
-| Active plan | chapter: `docs/plans/chapter_11_MLP.md` (APPROVED). **All 5 NBs DONE — chapter complete on the branch.** |
-| Next concrete action | **Close chapter 11 on Rémy's explicit go:** PR `chapter/11_MLP → main` (`--no-ff`, preserve per-notebook history — 5 NBs) via `gh pr create` + `gh pr merge --merge` (main is PR-only — global pre-push hook; remote `Ramdam17/QuickIntroToMachineLearning`; PR body ends `🤖 Generated with [Claude Code](https://claude.com/claude-code)`). After merge: `course_map` §11 → "merged via PR #11", STATE → `idle` / next = open chapter 12 (NeuralNetworks). **Do NOT open the PR without Rémy's explicit go.** — Original scope (chapter plan §NB 5): `load_digits` (8×8, 1797×64, 10-class, offline, CPU-fast); `Pipeline(StandardScaler, MLPClassifier)`; tune lightly; held-out eval; read the **loss curve**; **confusion matrix + per-digit error analysis**; **seed-variance** check (single split → init variance ~0.974–0.980); a **fair tree-foil** (RF/HistGB on **raw** features vs the MLP in its `StandardScaler` pipeline, same split/metric — the preprocessing difference *is* the point). **Honest verdict (measured):** MLP **fully competitive, NOT superior** (HistGB ~0.982 ≥ MLP; not an MLP win); trees need no scaling + stay interpretable; loss non-convex (a minimum, not *the*); seed-sensitive; UAT = existence. The genuine MLP accuracy win lives elsewhere (`breast_cancer` 0.9754 > RF/HistGB). **≥6 figures, ~28–30 cells, visualization-first.** **Last NB of ch 11 → after it ships, close the chapter via PR `chapter/11_MLP → main` (`--no-ff`) on Rémy's explicit go.** NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** — Original scope (chapter plan §NB 4): the estimator `MLPClassifier`/`MLPRegressor`, each knob from the concept that owns it — `hidden_layer_sizes` (depth×width = capacity); **`activation` — why ReLU is the default (no saturation); the measured sigmoid+adam stall from NB 2/3 is the concrete motivation** (depth-driven vanishing gradient deferred to ch 12); `solver` (sgd/adam/lbfgs — **Adam named** as "an adaptive-step upgrade of the GD you built"); `alpha` (L2); `learning_rate_init`; `early_stopping`+`validation_fraction`; `max_iter`; **`batch_size` — epoch / mini-batch / iteration introduced as vocabulary** (their genuine home). **The K-class softmax output head — its explicit home** (a short subsection turning the single sigmoid output into K softmax units; formula recap from ch 03 NB 5). **Scaling mandatory**; the **loss curve** (`loss_curve_`) as the convergence diagnostic. Honest spine: unscaled-vs-scaled on a **synthetic 2-feature mismatched-scale problem** (digits too homogeneous to break reliably — folded ml-expert MAJOR); a capacity sweep; `alpha` up/down; defaults-vs-`GridSearchCV` → one sealed test. `ConvergenceWarning` stays **visible**; `verbose=True` where it aids — never silenced. ~4 figures. NB-plan = Rémy validates alone. **Do NOT auto-start — Rémy initiates each NB with "go".** |
+| Current chapter | **`12_NeuralNetworks` — the course finale (13th & final module). NB 1–10 shipped (10/10) — CHAPTER COMPLETE on the branch: by-hand numpy arc (NB 1–6), PyTorch (NB 7–9), the whole-course synthesis (NB 10). Awaiting Rémy's explicit go for the chapter-close PR #12 → `main`.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **DONE** (committed + ff-merged to `chapter/12`; Rémy validated visually 2026-07-02). **10/10 shipped — chapter complete on branch.** |
+| Phase | **`chapter-merge`** — NB 10 committed (`feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis`) & ff-merged into `chapter/12_NeuralNetworks`; both reviewers PASS, folds applied, Rémy validated. **Chapter 12 is COMPLETE on the branch (10/10).** **Awaiting Rémy's explicit "go" for the chapter-close PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the course finale.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 10 merged via ff-only; Fashion-MNIST loader @ `2acd9ab`; `deep` extra @ `08fbcf2`). `notebook/12_NeuralNetworks__10_where_ml_goes_next` is merged (deletable). |
+| Active plan | NB 10 DONE (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). Chapter **COMPLETE on branch** (`docs/plans/chapter_12_NeuralNetworks.md`, all 10 NBs built). Next: chapter-close PR #12 on Rémy's go. |
+| Next concrete action | **CHAPTER CLOSE — the course finale — on Rémy's explicit "go".** Chapter 12 is complete on `chapter/12_NeuralNetworks` (10/10, NB 10 ff-merged). Open PR #12 → `main`: `git push -u origin chapter/12_NeuralNetworks`; `gh pr create --base main --head chapter/12_NeuralNetworks --title "feat(12_neuralnetworks): complete chapter — neural networks (PyTorch finale)"` (body ends with the Claude Code line); merge as a **`--no-ff`** merge commit (remote `main` is **PR-only** — global pre-push hook; gh account `Ramdam17`); `git switch main && git pull`. Then set STATE phase **`idle`** — **13/13 modules complete on `main`; the course is done.** (Optionally delete merged `notebook/*` branches.) Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -38,6 +38,461 @@
 
 ## Progress log (most recent first)
 
+- **NB 10 (where ML goes next, and the whole course — THE COURSE FINALE) OPENED.** Branch
+  `notebook/12_NeuralNetworks__10_where_ml_goes_next` off `chapter/12_NeuralNetworks` (@ `d07b195`). Phase
+  `notebook-plan`. **The ONE intentional exception** (chapter plan §NB 10, Rémy ✅) to the by-hand +
+  executable-"Your turn" pattern — a **reflective close**: no new mechanism, no measured anchors, no executable
+  exercise. Two halves: (1) **where ML goes next** — CNN / RNN / transformer **named, not built** (c09/c10/c11),
+  *motivated by NB 9's verdict* (a dense net flattens the image → CNNs add locality + weight-sharing;
+  RNNs/transformers extend learned representations to sequences and to the attention behind today's LLMs);
+  (2) **the whole-course synthesis** — the spine KNN → Naive Bayes → Logistic Regression → Decision Tree → SVM
+  → (Random Forest → AdaBoost → Gradient Boosting → XGBoost → LightGBM) → MLP → Neural Networks, and the earned
+  through-line **"there is no universal best model."** Closes with a reflective **"Where to go next"**
+  (directional prompts, not code) + a whole-course **"What you built"** celebration. Mostly prose + **1–2
+  schematic figures** (each with a "Read the figure"). **No `src/` change** (pytest stays 26). NB-plan = **Rémy
+  validates alone** (no reviewer gate; both reviewers return on the built notebook). Draft cell-by-cell →
+  ExitPlanMode. **After it ships: chapter close via PR #12** (`chapter/12_NeuralNetworks → main`, `--no-ff`) —
+  the course finale — on Rémy's explicit go.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits, 2026-07-02) & persisted**
+  (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). **BUILT (17 cells: 2 code / 15 md, 2 schematic
+  figures) from `build_ch12_nb10.py` — awaiting Rémy's visual validation.** Fig 1 = the course map (12 methods,
+  7 families, charter colours, arrows = the spine); Fig 2 = flatten-vs-convolution (dense scrambles adjacency /
+  a shared filter slides). nbconvert **exit 0, 2 figures, 0 errors**; no `src/` change (pytest stays 26). **Both
+  reviewers PASS — no BLOCK.** `@ml-expert-reviewer` **PASS** (verified the honesty spine: the **breast_cancer
+  no-regression consistency check passes** — cell 7 keeps NB 9's "competitive, not a decisive win"; all three
+  through-line-#1 anchors faithful to measured verdicts [digits tie / breast_cancer competitive / Fashion-MNIST
+  real-margin win]; horizons named-not-built, nothing horizon claimed as measured; LeCun/H&S/Vaswani DOIs
+  verified; 2 MINOR + 2 NIT). `@pedagogy-reviewer` **PASS** (the intentional exception is earned & well-framed
+  [cell 2]; all 12 methods present in build order, faithfully characterized; **13-modules/12-methods count
+  consistent**, NB-9 miscount not reintroduced; both Read-the-figure paragraphs match the rendered images;
+  voice/charter clean, "you did the work" earned not flattery; 2 MINOR + 2 NIT). **Folds applied (4, all
+  prose + one figure-cell pick — no anchor impact):** Naive Bayes "independent" → "independent **given the
+  class**" (conditional, ml-expert MINOR); Fig 2 emphasized pair → **4-adjacent** `(2,2)`/`(2,3)` so "right next
+  to each other" is literal (ml-expert MINOR); "the loop you **wrote** in NB 7" → "**met** in NB 7 (and wrote by
+  hand before that)" (ml-expert NIT — NB 7 read it, NB 1–6 wrote it); digits bullet "gradient boosting" →
+  "**histogram-boosted trees** (the module-11 capstone)" (pedagogy MINOR — matches the measured source). Guards:
+  ruff clean, hex clean, **banned 0** (3 "just" reworded during build), output-free. **Rémy validated visually
+  (2026-07-02). End-of-NB checklist done:** rebuilt from `build_ch12_nb10.py` (kernel-drift guard — kernelspec
+  canonical `ml-course (3.12.12)`, output-free; no other NB drifted), `llms.txt` **97**, `course_map` §12 →
+  **COMPLETE on branch (10/10)**, `common_errors` unchanged (no new trap — a synthesis), **pytest 26** (no
+  `src/` change). **COMMITTED & ff-merged into `chapter/12`.** **CHAPTER 12 IS COMPLETE ON THE BRANCH (10/10) —
+  the whole course is built.** Next: **chapter-close PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the
+  course finale — on Rémy's explicit go** → then STATE `idle`, 13/13 on `main`.
+- **NB 9 (the demanding case — Fashion-MNIST, the visualization-first capstone; the finale's applied notebook) OPENED.**
+  Branch `notebook/12_NeuralNetworks__09_fashion_mnist_capstone` off `chapter/12_NeuralNetworks` (@ `425498f`). Phase
+  `notebook-plan`: measuring the torch/tree anchors on-box (fetch Fashion-MNIST via a scratchpad `fetch_openml`; the
+  formal loader lands at build), then drafting the cell-by-cell plan. **Scope (chapter plan §NB 9, visualization-first,
+  ≥6 figures, ~28–30 cells):** a full honest workflow on **Fashion-MNIST** (70k×784 → 10k-train / 5k-test subset;
+  offline, CPU) — look at the data → baselines → a **deep, He-initialized, dropout-regularized** torch net (scaled
+  pipeline) → loss curve & convergence → held-out **confusion matrix + error gallery** → **seed-variance** → a **fair
+  cross-method foil on 5-fold CV** (the torch net vs RF / HistGB on **raw** pixels, same split/metric — the preprocessing
+  difference is the point) → the **honest verdict** + optional first-layer-weight gallery. **The workflow beats are
+  applied, NOT re-taught** (baseline → loss curve → confusion → error gallery → seed-variance → CV foil are the
+  learner's reflex by the finale); NB 9's genuinely-new content is the torch deep net in the pipeline, the He/dropout
+  stack as the thing under test, and the **spatial-structure verdict** (→ the CNN bridge). **Honest verdict (measured
+  target; re-pin at build): MLP 0.859 ≈ RF 0.853 < HistGB 0.874** — a tree genuinely wins ~1.4pp; trees need no scaling;
+  **the pixels have spatial structure a dense net throws away: a CNN's job (c09, NB 10 bridge).** Tabular-humility aside
+  re-uses ch-11's measured `breast_cancer` MLP **0.975** > 0.967/0.970 (so "no universal best" lands both ways).
+  **Torch, shown not assigned** (the "Your turn" tiers *modify* the shown pipeline). **`src/` CHANGE at build (the 2nd
+  of ch 12):** `load_fashion_mnist()` (+ likely `load_mnist()`) in `datasets.py` (fetch-and-cache via `fetch_openml`,
+  INFO-logged **never silenced**, cache under `src/ml_course/data/` git-ignored) + `scripts/vendor_fashion_mnist.py`
+  (mirror `vendor_penguins.py`) + tests in `tests/test_datasets.py` → **pytest rises from 22**. NB-plan = **Rémy
+  validates alone** (no reviewer gate; both reviewers return on the built notebook). Torch anchors = build-time, on-box
+  (determinism contract from NB 7). Refs: LeCun et al. 1998 (CNN/MNIST; DOI 10.1109/5.726791); Xiao et al. 2017
+  (Fashion-MNIST; arXiv:1708.07747); Paszke et al. 2019 (PyTorch).
+  **`src/` change BUILT & COMMITTED (`2acd9ab`):** `load_fashion_mnist()` / `load_mnist()` / `fashion_mnist_subset()`
+  / `FASHION_MNIST_CLASSES` in `datasets.py` (fetch-and-cache `.npz`, INFO-logged, arrays — image carve-out) +
+  `scripts/vendor_fashion_mnist.py` + 4 tests → **pytest 22 → 26**; caches git-ignored (`*.npz`, confirmed
+  untracked). **NOTEBOOK BUILT (32 cells: 13 code / 19 md, 7 figures) from `build_ch12_nb9.py`.** Anchors
+  reproduced (nbconvert exit 0, 7 figures, 0 errors, determinism contract in-notebook): baselines dummy 0.100 /
+  logistic(scaled) 0.803; deep net (784→256→128→10, He, Dropout 0.2, Adam 1e-3, 30 ep, scaled) **0.865**, loss
+  0.797→0.109; per-class Shirt **0.614** … Trouser 0.978 (677/5000=13.5% err) + confusions Shirt→T-shirt 72 /
+  Pullover→Coat 66; seed-variance **0.863 ± 0.004** [0.858, 0.871]; **CV foil MLP 0.863 ± 0.005 ≈ RF 0.855 ±
+  0.005 < HistGB 0.876 ± 0.009**; `breast_cancer` MLP 0.979 / HistGB 0.970 / RF 0.965. Figs: image gallery / loss
+  curve / confusion matrix / error gallery / seed strip / cross-method CV bars / first-layer weights. **Both
+  reviewers no-BLOCK.** `@ml-expert-reviewer` REVISE→no-BLOCK (re-ran all anchors bit-for-bit; **paired tests
+  confirm HistGB>MLP p=0.015, 5/5 folds** — a real win; no leakage, fold-internal scaling verified; quantified
+  Fig 7 honesty [trained-filter neighbor-corr 0.20 vs 0.00 init, 0/256 > 0.3]; 2 MAJOR + 2 MINOR + 1 NIT).
+  `@pedagogy-reviewer` REVISE→no-BLOCK (all 7 Read-the-figure numbers verified vs live run; every net knob
+  attributed to its NB; honest verdict + Fig 7 land as empowering; 2 MAJOR + 1 MINOR + 1 NIT). **Folds applied
+  (all prose + one `n_classes` passthrough — zero anchor change):** (ml-expert MAJOR-1, the important one) fixed a
+  **causal-conflation error** — the tree>MLP gap was wrongly attributed to spatial structure, but trees see the
+  same flattened pixels and are equally blind to it (ch-11 digits tie is the tell); cell 26 now **separates** the
+  two truths — tree>MLP is an empirical *tabular* result, while *all* flat-pixel models ignore spatial structure
+  → that's the CNN's job; (ml-expert MAJOR-2) `breast_cancer` aside now respects the notebook's own ~0.01 noise
+  ruler (MLP "fully competitive," not a "win" — 0.009 gap within noise, paired p=0.27); (pedagogy MAJOR-1) softened
+  the **unmeasured/thread-mismatched cost claim** (RF ran `n_jobs=-1`) to an honest general point; (pedagogy
+  MAJOR-2) named the reach-exercise's two edits (relabel {0,2,4,6}→0–3 + `train_net(n_classes=4)`, now supported
+  by the harness); "thirteen methods"→"twelve"; loss-curve per-epoch-mean clarification; MLP-edges-RF-5/5-folds
+  nuance; Fig 7 title "…and did not". Guards: ruff clean, hex clean, **banned 0** (2 "clearly" reworded),
+  output-free. **Rémy validated visually (2026-07-02). End-of-NB checklist done:** rebuilt from `build_ch12_nb9.py`
+  (kernel-drift guard — kernelspec canonical `ml-course (3.12.12)`, output-free; no other NB drifted), `llms.txt`
+  **96**, `course_map` §12 → **NB 1–9 built**, `common_errors` **+2 rows** (tree>net-is-tabular-not-geometry /
+  all-flat-methods-want-a-CNN; capstone-verdict-net-loses-but-no-universal-best-both-ways), **pytest 26** (loader
+  committed `2acd9ab`; notebook adds no `src/`). **COMMITTED & ff-merged into `chapter/12`.** **The chapter's
+  PyTorch arc (NB 7–9) is complete; only NB 10 (the whole-course synthesis) remains before the chapter closes via
+  PR #12.** Next: open & plan NB 10 on Rémy's go.
+- **NB 8 (the model & its parameters in PyTorch — the estimator notebook) OPENED.** Branch
+  `notebook/12_NeuralNetworks__08_model_and_parameters` off `chapter/12_NeuralNetworks` (@ `25c5b51`). Phase
+  `notebook-plan`: measuring torch anchors on-box, then drafting the cell-by-cell plan. **Integrative (chapter
+  plan §NB 8):** the real torch estimator's knobs, each from the concept that owns it — capacity (depth/width);
+  **`activation` as the depth-pathology knob** (flip to sigmoid → a deep net stalls, c02, now *tunable*); the
+  optimizer menu **SGD / momentum / Adam** (c07, why depth makes them matter — a short deepened recap); learning
+  rate; **real `nn.Dropout` (c05) and `nn.BatchNorm` (c04)** as one-line layers (with the running-stats +
+  `.train()/.eval()` nuance NB 6/7 named, now realized); init via **`torch.nn.init`** He/Xavier (c03); epochs /
+  batch size; **train-vs-validation loss curves** separating underfit / overfit / **optimization failure** (the
+  flat-curve case, c06); honest tuning (small grid) → one sealed test. **Overlap-watch:** `alpha` / early
+  stopping / Adam were named in ch 11 → one tight recap; the genuinely-new owners here are the real dropout/BN
+  layers, the activation-as-pathology knob, and the optimization-failure reading. **~4 figures** (deep-vs-shallow
+  capacity & loss; the activation stall; dropout/BN effect; init effect); the rest as printed tables (the
+  ch-11-NB-4 template — don't overload). **Torch, shown not assigned** (challenges *modify* the shown setup).
+  NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook). Torch
+  anchors = **build-time, on-box** (determinism contract from NB 7). Refs: Kingma & Ba 2015 (Adam;
+  arXiv:1412.6980); the per-concept refs (He/Glorot/Srivastava/Ioffe-Szegedy) recap from NB 4/5/6.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__08_model_and_parameters.md`).
+  **BUILT (30 cells: 12 code / 18 md, 4 figures) — awaiting Rémy's visual validation.** A reusable
+  `build_net`/`train` harness (SHOWN) turned knob by knob. **Anchors reproduced (nbconvert exit 0, 4 figures;
+  torch 2.12.1, CPU, determinism contract in-notebook):** capacity tiny 0.868 underfit → wide 0.967 → deep
+  1.000/0.950 overfit; activation (deep w16d8 SGD+He) relu 0.758→0.068 / tanh 0.507→0.076 / **sigmoid 0.790→
+  0.693 flat / val 0.800**; init small/default flat at ln2 / **He 0.758→0.068**; optimizer **SGD 42 / momentum
+  10 / Adam 1** epochs to val-loss<0.35; lr 1e-4 crawls / 1e-2 best 0.967 / 1.0 unstable; regularizers (w256)
+  none gap 0.288 → **dropout 0.252** / wd 0.262 / **BN 0.278 (gentle)**; tuning grid on val → **sealed test
+  0.756** (w256+dropout0.5, val 0.738). **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran the
+  whole notebook, every anchor bit-stable; harness `bias=not batchnorm` + `.train()/.eval()` correct; honesty
+  caveats all *measured* — Adam-masks-sigmoid, default-init-stalls, BN-gentlest, tuning-within-noise; 2 MINOR +
+  2 NIT); `@pedagogy-reviewer` **REVISE→fixed** (found the **core "Your turn" tier-2 crash** — `batchnorm=True`
+  + explicit `init` hit `nn.init.zeros_(m.bias)` with `bias=None`; a real harness bug the body masked). **Folds
+  (7, applied):** (pedagogy MAJOR) `build_net` now guards `if m.bias is not None` — the small-init+BN exercise
+  path builds (reviewer measured 0.500→0.968 with the guard); cell "batch=" reworded (harness has no `batch=`);
+  optimizer why-deep softened to claim-as-horizon + momentum `0.9` stated + Polyak 1964 cite; Adam-rescue
+  "~0.32" → "roughly 0.3–0.4" (both reviewers; the figure was lr-dependent); "flat from the first epoch" made
+  precise for the sigmoid dip; scaler-on-full-X caveat added (ml-expert NIT — leak is conservative/immaterial,
+  0.756 vs 0.770 leak-free; a code comment points to strict train-only, ch 00, rather than re-pin ~20 anchors).
+  The `black`-reformat NIT is intentional (black skips `.ipynb`; ruff is the gate and passes). Guards: ruff
+  clean (12 E501/E702/B007 fixed across two passes), hex clean, **banned 0** (2 "just" reworded), output-free;
+  **pytest 22** (no new `src/`). **No `src/` change** (notebook-local harness; `deep` extra already shipped
+  `08fbcf2`; `make_moons`/`make_classification`/`StandardScaler`; `viz`/`colors`; inline matplotlib).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb8.py`
+  (kernel-drift guard — kernelspec canonical, output-free), `llms.txt` **95**, `course_map` §12 → **NB 1–8
+  built**, `common_errors` **+2 rows** (training-is-not-magic-knobs / the-3-failure-modes-off-the-loss-curve;
+  tune-on-val-read-test-once / winner-within-split-noise), **pytest 22** (no new `src/`). **COMMITTED &
+  ff-merged into `chapter/12`.** Next: open & plan NB 9 (the Fashion-MNIST capstone) on Rémy's go.
+- **NB 7 (hello-world in PyTorch — c08, the framework move) OPENED.** Branch
+  `notebook/12_NeuralNetworks__07_pytorch_hello_world` off `chapter/12_NeuralNetworks` (@ `0efcb8d`). Phase
+  `notebook-plan`. **First torch NB + first `src/` change of the chapter.** **One concept (chapter plan §NB 7):**
+  the real modern tool — define a model, **autograd builds the backward pass for you**, the canonical training
+  loop, optimizer, `.train()`/`.eval()` mode. **The same net as NB 1** (2-D `make_blobs` 3-class softmax+CE),
+  now in torch. **SHOWN, not assigned** (Rémy's rule) — `nn.Module`/`nn.Sequential` + the canonical loop
+  (`zero_grad → forward → loss → backward → step`) demonstrated to read; challenges in "Your turn" *modify* the
+  shown loop. **The numpy↔torch bridge is an explicit component-by-component "Read the figure"** (your `forward`
+  ↔ `nn.Module.forward`; your hand-derived `backward` ↔ `loss.backward()`/autograd; your `θ←θ−η∇L` ↔
+  `optimizer.step()`) **+ the one number: the autograd gradient == the NB-1 numpy gradient** (build anchor).
+  **Overlap-watch:** epoch/mini-batch/loss-curve = ch-11 recap (one sentence); NEW = autograd, the `nn.Module`
+  idiom, `.train()/.eval()` (matters the moment dropout/BN appear in NB 8). **FIRST build step (flagged risk):**
+  install the `deep = ["torch>=2.x"]` extra + verify a trivial **CPU-deterministic** torch example **on the box**
+  (pinned seeds + `torch.use_deterministic_algorithms(True)` + `torch.set_num_threads(1)`; **pin the resolved
+  version**) before trusting any torch number. **Loader-scope decision (to present):** recommend the
+  Fashion-MNIST loader + `scripts/vendor_fashion_mnist.py` + tests land **at NB 9** (just-in-time), so NB 7's
+  `src/` change is only the `deep` extra + a torch-determinism smoke test → **pytest rises from 20** (state new
+  total). Torch anchors = **build-time, on-box**. NB-plan = **Rémy validates alone** (no reviewer gate; both
+  reviewers return on the built notebook). Refs: Paszke et al. 2019 (PyTorch; NeurIPS).
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__07_pytorch_hello_world.md`).
+  **BUILT (21 cells: 7 code / 14 md, 2 figures) — awaiting Rémy's visual validation.** The same `2→16→3`
+  net as NB 1 in torch (`nn.Sequential` + `nn.CrossEntropyLoss`, the canonical loop SHOWN). **Anchors
+  reproduced (nbconvert exit 0, 2 figures):** **build anchor** autograd gradient == NB-1 numpy gradient to
+  machine precision (weights synced, float64 — dW1 **6.9e-18**, db1 1.7e-17, dW2 6.9e-18, db2 2.4e-17;
+  untrained loss by-hand **1.101153** == torch **1.101153** ≈ ln 3); **training parity** (float32, SGD lr 0.5,
+  400 ep, NB-1 init synced) final loss **0.308**, **train 0.867 / test 0.893** = NB 1; `.train()/.eval()`
+  toggle True/False, predictions identical (no dropout/BN yet). Fig 1 = numpy↔torch component bridge +
+  gradient-scatter on the diagonal (max|Δ|≈2e-17); Fig 2 = numpy-vs-torch loss overlay (two curves, one line,
+  ln3→~0.31). **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran the gradient-match with a
+  masked-bug control: perturbing a W2 entry by 0.05 jumps the mismatch to ~5e-5, 12 orders above the 1e-17
+  baseline → a genuine equivalence proof; parity reproduced independently 0.3076/0.867/0.893; `nn.Linear`
+  (out,in)=Wᵀ transpose + CrossEntropyLoss mean-reduction correct; determinism cross-process confirmed; no
+  forward-ref leak; 2 NIT) ; `@pedagogy-reviewer` **PASS** (recap boundary exact, NB-1 net reused byte-for-byte,
+  shown-not-assigned airtight, 2/2 Read-the-figure = pixels, exos modify-not-author + doable; 2 NIT). **Folds
+  (2, applied, markdown — anchors intact):** cell 7 — noted the gradient-match runs in float64 via
+  `F.cross_entropy` (the functional form of the same loss), so the comparison reflects the maths not float32
+  rounding (both reviewers' shared NIT); cell 14 — named the ~0.003 gap (small random weights nudge the start a
+  hair above the exact `ln 3`). The `black`-would-reformat NIT is **intentional** (black skips `.ipynb` in this
+  project; ruff is the gate and passes — the course's didactic layout). Guards: ruff *All checks passed* (7
+  E501/E702/B007 fixed), hex clean, **banned 0** (1 "just" reworded), output-free; **pytest 22** (rose from 20:
+  `tests/test_torch_determinism.py`). **`src/` change:** the `deep` extra (committed `08fbcf2`) + the
+  determinism test; **Fashion-MNIST loader deferred to NB 9** (approved).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb7.py`
+  (kernel-drift guard — kernelspec canonical, output-free), `llms.txt` **94**, `course_map` §12 → **NB 1–7
+  built**, `common_errors` **+2 rows** (framework-is-not-a-black-box / autograd==by-hand-to-1e-17;
+  `.train()/.eval()`-is-a-no-op-until-dropout/BN + logits-not-probs), **pytest 22** (the `deep` extra + the
+  determinism test). **COMMITTED & ff-merged into `chapter/12`.** (Restored an editor-drifted NB 6 — cosmetic
+  key-reorder — before staging.) Next: open & plan NB 8 (the model & its parameters in PyTorch) on Rémy's go.
+- **NB 6 (normalization: batch & layer norm — c04) OPENED.** Branch
+  `notebook/12_NeuralNetworks__06_normalization` off `chapter/12_NeuralNetworks` (@ `db388cd`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 6):** **normalization** — re-center/re-scale a layer's activations to a healthy range *during* training
+  (the same "control the variance with depth" lever as init [NB 4], now applied at every step). **By hand — a
+  complete batch-norm forward layer** in numpy (batch mean/var → normalize → the **learnable γ/β**, with the
+  **backward through it** so the net trains end-to-end); show it on the **drifting-activation stack** (NB 3/4)
+  AND demonstrate a **training-time effect** (a deeper net that stalled / trained slowly now trains / loss
+  descends faster). Then **name in one sentence** what the real `nn.BatchNorm` adds beyond the forward
+  transform: **running statistics + the train/eval-mode difference** (explicitly NB 8's — no oversold
+  from-scratch BN *trainer*). **Layer norm** named as the per-sample sibling (BN across the batch, LN across
+  features; LN is what transformers use — ties to NB 10 horizons) — contrasted in a sentence, not a second
+  by-hand build. **The LAST by-hand numpy NB** (NB 7 = the torch hello-world; the `deep` extra + Fashion-MNIST
+  loader + tests land there → pytest rises from 20). Figs: activation distributions drifting vs normalized; the
+  train-time loss effect; the BN-layer schematic. **Still pure numpy — no torch.** NB-plan = **Rémy validates
+  alone** (no reviewer gate; both reviewers return on the built notebook). Refs: Ioffe & Szegedy 2015
+  (BatchNorm; arXiv:1502.03167); Ba et al. 2016 (LayerNorm; arXiv:1607.06450); Goodfellow et al. 2016 ch 8.
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__06_normalization.md`).
+  **BUILT (24 cells: 8 code / 16 md, 3 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  A complete by-hand BN layer (`bn_forward`: per-feature batch mean/var → ẑ → learnable γ/β; `bn_backward`:
+  the simplified BN Jacobian) placed between the linear map and the activation; reused the NB-1–5 `L`-layer
+  net. **Anchors reproduced (nbconvert exit 0, 3 figures):** forward drift (10-layer ReLU stack, width 32) —
+  small no-BN **0.079→0.000** (dies), large no-BN **0.790→128542** (explodes), he no-BN 0.790→0.490; **all
+  three flat ~0.575→0.613 with BN**; BN backward **gradient-checked** dW **1.3e-10** / dγ 8.9e-9 & 2.5e-10 /
+  dβ 2.8e-9, `db`≈**2.7e-19** (BN makes the pre-BN bias redundant — β is the effective bias); training (deep
+  ReLU 6×16 on circles) small-init **none 0.500/ln2 → BN 1.000/0.0033**, he lr1.0 **none 0.500 → BN 1.000**
+  (lr-robustness), tanh/sigmoid small none 0.500 → BN 1.000, **honest: he lr0.3 plain already 1.000 & a touch
+  faster than BN** (BN's win = robustness, not raw speed); BN cols vs LN rows mean0/std1; batch stats wander
+  2.49–3.25 / 3.58–4.77. **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-derived the BN
+  backward 3 ways: isolated JVP 1.6e-9, compact==explicit chain 3.3e-16, in-notebook 1.3e-10; `db=0` exact by
+  construction Σẑ=0; honest robustness-not-speed + Santurkar covariate-shift caveat faithful; no torch leak;
+  DOIs resolve; 1 MINOR + 2 NIT) ; `@pedagogy-reviewer` **PASS** (recap boundary exact, forward-refs all
+  named-as-horizon [zero torch code], one-concept respected [LN named not built], 3/3 Read-the-figure match
+  pixels, exos verified; 2 MINOR + 1 NIT). **Folds (5, applied, markdown/colour — anchors intact):** cell 7 —
+  attribute the width-32 rerun (NB 4 was width 16); cell 10 — grammar "keeps only the positive half" + adossed
+  the explode value to the table (128 542); cell 23 exo 3 — "equals" → "recovers up to ε (use `np.allclose`)";
+  Fig 3 — the `ln 2 = chance` guide `zero`(white, invisible) → `muted`(visible); Fig 2 — removed the unlabeled
+  invisible `zero` guide lines. Guards: ruff *All checks passed*, hex clean, **banned 0**, output-free; black
+  skips `.ipynb`. **No `src/` change** (notebook-local numpy net + BN; `make_circles`/`StandardScaler`;
+  `viz`/`colors`; inline matplotlib).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb6.py`
+  (kernel-drift guard — kernelspec canonical `ml-course (3.12.12)`, output-free), `llms.txt` **93**,
+  `course_map` §12 → **NB 1–6 built**, `common_errors` **+2 rows** (init-fixed-the-scale-but-drift-returns /
+  BN-pins-flat-regardless-of-init + bias-redundant; BN-win-is-robustness-not-raw-speed / why-debated-Santurkar
+  + LN-per-sample-transformer), **pytest 20** (no `src/` change). **COMMITTED & ff-merged into `chapter/12`.**
+  **The by-hand numpy arc (NB 1–6) is complete.** Next: open & plan NB 7 (hello-world in PyTorch — the
+  framework move; the `deep` extra + Fashion-MNIST loader + tests → pytest rises) on Rémy's go.
+- **NB 5 (dropout — c05) OPENED.** Branch `notebook/12_NeuralNetworks__05_dropout` off
+  `chapter/12_NeuralNetworks` (@ `cc1546a`). Phase `notebook-plan`: measuring anchors live, then drafting the
+  cell-by-cell plan. **One concept (chapter plan §NB 5):** **dropout** — randomly zero a fraction `p` of
+  activations each training step (**inverted dropout** rescales the survivors by `1/(1−p)` so the expected
+  activation is preserved) → an **implicit ensemble** that breaks co-adaptation; and **how it differs from L2 /
+  early-stopping** (stochastic co-adaptation-breaking, not a weight penalty or a stop rule). By hand (numpy):
+  inverted dropout preserving the expected activation (mean ~0, variance 1→2); show it **reduce overfitting**
+  on a small net; contrast explicitly with `alpha` (L2). **`MLPClassifier` has NO dropout — it must be by-hand
+  here; the real `nn.Dropout` layer arrives in NB 8.** Figs: the dropout mask / expected-activation
+  preservation; train-vs-val with vs without dropout. **Still pure numpy — no torch** (the `deep` extra + torch
+  land at NB 7). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built
+  notebook). **Anchors measured live** (`measure_ch12_nb5.py` / `_nb5b.py` / `_nb5c.py`): mechanism on N(0,1)
+  100k — inverted dropout preserves the mean (≈0→≈0), injects variance, E[mask]=1.0 (**p=0.5 var 1.00→1.99**;
+  p=0.2→1.25; p=0.8→5.07); overfitting (50 feat/10 inf, 200 train/1000 val, `[50,256,256,2]`, He, ReLU,
+  mini-batch lr0.1 batch32 1500ep) none train 1.0/val **0.752**/gap 0.248 → **dropout 0.3 val 0.780/gap 0.220**
+  (beats L2 1e-2 val 0.776) / dropout 0.5 0.771; train-vs-val curves none plateau ~0.75 vs dropout ~0.77
+  (modest, real; no peak-then-collapse on this data). **Honest scope: dropout gentle on a small net (~+2–3 val
+  pts, ≈ L2); decisive wins are large vision nets (Srivastava 2014) — demo uses high-dim (50 feat) since the
+  2-D toy effect is negligible (0.805→0.815).** **Decisions: all by-hand (MLPClassifier has no dropout);
+  mechanism is the strong core, overfitting reduction real-but-modest, scope stated not hidden.** **Plan
+  APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__05_dropout.md`).
+  **BUILT (19 cells: 5 code / 14 md, 2 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  Reused the `L`-layer net (He init) + inverted dropout (mask the hidden activations in forward [train only];
+  gate the backward gradient by the same mask; eval = no dropout). **Anchors reproduced (nbconvert exit 0, 2
+  figures):** mechanism on N(0,1) p=0.5 var **1.0→1.99** mean preserved E[mask]≈1.0 (p=0.2→1.25, p=0.8→5.07);
+  overfitting (50 feat/10 inf, 200 train/1000 val, `[50,256,256,2]`) none val **0.752** gap 0.248 → dropout 0.3
+  val **0.780** gap 0.220 / dropout 0.5 0.771 / L2 1e-2 0.776; train-vs-val curves none ~0.75 vs dropout ~0.77.
+  **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (the by-hand dropout **backward gradient-checked
+  to 8.1e-08** — correct; inverted-dropout mean/variance match closed forms `1/(1−p)`; zero train/val overlap;
+  no torch leak; 2 MINOR folded); `@pedagogy-reviewer` **PASS** (one-concept arc, no forward refs, 2/2
+  Read-the-figure match pixels, honest scope empowering; 2 MINOR + 1 NIT, the load-bearing ones folded).
+  **Folds (3, applied, markdown):** cell 14 — added the **single-split-noise caveat** on the dropout-vs-L2
+  ordering (the ch-11-NB-5 lesson: both beat *none*, but which wins by a hair is within split noise — ml-expert
+  MINOR-1, the most valuable); cell 7 — "averaging" → named it a **geometric mean** (Srivastava §7) + removed
+  the "exactly"/"approximates" adjacency; cell 1 — "almost absurdly simple" → "almost suspiciously simple"
+  (banned-family-adjacent). Guards: ruff *All checks passed* (1 E501 fixed), hex clean, **banned 0**,
+  output-free; black skips `.ipynb`. **No `src/` change** (notebook-local numpy net + inverted dropout;
+  `make_classification`/`train_test_split`/`StandardScaler`; `viz`/`colors`; inline matplotlib). Next: Rémy
+  visual → end-of-NB checklist (rebuild [kernel-drift], `gen_llms_txt`, `common_errors` +rows, `course_map` §12
+  → NB 5 built, pytest 20) → commit + ff-merge into `chapter/12`.
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb5.py`
+  (kernel-drift guard), `llms.txt` **92**, `course_map` §12 → **NB 1–5 built**, `common_errors` **+2 rows**
+  (dropout-is-inverted-rescale-not-deletion / implicit-ensemble; dropout-gentle-here-decisive-at-scale /
+  ordering-within-split-noise), **pytest 20** (no `src/` change). **No `src/` change** (notebook-local numpy net
+  + inverted dropout; `make_classification`/`train_test_split`/`StandardScaler`; `viz`/`colors`; inline
+  matplotlib). **COMMITTED & ff-merged into `chapter/12`.** Next: open & plan NB 6 (normalization — the LAST
+  by-hand numpy NB) on Rémy's go.
+- **NB 4 (initialization: He & Xavier — c03, the fix) OPENED.** Branch
+  `notebook/12_NeuralNetworks__04_initialization` off `chapter/12_NeuralNetworks` (@ `71aa5e8`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 4):** the **fix** for NB 3's pathology — choose the initial weight **variance** so the per-layer factor
+  stays ≈1 and signal/gradient magnitude is ~preserved across depth (the real content behind ch 11's "break
+  symmetry"). **He `sqrt(2/n)` for ReLU**, **Xavier `1/sqrt(n)` for tanh** (the symmetric/linear regime);
+  **sigmoid the awkward non-zero-centered case** — Xavier *slows* but does not fully preserve it (Glorot's
+  larger-gain note), which itself motivates why tanh/ReLU displaced sigmoid as the default. **Do NOT claim
+  "Xavier rescues sigmoid".** By hand (pure numpy, reuse NB-3's 10-layer stack): derive the variance-preserving
+  idea, implement He & Xavier, re-run NB-3's per-layer RMS → He flattens ReLU's gradient/activation RMS across
+  all 10 layers; plus the *training* payoff (a deep ReLU net that stalled with naive init now trains with He).
+  Figs: gradient-RMS before/after He & Xavier; activation distributions (drift vs preserved). **Still pure
+  numpy — no torch** (the `deep` extra + torch land at NB 7; `torch.nn.init` realizes He/Xavier in NB 8).
+  NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on the built notebook).
+  **Anchors measured live** (`measure_ch12_nb4.py`): derivation `Var(Wx)=n·Var(W)·Var(x)` → Xavier `σ=1/√n` /
+  He `σ=√(2/n)` (ReLU halves variance); per-layer gradient RMS **ReLU+he flat 4.6e-2→2.2e-1** (min 0.03/max
+  0.22) / tanh+xavier flat 6.1e-3→2.3e-2 / **sigmoid+xavier still vanishing 3.4e-9→7.8e-2 ratio 2.3e7** (vs
+  tanh+xavier ratio 3.8 — same Xavier, opposite outcome → sigmoid the awkward non-zero-centered case, NOT
+  "rescued"); forward activation std **ReLU+he 0.69→0.53 preserved** vs ReLU+small 0.07→0.00 (dies); **training
+  8-hidden-layer (by-hand GD, 3 seeds): ReLU small/large 0.500 → he 1.000; tanh small 0.500 → xavier 1.000.**
+  **Decisions: all by-hand numpy (diagnostics + training payoff, no MLPClassifier); sigmoid awkward not rescued;
+  report measured flat values (grad 0.05–0.22, fwd std 0.53–0.69), not the chapter-plan's "0.71–0.80".** **Plan
+  APPROVED by Rémy via ExitPlanMode (no edits) & persisted** (`docs/plans/12_NeuralNetworks__04_initialization.md`).
+  **BUILT (22 cells: 7 code / 15 md, 3 figures; pure numpy, all by-hand) — awaiting Rémy's visual validation.**
+  Reused NB-3's `L`-layer net + a fan-in-scaled init (he/xavier/glorot/small/large). **Anchors reproduced
+  (nbconvert exit 0, 3 figures):** derivation `Var(Wx)=n·σ²·Var(x)` → Xavier `1/√n` / He `√(2/n)`; gradient RMS
+  ReLU+he flat **0.03–0.22** (0.22 = softmax output layer; hidden band tighter), tanh+xavier flat 5.7e-3–2.3e-2,
+  **sigmoid+xavier still vanishing ratio 2.3e7** (vs tanh 3.8; input 8.4e-14→3.4e-9); forward std ReLU+he
+  **0.69→0.53** preserved vs small 0.07→0.00; training 8-layer ReLU small/large **0.500** → he **1.000**, tanh
+  small 0.500 → xavier 1.000. **Both reviewers no-BLOCK** — `@ml-expert-reviewer` **PASS** (re-ran every anchor
+  bit-for-bit; confirmed the 0.22 max is the softmax layer & hidden layers sit in a tight 0.029–0.084 band;
+  verified seed-robustness 0/1/2; sigmoid mechanism measured [Xavier sigmoid means ~0.5/layer vs tanh ~1e-4];
+  no torch leak; 2 MINOR folded); `@pedagogy-reviewer` **PASS** (cure framing exact, derivation from scratch,
+  3/3 Read-the-figure match pixels, sigmoid honesty empowering; 1 MINOR + 1 NIT folded). **Folds (4, applied):**
+  (ml-expert) cell 3 — ReLU "halves the **second moment** `E[x²]`" not variance (rigor, matches the sigmoid
+  argument); cell 21 exo 2 — reframed toward the gradient (mismatch often still trains on this easy net; gap
+  grows with depth); (pedagogy) cell 8 — "0.05–0.22" → **0.03–0.22** (match the printout) + the 0.22-is-softmax
+  note; cell 10 — **print the forward-std anchors** (0.69→0.53 / 0.07→0.00) for checkability. Guards: ruff *All
+  checks passed* (1 E501 fixed), hex clean, **banned 0**, output-free; black skips `.ipynb`. **No `src/` change**
+  (notebook-local numpy net; `make_circles`/`StandardScaler`; `viz`/`colors`; inline matplotlib). Next: Rémy
+  visual → end-of-NB checklist (rebuild [kernel-drift], `gen_llms_txt`, `common_errors` +rows, `course_map` §12
+  → NB 4 built, pytest 20) → commit + ff-merge into `chapter/12`.
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb4.py`
+  (kernel-drift guard), `llms.txt` **91**, `course_map` §12 → **NB 1–4 built**, `common_errors` **+2 rows**
+  (init-scale-is-precise-not-arbitrary / He-Xavier-formulas + the 8-layer chance→100% payoff;
+  init-is-matched-to-the-activation / sigmoid-awkward-not-rescued), **pytest 20** (no `src/` change). **No
+  `src/` change** (notebook-local numpy net; `make_circles`/`StandardScaler`; `viz`/`colors`; inline
+  matplotlib). **COMMITTED & ff-merged into `chapter/12`.** Next: open & plan NB 5 (dropout) on Rémy's go.
+- **NB 3 (vanishing & exploding gradients — c02, the pivot) OPENED.** Branch
+  `notebook/12_NeuralNetworks__03_vanishing_exploding_gradients` off `chapter/12_NeuralNetworks` (@ `199d900`).
+  Phase `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter
+  plan §NB 3 — THE PIVOT):** backprop through many layers multiplies one factor per layer → the gradient signal
+  **collapses (vanish)** or **blows up (explode)** — the reason naive deep nets don't train. By hand (pure
+  numpy, reuse NB-2's `L`-layer net): run the backward pass through a **10-layer** stack and **measure the
+  per-layer gradient RMS** (**sigmoid + small init → ~1e-16**; **ReLU + unit-Gaussian init → ~5e6**); then the
+  *training* proof — a **5-layer sigmoid** net stalls at **0.500 (chance)** vs **tanh/ReLU ~1.000** on circles.
+  Figs: gradient-RMS-by-layer (vanish vs explode); the flat sigmoid loss curve vs the descending ReLU one; the
+  chain-of-factors schematic. **This is why c03 (init), c04 (norm), c06 (the flat-curve diagnostic) all exist.**
+  **Still pure numpy — no torch** (the `deep` extra + torch land at NB 7). NB-plan = **Rémy validates alone**
+  (no reviewer gate; both reviewers return on the built notebook). **Anchors measured live** (`measure_ch12_nb3.py`
+  / `_nb3b.py` / `_nb3c.py` / `_nb3d.py`): mechanism by-hand (10-layer × width-16 stack on circles) — **sigmoid +
+  small gradient 2.9e-2 → 8.4e-14 (vanish, ~12 orders)**, **ReLU + large(std1) ~1e3–5e3 (explode)**; forward
+  activations sigmoid flat ~0.5 (saturated) / ReLU+large 0.8 → 7800; training proof `MLPClassifier` (16,)×5 adam
+  — **sigmoid 0.500 loss flat at ln2 (0.6932)**, tanh/ReLU 1.000; **lbfgs depth 1 → 1.0, depth 5 → 0.478
+  (chance)** = unrecoverable (depth, not optimizer; the clean contrast needs lbfgs since sigmoid+adam stalls at
+  every depth — ch 11 NB 4). Exercise: sigmoid ×20 → 4.4e-24; ReLU+small → small-but-flat ~1e-7 (no explode →
+  scale is the lever, NB 4). **Decisions: mechanism by-hand numpy / training proof MLPClassifier (no He
+  forward-ref); only small+large init in code; report measured explode (~1e3, not the chapter-plan's order "5e6").**
+  **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted**
+  (`docs/plans/12_NeuralNetworks__03_vanishing_exploding_gradients.md`). **BUILT (21 cells: 6 code / 15 md,
+  3 figures) — awaiting Rémy's visual validation.** Reused NB-2's `L`-layer net + a sigmoid option + an
+  init-scale knob (`small` 0.1 / `large` 1.0 — **no He/Xavier**); mechanism by-hand, training proof via
+  `MLPClassifier`. **Anchors reproduced (nbconvert exit 0, 3 figures):** sigmoid+small gradient **8.38e-14
+  (input) → 2.94e-2 (output)** (vanish); ReLU+large **~2e3** gradient, forward **0.8 → 7783** (explode);
+  `MLPClassifier` (16,)×5 adam — sigmoid **0.500** loss flat at **ln2 (0.6932)**, tanh/ReLU **1.000**; lbfgs
+  sigmoid depth **1 → 1.0 / 5 → 0.507** (unrecoverable). **Both reviewers no-BLOCK** — `@ml-expert-reviewer`
+  **PASS** (re-verified every anchor live, σ'≤0.25 to machine precision, 0.25¹⁰≈9.5e-7, by-hand backward ==
+  NB-1/2 chain rule, lbfgs choice *principled* not cherry-picked [adam stalls sigmoid at every depth], no
+  He/Xavier leak, DOIs resolve; 1 MINOR = schematic fixed-factors, explicitly "no change required");
+  `@pedagogy-reviewer` **PASS** (clean pivot framing, deferrals textbook-clean, 3/3 Read-the-figure match the
+  pixels, exercises bridge to NB 4; 2 MINOR folded). **Folds (markdown only):** cell 14 — tied `ln 2` to the
+  two-class circles (`ln K` with K=2; NB 1 showed `ln 3`); cell 5 — softened "annihilates/detonates" register.
+  Guards: ruff *All checks passed*, hex clean, **banned 0**, output-free; black skips `.ipynb`. **No `src/`
+  change** (notebook-local numpy net; `make_circles`/`StandardScaler`/`MLPClassifier`; `viz`/`colors`; inline
+  matplotlib). **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from
+  `build_ch12_nb3.py` (kernel-drift guard), `llms.txt` **90**, `course_map` §12 → **NB 1–3 built**,
+  `common_errors` **+2 rows** (deeper-isn't-free / vanishing-exploding-mechanism + flat-loss-from-epoch-1;
+  depth-not-the-optimizer / fixes-are-structural), **pytest 20** (no `src/` change). **COMMITTED & ff-merged
+  into `chapter/12`.** Next: open & plan NB 4 (initialization — He & Xavier, the fix) on Rémy's go.
+- **NB 2 (depth is a representation hierarchy — c01) OPENED.** Branch
+  `notebook/12_NeuralNetworks__02_depth_is_a_hierarchy` off `chapter/12_NeuralNetworks` (@ `9fffa02`). Phase
+  `notebook-plan`: measuring anchors live, then drafting the cell-by-cell plan. **One concept (chapter plan
+  §NB 2):** *why* stack layers — successive layers **compose / remap** features; depth (not just width) is the
+  bet. By hand (pure numpy): stack the NB-1 forward pass into an `L`-layer net; show what successive hidden
+  layers represent on a 2-D problem (the **layer-by-layer activation remap**); show — **honestly, measured** —
+  that depth helps modestly (MNIST-10k `(50,)` ~0.941 → `(256,128,64)` ~0.949). **Drop the equal-unit-budget
+  claim** (the anchor compares 50 vs 448 units) → land on "depth remaps the feature space; a modest, honest
+  gain"; *optional* equal-budget `(448,)` vs `(256,128,64)` near-wash check (itself the honest lesson).
+  *Honesty:* the vivid edge→part→object hierarchy is a **CNN** phenomenon (c09, NB 10 horizon) — NB 2 shows
+  the honest version and defers the vivid picture. Figs: layer-by-layer activation remap; depth-vs-accuracy
+  (honest, modest). **Still pure numpy — no torch** (the `deep` extra + torch land at NB 7). NB-plan = **Rémy
+  validates alone** (no reviewer gate; both reviewers return on the built notebook). **Anchors measured live**
+  (`measure_ch12_nb2_remap.py` / `_depth.py` / `_equalbudget.py` / `_init.py`): moons `[2,2,2,1]` linsep
+  **0.877→0.917→0.973**, net acc ~0.96 (5 seeds 0.958–0.963); **MNIST 10k/5k 50u 0.9432 / 448u-wide 0.9538 /
+  deep(256,128,64) 0.9558** (width +1.1pp; **equal-budget depth +0.2pp — near-wash**, robust +0.002–0.004/seed
+  at 60 ep, both train 1.0); sklearn cross-check 0.940/0.9486/0.9490; **flat-0.1 init (NB-1's) trains every net
+  → no He forward-ref**; `[2,8,1]` width alone untangles moons (~0.965); `[2,2,2,2,1]` deeper net sometimes
+  stalls (seed0 0.887 — NB-3 foreshadow). **Plan APPROVED by Rémy via ExitPlanMode (no edits) & persisted**
+  (`docs/plans/12_NeuralNetworks__02_depth_is_a_hierarchy.md`). **BUILT (22 cells: 7 code / 15 md, 3 figures;
+  pure numpy) — awaiting Rémy's visual validation.** Unified machinery (NB-1's softmax+CE generalized to an
+  `L`-layer loop; hidden act a choice tanh/ReLU; flat-0.1 init — **no He forward-ref**). **Anchors reproduced
+  (nbconvert exit 0, 3 figures):** gradient-check **1.45e-7**; moons `[2,2,2,2]` (tanh, lr0.5, 8000 ep) loss
+  ln2(0.693)→0.089, acc **0.965**; one wide layer `[2,8,2]` **0.965**; MNIST 10k/5k (ReLU, flat-0.1, 60 ep)
+  **50u 0.9432 / 448u-wide 0.9538 / deep(256,128,64) 0.9558** (width +1.06pp; equal-budget depth +0.20pp,
+  near-wash). **Both reviewers no-BLOCK** — `@pedagogy-reviewer` **PASS** (one-concept arc, no forward refs,
+  3 Read-the-figure match the pixels, exemplary equal-budget control) + 2 NIT folded (named the mini-batch loop
+  in cell 5; fixed "NB-1's single sigmoid" → "a sigmoid of ch 11" in cell 7); `@ml-expert-reviewer` **REVISE→
+  no-BLOCK** — verified every anchor live, **MAJOR folded:** the linsep staircase used the **default
+  regularized** `LogisticRegression` probe (understated h1 ~5pp → false "rises step by step"); switched to a
+  near-unregularized probe (`C=1e6`) → honest **input 0.877 → h1 0.970 → h2 0.970** ("the **first** layer does
+  almost all the untangling; the second consolidates" — strengthens the anti-hype thesis, ties to the wide-layer
+  + MNIST near-wash) + 2 MINOR (gradient-check message softened to "finite-difference precision"; float-order
+  "about" confirmed sufficient). Removed an extra "clearly" (cell 21, ml-expert-adjacent). Guards: ruff *All
+  checks passed*, hex clean, **banned 0**, output-free; black skips `.ipynb` (no `black[jupyter]`, as NB 1).
+  **Rémy validated visually (2026-06-30). End-of-NB checklist done:** rebuilt from `build_ch12_nb2.py`
+  (kernel-drift guard), `llms.txt` **89**, `course_map` §12 → **NB 1–2 built**, `common_errors` **+2 rows**
+  (deep-net-remaps-into-linear-separability-not-a-wiggly-boundary; deeper-isn't-always-better / equal-budget
+  near-wash / vivid-hierarchy-needs-a-CNN), **pytest 20** (no `src/` change). **No `src/` change** (notebook-local
+  numpy `L`-layer net; sklearn utilities `make_moons`/`fetch_openml`/`train_test_split`/`StandardScaler` +
+  `LogisticRegression` as a linsep probe; `viz`/`colors`; inline matplotlib). **COMMITTED & ff-merged into
+  `chapter/12`.** Next: open & plan NB 3 (vanishing & exploding gradients — the pivot) on Rémy's go.
+- **NB 1 (a neural network from scratch in numpy — the hello-world / reference) OPENED.** Branch
+  `notebook/12_NeuralNetworks__01_numpy_hello_world` off `chapter/12_NeuralNetworks` (@ `d009480`). Phase
+  `notebook-plan`: measuring anchors live (a by-hand multi-class **softmax + cross-entropy** net on
+  `make_blobs` 3-class — gradient-check the softmax-CE gradient vs finite differences; train via GD), then
+  drafting the cell-by-cell plan. **NB-1 pins (approved chapter plan):** the reference net is multi-class
+  softmax+CE on a 2-D `make_blobs` 3-class toy; the binary chain-rule backward is **ch-11-NB-3 recap
+  (black-boxed, NOT re-derived)**; the **softmax-CE gradient is the one genuinely-new derivation**; it is the
+  **same architecture NB 7 re-instantiates in torch**; **show** (never assign) the full machinery — forward /
+  loss / backward / short GD loop / train-test / eval / optimizer. **Pure numpy — no torch** (the `deep`
+  extra + torch land at NB 7). NB-plan = **Rémy validates alone** (no reviewer gate; both reviewers return on
+  the built notebook). **Plan APPROVED & persisted.** **BUILT (25 cells: 7 code / 18 md, 4 figures; pure
+  numpy) & ff-merged into `chapter/12` — Rémy validated visually.** Anchors reproduced (nbconvert exit 0):
+  untrained loss **1.1012 ≈ ln3**; softmax-CE **gradient-check 5.28e-8**; loss **1.10→0.31**; **train 0.867
+  / test 0.893** (chance 0.333). **Both reviewers PASS, no BLOCK** — `@ml-expert` re-verified every anchor
+  live and derived the softmax-CE gradient from first principles (rel-err **2.4e-10**, exact); `@pedagogy`
+  found no concept gap and a clean recap/new boundary. **Folds (markdown only):** added a *Going further*
+  derivation of `(p−y)` (the softmax Jacobian and the `1/p_c` cancel); re-anchored the generalization
+  verdict on the **gap-to-chance** (not the noisy 75-pt train/test ordering — the ch-11-NB-5 lesson);
+  bridged the schematic (5 units drawn → `W₁` is (2×16)). Guards: ruff / hex / banned 0 / output-free;
+  **pytest 20** (no `src/` change); `llms.txt` **88**; `course_map` §12 → NB 1 built; `common_errors`
+  **+2 rows** (softmax-CE-gradient-is-(p−y); untrained-loss-is-lnK). Next: open & plan NB 2 (depth) on
+  Rémy's go.
+- **CHAPTER 12 (NeuralNetworks) OPENED — the course finale (13th & final module).** Chapter 11 (MLP)
+  closed via PR #11 (merge `0ce9d93`; 5 NBs, per-notebook history preserved). Branch
+  `chapter/12_NeuralNetworks` created off `main` (@ `0ce9d93`). Phase `chapter-plan`: concept tour
+  (`@concept-cartographer`, neural-networks scope) → draft the 5-NB chapter plan per `course_map.md`
+  §12 and the per-method arc → **two-reviewer gate** (`@ml-expert-reviewer` + `@pedagogy-reviewer`, no
+  BLOCK) → Rémy approves via ExitPlanMode. The deferred ch-11-close housekeeping (`course_map` §11 →
+  "merged via PR #11") is folded into this opening commit (on the chapter branch, not protected
+  `main`). **The key planning decision is the ch 11 / ch 12 scope boundary:** ch 11 already built the
+  hidden layer, backprop by hand, ReLU, the K-class softmax head, mandatory scaling, and the loss
+  curve — so ch 12 must teach the genuinely-new deep-learning material (depth as a representation
+  *hierarchy*; dropout; depth-driven gradient pathologies — vanishing/exploding; modern init /
+  normalization; the deep-learning-framework move) without repeating ch 11 or overloading. **`src/` WILL change** (the `deep` extra + a Fashion-MNIST loader + tests → pytest rises
+  from 20 at the NB-7/NB-9 builds). **Concept tour DONE** (full map c01–c11 + dependency graph + live
+  anchors + verified offline datasets + refs); the cartographer **recommended A (stay sklearn)**, but
+  **Rémy chose B (PyTorch) with eyes open** for a faithful finale; structural direction = **~10 thicker
+  NBs**, two hello-worlds (numpy NB 1 / torch NB 7), torch **shown not hand-coded** (skorch dropped).
+  **Chapter plan drafted → two-reviewer gate (both REVISE→no-BLOCK; the ml-expert live-verified every
+  sklearn anchor and measured the capstone-foil fix — Fashion-MNIST MLP 0.859 ≈ RF 0.853 < HistGB 0.874,
+  a tree genuinely wins) → APPROVED by Rémy via ExitPlanMode (2026-06-29) & persisted**
+  (`docs/plans/chapter_12_NeuralNetworks.md`); `course_map` §12 refined to the 10-NB decomposition.
+  Next: open & plan NB 1 (numpy hello-world) on Rémy's go.
 - **NB 5 (the demanding case — handwritten digits, the visualization-first capstone) OPENED.** Branch
   `notebook/11_MLP__05_digits_capstone` off `chapter/11_MLP` (@ `9b1394d`). Phase `notebook-plan`: measuring
   anchors live, then drafting the capstone. **The LAST NB of ch 11.** Scope (chapter plan §NB 5): a full,

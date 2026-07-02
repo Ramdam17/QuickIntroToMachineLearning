@@ -20,6 +20,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -271,3 +272,174 @@ def load_breast_cancer() -> pd.DataFrame:
         len(bunch.feature_names),
     )
     return df
+
+
+# ---------------------------------------------------------------------------
+# Image datasets (Fashion-MNIST / MNIST) — fetched once from OpenML, then cached
+# ---------------------------------------------------------------------------
+
+#: Cache files for the image datasets (git-ignored ``*.npz`` under the package).
+_FASHION_MNIST_NPZ = _DATA_DIR / "fashion_mnist.npz"
+_MNIST_NPZ = _DATA_DIR / "mnist.npz"
+
+#: The ten Fashion-MNIST class names, in label order (index = label 0..9).
+FASHION_MNIST_CLASSES: list[str] = [
+    "T-shirt/top",
+    "Trouser",
+    "Pullover",
+    "Dress",
+    "Coat",
+    "Sandal",
+    "Shirt",
+    "Sneaker",
+    "Bag",
+    "Ankle boot",
+]
+
+
+def _ensure_image_npz(openml_name: str, cache_path: Path) -> Path:
+    """Return the path to the cached ``<dataset>.npz``, fetching from OpenML once if absent.
+
+    On a cache miss the dataset is fetched with :func:`sklearn.datasets.fetch_openml`, its pixels
+    scaled to ``[0, 1]`` (float32) and its labels cast to int, then written to ``cache_path``; on a
+    hit the cached file is reused. Progress is logged at INFO (never silenced) — the one-time
+    download is ~15-30 MB; enable ``logging.basicConfig(level=logging.INFO)`` to watch it.
+    """
+    if cache_path.exists():
+        logger.info("Using cached image dataset: %s", cache_path)
+        return cache_path
+    from sklearn.datasets import fetch_openml
+
+    logger.info("Downloading %s from OpenML (one-time, ~15-30 MB) ...", openml_name)
+    X, y = fetch_openml(openml_name, version=1, as_frame=False, return_X_y=True)
+    X = X.astype(np.float32) / 255.0
+    y = y.astype(np.int64)
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(cache_path, X=X, y=y)
+    logger.info("Cached to %s (%d images x %d pixels).", cache_path, X.shape[0], X.shape[1])
+    return cache_path
+
+
+def load_fashion_mnist() -> tuple[np.ndarray, np.ndarray]:
+    """Load Fashion-MNIST as ``(images, labels)`` arrays (fetched once from OpenML, then cached).
+
+    Returns all 70 000 examples: 28x28 grayscale clothing photos flattened to 784-length rows,
+    pixel intensities scaled to ``[0, 1]``, and integer labels 0-9 (see
+    :data:`FASHION_MNIST_CLASSES` for the names). One row = one image.
+
+    Returns
+    -------
+    X : numpy.ndarray, shape (70000, 784), float32
+        Flattened images; column ``28*r + c`` is the pixel at row ``r``, column ``c`` (reshape a
+        row with ``X[i].reshape(28, 28)`` to view it). Values in ``[0, 1]``.
+    y : numpy.ndarray, shape (70000,), int64
+        Class label in ``0..9`` (:data:`FASHION_MNIST_CLASSES`).
+
+    When to use
+    -----------
+    For the module-12 capstone (NB 9): a real, harder-than-MNIST image benchmark for an end-to-end
+    deep-net workflow and a fair foil against trees. For a stratified train/test subset ready to
+    model, use :func:`fashion_mnist_subset`.
+
+    Notes
+    -----
+    Unlike the tabular loaders, this returns **numpy arrays, not a DataFrame** — 784 raw pixels have
+    no meaningful column names, so arrays are the honest interface (numpy where numpy is right). The
+    first call downloads ~30 MB (network required) and caches it under the package (git-ignored);
+    later calls read the cache and need no network. Run ``scripts/vendor_fashion_mnist.py`` to warm
+    it beforehand.
+
+    References
+    ----------
+    Xiao H, Rasul K, Vollgraf R (2017). Fashion-MNIST: a Novel Image Dataset for Benchmarking
+    Machine Learning Algorithms. arXiv:1708.07747.
+
+    Examples
+    --------
+    >>> X, y = load_fashion_mnist()  # doctest: +SKIP
+    >>> X.shape, y.shape  # doctest: +SKIP
+    ((70000, 784), (70000,))
+    """
+    with np.load(_ensure_image_npz("Fashion-MNIST", _FASHION_MNIST_NPZ)) as data:
+        return data["X"], data["y"]
+
+
+def load_mnist() -> tuple[np.ndarray, np.ndarray]:
+    """Load MNIST handwritten digits as ``(images, labels)`` arrays (fetched once, then cached).
+
+    The classic 70 000 handwritten-digit benchmark, in the same format as
+    :func:`load_fashion_mnist` — 28x28 grayscale flattened to 784-length rows scaled to ``[0, 1]``,
+    integer labels 0-9. Provided so a curious learner can rerun the capstone pipeline on the
+    *easier* digits and compare (Fashion-MNIST is a drop-in harder replacement).
+
+    Returns
+    -------
+    X : numpy.ndarray, shape (70000, 784), float32
+        Flattened digit images, pixels in ``[0, 1]``.
+    y : numpy.ndarray, shape (70000,), int64
+        Digit label in ``0..9``.
+
+    Notes
+    -----
+    Same fetch-and-cache pattern and array interface as :func:`load_fashion_mnist`.
+
+    References
+    ----------
+    LeCun Y, Bottou L, Bengio Y, Haffner P (1998). Gradient-based learning applied to document
+    recognition. Proc. IEEE 86(11):2278-2324. https://doi.org/10.1109/5.726791
+
+    Examples
+    --------
+    >>> X, y = load_mnist()  # doctest: +SKIP
+    >>> X.shape  # doctest: +SKIP
+    (70000, 784)
+    """
+    with np.load(_ensure_image_npz("mnist_784", _MNIST_NPZ)) as data:
+        return data["X"], data["y"]
+
+
+def fashion_mnist_subset(
+    n_train: int = 10000, n_test: int = 5000, *, seed: int = 0
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Return a stratified train/test subset of Fashion-MNIST, ready to model.
+
+    Draws ``n_train + n_test`` examples stratified by class from the full 70 000 (so every class
+    stays balanced), then splits them into a train and a sealed test set — the same two-step
+    stratified draw the capstone uses, so results are reproducible from ``seed``.
+
+    Parameters
+    ----------
+    n_train : int, default 10000
+        Training-set size (balanced across the 10 classes).
+    n_test : int, default 5000
+        Sealed-test-set size (balanced across the 10 classes).
+    seed : int, default 0
+        Random seed for both stratified splits.
+
+    Returns
+    -------
+    X_train, X_test : numpy.ndarray, shape (n_train, 784) / (n_test, 784), float32
+        Flattened images, pixels in ``[0, 1]``.
+    y_train, y_test : numpy.ndarray, shape (n_train,) / (n_test,), int64
+        Class labels in ``0..9``.
+
+    When to use
+    -----------
+    The module-12 capstone (NB 9): a CPU-sized, balanced subset for training a deep net and
+    comparing it against trees on the same split.
+
+    Examples
+    --------
+    >>> Xtr, Xte, ytr, yte = fashion_mnist_subset(10000, 5000, seed=0)  # doctest: +SKIP
+    >>> Xtr.shape, Xte.shape  # doctest: +SKIP
+    ((10000, 784), (5000, 784))
+    """
+    from sklearn.model_selection import train_test_split
+
+    X, y = load_fashion_mnist()
+    X_sub, _, y_sub, _ = train_test_split(
+        X, y, train_size=n_train + n_test, stratify=y, random_state=seed
+    )
+    return train_test_split(
+        X_sub, y_sub, train_size=n_train, test_size=n_test, stratify=y_sub, random_state=seed
+    )
