@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| Current chapter | **`12_NeuralNetworks` — in build (the course finale; 13th & final module). NB 1–9 shipped (9/10) — by-hand numpy arc (NB 1–6) complete; PyTorch introduced (NB 7), the torch estimator (NB 8) & the Fashion-MNIST capstone (NB 9). 1 left: NB 10 synthesis.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
-| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **BUILT** (17 cells: 2 code / 15 md, 2 schematic figures). Both reviewers **PASS** (no BLOCK), folds applied. **Awaiting Rémy's visual validation.** |
-| Phase | **`notebook-visual-check`** — NB 10 built + executed clean (nbconvert exit 0, 2 figures, 0 errors). **Both reviewers PASS** (`@ml-expert-reviewer` PASS — honesty spine verified, breast_cancer no-regression consistency check passes, horizons not overclaimed, citations verified; `@pedagogy-reviewer` PASS — the exception is earned, synthesis faithful, count consistent); 4 folds applied (NB conditional-independence, Fig 2 4-adjacent pair, loop-met-not-wrote NB 7, digits→HistGB+module-11 cue). **Awaiting Rémy's visual validation, then commit + ff-merge → chapter close PR #12.** |
-| Active branch | **`notebook/12_NeuralNetworks__10_where_ml_goes_next`** (off `chapter/12_NeuralNetworks` @ `d07b195`). |
-| Active plan | NB 10 plan **APPROVED & persisted** (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). Chapter: `docs/plans/chapter_12_NeuralNetworks.md` (APPROVED, §NB 10). |
-| Next concrete action | **Rémy validates NB 10 visually.** On his go: rebuild from `build_ch12_nb10.py` (kernel-drift guard — canonical kernelspec, output-free), then end-of-NB checklist — `uv run python scripts/gen_llms_txt.py`; `docs/course_map.md` §12 → **COMPLETE (10/10)**; STATE; **pytest 26** (no `src/` change). Commit `feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis` on the notebook branch → `git switch chapter/12_NeuralNetworks && git merge --ff-only notebook/12_NeuralNetworks__10_where_ml_goes_next`. **Then THE CHAPTER CLOSES — and with it the course:** PR `chapter/12_NeuralNetworks → main` (`--no-ff`, PR #12, the course finale) on Rémy's explicit go (push the chapter branch, `gh pr create --base main`, merge `--no-ff`, `git switch main && git pull`); set STATE phase `idle` — **13/13 modules complete on `main`.** Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
+| Current chapter | **`12_NeuralNetworks` — the course finale (13th & final module). NB 1–10 shipped (10/10) — CHAPTER COMPLETE on the branch: by-hand numpy arc (NB 1–6), PyTorch (NB 7–9), the whole-course synthesis (NB 10). Awaiting Rémy's explicit go for the chapter-close PR #12 → `main`.** Earlier chapters merged to `main`: ch 11 PR #11 (`0ce9d93`), ch 10 PR #10 (`6609afb`), ch 09 PR #9 (`fe295aa`), ch 08 PR #8 (`4775fe2`), ch 07 PR #7 (`b256580`), ch 06 PR #6 (`9f18507`), ch 05 PR #5 (`b5c00f7`). **12/13 modules complete on `main`; this is the last — 10 NBs planned (PyTorch finale).** |
+| Current notebook | **`10_where_ml_goes_next`** (NB 10 of 10 — the course finale) — **DONE** (committed + ff-merged to `chapter/12`; Rémy validated visually 2026-07-02). **10/10 shipped — chapter complete on branch.** |
+| Phase | **`chapter-merge`** — NB 10 committed (`feat(12_neuralnetworks): notebook 10 — where ML goes next & synthesis`) & ff-merged into `chapter/12_NeuralNetworks`; both reviewers PASS, folds applied, Rémy validated. **Chapter 12 is COMPLETE on the branch (10/10).** **Awaiting Rémy's explicit "go" for the chapter-close PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the course finale.** |
+| Active branch | **`chapter/12_NeuralNetworks`** (NB 10 merged via ff-only; Fashion-MNIST loader @ `2acd9ab`; `deep` extra @ `08fbcf2`). `notebook/12_NeuralNetworks__10_where_ml_goes_next` is merged (deletable). |
+| Active plan | NB 10 DONE (`docs/plans/12_NeuralNetworks__10_where_ml_goes_next.md`). Chapter **COMPLETE on branch** (`docs/plans/chapter_12_NeuralNetworks.md`, all 10 NBs built). Next: chapter-close PR #12 on Rémy's go. |
+| Next concrete action | **CHAPTER CLOSE — the course finale — on Rémy's explicit "go".** Chapter 12 is complete on `chapter/12_NeuralNetworks` (10/10, NB 10 ff-merged). Open PR #12 → `main`: `git push -u origin chapter/12_NeuralNetworks`; `gh pr create --base main --head chapter/12_NeuralNetworks --title "feat(12_neuralnetworks): complete chapter — neural networks (PyTorch finale)"` (body ends with the Claude Code line); merge as a **`--no-ff`** merge commit (remote `main` is **PR-only** — global pre-push hook; gh account `Ramdam17`); `git switch main && git pull`. Then set STATE phase **`idle`** — **13/13 modules complete on `main`; the course is done.** (Optionally delete merged `notebook/*` branches.) Build scripts in the **ephemeral** scratchpad ([[scratchpad-build-scripts-ephemeral]]). |
 
 ## Notes / blockers
 
@@ -71,8 +71,13 @@
   to each other" is literal (ml-expert MINOR); "the loop you **wrote** in NB 7" → "**met** in NB 7 (and wrote by
   hand before that)" (ml-expert NIT — NB 7 read it, NB 1–6 wrote it); digits bullet "gradient boosting" →
   "**histogram-boosted trees** (the module-11 capstone)" (pedagogy MINOR — matches the measured source). Guards:
-  ruff clean, hex clean, **banned 0** (3 "just" reworded during build), output-free. **Awaiting Rémy's visual
-  validation** → end-of-NB checklist + commit + ff-merge → **chapter close PR #12 (the course finale).**
+  ruff clean, hex clean, **banned 0** (3 "just" reworded during build), output-free. **Rémy validated visually
+  (2026-07-02). End-of-NB checklist done:** rebuilt from `build_ch12_nb10.py` (kernel-drift guard — kernelspec
+  canonical `ml-course (3.12.12)`, output-free; no other NB drifted), `llms.txt` **97**, `course_map` §12 →
+  **COMPLETE on branch (10/10)**, `common_errors` unchanged (no new trap — a synthesis), **pytest 26** (no
+  `src/` change). **COMMITTED & ff-merged into `chapter/12`.** **CHAPTER 12 IS COMPLETE ON THE BRANCH (10/10) —
+  the whole course is built.** Next: **chapter-close PR #12 (`chapter/12_NeuralNetworks → main`, `--no-ff`) — the
+  course finale — on Rémy's explicit go** → then STATE `idle`, 13/13 on `main`.
 - **NB 9 (the demanding case — Fashion-MNIST, the visualization-first capstone; the finale's applied notebook) OPENED.**
   Branch `notebook/12_NeuralNetworks__09_fashion_mnist_capstone` off `chapter/12_NeuralNetworks` (@ `425498f`). Phase
   `notebook-plan`: measuring the torch/tree anchors on-box (fetch Fashion-MNIST via a scratchpad `fetch_openml`; the
