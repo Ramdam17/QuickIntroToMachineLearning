@@ -1,49 +1,88 @@
 """Generate ``llms.txt`` — a machine-readable index of the course for AI assistants.
 
-Scans ``notebooks/``, extracts each notebook's title and one-line purpose, groups them by module
-folder, and writes ``llms.txt`` at the repo root. Re-run whenever notebooks change (or wire into CI
-/ a pre-commit hook) so the index never goes stale::
+Scans ``notebooks/``, extracts each notebook's title and purpose, groups them by module folder, and
+writes ``llms.txt`` at the repo root. Re-run whenever notebooks change (or wire into CI / a
+pre-commit hook) so the index never goes stale::
 
     uv run python scripts/gen_llms_txt.py
+
+The purpose of a notebook is the first paragraph of prose of its header cell, the one that says
+what the notebook teaches. The line that only gives the position of the notebook in its module
+("notebook 3 of 6") is skipped, because it names no concept.
 """
 
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NB_DIR = ROOT / "notebooks"
 OUT = ROOT / "llms.txt"
 
+# A paragraph that only locates the notebook, such as "*Module 00 · Getting Started — notebook 1 of
+# 11*" or "*Notebook 2 of 5 · Support Vector Machines*". It says where the notebook sits, not what
+# it teaches.
+POSITION_LINE = re.compile(r"\bnotebook\s+\d+\s+of\s+\d+\b", re.IGNORECASE)
 
-def _first_markdown_lines(nb: dict) -> list[str]:
-    """Return the source lines of a notebook's first markdown cell."""
+# Paragraphs of the header cell that are not its purpose: headings, bold field labels
+# ("**Prerequisites:**"), quoted notes, and lists.
+_NOT_PROSE_PREFIXES = ("#", "**", ">", "- ", "* ", "1. ")
+
+
+def _first_markdown_cell(nb: dict) -> str:
+    """Return the source of a notebook's first markdown cell, or an empty string."""
     for cell in nb.get("cells", []):
         if cell.get("cell_type") == "markdown":
             src = cell.get("source", [])
-            return [ln.rstrip("\n") for ln in (src if isinstance(src, list) else [src])]
-    return []
+            return "".join(src) if isinstance(src, list) else src
+    return ""
+
+
+def _is_purpose(paragraph: str) -> bool:
+    """Tell whether a header paragraph is prose that says what the notebook teaches."""
+    if paragraph.startswith(_NOT_PROSE_PREFIXES):
+        return False
+    return not POSITION_LINE.search(paragraph)
 
 
 def title_and_purpose(nb_path: Path) -> tuple[str, str]:
     """Extract (title, purpose) from a notebook's header markdown cell.
 
-    Title = the first ``# `` heading (falls back to the file stem). Purpose = the first prose line
-    that is neither a heading nor bold (the one-line purpose under the title).
+    Title = the first ``# `` heading (falls back to the file stem). Purpose = the first paragraph
+    of prose under the title, joined on one line. Headings, bold field labels, lists, quoted notes
+    and the line that gives the position of the notebook in its module are not the purpose.
+
+    Parameters
+    ----------
+    nb_path : Path
+        Path to the ``.ipynb`` file.
+
+    Returns
+    -------
+    tuple of (str, str)
+        The title and the purpose. The purpose is empty when the header cell holds no prose.
+
+    Examples
+    --------
+    >>> import json, tempfile
+    >>> header = "# 01 — The margin\\n\\n*Notebook 1 of 5 · SVM*\\n\\nPick the widest\\nstreet."
+    >>> nb = {"cells": [{"cell_type": "markdown", "source": header}]}
+    >>> with tempfile.TemporaryDirectory() as folder:
+    ...     path = Path(folder) / "01_margin.ipynb"
+    ...     _ = path.write_text(json.dumps(nb))
+    ...     title_and_purpose(path)
+    ('01 — The margin', 'Pick the widest street.')
     """
-    lines = _first_markdown_lines(json.loads(nb_path.read_text()))
+    source = _first_markdown_cell(json.loads(nb_path.read_text()))
     title = nb_path.stem
-    for ln in lines:
-        if ln.startswith("# "):
-            title = ln[2:].strip()
+    for line in source.splitlines():
+        if line.startswith("# "):
+            title = line[2:].strip()
             break
-    purpose = ""
-    for ln in lines:
-        s = ln.strip()
-        if s and not s.startswith("#") and not s.startswith("**"):
-            purpose = s
-            break
+    paragraphs = (p.strip() for p in re.split(r"\n\s*\n", source))
+    purpose = next((" ".join(p.split()) for p in paragraphs if p and _is_purpose(p)), "")
     return title, purpose
 
 
