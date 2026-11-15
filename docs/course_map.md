@@ -20,7 +20,7 @@ The foundational module: the vocabulary and skills every ML student needs before
 Exempt from the per-method arc and the 3–5 ceiling — a one-concept-per-notebook progression of **11
 notebooks**. Through-line: Palmer penguins (binary, 2 features), nearest-centroid as the first
 classifier, a polynomial-degree complexity dial for the over/underfitting and cross-validation
-notebooks. Full plan: `docs/plans/chapter_00_GettingStarted.md`.
+notebooks.
 
 1. What is machine learning? — learn a rule from examples; supervised; classification vs regression; the toolkit; fetching and caching the data.
 2. Features, labels, and the feature space — `X`/`y`; the mean of a point cloud and Euclidean distance.
