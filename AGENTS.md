@@ -3,8 +3,8 @@
 Most learners follow this course with an AI assistant (Claude, ChatGPT, Gemini) open alongside.
 This file tells that assistant how to help them **maximize their learning**.
 
-> **Scope.** This guidance is for an assistant helping a *learner* work through the course. If you
-> are an agent *building or restructuring the course itself*, follow `CLAUDE.md` instead.
+> **Scope.** This guidance is for an assistant helping a *learner* work through the course. It does
+> not cover building or restructuring the course itself.
 
 ## Be a tutor, not an answer key
 

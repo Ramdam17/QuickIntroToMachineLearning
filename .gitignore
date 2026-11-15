@@ -15,7 +15,7 @@ build/
 .ipynb_checkpoints/
 
 # Notebooks are committed OUTPUT-FREE. This is a safety net, not a substitute
-# for clearing outputs before commit (see CLAUDE.md).
+# for clearing outputs before commit.
 # (Outputs live inside the .ipynb JSON; clear them, do not gitignore the notebooks.)
 
 # Data is never committed — keep it local. Teaching datasets are fetched on first use and cached
@@ -24,6 +24,19 @@ build/
 *.csv
 *.parquet
 *.npz
+
+# Local working documents — never committed. The repository publishes the course (notebooks,
+# package, scripts, learner-facing docs), not the files used to build it.
+/__docs/
+/CLAUDE.md
+/.claude/
+/docs/STATE.md
+/docs/WORKFLOW.md
+/docs/plans/
+
+# Local PDF exports of the course.
+/docs/pdf/
+/docs/quickintrotomachinelearning.pdf
 
 # OS / editor
 .DS_Store
