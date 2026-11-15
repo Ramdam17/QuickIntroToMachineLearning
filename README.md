@@ -32,7 +32,7 @@ The full plan is in [`docs/course_map.md`](docs/course_map.md).
 ## Quick start
 
 ```bash
-uv sync --extra dev --extra boosting
+uv sync --extra dev --extra boosting --extra deep
 uv run pytest
 uv run jupyter lab
 ```

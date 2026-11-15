@@ -40,9 +40,9 @@ The point of this course is for the learner to *understand*, not to collect answ
 ## Running things
 
 ```bash
-uv sync --extra dev --extra boosting   # set up the environment
-uv run pytest                          # run the tests
-uv run jupyter lab                     # open the notebooks
+uv sync --extra dev --extra boosting --extra deep   # set up the environment
+uv run pytest                                       # run the tests
+uv run jupyter lab                                  # open the notebooks
 ```
 
 Notebooks are committed **without outputs** — run cells top to bottom.
